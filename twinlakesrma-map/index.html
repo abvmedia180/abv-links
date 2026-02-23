@@ -1,0 +1,1582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=no">
+<title>Twin Lakes Ranch — Interactive Plat Map</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d1117;color:#c9d1d9;overflow:hidden;height:100vh;height:100dvh}
+#app{display:flex;height:100vh;height:100dvh}
+
+/* === PANELS (shared) === */
+.panel{
+  width:260px;min-width:260px;background:#161b22;
+  display:flex;flex-direction:column;z-index:10;
+}
+.panel-l{border-right:1px solid #30363d}
+.panel-r{border-left:1px solid #30363d}
+.panel-hdr{padding:10px 12px;background:#0d1117;border-bottom:1px solid #30363d;cursor:pointer;user-select:none}
+.panel-hdr h2{font-size:12px;font-weight:700;letter-spacing:0.3px;margin-bottom:1px;display:flex;align-items:center;justify-content:space-between}
+.panel-hdr h2::after{content:'▾';font-size:10px;color:#8b949e}
+.panel-hdr .sub{font-size:9px;color:#8b949e;line-height:1.3}
+
+#title-bar{padding:10px 12px;background:#0d1117;border-bottom:1px solid #30363d}
+#title-bar h1{font-size:13px;font-weight:700;color:#58a6ff;letter-spacing:0.3px;margin-bottom:1px}
+#title-bar .subtitle{font-size:9px;color:#8b949e;line-height:1.3}
+#title-bar .org{font-size:10px;color:#7ee787;font-weight:600;margin-top:4px;display:flex;align-items:center;gap:4px}
+#title-bar .org::before{content:'';display:inline-block;width:6px;height:6px;background:#7ee787;border-radius:50%}
+
+.search-wrap{padding:6px 10px;border-bottom:1px solid #30363d}
+.search-wrap input{
+  width:100%;padding:6px 8px;border-radius:5px;border:1px solid #30363d;
+  background:#0d1117;color:#c9d1d9;font-size:11px;outline:none;
+}
+.search-wrap input:focus{border-color:#58a6ff}
+.search-wrap input::placeholder{color:#484f58}
+
+.filter-area{padding:6px 10px;border-bottom:1px solid #30363d}
+.filter-area h3{font-size:9px;color:#8b949e;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:4px}
+.chips{display:flex;flex-wrap:wrap;gap:2px}
+.chip{
+  padding:2px 7px;border-radius:9px;font-size:9px;font-weight:600;
+  cursor:pointer;border:2px solid #30363d;background:#21262d;color:#c9d1d9;
+  transition:all .12s;white-space:nowrap;
+}
+.chip:hover{opacity:0.85}
+.chip.on{color:#fff}
+
+.item-list{flex:1;overflow-y:auto;padding:2px 4px}
+.item-list::-webkit-scrollbar{width:4px}
+.item-list::-webkit-scrollbar-track{background:#161b22}
+.item-list::-webkit-scrollbar-thumb{background:#30363d;border-radius:3px}
+
+.panel-stats{padding:5px 10px;border-top:1px solid #30363d;font-size:9px;color:#8b949e;display:flex;justify-content:space-between}
+
+/* Lot items */
+.li{
+  padding:5px 8px;margin:1px 0;border-radius:4px;cursor:pointer;
+  transition:all .1s;border-left:3px solid transparent;
+  display:flex;align-items:center;font-size:11px;gap:5px;
+}
+.li:hover{background:#21262d;border-left-color:#58a6ff}
+.li.act{background:#1c2333;border-left-color:#58a6ff}
+.li .num{font-weight:700;color:#58a6ff;min-width:36px}
+.li .ac{color:#7ee787;font-size:9px;min-width:32px;text-align:right}
+.li .owner{font-size:9px;color:#8b949e;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.li .sheet-badge{font-size:8px;color:#d29922;margin-left:auto}
+
+/* Point items */
+.pi{
+  padding:4px 8px;margin:1px 0;border-radius:4px;cursor:pointer;
+  transition:all .1s;border-left:3px solid transparent;
+  display:flex;align-items:center;font-size:11px;gap:5px;
+}
+.pi:hover{background:#21262d}
+.pi.act{background:#1c2333}
+.pi .plabel{font-weight:700;min-width:28px}
+.pi .pdesc{flex:1;color:#8b949e;font-size:9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pi .sheet-badge{font-size:8px;color:#d29922;margin-left:auto}
+
+.grp-hdr{
+  padding:3px 8px;margin-top:5px;font-size:9px;font-weight:800;
+  text-transform:uppercase;letter-spacing:0.6px;display:flex;align-items:center;gap:5px;
+}
+.grp-dot{width:8px;height:8px;border-radius:50%}
+
+/* === MAP === */
+#map{flex:1;position:relative;overflow:hidden;background:#d5d0c4;cursor:grab}
+#map.drag{cursor:grabbing}
+#map.tool-pen,#map.tool-hl{cursor:crosshair}
+#map.tool-text{cursor:text}
+#map.tool-dot{cursor:cell}
+#map.tool-move{cursor:default}
+#map.tool-eraser{cursor:none}
+#map.tool-screenshot{cursor:crosshair}
+#map.tool-measure{cursor:crosshair}
+#sel-rect{position:absolute;border:2px dashed #58a6ff;background:rgba(88,166,255,0.08);pointer-events:none;display:none;z-index:7;border-radius:2px}
+.tb svg{width:16px;height:16px;pointer-events:none;flex-shrink:0}
+#wrap{position:absolute;top:0;left:0;transform-origin:0 0}
+#img{display:block;user-select:none;-webkit-user-drag:none}
+#svg{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
+#draw-svg{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
+#draw-svg.interactive{pointer-events:all}
+#draw-svg.interactive *{pointer-events:all;cursor:grab}
+#draw-svg.interactive .dragging{cursor:grabbing}
+/* eraser pointer-events handled via JS inline styles */
+
+/* Eraser cursor circle */
+#eraser-cursor{
+  position:absolute;pointer-events:none;z-index:9;display:none;
+  border:2px solid rgba(255,255,255,0.8);border-radius:50%;
+  box-shadow:0 0 0 1px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(0,0,0,0.15);
+  transform:translate(-50%,-50%);
+  transition:width 0.15s, height 0.15s;
+}
+/* Eraser stamp circles */
+.eraser-stamp{
+  position:absolute;pointer-events:none;z-index:8;border-radius:50%;
+  background:rgba(255,255,255,0.35);
+  transform:translate(-50%,-50%);
+  animation:eraser-fade 0.6s ease-out forwards;
+}
+@keyframes eraser-fade{
+  0%{opacity:1;transform:translate(-50%,-50%) scale(1)}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(0.85)}
+}
+
+/* Lot circle indicator */
+@keyframes pulse{0%,100%{r:22;opacity:0.9}50%{r:30;opacity:0.5}}
+.lot-dot{fill:rgba(255,200,0,0.5);stroke:#ffd700;stroke-width:3;pointer-events:none}
+.lot-dot.show{animation:pulse 1.6s ease-in-out infinite}
+.lot-label{font-size:16px;font-weight:800;fill:#1a1a2e;text-anchor:middle;pointer-events:none;
+  paint-order:stroke;stroke:#fff;stroke-width:4px;dominant-baseline:central;opacity:0;transition:opacity .15s}
+.lot-label.show{opacity:1}
+
+/* Road point markers */
+@keyframes ptpulse{0%,100%{r:14;opacity:0.95}50%{r:20;opacity:0.6}}
+.rp-dot{stroke:#fff;stroke-width:2;opacity:0.85;pointer-events:none;transition:opacity .15s}
+.rp-dot.dim{opacity:0.2}
+.rp-dot.hi{animation:ptpulse 1.4s ease-in-out infinite;opacity:1;stroke-width:3}
+.rp-label{font-size:11px;font-weight:800;fill:#fff;text-anchor:middle;pointer-events:none;
+  paint-order:stroke;stroke:rgba(0,0,0,0.7);stroke-width:3px;dominant-baseline:central;transition:opacity .15s}
+.rp-label.dim{opacity:0.15}
+.rp-label.hi{opacity:1;font-size:14px}
+
+/* === TOOLBAR === */
+#toolbar{
+  position:absolute;top:8px;left:50%;transform:translateX(-50%);z-index:6;
+  display:flex;flex-wrap:wrap;justify-content:center;gap:2px;
+  background:#161b22;border:1px solid #30363d;border-radius:8px;padding:3px 3px 1px;
+  max-width:calc(100% - 90px);align-items:flex-start;
+}
+.tb{
+  width:32px;min-height:32px;border-radius:6px;border:none;
+  background:transparent;color:#8b949e;font-size:15px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:all .1s;
+  position:relative;flex-shrink:0;flex-direction:column;gap:0;padding:4px 0 0;
+}
+.tb-tip{font-size:7px;color:#6e7681;line-height:1;pointer-events:none;letter-spacing:0.2px;margin-top:1px}
+.tb:hover{background:#21262d;color:#c9d1d9}
+.tb.on{background:#1f6feb;color:#fff}
+.tb-sep{width:1px;background:#30363d;margin:4px 1px;flex-shrink:0}
+.tb input[type="color"]{
+  position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;
+}
+.tb .color-preview{width:16px;height:16px;border-radius:3px;border:2px solid #8b949e;pointer-events:none}
+#stroke-size{
+  width:44px;height:28px;border-radius:4px;border:1px solid #30363d;
+  background:#0d1117;color:#c9d1d9;font-size:10px;text-align:center;
+  padding:0 2px;outline:none;flex-shrink:0;
+}
+#stroke-size:focus{border-color:#58a6ff}
+.tb-label{font-size:8px;color:#8b949e;display:flex;align-items:center;padding:0 3px;flex-shrink:0}
+
+/* === CONTROLS (zoom) === */
+#ctrls{position:absolute;top:8px;right:8px;z-index:5;display:flex;flex-direction:column;gap:2px}
+.cb{
+  width:32px;height:32px;border-radius:6px;border:1px solid #30363d;
+  background:#161b22;color:#c9d1d9;font-size:15px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:all .1s;
+}
+.cb:hover{background:#21262d;border-color:#58a6ff;color:#58a6ff}
+
+/* === INFO PANEL === */
+#info{
+  position:absolute;bottom:0;left:0;right:0;z-index:8;
+  background:#161b22;border-top:2px solid #58a6ff;
+  transform:translateY(100%);transition:transform .2s ease;
+  max-height:35vh;overflow-y:auto;
+}
+#info.show{transform:translateY(0)}
+#info-head{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:10px 16px;border-bottom:1px solid #30363d;
+  position:sticky;top:0;background:#161b22;
+}
+#info-t{font-size:15px;font-weight:700;color:#58a6ff}
+#info-x{
+  width:24px;height:24px;border-radius:4px;border:1px solid #30363d;
+  background:transparent;color:#8b949e;cursor:pointer;font-size:13px;
+  display:flex;align-items:center;justify-content:center;
+}
+#info-x:hover{background:#21262d;color:#f85149}
+#info-b{padding:10px 16px;display:flex;flex-wrap:wrap;gap:10px}
+.ic{background:#0d1117;border:1px solid #30363d;border-radius:6px;padding:8px 12px;min-width:140px;flex:1}
+.ic-l{font-size:8px;text-transform:uppercase;letter-spacing:0.6px;color:#8b949e;margin-bottom:2px}
+.ic-v{font-size:13px;font-weight:600;color:#c9d1d9}
+.ic-v.grn{color:#7ee787}.ic-v.blu{color:#58a6ff}.ic-v.ylw{color:#d29922}
+.in{width:100%;background:#0d1117;border:1px solid #30363d;border-radius:6px;padding:8px 12px}
+.in h4{font-size:9px;color:#8b949e;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:3px}
+.in p{font-size:11px;color:#c9d1d9;line-height:1.4}
+#info::-webkit-scrollbar{width:4px}
+#info::-webkit-scrollbar-track{background:#161b22}
+#info::-webkit-scrollbar-thumb{background:#30363d;border-radius:3px}
+
+/* TOAST */
+#toast{
+  position:absolute;bottom:10px;left:50%;transform:translateX(-50%) translateY(50px);
+  z-index:20;background:#1f6feb;color:#fff;padding:6px 12px;
+  border-radius:6px;font-size:11px;font-weight:600;transition:transform .25s;pointer-events:none;
+  white-space:nowrap;
+}
+#toast.show{transform:translateX(-50%) translateY(0)}
+
+/* === ANNOTATION COUNT BADGE === */
+#anno-count{
+  position:absolute;bottom:10px;right:10px;z-index:5;
+  background:#161b22;border:1px solid #30363d;border-radius:6px;
+  padding:4px 10px;font-size:10px;color:#8b949e;display:none;
+}
+#anno-count.show{display:block}
+
+/* === RESPONSIVE === */
+@media(max-width:1000px){
+  .panel{width:200px;min-width:200px}
+}
+@media(max-width:760px){
+  #app{flex-direction:column}
+  .panel{width:100%;min-width:100%;border-right:none!important;border-left:none!important;border-bottom:1px solid #30363d}
+  .panel.collapsed .item-list,
+  .panel.collapsed .search-wrap,
+  .panel.collapsed .filter-area,
+  .panel.collapsed .panel-stats{display:none}
+  .panel.collapsed{min-height:auto}
+  .panel-hdr h2::after{content:'▸'}
+  .panel:not(.collapsed) .panel-hdr h2::after{content:'▾'}
+  #title-bar .subtitle{display:none}
+  #toolbar{top:6px;padding:2px;gap:1px;border-radius:6px}
+  .tb{width:28px;height:28px;font-size:13px}
+  #stroke-size{width:36px;height:24px;font-size:9px}
+  .tb-label{font-size:7px;padding:0 2px}
+  .tb-sep{margin:3px 0}
+  #ctrls{top:auto;bottom:50px;right:6px}
+  .cb{width:28px;height:28px;font-size:13px}
+  #toolbar{max-width:calc(100% - 20px)}
+}
+@media(max-width:420px){
+  .tb-label{display:none}
+  #stroke-size{display:none}
+}
+
+/* === WELCOME MODAL === */
+#modal-overlay{
+  position:fixed;inset:0;z-index:999;
+  background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;
+  opacity:1;transition:opacity .3s;
+}
+#modal-overlay.hidden{opacity:0;pointer-events:none}
+#modal-overlay.no-backdrop{background:rgba(0,0,0,0.25);backdrop-filter:none}
+#modal{
+  background:#161b22;border:1px solid #30363d;border-radius:12px;
+  max-width:580px;width:100%;max-height:90vh;overflow-y:auto;
+  box-shadow:0 20px 60px rgba(0,0,0,0.5);
+}
+#modal::-webkit-scrollbar{width:4px}
+#modal::-webkit-scrollbar-thumb{background:#30363d;border-radius:3px}
+.modal-top{
+  padding:24px 28px 16px;border-bottom:1px solid #30363d;text-align:center;
+}
+.modal-top .logo{font-size:20px;font-weight:800;color:#58a6ff;margin-bottom:2px;letter-spacing:0.3px}
+.modal-top .org-tag{font-size:11px;color:#7ee787;font-weight:600;display:inline-flex;align-items:center;gap:5px}
+.modal-top .org-tag::before{content:'';width:6px;height:6px;background:#7ee787;border-radius:50%;display:inline-block}
+.modal-body{padding:20px 28px}
+.modal-body h3{font-size:13px;font-weight:700;color:#58a6ff;margin:14px 0 6px;display:flex;align-items:center;gap:6px}
+.modal-body h3:first-child{margin-top:0}
+.modal-body p{font-size:12px;color:#c9d1d9;line-height:1.6;margin-bottom:8px}
+.modal-body .note{
+  font-size:11px;color:#d29922;background:rgba(210,153,34,0.1);
+  border:1px solid rgba(210,153,34,0.25);border-radius:6px;
+  padding:8px 12px;margin-top:12px;line-height:1.5;
+}
+.modal-footer{
+  padding:16px 28px 24px;display:flex;flex-wrap:wrap;justify-content:center;
+}
+#modal-continue{
+  padding:10px 40px;border-radius:8px;border:none;
+  background:#1f6feb;color:#fff;font-size:14px;font-weight:700;
+  cursor:pointer;transition:all .15s;letter-spacing:0.3px;
+}
+#modal-continue:hover{background:#388bfd;transform:translateY(-1px);box-shadow:0 4px 12px rgba(31,111,235,0.4)}
+
+/* === MEASURE TOOL === */
+#measure-line{pointer-events:none}
+#measure-label{
+  font-size:14px;font-weight:800;fill:#00d4ff;text-anchor:middle;
+  paint-order:stroke;stroke:#000;stroke-width:3px;dominant-baseline:central;pointer-events:none;
+}
+#measure-info{
+  position:absolute;top:54px;left:50%;transform:translateX(-50%);z-index:7;
+  background:#161b22;border:1px solid #30363d;border-radius:8px;padding:6px 14px;
+  font-size:11px;color:#c9d1d9;display:none;white-space:nowrap;
+  box-shadow:0 4px 12px rgba(0,0,0,0.4);
+}
+#measure-info.show{display:block}
+
+/* === LEGEND PANEL === */
+#legend-panel{
+  position:absolute;top:54px;right:8px;z-index:8;
+  background:#161b22;border:1px solid #30363d;border-radius:8px;
+  width:240px;max-height:70vh;overflow-y:auto;display:none;
+  box-shadow:0 8px 24px rgba(0,0,0,0.5);
+}
+#legend-panel.show{display:block}
+#legend-panel::-webkit-scrollbar{width:4px}
+#legend-panel::-webkit-scrollbar-thumb{background:#30363d;border-radius:3px}
+.legend-hdr{padding:10px 14px;border-bottom:1px solid #30363d;display:flex;justify-content:space-between;align-items:center}
+.legend-hdr h3{font-size:12px;font-weight:700;color:#58a6ff}
+.legend-hdr button{width:20px;height:20px;border:none;background:transparent;color:#8b949e;cursor:pointer;font-size:13px;border-radius:4px}
+.legend-hdr button:hover{background:#21262d;color:#f85149}
+.legend-body{padding:10px 14px}
+.legend-item{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:11px;color:#c9d1d9}
+.legend-swatch{width:14px;height:14px;border-radius:3px;flex-shrink:0}
+.legend-section{font-size:9px;font-weight:700;color:#8b949e;text-transform:uppercase;letter-spacing:0.5px;margin:10px 0 4px;padding-top:6px;border-top:1px solid #21262d}
+.legend-section:first-child{margin-top:0;padding-top:0;border-top:none}
+#legend-notes{width:100%;min-height:60px;background:#0d1117;border:1px solid #30363d;border-radius:6px;color:#c9d1d9;font-size:11px;padding:6px 8px;resize:vertical;outline:none;font-family:inherit;margin-top:6px}
+#legend-notes:focus{border-color:#58a6ff}
+
+/* === PRINT STYLES === */
+@media print{
+  body{background:#fff!important;overflow:visible!important}
+  #app{display:block!important;height:auto!important}
+  .panel,#toolbar,#ctrls,#info,#toast,#anno-count,#eraser-cursor,#modal-overlay,#legend-panel,#measure-info{display:none!important}
+  #map{position:static!important;overflow:visible!important;background:#fff!important;width:100%!important;height:auto!important}
+  #wrap{position:static!important;transform:none!important}
+  #img{width:100%!important;height:auto!important}
+  #svg,#draw-svg{width:100%!important;height:auto!important;position:absolute!important;top:0;left:0}
+}
+
+@media(max-width:760px){
+  .modal-top{padding:18px 18px 12px}
+  .modal-body{padding:14px 18px}
+  .modal-footer{padding:12px 18px 18px}
+  .modal-top .logo{font-size:18px}
+  #legend-panel{right:4px;width:220px;top:48px}
+}
+</style>
+</head>
+<body>
+
+<!-- WELCOME MODAL -->
+<div id="modal-overlay">
+<div id="modal">
+  <div class="modal-top">
+    <div class="logo">Twin Lakes Road Maintenance Association</div>
+    <div class="org-tag">Interactive Map — Created by the Board</div>
+  </div>
+  <div class="modal-body">
+    <h3>📍 What is this?</h3>
+    <p>The Twin Lakes RMA board built this tool to help our community explore and reference the recorded survey of our subdivision. The background image is a direct copy of the survey on file — it spans two pages, so you'll see both as you scroll up and down.</p>
+
+    <h3>🏠 Lots (Left Panel)</h3>
+    <p>All 59 lots are listed on the left. Click any lot to highlight its location on the map. Some lots appear on both survey pages — you'll see a <strong style="color:#d29922">1&amp;2</strong> badge when that's the case, and the lot will be marked in both places.</p>
+
+    <h3>🛤️ Road Points (Right Panel)</h3>
+    <p>On the right, you'll find reference points along each road, organized by letter: <strong style="color:#ef4444">A — Lakeside Lane</strong>, <strong style="color:#f97316">B — Creekside Court</strong>, <strong style="color:#eab308">C — Twin Lakes Trail</strong>, and <strong style="color:#22c55e">D — Westlake Court</strong>. Click any point (e.g., A1, A2) to jump to that location. Points that appear on both pages will show on both.</p>
+
+    <h3>✏️ Markup Tools (Top Toolbar)</h3>
+    <p>Use the toolbar above the map to draw, highlight, add text, or drop numbered marker dots (P1, P2, P3…). There's also an eraser, undo, and a screenshot tool that lets you select an area and save it as an image. All markups are temporary — they'll clear when you reload the page.</p>
+    <p><strong style="color:#c9d1d9">Tip:</strong> To move a markup you've placed, click the <strong style="color:#c9d1d9">✥</strong> (four-arrow) button next to the eraser, then drag any annotation to reposition it.</p>
+
+    <div class="note">⚠️ <strong>Accuracy Note:</strong> The survey image is the recorded document. All lot markers, road points, and tools were placed by the RMA board and may not be 100% precise. If you spot an error, please let the board know so we can correct it.</div>
+  </div>
+  <div class="modal-footer">
+    <p style="font-size:10px;color:#8b949e;text-align:center;margin-bottom:10px;width:100%">To see these instructions again, click the <strong style="color:#c9d1d9">ⓘ</strong> button on the top toolbar.</p>
+    <button id="modal-continue">Continue to Map</button>
+  </div>
+</div>
+</div>
+
+<div id="app">
+
+<!-- LEFT PANEL: LOTS -->
+<div class="panel panel-l" id="left-panel">
+  <div id="title-bar">
+    <h1>THE RANCHES AT TWIN LAKES</h1>
+    <div class="subtitle">Final Plat &bull; Lamar County, Texas &bull; 59 Lots &bull; ~591 Acres</div>
+    <div class="org">Twin Lakes RMA</div>
+  </div>
+  <div class="panel-hdr" id="lot-hdr"><h2 style="color:#58a6ff">Lots</h2><div class="sub">Click a lot to highlight on map</div></div>
+  <div class="search-wrap"><input type="text" id="lot-search" placeholder="Search lot # or owner..." autocomplete="off"></div>
+  <div class="item-list" id="lot-list"></div>
+  <div class="panel-stats"><span>59 Lots</span><span>~591 ac</span></div>
+</div>
+
+<!-- MAP -->
+<div id="map">
+  <div id="wrap">
+    <img id="img" src="plat_combined_web.jpg" alt="Twin Lakes Plat — Sheet 1 & Sheet 2">
+    <svg id="svg" xmlns="http://www.w3.org/2000/svg"></svg>
+    <svg id="draw-svg" xmlns="http://www.w3.org/2000/svg"></svg>
+  </div>
+
+  <div id="toolbar">
+    <button class="tb on" data-tool="pan" title="Pan (V)">✋<span class="tb-tip">Pan</span></button>
+    <button class="tb" data-tool="pen" title="Pen (P)">✏️<span class="tb-tip">Pen</span></button>
+    <button class="tb" data-tool="hl" title="Highlighter (H)">🖍️<span class="tb-tip">Hilite</span></button>
+    <button class="tb" data-tool="text" title="Text (T)">T<span class="tb-tip">Text</span></button>
+    <button class="tb" data-tool="dot" title="Marker Dot (D)">●<span class="tb-tip">Dot</span></button>
+    <div class="tb-sep"></div>
+    <button class="tb" data-tool="move" title="Move annotation (M)">✥<span class="tb-tip">Move</span></button>
+    <button class="tb" data-tool="eraser" title="Eraser (E)"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 21h10"/><path d="m5.5 12.5 5-5a2.12 2.12 0 0 1 3 0l3 3a2.12 2.12 0 0 1 0 3l-5 5H7l-3-3a2 2 0 0 1 0-2.83Z"/></svg><span class="tb-tip">Erase</span></button>
+    <div class="tb-sep"></div>
+    <div class="tb" title="Drawing Color">
+      <span class="color-preview" id="color-prev" style="background:#ff4444"></span>
+      <input type="color" id="draw-color" value="#ff4444">
+      <span class="tb-tip">Color</span>
+    </div>
+    <label class="tb-label">Size</label>
+    <input type="number" id="stroke-size" value="4" min="1" max="40">
+    <div class="tb-sep"></div>
+    <button class="tb" id="undo-btn" title="Undo (Ctrl+Z)">↩<span class="tb-tip">Undo</span></button>
+    <button class="tb" id="clear-btn" title="Clear All">🗑<span class="tb-tip">Clear</span></button>
+    <div class="tb-sep"></div>
+    <button class="tb" data-tool="measure" title="Measure distance (R)">📏<span class="tb-tip">Ruler</span></button>
+    <button class="tb" data-tool="screenshot" title="Screenshot area (S)"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 7V3h4"/><path d="M17 3h4v4"/><path d="M21 17v4h-4"/><path d="M7 21H3v-4"/></svg><span class="tb-tip">Snap</span></button>
+    <div class="tb-sep"></div>
+    <button class="tb" id="print-btn" title="Print-friendly view">🖨️<span class="tb-tip">Print</span></button>
+    <button class="tb" id="share-btn" title="Share current view">🔗<span class="tb-tip">Share</span></button>
+    <button class="tb" id="legend-btn" title="Legend & Notes">🗺️<span class="tb-tip">Legend</span></button>
+    <div class="tb-sep"></div>
+    <button class="tb" id="info-btn" title="Help & Info (I)"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><span class="tb-tip">Help</span></button>
+  </div>
+
+  <div id="ctrls">
+    <button class="cb" id="zi" title="Zoom In (+)">+</button>
+    <button class="cb" id="zo" title="Zoom Out (-)">−</button>
+    <button class="cb" id="zr" title="Fit (0)">⟲</button>
+  </div>
+
+  <div id="info">
+    <div id="info-head"><span id="info-t">—</span><button id="info-x">✕</button></div>
+    <div id="info-b"></div>
+  </div>
+  <div id="toast"></div>
+  <div id="anno-count"></div>
+  <div id="sel-rect"></div>
+  <div id="eraser-cursor"></div>
+  <div id="measure-info"></div>
+  <div id="legend-panel">
+    <div class="legend-hdr"><h3>Legend & Notes</h3><button id="legend-close">✕</button></div>
+    <div class="legend-body">
+      <div class="legend-section">Road Colors</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:#ef4444"></span>A — Lakeside Lane</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:#f97316"></span>B — Creekside Court</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:#eab308"></span>C — Twin Lakes Trail</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:#22c55e"></span>D — Westlake Court</div>
+      <div class="legend-section">Map Markers</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:#ffd700;border:2px solid #ffd700"></span>Lot highlight (gold pulse)</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:#00d4ff"></span>User-placed dot markers (P1, P2…)</div>
+      <div class="legend-section">Notes</div>
+      <textarea id="legend-notes" placeholder="Type board notes here… (saved in browser)"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- RIGHT PANEL: ROAD POINTS -->
+<div class="panel panel-r" id="right-panel">
+  <div class="panel-hdr" id="pt-hdr"><h2 style="color:#f97316">Road Points</h2><div class="sub">Click a point to highlight on map</div></div>
+  <div class="search-wrap"><input type="text" id="pt-search" placeholder="Search point..." autocomplete="off"></div>
+  <div class="filter-area" id="filter-area">
+    <h3>Filter by Road</h3>
+    <div class="chips" id="chips"></div>
+  </div>
+  <div class="item-list" id="pt-list"></div>
+  <div class="panel-stats" id="pt-stats"><span>25 Points</span><span>4 Roads</span></div>
+</div>
+
+</div>
+
+<script>
+const IW = 4000, IH = 5397;
+
+// ===== LOT DATA =====
+const D = {};
+for (let i = 1; i <= 59; i++) D[i] = { a: 10.01 };
+// Owner data
+const OWNERS = {
+  1: 'Developer owned',
+  6: 'Erik Adelson',
+  11: 'Developer owned',
+  15: 'Developer owned',
+  18: 'Ranju Mathew',
+  19: 'Abe Varughese',
+  22: 'Developer owned',
+  28: 'Abe Varughese',
+  29: 'Abe Varughese',
+  31: 'Abe Varughese',
+  54: 'Developer owned',
+};
+
+// ===== LOT POSITIONS =====
+const P = {
+  1:[[72.59,64.46]], 2:[[67.91,61.78],[69.09,45.71]], 3:[[64.66,56.36],[66.59,42.88]],
+  4:[[62.22,52.7],[63.53,39.09]], 5:[[51.42,51.68],[60.57,35.47]], 6:[[62.45,34.08]],
+  7:[[65.23,34.88],[67.67,54.76]], 8:[[71.71,31.26],[70.4,52.15]], 9:[[69.52,22.96]],
+  10:[[68.91,18.02]], 11:[[67.31,13.36]], 12:[[63.51,10.62]], 13:[[50.01,11.69]],
+  14:[[44.82,13.28]], 15:[[50.06,18.63]], 16:[[50.12,20.35]], 17:[[51.49,24.02]],
+  18:[[48.63,25.09]], 19:[[46.24,23.29]], 20:[[45.06,20.28]], 21:[[42.83,17.31]],
+  22:[[39.77,14.68]], 23:[[36.59,11.37]], 24:[[30.1,9.43]], 25:[[24.76,18.9]],
+  26:[[26.77,27.49]], 27:[[29.18,33.39]], 28:[[32.92,35.41],[28.38,51.43]],
+  29:[[36.39,37.59],[32.12,51.97]], 30:[[38.66,39.81],[36.66,53.31]],
+  31:[[41.72,42.33],[39.99,55.73]], 32:[[45.13,44.51],[42.99,58]],
+  33:[[50.6,45.89],[48.93,59.29]], 34:[[55.06,47.47],[50.13,63.24]],
+  35:[[54.13,65.91]], 36:[[56.22,69.3]], 37:[[53.74,71.55]], 38:[[48.89,73.31]],
+  39:[[42.22,72]], 40:[[40.68,69.43]], 41:[[33.68,69.43]], 42:[[32.24,76]],
+  43:[[32.19,81.85]], 44:[[31.03,86.67]], 45:[[24.2,85.85]], 46:[[22.76,84.26]],
+  47:[[22.38,82.17]], 48:[[11.52,83.93]], 49:[[16.86,79.23]], 50:[[22.38,75.64]],
+  51:[[22.49,70.05]], 52:[[27.11,66.69]], 53:[[27.36,65.56]],
+  54:[[29.75,61.62],[33.19,47.91]], 55:[[29.7,58.74],[31.5,45.51]],
+  56:[[26.63,55.26],[28.23,42.03]], 57:[[24.84,52.32],[26.54,39.1]],
+  58:[[25.57,36.35],[10.88,51.9]], 59:[[23.31,32.34]],
+};
+
+// ===== ROAD POINTS =====
+const ROAD_POINTS = {
+  A: {
+    color: '#ef4444', name: 'Lakeside Lane',
+    points: [
+      { num:1, dots:[[37.72,9.89]] },
+      { num:2, dots:[[39.39,12.37]] },
+      { num:3, dots:[[45.97,16.07]] },
+      { num:4, dots:[[47.23,18.79]] },
+      { num:5, dots:[[47.95,21.34]] },
+      { num:6, dots:[[48.29,22.51]] },
+    ]
+  },
+  B: {
+    color: '#f97316', name: 'Creekside Court',
+    points: [
+      { num:1, dots:[[63.23,35.59]] },
+      { num:2, dots:[[66.49,40.39],[64.71,53.79]] },
+      { num:3, dots:[[70.14,58.44],[71.84,44.99]] },
+      { num:4, dots:[[71.87,58.9],[73.57,45.46]] },
+    ]
+  },
+  C: {
+    color: '#eab308', name: 'Twin Lakes Trail',
+    points: [
+      { num:1, dots:[[21.03,27.77]] },
+      { num:2, dots:[[23.72,29.33]] },
+      { num:3, dots:[[27,35.05]] },
+      { num:4, dots:[[28.21,39.31],[26.56,52.65]] },
+      { num:5, dots:[[31.45,57.4],[33.1,44.03]] },
+      { num:6, dots:[[37.7,47.29],[36.08,60.64]] },
+      { num:7, dots:[[41.35,64.45]] },
+      { num:8, dots:[[46.13,68.19]] },
+      { num:9, dots:[[48.9,70.4]] },
+    ]
+  },
+  D: {
+    color: '#22c55e', name: 'Westlake Court',
+    points: [
+      { num:1, dots:[[34.12,60.07]] },
+      { num:2, dots:[[32.24,63.86]] },
+      { num:3, dots:[[28.93,71.9]] },
+      { num:4, dots:[[24.96,76.41]] },
+      { num:5, dots:[[25.61,80.86]] },
+      { num:6, dots:[[25.96,82.58]] },
+    ]
+  },
+};
+
+// ===== SVG SETUP =====
+const svg = document.getElementById('svg');
+svg.setAttribute('viewBox', `0 0 ${IW} ${IH}`);
+svg.setAttribute('preserveAspectRatio', 'none');
+const drawSvg = document.getElementById('draw-svg');
+drawSvg.setAttribute('viewBox', `0 0 ${IW} ${IH}`);
+drawSvg.setAttribute('preserveAspectRatio', 'none');
+
+// Eraser mask: white rect = visible, black strokes = erased
+const eraseDefs = document.createElementNS('http://www.w3.org/2000/svg','defs');
+const eraseMask = document.createElementNS('http://www.w3.org/2000/svg','mask');
+eraseMask.id = 'erase-mask';
+eraseMask.setAttribute('maskUnits','userSpaceOnUse');
+eraseMask.setAttribute('x','0'); eraseMask.setAttribute('y','0');
+eraseMask.setAttribute('width',IW); eraseMask.setAttribute('height',IH);
+const maskRect = document.createElementNS('http://www.w3.org/2000/svg','rect');
+maskRect.setAttribute('width',IW); maskRect.setAttribute('height',IH);
+maskRect.setAttribute('fill','white');
+eraseMask.appendChild(maskRect);
+eraseDefs.appendChild(eraseMask);
+drawSvg.appendChild(eraseDefs);
+
+// Masked group for pen/highlighter strokes (eraser affects only this group)
+const drawStrokes = document.createElementNS('http://www.w3.org/2000/svg','g');
+drawStrokes.id = 'draw-strokes';
+drawStrokes.setAttribute('mask','url(#erase-mask)');
+drawSvg.appendChild(drawStrokes);
+
+// ===== LOT SVG ELEMENTS =====
+const lotDots = {}, lotLabels = {};
+for (const n in P) {
+  lotDots[n] = []; lotLabels[n] = [];
+  P[n].forEach(([cxp, cyp], i) => {
+    const cx = cxp/100*IW, cy = cyp/100*IH;
+    const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx', cx); c.setAttribute('cy', cy); c.setAttribute('r', 22);
+    c.classList.add('lot-dot');
+    if (i > 0) c.style.stroke = '#c084fc';
+    c.style.display = 'none';
+    svg.appendChild(c);
+    lotDots[n].push(c);
+    const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x', cx); t.setAttribute('y', cy);
+    t.classList.add('lot-label'); t.textContent = n;
+    svg.appendChild(t);
+    lotLabels[n].push(t);
+  });
+}
+
+// ===== ROAD POINT SVG ELEMENTS =====
+const rpEls = {};
+for (const g in ROAD_POINTS) {
+  rpEls[g] = [];
+  const grp = ROAD_POINTS[g];
+  grp.points.forEach((pt) => {
+    const els = { dots:[], labels:[] };
+    pt.dots.forEach(([cxp, cyp], di) => {
+      const cx = cxp/100*IW, cy = cyp/100*IH;
+      const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+      c.setAttribute('cx', cx); c.setAttribute('cy', cy); c.setAttribute('r', 10);
+      c.setAttribute('fill', grp.color);
+      c.classList.add('rp-dot');
+      if (di > 0) c.setAttribute('stroke-dasharray','3,2');
+      svg.appendChild(c);
+      els.dots.push(c);
+      const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+      t.setAttribute('x', cx); t.setAttribute('y', cy - 16);
+      t.classList.add('rp-label');
+      t.textContent = g + pt.num;
+      svg.appendChild(t);
+      els.labels.push(t);
+    });
+    rpEls[g].push(els);
+  });
+}
+
+// ===== STATE =====
+let curFilter = null, curLot = null, curPoint = null;
+let activeTool = 'pan';
+
+// ===== MOBILE: COLLAPSIBLE PANELS =====
+function setupCollapse() {
+  if (window.innerWidth > 760) return;
+  document.getElementById('left-panel').classList.add('collapsed');
+  document.getElementById('right-panel').classList.add('collapsed');
+}
+document.getElementById('lot-hdr').onclick = () => {
+  if (window.innerWidth > 760) return;
+  document.getElementById('left-panel').classList.toggle('collapsed');
+};
+document.getElementById('pt-hdr').onclick = () => {
+  if (window.innerWidth > 760) return;
+  document.getElementById('right-panel').classList.toggle('collapsed');
+};
+setupCollapse();
+window.addEventListener('resize', () => {
+  if (window.innerWidth > 760) {
+    document.getElementById('left-panel').classList.remove('collapsed');
+    document.getElementById('right-panel').classList.remove('collapsed');
+  }
+});
+
+// ===== BUILD LOT LIST =====
+const lotList = document.getElementById('lot-list');
+function buildLotList(q) {
+  lotList.innerHTML = '';
+  const s = (q||'').toLowerCase();
+  Object.keys(D).map(Number).sort((a,b)=>a-b).forEach(n => {
+    if (s && !String(n).includes(s) && !(OWNERS[n]||'').toLowerCase().includes(s)) return;
+    const div = mk('div','li');
+    div.dataset.lot = n;
+    const owner = OWNERS[n] || '';
+    let html = `<span class="num">Lot ${n}</span>`;
+    if (owner) html += `<span class="owner">${owner}</span>`;
+    html += `<span class="ac">${D[n].a} ac</span>`;
+    if (P[n] && P[n].length > 1) html += `<span class="sheet-badge">1&2</span>`;
+    div.innerHTML = html;
+    div.onclick = () => selLot(n);
+    lotList.appendChild(div);
+  });
+}
+
+// ===== BUILD ROAD POINT LIST =====
+const ptList = document.getElementById('pt-list');
+function buildPtList(q) {
+  ptList.innerHTML = '';
+  const s = (q||'').toLowerCase();
+  const groups = curFilter ? [curFilter] : Object.keys(ROAD_POINTS).sort();
+  groups.forEach(g => {
+    const grp = ROAD_POINTS[g];
+    const color = grp.color;
+    const hdr = mk('div','grp-hdr');
+    const rname = grp.name ? ` — ${grp.name}` : '';
+    hdr.innerHTML = `<span class="grp-dot" style="background:${color}"></span><span style="color:${color}">${g}${rname}</span><span style="color:#8b949e;font-weight:400">${grp.points.length} pts</span>`;
+    ptList.appendChild(hdr);
+    grp.points.forEach((pt, idx) => {
+      const label = g + pt.num;
+      if (s && !label.toLowerCase().includes(s) && !(pt.desc||'').toLowerCase().includes(s)) return;
+      const div = mk('div','pi');
+      div.style.borderLeftColor = color;
+      div.dataset.group = g; div.dataset.idx = idx;
+      let html = `<span class="plabel" style="color:${color}">${label}</span>`;
+      html += `<span class="pdesc">${pt.desc||'—'}</span>`;
+      if (pt.dots.length > 1) html += `<span class="sheet-badge">1&2</span>`;
+      div.innerHTML = html;
+      div.onclick = () => selPoint(g, idx);
+      ptList.appendChild(div);
+    });
+  });
+}
+
+// ===== FILTER CHIPS =====
+function buildChips() {
+  const wrap = document.getElementById('chips');
+  wrap.innerHTML = '';
+  const allC = mk('span','chip' + (!curFilter ? ' on' : ''));
+  allC.textContent = 'All';
+  allC.style.borderColor = '#58a6ff';
+  if (!curFilter) allC.style.background = '#1f6feb';
+  allC.onclick = () => { curFilter = null; buildChips(); buildPtList(); updatePtStats(); updateRPVisibility(); };
+  wrap.appendChild(allC);
+  for (const g in ROAD_POINTS) {
+    const color = ROAD_POINTS[g].color;
+    const c = mk('span','chip' + (curFilter===g ? ' on' : ''));
+    const rname = ROAD_POINTS[g].name ? g + ' — ' + ROAD_POINTS[g].name : g;
+    c.textContent = rname + ' (' + ROAD_POINTS[g].points.length + ')';
+    c.style.borderColor = color;
+    if (curFilter===g) c.style.background = color;
+    c.onclick = () => {
+      curFilter = curFilter===g ? null : g;
+      buildChips(); buildPtList(); updatePtStats(); updateRPVisibility();
+      if (curFilter) toast((ROAD_POINTS[g].name||'Group '+g) + ' · ' + ROAD_POINTS[g].points.length + ' pts');
+    };
+    wrap.appendChild(c);
+  }
+}
+
+function updatePtStats() {
+  let total = 0;
+  (curFilter ? [curFilter] : Object.keys(ROAD_POINTS)).forEach(g => { total += ROAD_POINTS[g].points.length; });
+  document.getElementById('pt-stats').innerHTML =
+    `<span>${total} Point${total!==1?'s':''}</span><span>${Object.keys(ROAD_POINTS).length} Roads</span>`;
+}
+
+function updateRPVisibility() {
+  for (const g in rpEls) {
+    rpEls[g].forEach(els => {
+      const dim = curFilter && curFilter !== g;
+      els.dots.forEach(c => { c.classList.toggle('dim', dim); c.classList.remove('hi'); });
+      els.labels.forEach(t => { t.classList.toggle('dim', dim); t.classList.remove('hi'); });
+    });
+  }
+}
+
+// ===== SELECT LOT =====
+function selLot(n) {
+  clearSelection(); curLot = n;
+  if (lotDots[n]) lotDots[n].forEach(c => { c.style.display=''; c.classList.add('show'); });
+  if (lotLabels[n]) lotLabels[n].forEach(t => t.classList.add('show'));
+  const li = lotList.querySelector(`[data-lot="${n}"]`);
+  if (li) { li.classList.add('act'); li.scrollIntoView({behavior:'smooth',block:'nearest'}); }
+  document.getElementById('info-t').textContent = 'Lot ' + n;
+  let h = `<div class="ic"><div class="ic-l">Acreage</div><div class="ic-v grn">${D[n].a} acres</div></div>`;
+  if (OWNERS[n]) h += `<div class="ic"><div class="ic-l">Owner</div><div class="ic-v blu">${OWNERS[n]}</div></div>`;
+  if (P[n] && P[n].length > 1) h += `<div class="ic"><div class="ic-l">Sheets</div><div class="ic-v ylw">Shown on both Sheet 1 &amp; 2</div></div>`;
+  document.getElementById('info-b').innerHTML = h;
+  document.getElementById('info').classList.add('show');
+  panToCoord(P[n][0]);
+}
+
+// ===== SELECT ROAD POINT =====
+function selPoint(g, idx) {
+  clearSelection(); curPoint = { g, idx };
+  const grp = ROAD_POINTS[g], pt = grp.points[idx], color = grp.color;
+  rpEls[g][idx].dots.forEach(c => c.classList.add('hi'));
+  rpEls[g][idx].labels.forEach(t => t.classList.add('hi'));
+  const item = ptList.querySelector(`[data-group="${g}"][data-idx="${idx}"]`);
+  if (item) { item.classList.add('act'); item.scrollIntoView({behavior:'smooth',block:'nearest'}); }
+  const rname = grp.name ? ` — ${grp.name}` : '';
+  document.getElementById('info-t').innerHTML = `<span style="color:${color}">●</span> Point ${g}${pt.num}`;
+  let h = `<div class="ic"><div class="ic-l">Road</div><div class="ic-v" style="color:${color}">${g}${rname}</div></div>`;
+  if (pt.dots.length > 1) h += `<div class="ic"><div class="ic-l">Sheets</div><div class="ic-v ylw">Shown on both Sheet 1 &amp; 2</div></div>`;
+  if (pt.desc) h += `<div class="in"><h4>Description</h4><p>${pt.desc}</p></div>`;
+  document.getElementById('info-b').innerHTML = h;
+  document.getElementById('info').classList.add('show');
+  panToCoord(pt.dots[0]);
+}
+
+// ===== CLEAR / CLOSE =====
+function clearSelection() {
+  if (curLot) {
+    if (lotDots[curLot]) lotDots[curLot].forEach(c => { c.style.display='none'; c.classList.remove('show'); });
+    if (lotLabels[curLot]) lotLabels[curLot].forEach(t => t.classList.remove('show'));
+    curLot = null;
+  }
+  if (curPoint) {
+    const {g, idx} = curPoint;
+    if (rpEls[g]?.[idx]) {
+      rpEls[g][idx].dots.forEach(c => c.classList.remove('hi'));
+      rpEls[g][idx].labels.forEach(t => t.classList.remove('hi'));
+    }
+    curPoint = null;
+  }
+  document.querySelectorAll('.li.act,.pi.act').forEach(e => e.classList.remove('act'));
+}
+function closeInfo() { document.getElementById('info').classList.remove('show'); clearSelection(); }
+document.getElementById('info-x').onclick = closeInfo;
+
+function panToCoord(coords) {
+  if (!coords) return;
+  const [cxp, cyp] = coords;
+  const cx = cxp/100*IW, cy = cyp/100*IH;
+  const r = mc.getBoundingClientRect();
+  const screenX = cx*scale+px, screenY = cy*scale+py;
+  if (screenX<80||screenX>r.width-80||screenY<80||screenY>r.height-200) {
+    px = r.width/2 - cx*scale; py = r.height/2 - cy*scale; upd();
+  }
+}
+
+// ===== SEARCH =====
+document.getElementById('lot-search').addEventListener('input', e => buildLotList(e.target.value));
+document.getElementById('pt-search').addEventListener('input', e => buildPtList(e.target.value));
+
+// ===== PAN & ZOOM =====
+const mc = document.getElementById('map'), mw = document.getElementById('wrap');
+let scale=1, px=0, py=0, drag=false, sx, sy;
+
+function upd() { mw.style.transform = `translate(${px}px,${py}px) scale(${scale})`; }
+function fit() {
+  const cw=mc.clientWidth, ch=mc.clientHeight;
+  scale = Math.min(cw/IW, ch/IH)*0.96;
+  px = (cw-IW*scale)/2; py = (ch-IH*scale)/2; upd();
+}
+const img = document.getElementById('img');
+img.onload = fit; if (img.complete) fit();
+window.addEventListener('resize', fit);
+
+function screenToSvg(clientX, clientY) {
+  const r = mc.getBoundingClientRect();
+  return [(clientX - r.left - px) / scale, (clientY - r.top - py) / scale];
+}
+
+// ===== DRAWING STATE =====
+let drawColor = '#ff4444', drawSize = 4;
+let drawing = false, curPath = null;
+let drawHistory = [];
+let dotCounter = 0;
+let selecting = false, selStart = null;
+
+document.getElementById('draw-color').addEventListener('input', e => {
+  drawColor = e.target.value;
+  document.getElementById('color-prev').style.background = drawColor;
+});
+document.getElementById('stroke-size').addEventListener('input', e => {
+  drawSize = Math.max(1, Math.min(40, parseInt(e.target.value)||4));
+  updateEraserCursorSize();
+});
+
+function updateAnnoCount() {
+  const el = document.getElementById('anno-count');
+  if (drawHistory.length > 0) {
+    el.textContent = drawHistory.length + ' annotation' + (drawHistory.length!==1?'s':'');
+    el.classList.add('show');
+  } else {
+    el.classList.remove('show');
+  }
+}
+
+// ===== ERASER CURSOR =====
+const eraserCursor = document.getElementById('eraser-cursor');
+function getEraserScreenRadius() {
+  // Convert SVG-space eraser width to screen pixels
+  return (drawSize * 8 * scale) / 2;
+}
+function updateEraserCursorSize() {
+  if (activeTool !== 'eraser') return;
+  const d = getEraserScreenRadius() * 2;
+  eraserCursor.style.width = d + 'px';
+  eraserCursor.style.height = d + 'px';
+}
+function moveEraserCursor(clientX, clientY) {
+  if (activeTool !== 'eraser') return;
+  const r = mc.getBoundingClientRect();
+  eraserCursor.style.left = (clientX - r.left) + 'px';
+  eraserCursor.style.top = (clientY - r.top) + 'px';
+}
+function showEraserCursor() { eraserCursor.style.display = 'block'; updateEraserCursorSize(); }
+function hideEraserCursor() { eraserCursor.style.display = 'none'; }
+
+function spawnEraserStamp(clientX, clientY) {
+  const r = mc.getBoundingClientRect();
+  const d = getEraserScreenRadius() * 2;
+  const stamp = document.createElement('div');
+  stamp.className = 'eraser-stamp';
+  stamp.style.left = (clientX - r.left) + 'px';
+  stamp.style.top = (clientY - r.top) + 'px';
+  stamp.style.width = d + 'px';
+  stamp.style.height = d + 'px';
+  mc.appendChild(stamp);
+  stamp.addEventListener('animationend', () => stamp.remove());
+}
+
+// Track mouse over map for eraser cursor
+mc.addEventListener('mousemove', e => {
+  if (activeTool === 'eraser') {
+    moveEraserCursor(e.clientX, e.clientY);
+  }
+});
+mc.addEventListener('mouseleave', () => { if (activeTool === 'eraser') hideEraserCursor(); });
+mc.addEventListener('mouseenter', e => { if (activeTool === 'eraser') { showEraserCursor(); moveEraserCursor(e.clientX, e.clientY); } });
+
+// ===== TOOLBAR =====
+function setTool(tool) {
+  activeTool = tool;
+  document.querySelectorAll('.tb[data-tool]').forEach(b => b.classList.remove('on'));
+  const btn = document.querySelector(`[data-tool="${tool}"]`);
+  if (btn) btn.classList.add('on');
+  mc.className = (tool === 'pan') ? '' : 'tool-' + tool;
+  // Toggle interactive modes on draw SVG
+  drawSvg.classList.remove('interactive');
+  drawSvg.style.pointerEvents = '';
+  drawStrokes.style.pointerEvents = '';
+  if (tool === 'move') drawSvg.classList.add('interactive');
+  if (tool === 'eraser') { drawSvg.style.pointerEvents = 'all'; drawStrokes.style.pointerEvents = 'none'; }
+  // Eraser cursor visibility
+  if (tool === 'eraser') { showEraserCursor(); } else { hideEraserCursor(); }
+  // Clear any lingering selection rect
+  if (tool !== 'screenshot') { selecting = false; document.getElementById('sel-rect').style.display = 'none'; }
+  // Clear measure when switching away
+  if (tool !== 'measure' && typeof clearMeasure === 'function') clearMeasure();
+}
+document.querySelectorAll('.tb[data-tool]').forEach(btn => {
+  btn.onclick = () => setTool(btn.dataset.tool);
+});
+
+// ===== MOVE TOOL STATE =====
+let moveTarget = null, moveStartSvg = null, moveOrigTransform = null;
+
+// ===== MOUSE EVENTS =====
+mc.addEventListener('mousedown', e => {
+  if (e.target.closest('#info,#ctrls,#toolbar')) return;
+
+  // Move tool — start drag on draw element
+  if (activeTool === 'move' && e.target !== drawSvg && drawSvg.contains(e.target)) {
+    e.preventDefault();
+    moveTarget = e.target;
+    moveTarget.classList.add('dragging');
+    moveStartSvg = screenToSvg(e.clientX, e.clientY);
+    // Parse existing transform
+    const t = moveTarget.getAttribute('transform') || '';
+    const m = t.match(/translate\(([-\d.]+),([-\d.]+)\)/);
+    moveOrigTransform = m ? [parseFloat(m[1]), parseFloat(m[2])] : [0, 0];
+    return;
+  }
+
+  if (activeTool === 'screenshot') {
+    e.preventDefault();
+    selecting = true;
+    const r = mc.getBoundingClientRect();
+    selStart = { x: e.clientX - r.left, y: e.clientY - r.top };
+    const sel = document.getElementById('sel-rect');
+    sel.style.left = selStart.x + 'px'; sel.style.top = selStart.y + 'px';
+    sel.style.width = '0'; sel.style.height = '0'; sel.style.display = 'block';
+    return;
+  }
+
+  if (activeTool === 'pan') {
+    drag=true; sx=e.clientX-px; sy=e.clientY-py; mc.classList.add('drag'); e.preventDefault();
+    return;
+  }
+
+  // Eraser tool: click dots/text to delete group, or draw to partially erase pen/hl
+  if (activeTool === 'eraser') {
+    e.preventDefault();
+    const clicked = e.target;
+    // Check if clicked a dot group child (circle or text inside a <g>)
+    let found = null;
+    if (clicked !== drawSvg && drawSvg.contains(clicked)) {
+      // Walk up to find a drawHistory entry
+      let el = clicked;
+      while (el && el !== drawSvg) {
+        if (drawHistory.includes(el)) { found = el; break; }
+        el = el.parentElement;
+      }
+    }
+    if (found && found.tagName === 'g') {
+      // It's a dot group — delete the whole group
+      const idx = drawHistory.indexOf(found);
+      if (idx !== -1) drawHistory.splice(idx, 1);
+      found.remove();
+      updateAnnoCount();
+      toast('Erased');
+      return;
+    }
+    // Also allow erasing standalone text annotations
+    if (found && found.tagName === 'text') {
+      const idx = drawHistory.indexOf(found);
+      if (idx !== -1) drawHistory.splice(idx, 1);
+      found.remove();
+      updateAnnoCount();
+      toast('Erased');
+      return;
+    }
+    // Otherwise start drawing an erase stroke on the mask
+    drawing = true;
+    const [svgX, svgY] = screenToSvg(e.clientX, e.clientY);
+    curPath = document.createElementNS('http://www.w3.org/2000/svg','path');
+    curPath.setAttribute('fill','none');
+    curPath.setAttribute('stroke','black');
+    curPath.setAttribute('stroke-linecap','round');
+    curPath.setAttribute('stroke-linejoin','round');
+    curPath.setAttribute('stroke-width', drawSize * 8);
+    curPath._pts = `M${svgX.toFixed(1)},${svgY.toFixed(1)}`;
+    curPath.setAttribute('d', curPath._pts);
+    curPath._isEraserMask = true;
+    eraseMask.appendChild(curPath);
+    drawHistory.push(curPath);
+    updateAnnoCount();
+    spawnEraserStamp(e.clientX, e.clientY);
+    return;
+  }
+
+  if (activeTool === 'move') return;
+
+  e.preventDefault();
+  const [svgX, svgY] = screenToSvg(e.clientX, e.clientY);
+
+  if (activeTool === 'pen' || activeTool === 'hl') {
+    drawing = true;
+    curPath = document.createElementNS('http://www.w3.org/2000/svg','path');
+    curPath.setAttribute('fill','none');
+    curPath.setAttribute('stroke-linecap','round');
+    curPath.setAttribute('stroke-linejoin','round');
+    if (activeTool === 'hl') {
+      curPath.setAttribute('stroke', '#ffff00'); // Always yellow
+      curPath.setAttribute('stroke-width', drawSize * 6);
+      curPath.setAttribute('opacity','0.35');
+    } else {
+      curPath.setAttribute('stroke', drawColor);
+      curPath.setAttribute('stroke-width', drawSize);
+    }
+    curPath._pts = `M${svgX.toFixed(1)},${svgY.toFixed(1)}`;
+    curPath.setAttribute('d', curPath._pts);
+    drawStrokes.appendChild(curPath);
+    drawHistory.push(curPath);
+    updateAnnoCount();
+  } else if (activeTool === 'text') {
+    const txt = prompt('Enter text:');
+    if (txt) {
+      const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+      t.setAttribute('x', svgX); t.setAttribute('y', svgY);
+      t.setAttribute('fill', drawColor);
+      t.setAttribute('font-size', drawSize * 8);
+      t.setAttribute('font-weight','700');
+      t.setAttribute('font-family','Segoe UI, system-ui, sans-serif');
+      t.textContent = txt;
+      drawSvg.appendChild(t);
+      drawHistory.push(t);
+      updateAnnoCount();
+    }
+  } else if (activeTool === 'dot') {
+    dotCounter++;
+    const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+    const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx', svgX); c.setAttribute('cy', svgY);
+    c.setAttribute('r', drawSize * 3);
+    c.setAttribute('fill', '#00d4ff');
+    c.setAttribute('stroke','#fff'); c.setAttribute('stroke-width', 2);
+    c.setAttribute('opacity','0.9');
+    g.appendChild(c);
+    const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x', svgX); t.setAttribute('y', svgY - drawSize * 3 - 10);
+    t.setAttribute('fill', '#00d4ff');
+    t.setAttribute('font-size', Math.max(28, drawSize * 6));
+    t.setAttribute('font-weight','800');
+    t.setAttribute('text-anchor','middle');
+    t.setAttribute('font-family','Segoe UI, system-ui, sans-serif');
+    t.setAttribute('paint-order','stroke');
+    t.setAttribute('stroke','rgba(0,0,0,0.8)');
+    t.setAttribute('stroke-width','4px');
+    t.textContent = 'P' + dotCounter;
+    g.appendChild(t);
+    drawSvg.appendChild(g);
+    drawHistory.push(g);
+    updateAnnoCount();
+    toast('P' + dotCounter + ' placed');
+  }
+});
+
+window.addEventListener('mousemove', e => {
+  // Screenshot selection drag
+  if (selecting && selStart) {
+    const r = mc.getBoundingClientRect();
+    const cx = e.clientX - r.left, cy = e.clientY - r.top;
+    const sel = document.getElementById('sel-rect');
+    sel.style.left = Math.min(selStart.x, cx) + 'px';
+    sel.style.top = Math.min(selStart.y, cy) + 'px';
+    sel.style.width = Math.abs(cx - selStart.x) + 'px';
+    sel.style.height = Math.abs(cy - selStart.y) + 'px';
+    return;
+  }
+  // Move tool drag
+  if (moveTarget) {
+    const [svgX, svgY] = screenToSvg(e.clientX, e.clientY);
+    const dx = svgX - moveStartSvg[0] + moveOrigTransform[0];
+    const dy = svgY - moveStartSvg[1] + moveOrigTransform[1];
+    moveTarget.setAttribute('transform', `translate(${dx.toFixed(1)},${dy.toFixed(1)})`);
+    return;
+  }
+  if (drag && activeTool === 'pan') { px=e.clientX-sx; py=e.clientY-sy; upd(); return; }
+  if (drawing && curPath) {
+    const [svgX, svgY] = screenToSvg(e.clientX, e.clientY);
+    curPath._pts += ` L${svgX.toFixed(1)},${svgY.toFixed(1)}`;
+    curPath.setAttribute('d', curPath._pts);
+    // Spawn visual eraser stamps
+    if (curPath._isEraserMask) spawnEraserStamp(e.clientX, e.clientY);
+  }
+});
+
+window.addEventListener('mouseup', e => {
+  // Screenshot capture
+  if (selecting && selStart) {
+    selecting = false;
+    const sel = document.getElementById('sel-rect');
+    sel.style.display = 'none';
+    const r = mc.getBoundingClientRect();
+    const cx = e.clientX - r.left, cy = e.clientY - r.top;
+    const x1 = Math.min(selStart.x, cx), y1 = Math.min(selStart.y, cy);
+    const w = Math.abs(cx - selStart.x), h = Math.abs(cy - selStart.y);
+    if (w < 10 || h < 10) { toast('Selection too small'); setTool('pan'); return; }
+    captureArea(x1, y1, w, h);
+    return;
+  }
+  if (moveTarget) { moveTarget.classList.remove('dragging'); moveTarget = null; }
+  drag=false; mc.classList.remove('drag');
+  drawing = false; curPath = null;
+});
+
+// ===== SCREENSHOT CAPTURE (fixed) =====
+function captureArea(sx, sy, sw, sh) {
+  toast('Capturing...');
+  const svgX1 = (sx - px) / scale;
+  const svgY1 = (sy - py) / scale;
+  const svgW = sw / scale;
+  const svgH = sh / scale;
+
+  const dpr = window.devicePixelRatio || 1;
+  const canvas = document.createElement('canvas');
+  canvas.width = Math.round(sw * dpr);
+  canvas.height = Math.round(sh * dpr);
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  // Draw plat image — use a temp canvas to avoid cross-origin taint
+  // We re-draw from the loaded image. If img is same-origin it works directly.
+  try { ctx.drawImage(img, svgX1, svgY1, svgW, svgH, 0, 0, sw, sh); } catch(e) { /* continue without base image */ }
+
+  // Render SVG overlays via foreignObject-free serialization
+  function renderSvgToCanvas(svgEl) {
+    return new Promise(resolve => {
+      try {
+        const clone = svgEl.cloneNode(true);
+        clone.setAttribute('viewBox', `${svgX1} ${svgY1} ${svgW} ${svgH}`);
+        clone.setAttribute('width', sw);
+        clone.setAttribute('height', sh);
+        clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+        // Inline the mask defs so they resolve in standalone SVG
+        const data = new XMLSerializer().serializeToString(clone);
+        const svgImg = new Image();
+        svgImg.onload = () => { ctx.drawImage(svgImg, 0, 0, sw, sh); resolve(); };
+        svgImg.onerror = () => resolve();
+        svgImg.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(data);
+      } catch(e) { resolve(); }
+    });
+  }
+
+  renderSvgToCanvas(svg).then(() => renderSvgToCanvas(drawSvg)).then(() => {
+    // Try toDataURL first (more reliable cross-browser), fallback to toBlob
+    try {
+      const dataUrl = canvas.toDataURL('image/png');
+      const a = document.createElement('a');
+      a.href = dataUrl;
+      a.download = 'twin-lakes-capture-' + new Date().toISOString().slice(0,19).replace(/[:T]/g,'-') + '.png';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      toast('Screenshot saved!');
+      setTool('pan');
+    } catch(e) {
+      // Fallback: try toBlob
+      try {
+        canvas.toBlob(blob => {
+          if (!blob) { toast('Screenshot failed — try again'); setTool('pan'); return; }
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = 'twin-lakes-capture-' + new Date().toISOString().slice(0,19).replace(/[:T]/g,'-') + '.png';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(a.href);
+          toast('Screenshot saved!');
+          setTool('pan');
+        }, 'image/png');
+      } catch(e2) {
+        toast('Screenshot failed — cross-origin restriction');
+        setTool('pan');
+      }
+    }
+  });
+}
+
+// ===== MEASURE TOOL =====
+let measureState = null; // null | { x1, y1 } — first click stored in SVG coords
+let measureLine = null, measureLabel = null;
+
+function clearMeasure() {
+  if (measureLine) { measureLine.remove(); measureLine = null; }
+  if (measureLabel) { measureLabel.remove(); measureLabel = null; }
+  document.getElementById('measure-info').classList.remove('show');
+  measureState = null;
+}
+
+mc.addEventListener('mousedown', e => {
+  if (activeTool !== 'measure') return;
+  if (e.target.closest('#info,#ctrls,#toolbar,#legend-panel')) return;
+  e.preventDefault();
+  const [svgX, svgY] = screenToSvg(e.clientX, e.clientY);
+  if (!measureState) {
+    // First click
+    clearMeasure();
+    measureState = { x1: svgX, y1: svgY };
+    // Draw start dot
+    measureLine = document.createElementNS('http://www.w3.org/2000/svg','g');
+    measureLine.id = 'measure-line';
+    const c1 = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c1.setAttribute('cx', svgX); c1.setAttribute('cy', svgY); c1.setAttribute('r', 8);
+    c1.setAttribute('fill','#00d4ff'); c1.setAttribute('stroke','#fff'); c1.setAttribute('stroke-width', 2);
+    measureLine.appendChild(c1);
+    drawSvg.appendChild(measureLine);
+    toast('Click second point to measure');
+  } else {
+    // Second click — draw line + distance
+    const {x1, y1} = measureState;
+    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1', x1); line.setAttribute('y1', y1);
+    line.setAttribute('x2', svgX); line.setAttribute('y2', svgY);
+    line.setAttribute('stroke','#00d4ff'); line.setAttribute('stroke-width', 4);
+    line.setAttribute('stroke-dasharray','12,6');
+    measureLine.insertBefore(line, measureLine.firstChild);
+    const c2 = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c2.setAttribute('cx', svgX); c2.setAttribute('cy', svgY); c2.setAttribute('r', 8);
+    c2.setAttribute('fill','#00d4ff'); c2.setAttribute('stroke','#fff'); c2.setAttribute('stroke-width', 2);
+    measureLine.appendChild(c2);
+    // Distance in pixels and approximate
+    const dxPx = Math.abs(svgX - x1), dyPx = Math.abs(svgY - y1);
+    const distPx = Math.sqrt(dxPx*dxPx + dyPx*dyPx);
+    // Label at midpoint
+    const mx = (x1 + svgX) / 2, my = (y1 + svgY) / 2;
+    measureLabel = document.createElementNS('http://www.w3.org/2000/svg','text');
+    measureLabel.id = 'measure-label';
+    measureLabel.setAttribute('x', mx); measureLabel.setAttribute('y', my - 14);
+    measureLabel.textContent = Math.round(distPx) + ' px';
+    drawSvg.appendChild(measureLabel);
+    // Show info bar
+    const pctX = (dxPx / IW * 100).toFixed(1);
+    const pctY = (dyPx / IH * 100).toFixed(1);
+    const pctDist = (distPx / Math.sqrt(IW*IW+IH*IH) * 100).toFixed(2);
+    document.getElementById('measure-info').innerHTML =
+      `📏 <strong>${Math.round(distPx)} px</strong> &nbsp;|&nbsp; ΔX: ${Math.round(dxPx)} &nbsp; ΔY: ${Math.round(dyPx)} &nbsp;|&nbsp; ~${pctDist}% of map diagonal`;
+    document.getElementById('measure-info').classList.add('show');
+    measureState = null;
+    toast('Distance measured — click Ruler again to re-measure');
+  }
+}, true); // capture phase so it fires before pan handler
+
+// ===== PRINT BUTTON =====
+document.getElementById('print-btn').onclick = () => {
+  toast('Preparing print view...');
+  setTimeout(() => window.print(), 200);
+};
+
+// ===== SHARE BUTTON =====
+document.getElementById('share-btn').onclick = () => {
+  // Encode current view into URL hash
+  const z = scale.toFixed(4);
+  const cx = ((mc.clientWidth/2 - px) / scale / IW * 100).toFixed(2);
+  const cy = ((mc.clientHeight/2 - py) / scale / IH * 100).toFixed(2);
+  const hash = `#v=${z},${cx},${cy}`;
+  const url = window.location.origin + window.location.pathname + hash;
+  // Copy to clipboard
+  navigator.clipboard.writeText(url).then(() => {
+    toast('Link copied to clipboard!');
+  }).catch(() => {
+    // Fallback
+    const inp = document.createElement('input');
+    inp.value = url;
+    document.body.appendChild(inp);
+    inp.select();
+    document.execCommand('copy');
+    document.body.removeChild(inp);
+    toast('Link copied!');
+  });
+};
+
+// Read share hash on load
+function applyShareHash() {
+  const h = window.location.hash;
+  if (!h.startsWith('#v=')) return;
+  const parts = h.slice(3).split(',').map(Number);
+  if (parts.length === 3 && parts.every(n => !isNaN(n))) {
+    const [z, cxPct, cyPct] = parts;
+    scale = z;
+    const targetX = cxPct / 100 * IW;
+    const targetY = cyPct / 100 * IH;
+    px = mc.clientWidth / 2 - targetX * scale;
+    py = mc.clientHeight / 2 - targetY * scale;
+    upd();
+  }
+}
+
+// ===== LEGEND PANEL =====
+document.getElementById('legend-btn').onclick = () => {
+  document.getElementById('legend-panel').classList.toggle('show');
+};
+document.getElementById('legend-close').onclick = () => {
+  document.getElementById('legend-panel').classList.remove('show');
+};
+// Save/load legend notes
+const legendNotes = document.getElementById('legend-notes');
+legendNotes.value = localStorage.getItem('tl-legend-notes') || '';
+legendNotes.addEventListener('input', () => {
+  localStorage.setItem('tl-legend-notes', legendNotes.value);
+});
+
+// ===== WHEEL ZOOM =====
+mc.addEventListener('wheel', e => {
+  e.preventDefault();
+  const r=mc.getBoundingClientRect(), mx=e.clientX-r.left, my=e.clientY-r.top;
+  const f=e.deltaY>0?0.9:1.1, ns=Math.max(0.08,Math.min(12,scale*f));
+  px=mx-(mx-px)*(ns/scale); py=my-(my-py)*(ns/scale); scale=ns; upd();
+  updateEraserCursorSize();
+}, {passive:false});
+
+// ===== TOUCH (pan + pinch + draw) =====
+let ltd=0, touchDrawing=false, touchPath=null;
+mc.addEventListener('touchstart', e => {
+  if (e.target.closest('#info,#ctrls,#toolbar')) return;
+
+  if (e.touches.length === 2) {
+    // Pinch zoom — always works regardless of tool
+    touchDrawing = false; touchPath = null;
+    ltd = Math.hypot(e.touches[0].clientX-e.touches[1].clientX, e.touches[0].clientY-e.touches[1].clientY);
+    return;
+  }
+
+  if (e.touches.length === 1) {
+    if (activeTool === 'eraser') {
+      // Check if touch landed on a dot group or text annotation
+      const touchEl = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY);
+      let found = null;
+      if (touchEl && touchEl !== drawSvg && drawSvg.contains(touchEl)) {
+        let el = touchEl;
+        while (el && el !== drawSvg) {
+          if (drawHistory.includes(el)) { found = el; break; }
+          el = el.parentElement;
+        }
+      }
+      if (found && (found.tagName === 'g' || found.tagName === 'text')) {
+        const idx = drawHistory.indexOf(found);
+        if (idx !== -1) drawHistory.splice(idx, 1);
+        found.remove();
+        updateAnnoCount();
+        toast('Erased');
+        return;
+      }
+      // Start drawing erase mask stroke
+      const [svgX, svgY] = screenToSvg(e.touches[0].clientX, e.touches[0].clientY);
+      touchDrawing = true;
+      touchPath = document.createElementNS('http://www.w3.org/2000/svg','path');
+      touchPath.setAttribute('fill','none');
+      touchPath.setAttribute('stroke','black');
+      touchPath.setAttribute('stroke-linecap','round');
+      touchPath.setAttribute('stroke-linejoin','round');
+      touchPath.setAttribute('stroke-width', drawSize * 8);
+      touchPath._pts = `M${svgX.toFixed(1)},${svgY.toFixed(1)}`;
+      touchPath.setAttribute('d', touchPath._pts);
+      touchPath._isEraserMask = true;
+      eraseMask.appendChild(touchPath);
+      drawHistory.push(touchPath);
+      updateAnnoCount();
+      spawnEraserStamp(e.touches[0].clientX, e.touches[0].clientY);
+    } else if (activeTool === 'pan' || activeTool === 'move') {
+      drag=true; sx=e.touches[0].clientX-px; sy=e.touches[0].clientY-py;
+    } else if (activeTool === 'pen' || activeTool === 'hl') {
+      const [svgX, svgY] = screenToSvg(e.touches[0].clientX, e.touches[0].clientY);
+      touchDrawing = true;
+      touchPath = document.createElementNS('http://www.w3.org/2000/svg','path');
+      touchPath.setAttribute('fill','none');
+      touchPath.setAttribute('stroke-linecap','round');
+      touchPath.setAttribute('stroke-linejoin','round');
+      if (activeTool === 'hl') {
+        touchPath.setAttribute('stroke', '#ffff00');
+        touchPath.setAttribute('stroke-width', drawSize * 6);
+        touchPath.setAttribute('opacity','0.35');
+      } else {
+        touchPath.setAttribute('stroke', drawColor);
+        touchPath.setAttribute('stroke-width', drawSize);
+      }
+      touchPath._pts = `M${svgX.toFixed(1)},${svgY.toFixed(1)}`;
+      touchPath.setAttribute('d', touchPath._pts);
+      drawStrokes.appendChild(touchPath);
+      drawHistory.push(touchPath);
+      updateAnnoCount();
+    } else if (activeTool === 'dot') {
+      dotCounter++;
+      const [svgX, svgY] = screenToSvg(e.touches[0].clientX, e.touches[0].clientY);
+      const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+      const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+      c.setAttribute('cx', svgX); c.setAttribute('cy', svgY);
+      c.setAttribute('r', drawSize * 3);
+      c.setAttribute('fill', '#00d4ff');
+      c.setAttribute('stroke','#fff'); c.setAttribute('stroke-width', 2);
+      c.setAttribute('opacity','0.9');
+      g.appendChild(c);
+      const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+      t.setAttribute('x', svgX); t.setAttribute('y', svgY - drawSize * 3 - 10);
+      t.setAttribute('fill', '#00d4ff');
+      t.setAttribute('font-size', Math.max(28, drawSize * 6));
+      t.setAttribute('font-weight','800');
+      t.setAttribute('text-anchor','middle');
+      t.setAttribute('font-family','Segoe UI, system-ui, sans-serif');
+      t.setAttribute('paint-order','stroke');
+      t.setAttribute('stroke','rgba(0,0,0,0.8)');
+      t.setAttribute('stroke-width','4px');
+      t.textContent = 'P' + dotCounter;
+      g.appendChild(t);
+      drawSvg.appendChild(g);
+      drawHistory.push(g);
+      updateAnnoCount();
+      toast('P' + dotCounter + ' placed');
+    }
+  }
+}, {passive:true});
+
+mc.addEventListener('touchmove', e => {
+  if (e.touches.length === 1) {
+    if (drag) { px=e.touches[0].clientX-sx; py=e.touches[0].clientY-sy; upd(); }
+    if (touchDrawing && touchPath) {
+      const [svgX, svgY] = screenToSvg(e.touches[0].clientX, e.touches[0].clientY);
+      touchPath._pts += ` L${svgX.toFixed(1)},${svgY.toFixed(1)}`;
+      touchPath.setAttribute('d', touchPath._pts);
+      if (touchPath._isEraserMask) spawnEraserStamp(e.touches[0].clientX, e.touches[0].clientY);
+    }
+  }
+  if (e.touches.length === 2) {
+    const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX, e.touches[0].clientY-e.touches[1].clientY);
+    const r=d/ltd; ltd=d; const ns=Math.max(0.08,Math.min(12,scale*r));
+    const mx=(e.touches[0].clientX+e.touches[1].clientX)/2-mc.getBoundingClientRect().left;
+    const my=(e.touches[0].clientY+e.touches[1].clientY)/2-mc.getBoundingClientRect().top;
+    px=mx-(mx-px)*(ns/scale); py=my-(my-py)*(ns/scale); scale=ns; upd();
+  }
+}, {passive:true});
+
+mc.addEventListener('touchend', () => { drag=false; touchDrawing=false; touchPath=null; });
+
+// Click background to deselect
+mc.addEventListener('click', e => {
+  if (activeTool !== 'pan') return;
+  if (e.target===mc||e.target===mw||e.target===img) closeInfo();
+});
+
+// ===== UNDO / CLEAR =====
+document.getElementById('undo-btn').onclick = () => {
+  if (!drawHistory.length) return;
+  const last = drawHistory.pop();
+  last.remove();
+  updateAnnoCount();
+  toast('Undo');
+};
+document.getElementById('clear-btn').onclick = () => {
+  if (!drawHistory.length) return;
+  drawHistory.forEach(el => el.remove());
+  drawHistory = [];
+  dotCounter = 0;
+  // Also clear any eraser mask strokes (black paths in eraseMask)
+  eraseMask.querySelectorAll('path').forEach(p => p.remove());
+  updateAnnoCount();
+  toast('Annotations cleared');
+};
+
+// ===== ZOOM CONTROLS =====
+document.getElementById('zi').onclick = () => {
+  const cw=mc.clientWidth/2,ch=mc.clientHeight/2,ns=Math.min(12,scale*1.4);
+  px=cw-(cw-px)*(ns/scale);py=ch-(ch-py)*(ns/scale);scale=ns;upd();
+};
+document.getElementById('zo').onclick = () => {
+  const cw=mc.clientWidth/2,ch=mc.clientHeight/2,ns=Math.max(0.08,scale/1.4);
+  px=cw-(cw-px)*(ns/scale);py=ch-(ch-py)*(ns/scale);scale=ns;upd();
+};
+document.getElementById('zr').onclick = fit;
+
+// ===== KEYBOARD =====
+document.addEventListener('keydown', e => {
+  if (e.target.tagName==='INPUT') return;
+  if (e.key==='Escape') closeInfo();
+  if (e.key==='+'||e.key==='=') document.getElementById('zi').click();
+  if (e.key==='-') document.getElementById('zo').click();
+  if (e.key==='0') document.getElementById('zr').click();
+  const noMod = !e.ctrlKey && !e.metaKey;
+  if (e.key==='v'&&noMod) setTool('pan');
+  if (e.key==='p'&&noMod) setTool('pen');
+  if (e.key==='h'&&noMod) setTool('hl');
+  if (e.key==='t'&&noMod) setTool('text');
+  if (e.key==='d'&&noMod) setTool('dot');
+  if (e.key==='m'&&noMod) setTool('move');
+  if (e.key==='e'&&noMod) setTool('eraser');
+  if (e.key==='r'&&noMod) setTool('measure');
+  if (e.key==='s'&&noMod) setTool('screenshot');
+  if (e.key==='i'&&noMod) document.getElementById('info-btn').click();
+  if ((e.ctrlKey||e.metaKey) && e.key==='z') { e.preventDefault(); document.getElementById('undo-btn').click(); }
+});
+
+// ===== HELPERS =====
+function mk(tag,cls){const e=document.createElement(tag);e.className=cls;return e;}
+let tt;
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2200);}
+
+// ===== WELCOME MODAL =====
+const modalOverlay = document.getElementById('modal-overlay');
+document.getElementById('modal-continue').onclick = () => {
+  modalOverlay.classList.add('hidden');
+  setTimeout(() => { modalOverlay.style.display = 'none'; }, 300);
+};
+document.getElementById('info-btn').onclick = () => {
+  modalOverlay.classList.add('no-backdrop');
+  modalOverlay.style.display = 'flex';
+  requestAnimationFrame(() => { modalOverlay.classList.remove('hidden'); });
+};
+// Close modal on overlay click (not modal itself)
+modalOverlay.addEventListener('click', e => {
+  if (e.target === modalOverlay) {
+    modalOverlay.classList.add('hidden');
+    setTimeout(() => { modalOverlay.style.display = 'none'; }, 300);
+  }
+});
+
+// ===== INIT =====
+buildLotList();
+buildChips();
+buildPtList();
+updatePtStats();
+updateRPVisibility();
+// Apply shared view from URL hash (after image loads)
+img.addEventListener('load', applyShareHash);
+if (img.complete) setTimeout(applyShareHash, 100);
+</script>
+</body>
+</html>
