@@ -927,15 +927,11 @@ function zoomToCoord(coords) {
   const cx = cxp/100*IW, cy = cyp/100*IH;
   const r = mc.getBoundingClientRect();
   const isMobile = window.innerWidth <= 760;
-  // Mobile: zoom to ~3.5x for a close-up view. Desktop: ~1.8x for context.
-  const targetScale = isMobile ? Math.min(3.5, 12) : Math.min(1.8, 12);
-  const ns = Math.max(targetScale, scale); // only zoom in, never zoom out from current
-  // If already zoomed in more than target, just center without changing zoom
-  if (scale >= targetScale * 0.9) {
-    px = r.width/2 - cx*scale; py = r.height/2 - cy*scale; upd();
-    return;
-  }
-  scale = ns;
+  // Gentle zoom: show the lot/point with plenty of surrounding context
+  // Desktop: ~0.65x (see a large section of the plat). Mobile: ~1.1x (slightly closer).
+  const targetScale = isMobile ? 1.1 : 0.65;
+  // Always set to target scale and center — gives a consistent, comfortable view
+  scale = targetScale;
   px = r.width/2 - cx*scale;
   py = r.height/2 - cy*scale;
   upd();
