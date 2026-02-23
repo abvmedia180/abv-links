@@ -235,24 +235,45 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
   .panel{width:200px;min-width:200px}
 }
 @media(max-width:760px){
-  #app{flex-direction:column}
-  .panel{width:100%;min-width:100%;border-right:none!important;border-left:none!important;border-bottom:1px solid #30363d}
+  #app{flex-direction:column;position:relative}
+  .panel{
+    width:100%;min-width:100%;border-right:none!important;border-left:none!important;
+    border-bottom:1px solid #30363d;
+    position:absolute;left:0;right:0;z-index:15;
+    max-height:30vh;overflow-y:auto;
+    transition:max-height .2s ease;
+  }
+  .panel.collapsed{max-height:auto;position:relative;overflow:visible}
   .panel.collapsed .item-list,
   .panel.collapsed .search-wrap,
   .panel.collapsed .filter-area,
   .panel.collapsed .panel-stats{display:none}
   .panel.collapsed{min-height:auto}
+  #left-panel{top:0}
+  #right-panel{bottom:0;top:auto;border-bottom:none;border-top:1px solid #30363d}
   .panel-hdr h2::after{content:'▸'}
   .panel:not(.collapsed) .panel-hdr h2::after{content:'▾'}
   #title-bar .subtitle{display:none}
-  #toolbar{top:6px;padding:2px;gap:1px;border-radius:6px}
-  .tb{width:28px;height:28px;font-size:13px}
-  #stroke-size{width:36px;height:24px;font-size:9px}
-  .tb-label{font-size:7px;padding:0 2px}
-  .tb-sep{margin:3px 0}
+  #title-bar{padding:6px 10px}
+  #title-bar h1{font-size:11px}
+  #title-bar .org{font-size:9px;margin-top:2px}
+
+  /* Compact toolbar along left side */
+  #toolbar{
+    top:50%;right:auto;left:6px;transform:translateY(-50%);
+    flex-direction:column;max-width:36px!important;
+    padding:3px 2px;gap:1px;border-radius:6px;
+    align-items:center;
+  }
+  .tb{width:28px;min-height:28px;font-size:12px;padding:2px 0}
+  .tb-tip{display:none}
+  .tb-sep{width:80%;height:1px;margin:1px 0}
+  .tb-label{display:none}
+  #stroke-size{display:none}
   #ctrls{top:auto;bottom:50px;right:6px}
   .cb{width:28px;height:28px;font-size:13px}
-  #toolbar{max-width:calc(100% - 20px)}
+  #legend-panel{right:4px;width:220px;top:48px}
+  #measure-info{top:auto;bottom:10px;left:50%;font-size:10px}
 }
 @media(max-width:420px){
   .tb-label{display:none}
@@ -266,23 +287,26 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
   display:flex;align-items:center;justify-content:center;
   padding:20px;
   opacity:1;transition:opacity .3s;
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
 }
 #modal-overlay.hidden{opacity:0;pointer-events:none}
 #modal-overlay.no-backdrop{background:rgba(0,0,0,0.25);backdrop-filter:none}
 #modal{
   background:#161b22;border:1px solid #30363d;border-radius:12px;
-  max-width:580px;width:100%;max-height:90vh;overflow-y:auto;
+  max-width:580px;width:100%;
   box-shadow:0 20px 60px rgba(0,0,0,0.5);
+  display:flex;flex-direction:column;
+  max-height:90vh;
 }
 #modal::-webkit-scrollbar{width:4px}
 #modal::-webkit-scrollbar-thumb{background:#30363d;border-radius:3px}
 .modal-top{
-  padding:24px 28px 16px;border-bottom:1px solid #30363d;text-align:center;
+  padding:24px 28px 16px;border-bottom:1px solid #30363d;text-align:center;flex-shrink:0;
 }
 .modal-top .logo{font-size:20px;font-weight:800;color:#58a6ff;margin-bottom:2px;letter-spacing:0.3px}
 .modal-top .org-tag{font-size:11px;color:#7ee787;font-weight:600;display:inline-flex;align-items:center;gap:5px}
 .modal-top .org-tag::before{content:'';width:6px;height:6px;background:#7ee787;border-radius:50%;display:inline-block}
-.modal-body{padding:20px 28px}
+.modal-body{padding:20px 28px;overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch}
 .modal-body h3{font-size:13px;font-weight:700;color:#58a6ff;margin:14px 0 6px;display:flex;align-items:center;gap:6px}
 .modal-body h3:first-child{margin-top:0}
 .modal-body p{font-size:12px;color:#c9d1d9;line-height:1.6;margin-bottom:8px}
@@ -293,6 +317,8 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
 }
 .modal-footer{
   padding:16px 28px 24px;display:flex;flex-wrap:wrap;justify-content:center;
+  flex-shrink:0;border-top:1px solid #30363d;background:#161b22;
+  border-radius:0 0 12px 12px;
 }
 #modal-continue{
   padding:10px 40px;border-radius:8px;border:none;
@@ -349,11 +375,17 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
 }
 
 @media(max-width:760px){
-  .modal-top{padding:18px 18px 12px}
-  .modal-body{padding:14px 18px}
-  .modal-footer{padding:12px 18px 18px}
-  .modal-top .logo{font-size:18px}
-  #legend-panel{right:4px;width:220px;top:48px}
+  #modal-overlay{padding:10px;align-items:flex-start}
+  #modal{max-height:calc(100vh - 20px);max-height:calc(100dvh - 20px);margin:auto 0}
+  .modal-top{padding:14px 16px 10px}
+  .modal-top .logo{font-size:16px}
+  .modal-body{padding:12px 16px;font-size:11px}
+  .modal-body h3{font-size:12px;margin:10px 0 4px}
+  .modal-body p{font-size:11px;line-height:1.5;margin-bottom:6px}
+  .modal-body .note{font-size:10px;padding:6px 10px}
+  .modal-footer{padding:10px 16px 14px}
+  .modal-footer p{font-size:9px!important}
+  #modal-continue{padding:8px 30px;font-size:13px}
 }
 </style>
 </head>
@@ -401,7 +433,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
   <div class="panel-hdr" id="lot-hdr"><h2 style="color:#58a6ff">Lots</h2><div class="sub">Click a lot to highlight on map</div></div>
   <div class="search-wrap"><input type="text" id="lot-search" placeholder="Search lot # or owner..." autocomplete="off"></div>
   <div class="item-list" id="lot-list"></div>
-  <div class="panel-stats"><span>59 Lots</span><span>~591 ac</span></div>
+  <div class="panel-stats"><span>59 Lots</span></div>
 </div>
 
 <!-- MAP -->
@@ -436,8 +468,6 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
     <button class="tb" data-tool="measure" title="Measure distance (R)">📏<span class="tb-tip">Ruler</span></button>
     <button class="tb" data-tool="screenshot" title="Screenshot area (S)"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 7V3h4"/><path d="M17 3h4v4"/><path d="M21 17v4h-4"/><path d="M7 21H3v-4"/></svg><span class="tb-tip">Snap</span></button>
     <div class="tb-sep"></div>
-    <button class="tb" id="print-btn" title="Print-friendly view">🖨️<span class="tb-tip">Print</span></button>
-    <button class="tb" id="share-btn" title="Share current view">🔗<span class="tb-tip">Share</span></button>
     <button class="tb" id="legend-btn" title="Legend & Notes">🗺️<span class="tb-tip">Legend</span></button>
     <div class="tb-sep"></div>
     <button class="tb" id="info-btn" title="Help & Info (I)"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><span class="tb-tip">Help</span></button>
@@ -466,11 +496,8 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
       <div class="legend-item"><span class="legend-swatch" style="background:#f97316"></span>B — Creekside Court</div>
       <div class="legend-item"><span class="legend-swatch" style="background:#eab308"></span>C — Twin Lakes Trail</div>
       <div class="legend-item"><span class="legend-swatch" style="background:#22c55e"></span>D — Westlake Court</div>
-      <div class="legend-section">Map Markers</div>
-      <div class="legend-item"><span class="legend-swatch" style="background:#ffd700;border:2px solid #ffd700"></span>Lot highlight (gold pulse)</div>
-      <div class="legend-item"><span class="legend-swatch" style="background:#00d4ff"></span>User-placed dot markers (P1, P2…)</div>
       <div class="legend-section">Notes</div>
-      <textarea id="legend-notes" placeholder="Type board notes here… (saved in browser)"></textarea>
+      <textarea id="legend-notes" placeholder=""></textarea>
     </div>
   </div>
 </div>
@@ -478,7 +505,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
 <!-- RIGHT PANEL: ROAD POINTS -->
 <div class="panel panel-r" id="right-panel">
   <div class="panel-hdr" id="pt-hdr"><h2 style="color:#f97316">Road Points</h2><div class="sub">Click a point to highlight on map</div></div>
-  <div class="search-wrap"><input type="text" id="pt-search" placeholder="Search point..." autocomplete="off"></div>
+  <div class="search-wrap"><input type="text" id="pt-search" placeholder="Search road or point (e.g. Lakeside, A, C3)..." autocomplete="off"></div>
   <div class="filter-area" id="filter-area">
     <h3>Filter by Road</h3>
     <div class="chips" id="chips"></div>
@@ -670,11 +697,19 @@ function setupCollapse() {
 }
 document.getElementById('lot-hdr').onclick = () => {
   if (window.innerWidth > 760) return;
-  document.getElementById('left-panel').classList.toggle('collapsed');
+  const lp = document.getElementById('left-panel');
+  const rp = document.getElementById('right-panel');
+  lp.classList.toggle('collapsed');
+  // Collapse the other panel when opening this one
+  if (!lp.classList.contains('collapsed')) rp.classList.add('collapsed');
 };
 document.getElementById('pt-hdr').onclick = () => {
   if (window.innerWidth > 760) return;
-  document.getElementById('right-panel').classList.toggle('collapsed');
+  const lp = document.getElementById('left-panel');
+  const rp = document.getElementById('right-panel');
+  rp.classList.toggle('collapsed');
+  // Collapse the other panel when opening this one
+  if (!rp.classList.contains('collapsed')) lp.classList.add('collapsed');
 };
 setupCollapse();
 window.addEventListener('resize', () => {
@@ -696,7 +731,7 @@ function buildLotList(q) {
     const owner = OWNERS[n] || '';
     let html = `<span class="num">Lot ${n}</span>`;
     if (owner) html += `<span class="owner">${owner}</span>`;
-    html += `<span class="ac">${D[n].a} ac</span>`;
+    /* acreage removed */
     if (P[n] && P[n].length > 1) html += `<span class="sheet-badge">1&2</span>`;
     div.innerHTML = html;
     div.onclick = () => selLot(n);
@@ -708,18 +743,44 @@ function buildLotList(q) {
 const ptList = document.getElementById('pt-list');
 function buildPtList(q) {
   ptList.innerHTML = '';
-  const s = (q||'').toLowerCase();
+  const s = (q||'').trim().toLowerCase();
+  // Determine which groups match the search (by letter or road name)
+  let matchedGroups = null;
+  if (s) {
+    matchedGroups = [];
+    for (const g in ROAD_POINTS) {
+      const grp = ROAD_POINTS[g];
+      const roadName = (grp.name || '').toLowerCase();
+      const letter = g.toLowerCase();
+      if (letter === s || roadName.includes(s) || (letter + ' — ' + roadName).includes(s)) {
+        matchedGroups.push(g);
+      }
+    }
+  }
   const groups = curFilter ? [curFilter] : Object.keys(ROAD_POINTS).sort();
-  groups.forEach(g => {
+  // If search matched specific roads, narrow to those (intersect with curFilter if set)
+  const showGroups = matchedGroups && matchedGroups.length > 0
+    ? groups.filter(g => matchedGroups.includes(g))
+    : groups;
+  let totalShown = 0;
+  showGroups.forEach(g => {
     const grp = ROAD_POINTS[g];
     const color = grp.color;
-    const hdr = mk('div','grp-hdr');
-    const rname = grp.name ? ` — ${grp.name}` : '';
-    hdr.innerHTML = `<span class="grp-dot" style="background:${color}"></span><span style="color:${color}">${g}${rname}</span><span style="color:#8b949e;font-weight:400">${grp.points.length} pts</span>`;
-    ptList.appendChild(hdr);
+    // If search matched a road, show all its points; otherwise filter individual points
+    const roadMatched = matchedGroups && matchedGroups.includes(g);
+    const visiblePts = [];
     grp.points.forEach((pt, idx) => {
       const label = g + pt.num;
-      if (s && !label.toLowerCase().includes(s) && !(pt.desc||'').toLowerCase().includes(s)) return;
+      if (s && !roadMatched && !label.toLowerCase().includes(s) && !(pt.desc||'').toLowerCase().includes(s)) return;
+      visiblePts.push({ pt, idx });
+    });
+    if (visiblePts.length === 0) return;
+    const hdr = mk('div','grp-hdr');
+    const rname = grp.name ? ` — ${grp.name}` : '';
+    hdr.innerHTML = `<span class="grp-dot" style="background:${color}"></span><span style="color:${color}">${g}${rname}</span><span style="color:#8b949e;font-weight:400">${visiblePts.length} pts</span>`;
+    ptList.appendChild(hdr);
+    visiblePts.forEach(({ pt, idx }) => {
+      const label = g + pt.num;
       const div = mk('div','pi');
       div.style.borderLeftColor = color;
       div.dataset.group = g; div.dataset.idx = idx;
@@ -729,8 +790,21 @@ function buildPtList(q) {
       div.innerHTML = html;
       div.onclick = () => selPoint(g, idx);
       ptList.appendChild(div);
+      totalShown++;
     });
   });
+  // Also update map visibility to dim non-matching road points when searching
+  if (s && matchedGroups && matchedGroups.length > 0) {
+    for (const g in rpEls) {
+      rpEls[g].forEach(els => {
+        const dim = !matchedGroups.includes(g);
+        els.dots.forEach(c => { c.classList.toggle('dim', dim); c.classList.remove('hi'); });
+        els.labels.forEach(t => { t.classList.toggle('dim', dim); t.classList.remove('hi'); });
+      });
+    }
+  } else if (!s) {
+    updateRPVisibility();
+  }
 }
 
 // ===== FILTER CHIPS =====
@@ -784,7 +858,7 @@ function selLot(n) {
   const li = lotList.querySelector(`[data-lot="${n}"]`);
   if (li) { li.classList.add('act'); li.scrollIntoView({behavior:'smooth',block:'nearest'}); }
   document.getElementById('info-t').textContent = 'Lot ' + n;
-  let h = `<div class="ic"><div class="ic-l">Acreage</div><div class="ic-v grn">${D[n].a} acres</div></div>`;
+  let h = '';
   if (OWNERS[n]) h += `<div class="ic"><div class="ic-l">Owner</div><div class="ic-v blu">${OWNERS[n]}</div></div>`;
   if (P[n] && P[n].length > 1) h += `<div class="ic"><div class="ic-l">Sheets</div><div class="ic-v ylw">Shown on both Sheet 1 &amp; 2</div></div>`;
   document.getElementById('info-b').innerHTML = h;
@@ -1233,98 +1307,116 @@ function captureArea(sx, sy, sw, sh) {
   });
 }
 
-// ===== MEASURE TOOL =====
-let measureState = null; // null | { x1, y1 } — first click stored in SVG coords
-let measureLine = null, measureLabel = null;
+// ===== MEASURE TOOL (multi-point) =====
+let measurePoints = []; // array of {x, y} in SVG coords
+let measureGroup = null; // SVG <g> holding all lines/dots/labels
+let measureLabels = []; // SVG text labels for each segment
 
 function clearMeasure() {
-  if (measureLine) { measureLine.remove(); measureLine = null; }
-  if (measureLabel) { measureLabel.remove(); measureLabel = null; }
+  if (measureGroup) { measureGroup.remove(); measureGroup = null; }
+  measureLabels.forEach(l => l.remove());
+  measureLabels = [];
   document.getElementById('measure-info').classList.remove('show');
-  measureState = null;
+  measurePoints = [];
+}
+
+function createMeasureDot(svgX, svgY) {
+  const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+  c.setAttribute('cx', svgX); c.setAttribute('cy', svgY); c.setAttribute('r', 8);
+  c.setAttribute('fill','#00d4ff'); c.setAttribute('stroke','#fff'); c.setAttribute('stroke-width', 2);
+  return c;
+}
+
+function updateMeasureInfo() {
+  if (measurePoints.length < 2) {
+    document.getElementById('measure-info').classList.remove('show');
+    return;
+  }
+  let totalDist = 0;
+  const segments = [];
+  for (let i = 1; i < measurePoints.length; i++) {
+    const dx = measurePoints[i].x - measurePoints[i-1].x;
+    const dy = measurePoints[i].y - measurePoints[i-1].y;
+    const d = Math.sqrt(dx*dx + dy*dy);
+    totalDist += d;
+    segments.push(Math.round(d));
+  }
+  const pctDist = (totalDist / Math.sqrt(IW*IW+IH*IH) * 100).toFixed(2);
+  let html = `📏 <strong>Total: ${Math.round(totalDist)} px</strong> &nbsp;|&nbsp; ${measurePoints.length} points, ${segments.length} segment${segments.length!==1?'s':''} &nbsp;|&nbsp; ~${pctDist}% of map diagonal`;
+  if (segments.length > 1) html += `<br><span style="font-size:10px;color:#8b949e">Segments: ${segments.map((s,i) => (i+1)+':'+s+'px').join(' · ')}</span>`;
+  document.getElementById('measure-info').innerHTML = html;
+  document.getElementById('measure-info').classList.add('show');
+}
+
+function addMeasurePoint(svgX, svgY) {
+  if (!measureGroup) {
+    measureGroup = document.createElementNS('http://www.w3.org/2000/svg','g');
+    measureGroup.id = 'measure-line';
+    drawSvg.appendChild(measureGroup);
+  }
+  const prevPt = measurePoints.length > 0 ? measurePoints[measurePoints.length - 1] : null;
+  measurePoints.push({ x: svgX, y: svgY });
+
+  // Draw dot
+  measureGroup.appendChild(createMeasureDot(svgX, svgY));
+
+  // Draw line segment from previous point
+  if (prevPt) {
+    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1', prevPt.x); line.setAttribute('y1', prevPt.y);
+    line.setAttribute('x2', svgX); line.setAttribute('y2', svgY);
+    line.setAttribute('stroke','#00d4ff'); line.setAttribute('stroke-width', 4);
+    line.setAttribute('stroke-dasharray','12,6');
+    // Insert lines before dots so dots render on top
+    measureGroup.insertBefore(line, measureGroup.firstChild);
+
+    // Segment distance label at midpoint
+    const dx = svgX - prevPt.x, dy = svgY - prevPt.y;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    const mx = (prevPt.x + svgX) / 2, my = (prevPt.y + svgY) / 2;
+    const label = document.createElementNS('http://www.w3.org/2000/svg','text');
+    label.setAttribute('x', mx); label.setAttribute('y', my - 14);
+    label.setAttribute('font-size', '14');
+    label.setAttribute('font-weight', '800');
+    label.setAttribute('fill', '#00d4ff');
+    label.setAttribute('text-anchor', 'middle');
+    label.setAttribute('dominant-baseline', 'central');
+    label.style.paintOrder = 'stroke';
+    label.setAttribute('stroke', '#000');
+    label.setAttribute('stroke-width', '3px');
+    label.setAttribute('pointer-events', 'none');
+    label.textContent = Math.round(dist) + ' px';
+    drawSvg.appendChild(label);
+    measureLabels.push(label);
+  }
+
+  updateMeasureInfo();
+
+  if (measurePoints.length === 1) {
+    toast('Click to add points · Double-click to finish');
+  }
 }
 
 mc.addEventListener('mousedown', e => {
   if (activeTool !== 'measure') return;
-  if (e.target.closest('#info,#ctrls,#toolbar,#legend-panel')) return;
+  if (e.target.closest('#info,#ctrls,#toolbar,#legend-panel,#measure-info')) return;
   e.preventDefault();
+  e.stopPropagation();
   const [svgX, svgY] = screenToSvg(e.clientX, e.clientY);
-  if (!measureState) {
-    // First click
-    clearMeasure();
-    measureState = { x1: svgX, y1: svgY };
-    // Draw start dot
-    measureLine = document.createElementNS('http://www.w3.org/2000/svg','g');
-    measureLine.id = 'measure-line';
-    const c1 = document.createElementNS('http://www.w3.org/2000/svg','circle');
-    c1.setAttribute('cx', svgX); c1.setAttribute('cy', svgY); c1.setAttribute('r', 8);
-    c1.setAttribute('fill','#00d4ff'); c1.setAttribute('stroke','#fff'); c1.setAttribute('stroke-width', 2);
-    measureLine.appendChild(c1);
-    drawSvg.appendChild(measureLine);
-    toast('Click second point to measure');
-  } else {
-    // Second click — draw line + distance
-    const {x1, y1} = measureState;
-    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
-    line.setAttribute('x1', x1); line.setAttribute('y1', y1);
-    line.setAttribute('x2', svgX); line.setAttribute('y2', svgY);
-    line.setAttribute('stroke','#00d4ff'); line.setAttribute('stroke-width', 4);
-    line.setAttribute('stroke-dasharray','12,6');
-    measureLine.insertBefore(line, measureLine.firstChild);
-    const c2 = document.createElementNS('http://www.w3.org/2000/svg','circle');
-    c2.setAttribute('cx', svgX); c2.setAttribute('cy', svgY); c2.setAttribute('r', 8);
-    c2.setAttribute('fill','#00d4ff'); c2.setAttribute('stroke','#fff'); c2.setAttribute('stroke-width', 2);
-    measureLine.appendChild(c2);
-    // Distance in pixels and approximate
-    const dxPx = Math.abs(svgX - x1), dyPx = Math.abs(svgY - y1);
-    const distPx = Math.sqrt(dxPx*dxPx + dyPx*dyPx);
-    // Label at midpoint
-    const mx = (x1 + svgX) / 2, my = (y1 + svgY) / 2;
-    measureLabel = document.createElementNS('http://www.w3.org/2000/svg','text');
-    measureLabel.id = 'measure-label';
-    measureLabel.setAttribute('x', mx); measureLabel.setAttribute('y', my - 14);
-    measureLabel.textContent = Math.round(distPx) + ' px';
-    drawSvg.appendChild(measureLabel);
-    // Show info bar
-    const pctX = (dxPx / IW * 100).toFixed(1);
-    const pctY = (dyPx / IH * 100).toFixed(1);
-    const pctDist = (distPx / Math.sqrt(IW*IW+IH*IH) * 100).toFixed(2);
-    document.getElementById('measure-info').innerHTML =
-      `📏 <strong>${Math.round(distPx)} px</strong> &nbsp;|&nbsp; ΔX: ${Math.round(dxPx)} &nbsp; ΔY: ${Math.round(dyPx)} &nbsp;|&nbsp; ~${pctDist}% of map diagonal`;
-    document.getElementById('measure-info').classList.add('show');
-    measureState = null;
-    toast('Distance measured — click Ruler again to re-measure');
-  }
+  addMeasurePoint(svgX, svgY);
 }, true); // capture phase so it fires before pan handler
 
-// ===== PRINT BUTTON =====
-document.getElementById('print-btn').onclick = () => {
-  toast('Preparing print view...');
-  setTimeout(() => window.print(), 200);
-};
-
-// ===== SHARE BUTTON =====
-document.getElementById('share-btn').onclick = () => {
-  // Encode current view into URL hash
-  const z = scale.toFixed(4);
-  const cx = ((mc.clientWidth/2 - px) / scale / IW * 100).toFixed(2);
-  const cy = ((mc.clientHeight/2 - py) / scale / IH * 100).toFixed(2);
-  const hash = `#v=${z},${cx},${cy}`;
-  const url = window.location.origin + window.location.pathname + hash;
-  // Copy to clipboard
-  navigator.clipboard.writeText(url).then(() => {
-    toast('Link copied to clipboard!');
-  }).catch(() => {
-    // Fallback
-    const inp = document.createElement('input');
-    inp.value = url;
-    document.body.appendChild(inp);
-    inp.select();
-    document.execCommand('copy');
-    document.body.removeChild(inp);
-    toast('Link copied!');
-  });
-};
+mc.addEventListener('dblclick', e => {
+  if (activeTool !== 'measure') return;
+  if (e.target.closest('#info,#ctrls,#toolbar,#legend-panel,#measure-info')) return;
+  e.preventDefault();
+  // Double-click finishes the measurement (the two single clicks already added points)
+  if (measurePoints.length >= 2) {
+    toast('Measurement complete · Click Ruler or press R to start new');
+  }
+  // Stop adding points — user can click Ruler again or press R to clear and restart
+  setTool('pan');
+}, true);
 
 // Read share hash on load
 function applyShareHash() {
@@ -1368,7 +1460,7 @@ mc.addEventListener('wheel', e => {
 // ===== TOUCH (pan + pinch + draw) =====
 let ltd=0, touchDrawing=false, touchPath=null;
 mc.addEventListener('touchstart', e => {
-  if (e.target.closest('#info,#ctrls,#toolbar')) return;
+  if (e.target.closest('#info,#ctrls,#toolbar,#legend-panel,#modal-overlay')) return;
 
   if (e.touches.length === 2) {
     // Pinch zoom — always works regardless of tool
@@ -1525,7 +1617,7 @@ document.getElementById('zr').onclick = fit;
 
 // ===== KEYBOARD =====
 document.addEventListener('keydown', e => {
-  if (e.target.tagName==='INPUT') return;
+  if (e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA') return;
   if (e.key==='Escape') closeInfo();
   if (e.key==='+'||e.key==='=') document.getElementById('zi').click();
   if (e.key==='-') document.getElementById('zo').click();
