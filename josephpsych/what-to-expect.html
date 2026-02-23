@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What to Expect — Your First Visit | Joseph Psychiatry</title>
+<meta name="description" content="Wondering what it's like to see a psychiatrist? Here's exactly what happens from your first call to ongoing care at Joseph Psychiatry. No surprises.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+<style>
+.journey-step{display:grid;grid-template-columns:100px 1fr;gap:40px;padding:56px 0;border-bottom:1px solid rgba(15,56,35,.08);position:relative}
+.journey-step:last-child{border-bottom:none}
+.journey-number-col{display:flex;flex-direction:column;align-items:center}
+.journey-number{width:80px;height:80px;border-radius:50%;background:var(--green-deep);display:flex;align-items:center;justify-content:center;color:white;font-family:'Instrument Serif',serif;font-size:28px;flex-shrink:0;position:relative;z-index:2}
+.journey-line{width:2px;flex:1;background:linear-gradient(to bottom,var(--green-deep),rgba(15,56,35,.1));margin-top:8px}
+.journey-step:last-child .journey-line{display:none}
+.journey-content h2{font-family:'Instrument Serif',serif;font-size:28px;color:var(--green-deep);font-weight:400;margin-bottom:4px}
+.journey-meta{font-size:14px;color:var(--terracotta);font-weight:500;margin-bottom:16px;display:flex;gap:16px;flex-wrap:wrap}
+.journey-meta span{display:inline-flex;align-items:center;gap:4px}
+.journey-content p{font-size:16px;line-height:1.8;color:var(--text-secondary);margin-bottom:12px;max-width:640px}
+.journey-details{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px}
+.journey-detail{display:flex;align-items:flex-start;gap:10px;font-size:14px;line-height:1.6;color:var(--text-secondary)}
+.journey-detail .marker{color:var(--green-soft);font-weight:700;flex-shrink:0;margin-top:2px}
+.prepare-section{background:var(--white)}
+.prepare-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:48px}
+.prepare-card{background:var(--cream);border-radius:var(--radius-lg);padding:32px}
+.prepare-card h3{font-size:18px;font-weight:600;color:var(--green-deep);margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.prepare-card .items{display:flex;flex-direction:column;gap:10px}
+.prepare-item{display:flex;align-items:flex-start;gap:10px;font-size:14px;line-height:1.6;color:var(--text-secondary)}
+.prepare-item .check{color:var(--green-soft);flex-shrink:0;font-weight:700}
+.insurance-section{background:var(--cream)}
+.insurance-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-top:32px}
+.insurance-card{background:var(--white);border-radius:var(--radius-md);padding:20px;text-align:center;box-shadow:var(--shadow-sm)}
+.insurance-card h4{font-size:15px;font-weight:600;color:var(--green-deep);margin-bottom:4px}
+.insurance-card p{font-size:13px;color:var(--text-muted)}
+.tech-box{background:var(--green-deep);border-radius:var(--radius-lg);padding:48px;color:white;margin-top:48px;position:relative;overflow:hidden}
+.tech-box::before{content:'';position:absolute;top:0;right:0;width:300px;height:300px;background:radial-gradient(circle,rgba(196,119,109,.15) 0%,transparent 60%);pointer-events:none}
+.tech-box h3{font-family:'Instrument Serif',serif;font-size:28px;font-weight:400;margin-bottom:16px;position:relative;z-index:2}
+.tech-box p{font-size:15px;line-height:1.7;color:rgba(255,255,255,.65);margin-bottom:24px;position:relative;z-index:2;max-width:500px}
+.tech-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;position:relative;z-index:2}
+.tech-step{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius-md);padding:20px;text-align:center}
+.tech-step .num{font-family:'Instrument Serif',serif;font-size:24px;color:var(--terracotta-light);margin-bottom:8px;display:block}
+.tech-step h4{font-size:14px;font-weight:600;margin-bottom:6px}
+.tech-step p{font-size:13px;color:rgba(255,255,255,.5);line-height:1.5}
+@media(max-width:768px){.journey-step{grid-template-columns:60px 1fr;gap:20px}.journey-number{width:60px;height:60px;font-size:22px}.journey-details{grid-template-columns:1fr}.prepare-grid{grid-template-columns:1fr}.tech-steps{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="scroll-progress" id="scrollProgress"></div>
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><div class="nav-logo-icon">JP</div><span class="nav-logo-text">Joseph Psychiatry</span></a>
+    <div class="nav-links">
+      <a href="what-we-treat.html">What We Treat</a>
+      <a href="what-to-expect.html" class="active">What to Expect</a>
+      <a href="about.html">About Us</a>
+      <a href="contact.html">Contact</a>
+      <a href="sms:+15162001835" class="nav-text-btn">💬 Text Us</a>
+      <a href="schedule.html" class="nav-cta">Book Free Consult →</a>
+    </div>
+    <button class="nav-hamburger" onclick="toggleMobile()"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-menu-close" onclick="toggleMobile()">✕</button>
+  <a href="index.html">Home</a><a href="what-we-treat.html">What We Treat</a><a href="what-to-expect.html">What to Expect</a><a href="about.html">About Us</a><a href="contact.html">Contact</a><a href="sms:+15162001835">Text Us</a><a href="schedule.html">Book Free Consult</a>
+</div>
+
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb"><a href="index.html">Home</a> / What to Expect</div>
+    <h1>No surprises. No confusion.<br>Just a clear path to <em>feeling better.</em></h1>
+    <p>We know seeing a psychiatrist for the first time (or switching to a new one) can feel daunting. Here's exactly what happens, step by step.</p>
+  </div>
+</section>
+
+<!-- JOURNEY STEPS -->
+<section style="background:var(--cream)">
+  <div class="container">
+    <div class="animate-on-scroll" style="text-align:center;margin-bottom:56px">
+      <div class="section-label">Your Journey</div>
+      <div class="section-heading">From first call to <span class="serif italic">feeling like yourself.</span></div>
+    </div>
+
+    <div class="journey-step animate-on-scroll">
+      <div class="journey-number-col"><div class="journey-number">1</div><div class="journey-line"></div></div>
+      <div class="journey-content">
+        <h2>The Free Consult Call</h2>
+        <div class="journey-meta"><span>📞 10 minutes</span><span>💰 Free</span><span>📱 Phone call</span></div>
+        <p>This is just a quick, friendly conversation. We'll ask what's bringing you in, answer any questions you have, and make sure we're actually the right fit for you. No sales pitch, no pressure.</p>
+        <p>You can book online or simply text us at (516) 200-1835 and we'll set it up.</p>
+        <div class="info-box" style="margin-top:20px">
+          <h4>What we'll ask:</h4>
+          <div class="info-box-item"><span class="marker">→</span>What symptoms you're experiencing and what brought you to us</div>
+          <div class="info-box-item"><span class="marker">→</span>Your insurance information (we'll verify benefits for you)</div>
+          <div class="info-box-item"><span class="marker">→</span>Any previous psychiatric treatment or medications</div>
+          <div class="info-box-item"><span class="marker">→</span>What you're hoping to get out of treatment</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="journey-step animate-on-scroll">
+      <div class="journey-number-col"><div class="journey-number">2</div><div class="journey-line"></div></div>
+      <div class="journey-content">
+        <h2>Insurance Verification & Onboarding</h2>
+        <div class="journey-meta"><span>📋 Behind the scenes</span><span>⏱️ Before your first visit</span></div>
+        <p>After your consult, our team handles the insurance verification — you'll know your copay and coverage before your first appointment. We'll also send you intake forms to complete at your convenience through our secure patient portal.</p>
+        <p>The forms cover your medical history, symptoms, and current medications. Filling them out ahead of time means we can spend your actual appointment talking to you — not doing paperwork.</p>
+      </div>
+    </div>
+
+    <div class="journey-step animate-on-scroll">
+      <div class="journey-number-col"><div class="journey-number">3</div><div class="journey-line"></div></div>
+      <div class="journey-content">
+        <h2>Your First Visit — The Deep Dive</h2>
+        <div class="journey-meta"><span>🎥 Video call</span><span>⏱️ 60 minutes</span><span>🌙 Evening hours</span></div>
+        <p>This is the appointment most people dread but end up being grateful for. Your dedicated provider (an experienced NP or PA on our team) will take a full hour to understand your story — not just check boxes.</p>
+        <p>We'll go over your symptoms, your history, what's working, what isn't, and what your goals are. If medication is appropriate, we'll discuss options, side effects, and what to expect. Nothing happens without your input.</p>
+        <div class="journey-details">
+          <div class="journey-detail"><span class="marker">✦</span>Comprehensive symptom review and clinical history</div>
+          <div class="journey-detail"><span class="marker">✦</span>ADHD screening and evaluation (if relevant)</div>
+          <div class="journey-detail"><span class="marker">✦</span>Discussion of treatment options and goals</div>
+          <div class="journey-detail"><span class="marker">✦</span>Medication discussion (if appropriate)</div>
+          <div class="journey-detail"><span class="marker">✦</span>All treatment plans reviewed by Dr. Joseph</div>
+          <div class="journey-detail"><span class="marker">✦</span>Time for all your questions — no rushing</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="journey-step animate-on-scroll">
+      <div class="journey-number-col"><div class="journey-number">4</div><div class="journey-line"></div></div>
+      <div class="journey-content">
+        <h2>Follow-Up Visits</h2>
+        <div class="journey-meta"><span>🎥 Video call</span><span>⏱️ 20–30 minutes</span><span>📅 Every 2–4 weeks initially</span></div>
+        <p>In the beginning, we check in more frequently to see how you're responding to treatment and make any adjustments. Once things are stable, visits space out to monthly or as needed. You always see the same provider.</p>
+        <p>Between visits, you can message us through Spruce for quick questions, refill requests, or anything that comes up. You're never left hanging.</p>
+      </div>
+    </div>
+
+    <div class="journey-step animate-on-scroll">
+      <div class="journey-number-col"><div class="journey-number">5</div><div class="journey-line"></div></div>
+      <div class="journey-content">
+        <h2>Ongoing Care & Support</h2>
+        <div class="journey-meta"><span>🤝 Long-term</span><span>📱 Messaging access</span><span>🔄 Adjustments as needed</span></div>
+        <p>Mental health isn't a "one and done" thing. Life changes, stressors evolve, and your treatment should evolve with you. Your provider stays with you long-term, monitoring your progress and adjusting your plan as needed — all under Dr. Joseph's clinical oversight.</p>
+        <p>Think of us as your mental health home base. We're here when you need us.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PREPARE -->
+<section class="prepare-section" style="padding:100px 0">
+  <div class="container">
+    <div class="animate-on-scroll" style="text-align:center;margin-bottom:8px">
+      <div class="section-label">Before Your First Visit</div>
+      <div class="section-heading">What to prepare <span class="serif italic">(and what not to worry about).</span></div>
+    </div>
+    <div class="prepare-grid">
+      <div class="prepare-card animate-on-scroll delay-1">
+        <h3>✅ Helpful to Have Ready</h3>
+        <div class="items">
+          <div class="prepare-item"><span class="check">→</span>Your insurance card and ID</div>
+          <div class="prepare-item"><span class="check">→</span>A list of current medications (names + doses)</div>
+          <div class="prepare-item"><span class="check">→</span>Names of previous providers (psychiatrist, therapist, etc.)</div>
+          <div class="prepare-item"><span class="check">→</span>Notes on your main symptoms and concerns</div>
+          <div class="prepare-item"><span class="check">→</span>A quiet, private space for your video call</div>
+          <div class="prepare-item"><span class="check">→</span>A device with camera + internet (phone, tablet, or computer)</div>
+        </div>
+      </div>
+      <div class="prepare-card animate-on-scroll delay-2">
+        <h3>💡 Don't Worry About</h3>
+        <div class="items">
+          <div class="prepare-item"><span class="check">—</span>Having a "perfect" explanation of what's wrong</div>
+          <div class="prepare-item"><span class="check">—</span>"Not being sick enough" to need help</div>
+          <div class="prepare-item"><span class="check">—</span>Whether you'll be judged for your symptoms</div>
+          <div class="prepare-item"><span class="check">—</span>Knowing what diagnosis you have (that's our job)</div>
+          <div class="prepare-item"><span class="check">—</span>Being emotional — it's completely normal and expected</div>
+          <div class="prepare-item"><span class="check">—</span>Having tried other providers before — many of our patients have</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW TELEHEALTH WORKS -->
+<section style="background:var(--cream)">
+  <div class="container">
+    <div class="animate-on-scroll" style="text-align:center">
+      <div class="section-label">Telehealth</div>
+      <div class="section-heading">Virtual visits are simpler than <span class="serif italic">you think.</span></div>
+      <p class="section-subtitle" style="max-width:560px;margin:0 auto">No app to download. No complicated setup. Just a secure video link — like FaceTime or Zoom, but HIPAA-compliant.</p>
+    </div>
+    <div class="tech-box animate-on-scroll delay-2">
+      <h3>How it works:</h3>
+      <p>You'll receive a secure video link before your appointment. Click it from any device, and you're in. That's it.</p>
+      <div class="tech-steps">
+        <div class="tech-step"><span class="num">1</span><h4>Get Your Link</h4><p>We send a secure video link to your email or phone before the appointment</p></div>
+        <div class="tech-step"><span class="num">2</span><h4>Click & Connect</h4><p>Open the link on any device — phone, tablet, or computer. No app needed.</p></div>
+        <div class="tech-step"><span class="num">3</span><h4>See Your Provider</h4><p>Have your appointment from your couch, car, or wherever you're comfortable. It's your session.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INSURANCE -->
+<section class="insurance-section" style="background:var(--white);padding:100px 0">
+  <div class="container">
+    <div class="animate-on-scroll" style="text-align:center">
+      <div class="section-label">Insurance & Billing</div>
+      <div class="section-heading">We handle the insurance part <span class="serif italic">for you.</span></div>
+      <p class="section-subtitle" style="margin:0 auto">We verify your benefits before your first appointment so there are no surprises. You'll know your copay upfront.</p>
+    </div>
+    <div class="insurance-grid animate-on-scroll delay-2">
+      <div class="insurance-card"><h4>Aetna</h4><p>All Aetna plans</p></div>
+      <div class="insurance-card"><h4>Blue Cross Blue Shield</h4><p>Including local & national</p></div>
+      <div class="insurance-card"><h4>Anthem</h4><p>Anthem BCBS plans</p></div>
+      <div class="insurance-card"><h4>Empire</h4><p>Empire BCBS plans</p></div>
+      <div class="insurance-card"><h4>Private Pay</h4><p>Competitive self-pay rates</p></div>
+    </div>
+    <div class="info-box animate-on-scroll delay-3" style="max-width:600px;margin:32px auto 0">
+      <h4>Not sure if we take your insurance?</h4>
+      <div class="info-box-item"><span class="marker">→</span><span>We'll verify your benefits for free during the consult call</span></div>
+      <div class="info-box-item"><span class="marker">→</span><span>We can also provide superbills for out-of-network reimbursement</span></div>
+      <div class="info-box-item"><span class="marker">→</span><span>Text us at <strong>(516) 200-1835</strong> with your insurance info and we'll check</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section style="background:var(--cream)">
+  <div class="container-narrow">
+    <div class="animate-on-scroll" style="text-align:center;margin-bottom:48px">
+      <div class="section-label">Still Have Questions?</div>
+      <div class="section-heading">We've got <span class="serif italic">answers.</span></div>
+    </div>
+    <div class="faq-items animate-on-scroll delay-2">
+      <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">How soon can I get an appointment?<span class="faq-icon">+</span></button><div class="faq-answer"><p>Usually within 1–2 weeks of your consult call. We don't do long waitlists — when you're ready, we move quickly.</p></div></div>
+      <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">What if I need to cancel or reschedule?<span class="faq-icon">+</span></button><div class="faq-answer"><p>We ask for 24 hours notice for cancellations. Life happens — just let us know and we'll work with you to reschedule.</p></div></div>
+      <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">Can you prescribe controlled substances (Adderall, etc.)?<span class="faq-icon">+</span></button><div class="faq-answer"><p>Yes. If ADHD medication is clinically appropriate after a thorough evaluation, our providers can prescribe stimulant and non-stimulant medications. We follow evidence-based prescribing guidelines.</p></div></div>
+      <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">Do you provide therapy/talk therapy?<span class="faq-icon">+</span></button><div class="faq-answer"><p>We focus on psychiatric evaluation and medication management. If you'd benefit from therapy alongside medication, we can coordinate with your therapist or help connect you with one.</p></div></div>
+      <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">I'm nervous about taking medication. Is it required?<span class="faq-icon">+</span></button><div class="faq-answer"><p>Medication is never forced or pressured. We'll discuss all your options, explain benefits and risks, and respect your decision. Many patients want to start with understanding their diagnosis first.</p></div></div>
+      <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">Can I see you if I live outside New York?<span class="faq-icon">+</span></button><div class="faq-answer"><p>Currently we're licensed to provide telehealth services to patients located in New York State. If you're in NY — whether that's Manhattan, Long Island, or upstate — we can see you.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container"><div class="cta-inner animate-on-scroll">
+    <h2>Ready to take the <em>first step?</em></h2>
+    <p>It's just a 10-minute phone call. You'll talk to a real person, get your questions answered, and know if we're the right fit — for free.</p>
+    <div class="cta-buttons">
+      <a href="schedule.html" class="btn-white">Book Your Free Consult →</a>
+      <a href="sms:+15162001835" class="btn-ghost">💬 Text Us at (516) 200-1835</a>
+    </div>
+    <p class="cta-note">Free · 10 minutes · No commitment · Completely confidential</p>
+  </div></div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand"><a href="index.html" class="nav-logo"><div class="nav-logo-icon">JP</div><span class="nav-logo-text">Joseph Psychiatry</span></a><p>Expert ADHD, anxiety, and depression care from a board-certified psychiatrist. Virtual evening appointments serving all of New York State.</p><div class="footer-crisis">⚠️ Not for emergencies. If you are in crisis, call <strong>911</strong> or the Suicide & Crisis Lifeline at <strong>988</strong>.</div></div>
+      <div class="footer-col"><h4>Navigate</h4><a href="what-we-treat.html">What We Treat</a><a href="what-to-expect.html">What to Expect</a><a href="about.html">About Us</a><a href="contact.html">Contact</a><a href="schedule.html">Book a Consult</a></div>
+      <div class="footer-col"><h4>Contact</h4><a href="tel:+15166000316">📞 (516) 600-0316</a><a href="sms:+15162001835">💬 (516) 200-1835</a><a href="mailto:admin@josephpsych.com">✉️ admin@josephpsych.com</a></div>
+      <div class="footer-col"><h4>Legal</h4><a href="legal.html#hipaa">HIPAA Privacy Notice</a><a href="legal.html#privacy">Privacy Policy</a><a href="legal.html#terms">Terms of Service</a><a href="legal.html#telehealth">Telehealth Consent</a></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Joseph Psychiatry PLLC. All rights reserved.</span><span>1575 Hillside Avenue, New Hyde Park, NY 11040</span></div>
+  </div>
+</footer>
+<script src="scripts.js"></script>
+<!-- Cal floating-popup embed code begins -->
+<script type="text/javascript">
+  (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+Cal("init", "10min", {origin:"https://app.cal.com"});
+  Cal.ns["10min"]("floatingButton", {"calLink":"josephpsych/10min","config":{"layout":"month_view","useSlotsViewOnSmallScreen":"true"},"buttonText":"Free Consult","buttonColor":"#0B2E15","buttonTextColor":"#F2F0E6"});
+  Cal.ns["10min"]("ui", {"cssVarsPerTheme":{"light":{"cal-brand":"#0B2E15"},"dark":{"cal-brand":"#F2F0E6"}},"hideEventTypeDetails":false,"layout":"month_view"});
+</script>
+<!-- Cal floating-popup embed code ends -->
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Schedule a Free Consult — Joseph Psychiatry</title>
+<meta name="description" content="Book your free 10-minute consultation call with Joseph Psychiatry. No commitment, no pressure — just a conversation to see if we're the right fit.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+<style>
+.schedule-layout{display:grid;grid-template-columns:380px 1fr;gap:56px;align-items:start}
+.schedule-sidebar{position:sticky;top:120px}
+.schedule-sidebar h2{font-family:'Instrument Serif',serif;font-size:28px;color:var(--green-deep);font-weight:400;margin-bottom:16px;line-height:1.2}
+.schedule-sidebar>p{font-size:15px;color:var(--text-secondary);line-height:1.7;margin-bottom:32px}
+.schedule-perks{display:flex;flex-direction:column;gap:14px;margin-bottom:32px}
+.schedule-perk{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--text-secondary)}
+.schedule-perk-icon{width:32px;height:32px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.alt-contact{background:var(--green-lightest);border-radius:var(--radius-md);padding:24px}
+.alt-contact h4{font-size:15px;font-weight:600;color:var(--green-deep);margin-bottom:12px}
+.alt-contact a{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text-secondary);text-decoration:none;padding:8px 0;transition:color .3s}
+.alt-contact a:hover{color:var(--green-deep)}
+.alt-contact a strong{color:var(--green-deep)}
+.embed-area{background:var(--white);border-radius:var(--radius-lg);min-height:600px;box-shadow:var(--shadow-sm);overflow:hidden;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:48px}
+.embed-placeholder{text-align:center;max-width:400px}
+.embed-placeholder .icon{font-size:56px;display:block;margin-bottom:20px}
+.embed-placeholder h3{font-size:22px;font-family:'Instrument Serif',serif;color:var(--green-deep);margin-bottom:8px;font-weight:400}
+.embed-placeholder p{font-size:15px;color:var(--text-muted);line-height:1.7;margin-bottom:24px}
+.embed-placeholder code{display:block;background:var(--cream);border-radius:var(--radius-sm);padding:16px;font-size:13px;color:var(--text-muted);text-align:left;line-height:1.6;margin-top:16px;word-break:break-all}
+@media(max-width:1024px){.schedule-layout{grid-template-columns:1fr}.schedule-sidebar{position:static}}
+</style>
+</head>
+<body>
+<div class="scroll-progress" id="scrollProgress"></div>
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><div class="nav-logo-icon">JP</div><span class="nav-logo-text">Joseph Psychiatry</span></a>
+    <div class="nav-links">
+      <a href="what-we-treat.html">What We Treat</a>
+      <a href="what-to-expect.html">What to Expect</a>
+      <a href="about.html">About Us</a>
+      <a href="contact.html">Contact</a>
+      <a href="sms:+15162001835" class="nav-text-btn">💬 Text Us</a>
+      <a href="schedule.html" class="nav-cta">Book Free Consult →</a>
+    </div>
+    <button class="nav-hamburger" onclick="toggleMobile()"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-menu-close" onclick="toggleMobile()">✕</button>
+  <a href="index.html">Home</a><a href="what-we-treat.html">What We Treat</a><a href="what-to-expect.html">What to Expect</a><a href="about.html">About Us</a><a href="contact.html">Contact</a><a href="sms:+15162001835">Text Us</a><a href="schedule.html">Book Free Consult</a>
+</div>
+
+<section class="page-hero" style="padding:140px 0 60px">
+  <div class="container">
+    <div class="breadcrumb"><a href="index.html">Home</a> / Schedule</div>
+    <h1>Let's start with a <em>conversation.</em></h1>
+    <p>Book your free 10-minute consult call. We'll answer your questions, check your insurance, and make sure we're the right fit.</p>
+  </div>
+</section>
+
+<section style="background:var(--cream);padding:80px 0 100px">
+  <div class="container">
+    <div class="schedule-layout">
+      <div class="schedule-sidebar animate-on-scroll">
+        <h2>What to expect from your consult call</h2>
+        <p>It's a quick, friendly phone call — not a commitment. Here's what we'll cover:</p>
+        <div class="schedule-perks">
+          <div class="schedule-perk"><span class="schedule-perk-icon">💬</span>Tell us what's going on and what you're looking for</div>
+          <div class="schedule-perk"><span class="schedule-perk-icon">💳</span>We'll verify your insurance and explain any costs</div>
+          <div class="schedule-perk"><span class="schedule-perk-icon">🤝</span>We'll make sure we're the right fit (and be honest if we're not)</div>
+          <div class="schedule-perk"><span class="schedule-perk-icon">📅</span>If everything checks out, we'll book your intake right away</div>
+          <div class="schedule-perk"><span class="schedule-perk-icon">⏱️</span>The whole thing takes about 10 minutes</div>
+        </div>
+        
+        <div class="alt-contact">
+          <h4>Prefer not to book online?</h4>
+          <a href="sms:+15162001835">💬 <strong>Text us</strong> at (516) 200-1835</a>
+          <a href="tel:+15166000316">📞 <strong>Call us</strong> at (516) 600-0316</a>
+          <a href="mailto:admin@josephpsych.com">✉️ <strong>Email</strong> admin@josephpsych.com</a>
+        </div>
+
+        <div class="info-box" style="margin-top:24px">
+          <h4>Quick info:</h4>
+          <div class="info-box-item"><span class="marker">✓</span><span><strong>Insurance:</strong> Aetna & Blue Cross Blue Shield accepted</span></div>
+          <div class="info-box-item"><span class="marker">✓</span><span><strong>Hours:</strong> Evenings, 6–9 PM</span></div>
+          <div class="info-box-item"><span class="marker">✓</span><span><strong>Location:</strong> 100% virtual / New York State</span></div>
+          <div class="info-box-item"><span class="marker">✓</span><span><strong>No referral</strong> needed to schedule</span></div>
+        </div>
+      </div>
+
+      <div class="embed-area animate-on-scroll delay-2" style="padding:0;overflow:hidden">
+        <!-- Cal inline embed code begins -->
+        <div style="width:100%;height:100%;overflow:scroll" id="my-cal-inline-10min"></div>
+        <script type="text/javascript">
+          (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+        Cal("init", "10min", {origin:"https://app.cal.com"});
+          Cal.ns["10min"]("inline", {
+            elementOrSelector:"#my-cal-inline-10min",
+            config: {"layout":"month_view","useSlotsViewOnSmallScreen":"true"},
+            calLink: "josephpsych/10min",
+          });
+          Cal.ns["10min"]("ui", {"cssVarsPerTheme":{"light":{"cal-brand":"#0B2E15"},"dark":{"cal-brand":"#F2F0E6"}},"hideEventTypeDetails":false,"layout":"month_view"});
+        </script>
+        <!-- Cal inline embed code ends -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST -->
+<section style="background:var(--white);padding:64px 0">
+  <div class="container" style="text-align:center">
+    <div class="animate-on-scroll">
+      <p style="font-size:14px;color:var(--text-muted);margin-bottom:16px">Trusted by 2,000+ patients across New York State</p>
+      <div style="display:flex;justify-content:center;gap:24px;flex-wrap:wrap">
+        <span class="insurance-badge" style="font-size:14px;padding:10px 20px">✓ Aetna</span>
+        <span class="insurance-badge" style="font-size:14px;padding:10px 20px">✓ Blue Cross Blue Shield</span>
+        <span class="insurance-badge" style="font-size:14px;padding:10px 20px">✓ Anthem</span>
+        <span class="insurance-badge" style="font-size:14px;padding:10px 20px">✓ Empire</span>
+        <span class="insurance-badge" style="font-size:14px;padding:10px 20px">✓ Private Pay</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand"><a href="index.html" class="nav-logo"><div class="nav-logo-icon">JP</div><span class="nav-logo-text">Joseph Psychiatry</span></a><p>Expert ADHD, anxiety, and depression care from a board-certified psychiatrist. Virtual evening appointments serving all of New York State.</p><div class="footer-crisis">⚠️ Not for emergencies. If you are in crisis, call <strong>911</strong> or the Suicide & Crisis Lifeline at <strong>988</strong>.</div></div>
+      <div class="footer-col"><h4>Navigate</h4><a href="what-we-treat.html">What We Treat</a><a href="what-to-expect.html">What to Expect</a><a href="about.html">About Us</a><a href="contact.html">Contact</a><a href="schedule.html">Book a Consult</a></div>
+      <div class="footer-col"><h4>Contact</h4><a href="tel:+15166000316">📞 (516) 600-0316</a><a href="sms:+15162001835">💬 (516) 200-1835</a><a href="mailto:admin@josephpsych.com">✉️ admin@josephpsych.com</a></div>
+      <div class="footer-col"><h4>Legal</h4><a href="legal.html#hipaa">HIPAA Privacy Notice</a><a href="legal.html#privacy">Privacy Policy</a><a href="legal.html#terms">Terms of Service</a><a href="legal.html#telehealth">Telehealth Consent</a></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Joseph Psychiatry PLLC. All rights reserved.</span><span>1575 Hillside Avenue, New Hyde Park, NY 11040</span></div>
+  </div>
+</footer>
+<script src="scripts.js"></script>
+<!-- Cal floating-popup embed code begins -->
+<script type="text/javascript">
+  (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+Cal("init", "10min", {origin:"https://app.cal.com"});
+  Cal.ns["10min"]("floatingButton", {"calLink":"josephpsych/10min","config":{"layout":"month_view","useSlotsViewOnSmallScreen":"true"},"buttonText":"Free Consult","buttonColor":"#0B2E15","buttonTextColor":"#F2F0E6"});
+  Cal.ns["10min"]("ui", {"cssVarsPerTheme":{"light":{"cal-brand":"#0B2E15"},"dark":{"cal-brand":"#F2F0E6"}},"hideEventTypeDetails":false,"layout":"month_view"});
+</script>
+<!-- Cal floating-popup embed code ends -->
+</body>
+</html>

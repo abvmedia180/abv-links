@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ABV Financial Intelligence</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%2300d474'/%3E%3Cstop offset='100%25' stop-color='%2300b862'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='6' fill='%23080a0f'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='Georgia,serif' font-weight='700' font-size='16' fill='url(%23g)'%3EABV%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,700;9..144,800&family=Fraunces:ital,opsz,wght@1,9..144,400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+--bg:#080a0f;--bg2:#0c0f16;--bg3:#111521;--bg4:#161b2b;
+--bd:#1e2740;--bd2:#283350;
+--mt:#6b7394;--tx:#a0a8c0;--br:#ccd6f6;--wh:#e6f1ff;
+--ac:#00d474;--ac2:#00b862;--acd:rgba(0,212,116,.06);--ac15:rgba(0,212,116,.15);
+--cc1:rgba(0,150,255,.6);--cc2:rgba(0,212,116,.6);--cc1b:rgba(0,150,255,.1);--cc2b:rgba(0,212,116,.1);
+--rd:#ff5252;--rdd:rgba(255,82,82,.06);--am:#ffc107;
+--R:8px;--Rs:5px;--sans:'Inter',system-ui,sans-serif;--disp:'Fraunces',Georgia,serif;--heading:'Fraunces',Georgia,serif;
+--grid:rgba(255,255,255,.04);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--sans);background:var(--bg);color:var(--tx);min-height:100vh;font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.dov{position:fixed;inset:0;background:rgba(0,0,0,.92);backdrop-filter:blur(20px);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;transition:opacity .4s}
+.dov.hidden{opacity:0;pointer-events:none}
+.dbox{max-width:620px;width:100%;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--R);padding:32px 28px;position:relative;overflow-y:auto;max-height:90vh}
+.dbox::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--ac),var(--ac2))}
+.dtitle{font-family:var(--heading);font-size:22px;font-weight:600;color:var(--wh);text-align:center;margin-bottom:6px}
+.dsub{font-size:11px;color:var(--ac);font-weight:700;text-align:center;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:18px}
+.dtxt{font-size:13px;color:var(--tx);line-height:1.8;margin-bottom:20px}.dtxt b{color:var(--wh)}
+.dbul{margin:14px 0;padding:0;list-style:none}.dbul li{padding:5px 0 5px 20px;position:relative;font-size:13px;line-height:1.6}.dbul li::before{content:'\25b8';position:absolute;left:4px;top:5px;color:var(--ac);font-size:12px}
+.dbtn{display:block;width:100%;padding:13px;background:var(--bg4);border:1px solid var(--bd);border-radius:var(--Rs);color:var(--mt);font-size:14px;font-weight:600;cursor:not-allowed;text-align:center;transition:all .3s;font-family:var(--sans)}
+.dbtn.ready{background:var(--ac);border-color:var(--ac);color:var(--bg);cursor:pointer}
+.dchk{display:flex;align-items:center;gap:10px;margin-bottom:16px;cursor:pointer;user-select:none}
+.dchk input{display:none}.dchk .cm{width:18px;height:18px;border:2px solid var(--bd);border-radius:3px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.dchk.checked .cm{background:var(--ac);border-color:var(--ac)}.dchk .cm::after{content:'\2713';color:var(--bg);font-size:13px;font-weight:700;opacity:0;transition:opacity .2s}.dchk.checked .cm::after{opacity:1}
+.dchk span{font-size:13px;font-weight:500;color:var(--br)}
+.ninput{background:var(--bg4);border:1px solid var(--bd);border-radius:var(--Rs);padding:10px 12px;font-size:14px;font-weight:500;color:var(--wh);width:100%;font-family:var(--sans);transition:border-color .2s}
+.ninput:hover,.ninput:focus{border-color:var(--ac);outline:none}
+.nselect{background:var(--bg4);border:1px solid var(--bd);border-radius:var(--Rs);padding:10px 12px;font-size:13px;font-weight:500;color:var(--wh);width:100%;font-family:var(--sans);cursor:pointer;-webkit-appearance:none}
+.nselect:hover,.nselect:focus{border-color:var(--ac);outline:none}
+.igrp{margin-bottom:12px}.igrp label{display:block;font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--mt);margin-bottom:5px}
+.hero{position:relative;padding:72px 24px 36px;text-align:center;border-bottom:1px solid var(--bd)}
+.htag{display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--ac);text-transform:uppercase;margin-bottom:14px}
+.htag .pulse-dot{position:relative;width:14px;height:14px;display:inline-block;flex-shrink:0}
+.htag .pulse-dot::before{content:'';position:absolute;inset:2px;border-radius:50%;background:var(--ac);animation:pulseCore 2s ease-in-out infinite;box-shadow:0 0 8px var(--ac),0 0 16px rgba(0,212,116,.3)}
+.htag .pulse-dot::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:2px solid var(--ac);opacity:0;animation:pulseRing 2s ease-out infinite}
+@keyframes pulseCore{0%,100%{opacity:1;transform:scale(1);box-shadow:0 0 8px var(--ac),0 0 16px rgba(0,212,116,.3)}50%{opacity:.6;transform:scale(.75);box-shadow:0 0 4px var(--ac),0 0 8px rgba(0,212,116,.15)}}
+@keyframes pulseRing{0%{opacity:.5;transform:scale(.5)}100%{opacity:0;transform:scale(2.8)}}
+.hero h1{font-family:var(--heading);font-size:clamp(1.6rem,4vw,2.4rem);font-weight:600;color:var(--wh);margin-bottom:8px}
+.hero h1 em{font-family:var(--disp);font-style:italic;color:var(--ac)}
+.hero>p{font-size:13px;color:var(--mt);max-width:560px;margin:0 auto}
+.hdiscl{font-size:10px;color:var(--mt);max-width:480px;margin:10px auto 0;padding:6px 12px;border:1px solid var(--bd);border-radius:var(--Rs);background:var(--bg3);opacity:.7}
+.nb{position:sticky;top:48px;z-index:100;background:rgba(8,10,15,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--bd);padding:0 16px}
+.ni{max-width:1400px;margin:0 auto;display:flex;gap:0;overflow-x:auto;scrollbar-width:none}.ni::-webkit-scrollbar{display:none}
+.nt{padding:11px 14px;font-size:11.5px;font-weight:600;color:var(--mt);cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all .2s;user-select:none}
+.nt:hover{color:var(--tx)}.nt.a{color:var(--ac);border-bottom-color:var(--ac)}
+.con{max-width:1400px;margin:0 auto;padding:0 20px;position:relative;z-index:1}
+.sec{display:none;padding:24px 0;animation:fu .3s ease}.sec.a{display:block}
+@keyframes fu{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.card{background:var(--bg3);border:1px solid var(--bd);border-radius:var(--R);padding:20px;margin-bottom:14px;transition:border-color .2s}.card:hover{border-color:var(--bd2)}
+.tl{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--ac);margin-bottom:4px}
+.tl2{font-family:var(--heading);font-size:20px;font-weight:600;color:var(--wh);margin-bottom:6px}
+.ts{font-size:13px;color:var(--mt);margin-bottom:20px}
+.ct{font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--br);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.ct::before{content:'';width:3px;height:12px;background:var(--ac);border-radius:2px}
+.slider-group{margin-bottom:14px}
+.slider-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.slider-label .sn{font-size:13px;font-weight:500;color:var(--tx)}
+.slider-label .sv{font-family:var(--disp);font-size:17px;font-weight:700;color:var(--wh);min-width:90px;text-align:right}
+input[type=range]{-webkit-appearance:none;width:100%;height:4px;border-radius:2px;background:var(--bg4);outline:none;border:1px solid var(--bd)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:3px;background:var(--ac);cursor:pointer;border:2px solid var(--bg)}
+.rg{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px}
+.rc{background:var(--bg4);border:1px solid var(--bd);border-radius:var(--Rs);padding:14px;text-align:center}
+.rc-l{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--mt);margin-bottom:5px}
+.rc-v{font-family:var(--disp);font-size:22px;font-weight:700;color:var(--wh)}
+.rc-s{font-size:11px;color:var(--mt);margin-top:3px}
+.chart-wrap{position:relative;width:100%;height:320px;margin:16px 0}.chart-wrap canvas{width:100%!important;height:100%!important}
+.tw{overflow-x:auto;border-radius:var(--Rs);border:1px solid var(--bd)}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{text-align:left;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--mt);padding:8px 10px;border-bottom:1px solid var(--bd);background:var(--bg4)}
+.tbl td{padding:8px 10px;font-size:13px;border-bottom:1px solid var(--bd);font-variant-numeric:tabular-nums}
+.tbl tr:hover{background:var(--acd)}
+.cg{display:grid;grid-template-columns:360px 1fr;gap:16px}.cg>div{min-width:0}
+.ic{background:var(--bg3);border:1px solid var(--bd);border-radius:var(--Rs);padding:18px;margin-bottom:10px}.ic:hover{border-color:var(--bd2)}
+.ic-t{font-size:15px;font-weight:600;color:var(--wh);margin-bottom:6px}
+.ic-b{font-size:13px;color:var(--tx);line-height:1.8}.ic-b b{color:var(--br)}
+.ic-hl{padding:10px 12px;background:var(--bg4);border-radius:var(--Rs);margin-top:8px;border-left:3px solid var(--ac);font-size:12px;color:var(--br);line-height:1.7}
+.ms{padding:8px 12px;background:var(--bg4);border:1px solid var(--bd);border-radius:var(--Rs);margin-bottom:5px;display:grid;grid-template-columns:32px 1fr auto;gap:8px;align-items:center}
+.ms-i{font-size:16px;text-align:center}.ms-t{font-size:13px;color:var(--tx)}.ms-t b{color:var(--wh)}
+.ms-v{font-family:var(--disp);font-size:14px;font-weight:600;color:var(--wh);text-align:right}
+.pbar{height:32px;border-radius:var(--Rs);overflow:hidden;display:flex;border:1px solid var(--bd);margin-bottom:4px}
+.pbar>div{height:100%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.note{padding:8px 12px;background:var(--bg4);border-radius:var(--Rs);border-left:3px solid var(--ac);font-size:11px;color:var(--mt);line-height:1.6;margin-top:8px}.note b{color:var(--ac)}
+.tg{display:inline-flex;background:var(--bg4);border:1px solid var(--bd);border-radius:var(--Rs);overflow:hidden;margin-bottom:12px;flex-wrap:wrap}
+.tg button{padding:7px 14px;font-size:11px;font-weight:600;font-family:var(--sans);border:none;cursor:pointer;transition:all .2s;background:transparent;color:var(--mt)}
+.tg button.on{background:var(--ac);color:var(--bg)}.tg button:hover:not(.on){color:var(--wh)}
+.fg{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:end}.fg .igrp{margin-bottom:0}
+.tooltip{font-size:10px;color:var(--mt);font-style:italic;margin-top:4px}
+.ft{margin-top:32px;padding:24px;border-top:1px solid var(--bd);text-align:center}
+.ft .v{font-size:11px;color:var(--mt);margin-bottom:8px}.ft .d{font-size:10px;color:rgba(255,255,255,.2);line-height:1.8;max-width:600px;margin:0 auto}
+@media(max-width:768px){
+.hero{padding:28px 12px 20px}
+.con{padding:0 10px}
+.cg{grid-template-columns:1fr}
+.rg{grid-template-columns:repeat(2,1fr)}
+.tbl{font-size:11px}
+.tbl th,.tbl td{padding:6px 4px}
+.chart-wrap{height:250px}.nb{padding:0 6px}.nt{padding:9px 8px;font-size:10.5px}.dbox{padding:20px 16px}.fg{flex-direction:column}}
+@media(max-width:900px){.con div[style*='repeat(3,1fr)']{grid-template-columns:1fr 1fr!important}}
+@media(max-width:600px){
+.con div[style*='repeat(3,1fr)']{grid-template-columns:1fr!important}
+.rg{grid-template-columns:1fr!important}
+.hero .htag{display:none}
+.hero>p{display:none}
+}
+input[type=range]{height:6px;border-radius:3px}
+@media(max-width:480px){
+.ninput,.nselect,input[type=number],input[type=range],select{font-size:16px!important}
+.hero h1{font-size:22px}
+.hero .ts{font-size:12px}
+.nt{font-size:11px;padding:8px 10px;white-space:nowrap}
+.card{padding:14px}
+.ct{font-size:16px}
+.rc-v{font-size:18px}
+.rc-l{font-size:10px}
+.ic-b{font-size:12px}
+.tbl{font-size:10px}
+.tbl th,.tbl td{padding:4px 3px}
+div[style*='grid-template-columns:1fr 1fr']{grid-template-columns:1fr!important}
+div[style*='grid-template-columns:1fr 60px']{grid-template-columns:1fr 60px!important}
+div[style*='grid-template-columns:1fr auto']{grid-template-columns:1fr!important}
+div[style*='grid-template-columns:repeat(auto-fit']{grid-template-columns:1fr!important}
+.fg{flex-direction:column}
+.tg button{font-size:10px;padding:4px 6px}
+}
+
+/* ══ SITE-WIDE NAVIGATION ══ */
+.site-nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(8,10,15,.98);backdrop-filter:blur(20px);border-bottom:1px solid var(--bd);height:48px;display:flex;align-items:center;padding:0 20px}
+.site-nav-inner{max-width:1400px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.site-logo{font-family:var(--disp);font-size:15px;font-weight:600;color:var(--wh);text-decoration:none;white-space:nowrap;flex-shrink:0}
+.site-logo em{font-style:italic;color:var(--ac)}
+.site-links{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.site-links::-webkit-scrollbar{display:none}
+.site-links a{padding:6px 14px;font-size:11.5px;font-weight:600;color:var(--mt);text-decoration:none;border-radius:var(--Rs);transition:all .2s;white-space:nowrap;font-family:var(--sans)}
+.site-links a:hover{color:var(--tx);background:var(--bg4)}
+.site-links a.active{color:var(--ac);background:var(--acd)}
+@media(max-width:600px){.site-nav{height:auto;padding:8px 16px}.site-nav-inner{flex-direction:column;gap:6px}.site-logo{font-size:13px}.site-links{justify-content:center}.site-links a{font-size:10px;padding:5px 10px}}
+@media(max-width:480px){.site-links a{font-size:9.5px;padding:4px 8px}}
+</style></head>
+<body>
+<div class="site-nav"><div class="site-nav-inner">
+<a href="index.html" class="site-logo">ABV <em>Financial Intelligence</em></a>
+<div class="site-links"><a href="index.html" class="active">Personal Finance</a><a href="grievance.html">Tax Grievance Guide</a><a href="flip-calculator.html">Real Estate Calculators</a></div>
+</div></div>
+
+<!-- DISCLAIMER (hidden for testing) -->
+<div class="dov hidden" id="dOv"><div class="dbox">
+<div class="dtitle">Important Disclaimer</div><div class="dsub">Please Read Before Continuing</div>
+<div class="dtxt"><b>This website is not financial, legal, or investment advice.</b><br><br>Everything represents <b>my personal experiences and opinions</b>. Your situation is unique.
+<ul class="dbul"><li>No one can give accurate financial advice from a graph without understanding your complete situation</li><li>All projections use simplified assumptions and historical averages</li><li>Past market performance does not guarantee future results</li><li>Consult a qualified financial advisor, CPA, or attorney for your situation</li><li>This tool is for <b>informational and educational purposes only</b></li></ul>
+<span style="color:var(--ac);font-weight:600">People ask me all the time what I do with my money. This site is my answer.</span></div>
+<div style="border-top:1px solid var(--bd);padding-top:14px;margin-bottom:14px">
+<div style="font-size:12px;font-weight:600;color:var(--wh);margin-bottom:10px">To access this site:</div>
+<div class="igrp"><label>First and Last Name <span style="color:var(--rd)">*</span></label><input type="text" class="ninput" id="dName" placeholder="Your first and last name"></div>
+<div class="igrp"><label>Email Address <span style="color:var(--rd)">*</span></label><input type="email" class="ninput" id="dEmail" placeholder="your@email.com"></div>
+<div id="dErr" style="display:none;font-size:12px;color:var(--rd);font-weight:600;margin-bottom:8px;padding:6px 10px;background:var(--rdd);border-radius:var(--Rs)"></div>
+</div>
+<div class="dchk" id="dChk"><input type="checkbox"><div class="cm"></div><span>I understand this is not financial or legal advice</span></div>
+<button class="dbtn" id="dBtn">Please complete all fields above</button>
+</div></div>
+
+<div id="mainSite">
+<div class="hero">
+<div class="htag"><div class="pulse-dot"></div> Financial Intelligence Platform</div>
+<h1>ABV <em>Financial Intelligence</em></h1>
+<p>Tax analysis · Retirement projections · Net worth modeling · Investment education</p>
+<div class="hdiscl">⚠️ Educational purposes only. Not financial advice. Consult a licensed professional. Tax laws as of February 2026.</div>
+</div>
+
+<div class="nb"><div class="ni">
+<div class="nt a" data-s="calculator">Investment Calculator</div>
+<div class="nt" data-s="retirement">Retirement Planner</div>
+<div class="nt" data-s="networth">Net Worth Builder</div>
+<div class="nt" data-s="strategy">My Strategy</div>
+<div class="nt" data-s="accounts">Account Types</div>
+<div class="nt" data-s="tax">Tax Calculator</div>
+<div class="nt" data-s="statecomp">State Comparison</div>
+<div class="nt" data-s="compare">Compare Scenarios</div>
+<div class="nt" data-s="rules">Abe's Rules</div>
+</div></div>
+
+<div class="con">
+
+<!-- INVESTMENT CALCULATOR -->
+<div class="sec a" id="sec-calculator">
+<div class="tl">Compound Growth Engine</div><h2 class="tl2">Investment Calculator</h2>
+<p class="ts">See how your money grows over time with consistent investing. Adjust the sliders to match your situation.</p>
+<div style="padding:14px;background:var(--acd);border:1px solid var(--ac15);border-radius:var(--Rs);margin-bottom:14px;line-height:1.7">
+<div style="font-size:12px;font-weight:700;color:var(--ac);margin-bottom:6px">THE MOST IMPORTANT DECISION YOU MAKE</div>
+<div style="font-size:12px;color:var(--br)">The single biggest factor in your long-term wealth is <b style="color:var(--wh)">what you are invested in</b>. Play with the return rates below  - toggle between 7%, 10%, and 12%  - and watch what happens to your balance. The difference is massive. Most people are in a target-date fund because that is what their employer defaulted them into. If it were my money, I would want to understand exactly what I own and whether a more aggressive allocation makes sense for my timeline. Check out the <b style="color:var(--ac)">My Strategy</b> tab to see how I invest.</div>
+</div>
+<div class="cg"><div>
+<div class="card">
+<div class="ct">Your Numbers</div>
+<div class="igrp"><label>Starting Amount ($)</label><input type="number" class="ninput" id="cI" value="0" min="0" step="100" oninput="runCalc()"><div class="tooltip">How much you have to invest right now</div></div>
+<div class="slider-group"><div class="slider-label"><span class="sn">Monthly Contribution</span><span class="sv" id="cMV">$500</span></div><input type="range" id="cM" min="0" max="5000" value="500" step="25" oninput="runCalc()"><div class="tooltip">How much you'll invest every month automatically</div></div>
+<div class="slider-group"><div class="slider-label"><span class="sn">Your Current Age</span><span class="sv" id="cAgeV">21</span></div><input type="range" id="cAge" min="18" max="65" value="21" step="1" oninput="runCalc()"></div>
+<div class="slider-group"><div class="slider-label"><span class="sn">Target Age</span><span class="sv" id="cRetAgeV">65</span></div><input type="range" id="cRetAge" min="40" max="90" value="65" step="1" oninput="runCalc()"><div class="tooltip">When you want to see results  - retirement or any goal</div></div>
+<div style="margin-bottom:12px"><div style="font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--mt);margin-bottom:6px">Expected Annual Return</div>
+<div class="tg" id="cRateGroup"><button class="on" data-v="7">Conservative 7%</button><button data-v="10">Average 10%</button><button data-v="12">Optimistic 12%</button></div>
+<div class="tooltip">Conservative = inflation-adjusted. Average = S&P 500 historical. Optimistic = growth-tilted portfolio.</div></div>
+</div></div>
+<div><div id="calcRes"></div><div class="chart-wrap"><canvas id="calcChart"></canvas></div><div id="calcExtra"></div></div>
+</div></div>
+
+<!-- RETIREMENT PLANNER -->
+<div class="sec" id="sec-retirement">
+<div class="tl">Retirement Planning</div><h2 class="tl2">Retirement Planner</h2>
+<div style="padding:14px;background:var(--acd);border:1px solid var(--ac15);border-radius:var(--Rs);margin-bottom:14px;line-height:1.7">
+<div style="font-size:12px;font-weight:700;color:var(--ac);margin-bottom:6px">YOUR RETURNS DEPEND ON WHAT YOU OWN</div>
+<div style="font-size:12px;color:var(--br)">Before you project your retirement, understand this: the return rate you select below reflects <b style="color:var(--wh)">what you are actually invested in</b>. A target-date fund might give you 7%. A more aggressive portfolio could deliver 10-12% historically. Toggle the rates below and see how dramatically your retirement changes. If it were my money, I would not leave it in whatever my employer defaulted me into without understanding what I own. See the <b style="color:var(--ac)">My Strategy</b> tab for my approach.</div>
+</div>
+<p class="ts">See if you're on track for retirement and how much income your investments could generate.</p>
+<div class="cg"><div>
+<div class="card">
+<div class="ct">Your Details</div>
+<div class="slider-group"><div class="slider-label"><span class="sn">Current Age</span><span class="sv" id="rAV">31</span></div><input type="range" id="rA" min="18" max="65" value="31" step="1" oninput="runRet()"></div>
+<div class="slider-group"><div class="slider-label"><span class="sn">Retirement Age</span><span class="sv" id="rRV">65</span></div><input type="range" id="rR" min="50" max="80" value="65" step="1" oninput="runRet()"></div>
+<div class="igrp"><label>Current Retirement Savings ($)</label><input type="number" class="ninput" id="rC" value="0" min="0" step="1000" oninput="runRet()"><div class="tooltip">Total across all retirement accounts (401k, IRA, etc.)</div></div>
+<div class="slider-group"><div class="slider-label"><span class="sn">Monthly Contribution</span><span class="sv" id="rMV">$500</span></div><input type="range" id="rM" min="0" max="5000" value="500" step="25" oninput="runRet()"></div>
+<div style="margin-bottom:12px"><div style="font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--mt);margin-bottom:6px">Expected Return</div>
+<div class="tg" id="rRateGroup"><button class="on" data-v="7">Conservative 7%</button><button data-v="10">Average 10%</button><button data-v="12">Optimistic 12%</button></div></div>
+<div class="slider-group"><div class="slider-label"><span class="sn">Withdrawal Rate</span><span class="sv" id="rWV">4%</span></div><input type="range" id="rW" min="2" max="8" value="4" step="0.5" oninput="runRet()"><div class="tooltip">The 4% rule: withdraw 4% per year in retirement. Historically lasts 30+ years.</div></div>
+<div class="ct" style="margin-top:16px">Additional Retirement Income (Optional)</div>
+<div class="tooltip" style="margin-bottom:8px">These are supplemental. Your investments are the foundation  - SS and pension are just extra.</div>
+<div class="igrp"><label>Expected Social Security ($/month)</label><input type="number" class="ninput" id="rSS" value="0" min="0" step="100" oninput="runRet()"><div class="tooltip">Average is ~$2,000/mo. High earners: ~$3,000-$4,000. Check ssa.gov/myaccount for your estimate.</div></div>
+<div class="igrp"><label>Pension ($/month, if any)</label><input type="number" class="ninput" id="rPen" value="0" min="0" step="100" oninput="runRet()"><div class="tooltip">If your employer provides a pension, enter your expected monthly benefit at retirement.</div></div>
+</div></div>
+<div><div id="retRes"></div><div class="chart-wrap"><canvas id="retChart"></canvas></div></div>
+</div></div>
+
+<!-- NET WORTH BUILDER -->
+<div class="sec" id="sec-networth">
+<div class="tl">Wealth Projection</div><h2 class="tl2">Net Worth Builder</h2>
+<p class="ts">Add all your accounts and properties to see your total projected net worth over time.</p>
+<div style="padding:14px;background:var(--acd);border:1px solid var(--ac15);border-radius:var(--Rs);margin-bottom:14px;line-height:1.7">
+<div style="font-size:12px;font-weight:700;color:var(--ac);margin-bottom:6px">YOUR INVESTMENTS DRIVE EVERYTHING</div>
+<div style="font-size:12px;color:var(--br)">The return rates you select for each account below are not random numbers  - they reflect <b style="color:var(--wh)">what you are actually invested in</b>. Toggle between 7%, 10%, and 12% on any account and watch the total net worth change dramatically. Most people never look at what their 401(k) or IRA is actually invested in. If it were my money, I would know exactly what I own in every account. See the <b style="color:var(--ac)">My Strategy</b> tab for my approach.</div>
+</div>
+<div class="card">
+<div class="ct">Your Accounts & Assets</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+<div style="padding:12px;background:var(--bg4);border-radius:var(--Rs);border:1px solid var(--bd)"><div style="font-size:11px;font-weight:700;color:var(--ac);margin-bottom:8px">💵 CASH & EQUIVALENTS</div>
+<div style="display:grid;grid-template-columns:1fr 60px;gap:6px;align-items:end" class="igrp"><div><label>Checking</label><input type="text" inputmode="decimal" pattern="[0-9,]*" class="ninput" id="nwCashChk" value="0" min="0" oninput="fmtMoney(this);runNW()"></div><div><label>Rate %</label><input type="number" class="ninput" id="nwChkR" value="0" min="0" max="10" step="0.5" oninput="runNW()" style="width:100%"></div></div>
+<div style="display:grid;grid-template-columns:1fr 60px;gap:6px;align-items:end" class="igrp"><div><label>CDs / Treasuries</label><input type="text" inputmode="decimal" pattern="[0-9,]*" class="ninput" id="nwCashCD" value="0" min="0" oninput="fmtMoney(this);runNW()"></div><div><label>Rate %</label><input type="number" class="ninput" id="nwCDR" value="3" min="0" max="10" step="0.5" oninput="runNW()" style="width:100%"></div></div>
+<div style="display:grid;grid-template-columns:1fr 60px;gap:6px;align-items:end" class="igrp"><div><label>HYSA</label><input type="text" inputmode="decimal" pattern="[0-9,]*" class="ninput" id="nwCashHY" value="0" min="0" oninput="fmtMoney(this);runNW()"></div><div><label>Rate %</label><input type="number" class="ninput" id="nwHYR" value="3" min="0" max="10" step="0.5" oninput="runNW()" style="width:100%"></div></div></div>
+<div style="padding:12px;background:var(--bg4);border-radius:var(--Rs);border:1px solid var(--bd)"><div style="font-size:11px;font-weight:700;color:var(--ac);margin-bottom:8px">💼 RETIREMENT (401k, etc.)</div>
+<div class="igrp"><label>Current Balance</label><input type="text" inputmode="decimal" pattern="[0-9,]*" class="ninput" id="nw401" value="0" min="0" oninput="fmtMoney(this);runNW()"></div>
+<div class="igrp"><label>Annual Salary</label><input type="text" inputmode="decimal" pattern="[0-9,]*" class="ninput" id="nw401sal" value="0" min="0" oninput="fmtMoney(this);runNW()"></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px" class="igrp"><div><label>Your Contribution %</label><input type="number" class="ninput" id="nw401pct" value="0" min="0" max="100" step="1" oninput="runNW()"><div class="tooltip">% of salary you contribute</div></div><div><label>Employer Match %</label><input type="number" class="ninput" id="nw401mp" value="0" min="0" max="25" step="1" oninput="runNW()"><div class="tooltip">% of salary employer adds</div></div></div>
+<div class="tooltip" style="margin-bottom:6px;padding:6px 8px;background:var(--bg3);border-radius:var(--Rs);border:1px solid var(--bd)"><b style="color:var(--am)">⚠️ IRS Caps:</b> Employee max is <b>$23,500/yr</b>. Total (you + employer) max is <b>$69,000/yr</b>. We automatically stop at these limits no matter what % you enter.</div>
+<div style="margin-bottom:4px"><div style="font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--mt);margin-bottom:4px">Return Rate</div>
+<div class="tg nwrg" id="nw401rg"><button class="on" data-v="7">7%</button><button data-v="10">10%</button><button data-v="12">12%</button></div></div></div>
+<div style="padding:12px;background:var(--bg4);border-radius:var(--Rs);border:1px solid var(--bd)"><div style="font-size:11px;font-weight:700;color:var(--ac);margin-bottom:8px">🛡️ IRA</div>
+<div class="igrp"><label>Current Balance</label><input type="text" inputmode="decimal" pattern="[0-9,]*" class="ninput" id="nwRoth" value="0" min="0" oninput="fmtMoney(this);runNW()"></div>
+<div class="igrp"><label>Annual Contribution</label><input type="text" inputmode="decimal" pattern="[0-9,]*" class="ninput" id="nwRothA" value="0" min="0" max="8000" oninput="fmtMoney(this);runNW()"><div class="tooltip">Max: $7,000/yr ($8,000 if 50+)</div></div>
+<div style="margin-bottom:4px"><div style="font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--mt);margin-bottom:4px">Return Rate</div>
+<div class="tg nwrg" id="nwRothRg"><button class="on" data-v="7">7%</button><button data-v="10">10%</button><button data-v="12">12%</button></div></div></div>
+<div style="padding:12px;background:var(--bg4);border-radius:var(--Rs);border:1px solid var(--bd)"><div style="font-size:11px;font-weight:700;color:var(--ac);margin-bottom:8px">📈 BROKERAGE (Taxable)</div>
+<div class="igrp"><label>Current Balance</label><input type="text" inputmode="decimal" pattern="[0-9,]*" class="ninput" id="nwBrok" value="0" min="0" oninput="fmtMoney(this);runNW()"></div>
+<div class="igrp"><label>Monthly Contribution</label><input type="text" inputmode="decimal" pattern="[0-9,]*" class="ninput" id="nwBrokM" value="0" min="0" oninput="fmtMoney(this);runNW()"></div>
+<div style="margin-bottom:4px"><div style="font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--mt);margin-bottom:4px">Return Rate</div>
+<div class="tg nwrg" id="nwBrokRg"><button class="on" data-v="7">7%</button><button data-v="10">10%</button><button data-v="12">12%</button></div></div></div>
+<div style="padding:12px;background:var(--bg4);border-radius:var(--Rs);border:1px solid var(--bd)"><div style="font-size:11px;font-weight:700;color:var(--ac);margin-bottom:8px">🏠 PRIMARY HOME</div>
+<div class="igrp"><label>Home Value</label><input type="text" inputmode="decimal" pattern="[0-9,]*" class="ninput" id="nwHome" value="0" min="0" oninput="fmtMoney(this);runNW()"></div>
+<div class="igrp"><label>Remaining Mortgage</label><input type="text" inputmode="decimal" pattern="[0-9,]*" class="ninput" id="nwMort" value="0" min="0" oninput="fmtMoney(this);runNW()"></div>
+<div style="margin-bottom:4px"><div style="font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--mt);margin-bottom:4px">Appreciation</div>
+<div class="tg nwrg" id="nwHomeRg"><button class="on" data-v="2">2% Conservative</button><button data-v="3">3% Base</button><button data-v="4">4% Optimistic</button></div>
+<div class="tooltip">U.S. homes have appreciated ~3-4% annually over the long term.</div></div></div>
+<div style="padding:12px;background:var(--bg4);border-radius:var(--Rs);border:1px solid var(--bd)"><div style="font-size:11px;font-weight:700;color:var(--ac);margin-bottom:8px">🏢 INVESTMENT PROPERTY</div>
+<div class="igrp"><label>Property Value</label><input type="text" inputmode="decimal" pattern="[0-9,]*" class="ninput" id="nwRE" value="0" min="0" oninput="fmtMoney(this);runNW()"></div>
+<div class="igrp"><label>Remaining Debt</label><input type="text" inputmode="decimal" pattern="[0-9,]*" class="ninput" id="nwREDebt" value="0" min="0" oninput="fmtMoney(this);runNW()"></div>
+<div style="margin-bottom:4px"><div style="font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--mt);margin-bottom:4px">Appreciation</div>
+<div class="tg nwrg" id="nwRERg"><button class="on" data-v="2">2% Conservative</button><button data-v="3">3% Base</button><button data-v="4">4% Optimistic</button></div>
+<div class="tooltip">Investment properties may appreciate faster depending on location and improvements.</div></div></div>
+</div>
+</div>
+<div style="padding:14px;background:var(--bg4);border-radius:var(--Rs);border:1px solid var(--bd);margin-top:12px"><div style="font-size:11px;font-weight:700;color:var(--rd);margin-bottom:10px">🎓 STUDENT LOANS</div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px">
+<div class="igrp"><label>Remaining Balance</label><input type="text" inputmode="decimal" pattern="[0-9,]*" class="ninput" id="slBal" value="0" min="0" oninput="fmtMoney(this);runSL()"></div>
+<div class="igrp"><label>Interest Rate %</label><input type="number" class="ninput" id="slRate" value="5.5" min="0" max="15" step="0.1" oninput="runSL()"></div>
+<div class="igrp"><label>Current Monthly Payment</label><input type="text" inputmode="decimal" pattern="[0-9,]*" class="ninput" id="slPay" value="0" min="0" oninput="fmtMoney(this);runSL()"></div>
+</div>
+<div class="igrp" style="margin-bottom:8px"><label>Or pay off in: <span id="slYrLabel" style="color:var(--ac);font-weight:700">10 years</span></label>
+<input type="range" id="slYrSlider" min="1" max="30" value="10" step="1" oninput="runSL()" style="width:100%;accent-color:var(--ac)"></div>
+<div id="slRes"></div>
+<div id="slPSLF" style="display:none;margin-top:10px;padding:10px;background:var(--bg3);border-radius:var(--Rs);border:1px solid var(--bd)">
+<div style="font-size:10px;font-weight:700;color:var(--ac);margin-bottom:6px">PUBLIC SERVICE LOAN FORGIVENESS (PSLF)</div>
+<div style="font-size:11px;color:var(--br);line-height:1.7">If you work full-time for a qualifying <b>nonprofit or government employer</b> and make <b>120 qualifying payments</b> (10 years) under an income-driven repayment plan, the remaining balance is <b>forgiven tax-free</b>.</div>
+<div style="margin-top:6px;padding:8px;background:var(--rdd);border:1px solid rgba(255,82,82,.12);border-radius:var(--Rs);font-size:11px;color:var(--br);line-height:1.7"><b style="color:var(--rd)">CRITICAL WARNING FOR HEALTHCARE WORKERS:</b> Many hospitals and healthcare organizations have <b>for-profit arms</b> (physician groups, management companies, staffing entities) that may be signing your paycheck even though you work at what looks like a nonprofit hospital. If your W-2 shows a for-profit employer, <b>your payments do NOT count toward PSLF</b>  - even if you work in the same building treating the same patients.<br><br><b>What to do:</b> Check your W-2 employer name. Verify their 501(c)(3) status on the IRS Tax Exempt Organization Search. If you are being paid from a for-profit entity, you can often <b>request to be moved to the nonprofit payroll</b>. Many organizations will accommodate this. However, switching may affect certain benefits: employer retirement matching, profit-sharing contributions, or bonus structures may differ between the for-profit and nonprofit sides. Calculate the trade-off: compare the value of loan forgiveness ($50K-$300K+) against any reduction in benefits.</div>
+</div>
+</div>
+
+<div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:12px;align-items:end">
+<div class="igrp" style="margin-bottom:0"><label>Your Age</label><input type="number" class="ninput" id="nwAge" value="21" min="18" max="65" oninput="runNW()" style="width:70px"></div>
+<div class="igrp" style="margin-bottom:0"><label>Project To Age</label><input type="number" class="ninput" id="nwTo" value="65" min="40" max="90" oninput="runNW()" style="width:70px"></div>
+
+</div>
+<div id="nwRes"></div><div class="chart-wrap"><canvas id="nwChart"></canvas></div>
+</div>
+
+<!-- MY STRATEGY -->
+<div class="sec" id="sec-strategy">
+<div class="tl">Investment Philosophy</div><h2 class="tl2">My Investment Strategy</h2>
+<p class="ts">How I invest my money and why. Not advice  - just what I personally do.</p>
+
+<div class="card"><div class="ct">The Core Idea</div>
+<div class="ic-b" style="margin-bottom:14px">Most people know about the S&P 500  - a fund that tracks the 500 largest U.S. companies. It's the gold standard of investing: diversified, low-cost, and historically returns about <b>10% per year</b>. That alone will make you wealthy if you're patient.</div>
+<div class="ic-b" style="margin-bottom:14px">Personally, I invest in <b>5 funds total</b>: the S&P 500 index fund as my foundation, plus <b>4 actively managed mutual funds</b> that focus on areas I believe will outperform over the next 20-30 years  - specifically <b>technology, artificial intelligence, cloud computing, and large-cap growth</b>.</div>
+<div class="ic-b">I've been in this exact strategy since <b>2018</b>. Through COVID, through rate hikes, through everything.</div>
+<div class="ic-b" style="margin-top:12px">It's also a <b>set-it-and-forget-it</b> approach. I set up automatic investments once, allocated across these 5 funds, and I don't log in, I don't check it, I don't tinker. The money goes in every month on autopilot. That's it. No panic selling, no overthinking. Set it up once and let compounding do the work for decades.</div>
+</div>
+
+<div class="card"><div class="ct">Blended Portfolio Performance</div>
+<p style="font-size:11px;color:var(--mt);margin-bottom:10px">Equal-weight average across all 5 funds. As of February 2026.</p>
+<div class="tw"><table class="tbl"><thead><tr><th>Period</th><th>Blended Return</th><th>S&P 500 Alone</th><th>Difference</th></tr></thead><tbody>
+<tr><td style="color:var(--wh)">1 Year</td><td style="color:var(--ac);font-weight:600">+20.43%</td><td>+16.33%</td><td style="color:var(--ac)">+4.10%</td></tr>
+<tr><td style="color:var(--wh)">3 Year (annualized)</td><td style="color:var(--ac);font-weight:600">+29.46%</td><td>+21.10%</td><td style="color:var(--ac)">+8.36%</td></tr>
+
+<tr><td style="color:var(--wh)">10 Year (annualized)</td><td style="color:var(--ac);font-weight:600">+19.73%</td><td>+15.56%</td><td style="color:var(--ac)">+4.17%</td></tr>
+<tr><td style="color:var(--wh)">Life of Funds</td><td style="color:var(--ac);font-weight:600">+13.40%</td><td>+11.22%</td><td style="color:var(--ac)">+2.18%</td></tr>
+</tbody></table></div>
+<div class="note" style="margin-top:10px"><b>Is the higher expense ratio worth it?</b> Over the last 10 years, the growth tilt has added ~4% annually over the S&P alone. The 0.50% higher fee is a fraction of that outperformance. Of course, past performance doesn't guarantee future results.</div>
+</div>
+
+<div class="card"><div class="ct">What the 5 Funds Invest In</div>
+<div style="margin-bottom:14px">
+<div style="font-size:11px;font-weight:700;color:var(--ac);margin-bottom:10px">THE 5 FUNDS &amp; THEIR TOP HOLDINGS (as of Feb 2026)</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+
+<div style="padding:12px;background:var(--bg4);border-radius:var(--Rs)"><div style="font-size:11px;font-weight:700;color:var(--wh);margin-bottom:6px">1. Technology Sector Fund</div>
+<div style="font-size:10px;color:var(--mt);margin-bottom:4px">Pure tech exposure  - semiconductors, enterprise software, cloud infrastructure</div>
+<div style="font-size:11px;color:var(--br);line-height:1.8">NVIDIA (25.3%) · Apple (12.1%) · Microsoft (7.5%) · NXP Semiconductors · Marvell Technology · Cisco · ON Semiconductor · Micron · Shopify · Snowflake</div></div>
+
+<div style="padding:12px;background:var(--bg4);border-radius:var(--Rs)"><div style="font-size:11px;font-weight:700;color:var(--wh);margin-bottom:6px">2. Blue-Chip Large-Cap Growth</div>
+<div style="font-size:10px;color:var(--mt);margin-bottom:4px">The biggest, most dominant growth companies in the world</div>
+<div style="font-size:11px;color:var(--br);line-height:1.8">NVIDIA (15.0%) · Apple (10.3%) · Alphabet (7.9%) · Amazon (7.8%) · Microsoft (7.2%) · Meta (4.3%) · Broadcom (3.8%) · Eli Lilly · Netflix · Marvell</div></div>
+
+<div style="padding:12px;background:var(--bg4);border-radius:var(--Rs)"><div style="font-size:11px;font-weight:700;color:var(--wh);margin-bottom:6px">3. OTC / NASDAQ Growth</div>
+<div style="font-size:10px;color:var(--mt);margin-bottom:4px">NASDAQ-listed innovation companies  - heavy tech and growth</div>
+<div style="font-size:11px;color:var(--br);line-height:1.8">NVIDIA (15.7%) · Apple (10.5%) · Microsoft (9.7%) · Alphabet (8.9%) · Amazon (6.0%) · Meta (3.7%) · Broadcom · Marvell · Tesla · ServiceNow</div></div>
+
+<div style="padding:12px;background:var(--bg4);border-radius:var(--Rs)"><div style="font-size:11px;font-weight:700;color:var(--wh);margin-bottom:6px">4. Large-Cap Stock Picker</div>
+<div style="font-size:10px;color:var(--mt);margin-bottom:4px">Actively managed  - finds undervalued growth across all sectors</div>
+<div style="font-size:11px;color:var(--br);line-height:1.8">Meta (12.4%) · NVIDIA (9.4%) · Berkshire Hathaway (6.0%) · Amazon · Microsoft · Alphabet · Eli Lilly · Salesforce · Visa · Mastercard</div></div>
+
+<div style="padding:12px;background:var(--bg4);border-radius:var(--Rs);grid-column:1/-1"><div style="font-size:11px;font-weight:700;color:var(--wh);margin-bottom:6px">5. S&P 500 Index Fund (The Anchor)</div>
+<div style="font-size:10px;color:var(--mt);margin-bottom:4px">Broad market exposure  - 500 largest U.S. companies. The foundation.</div>
+<div style="font-size:11px;color:var(--br);line-height:1.8">Apple · NVIDIA · Microsoft · Amazon · Alphabet · Meta · Broadcom · Tesla · Berkshire Hathaway · JPMorgan Chase  - plus 490 more. Low cost (0.015% expense ratio). This is the bedrock.</div></div>
+
+</div>
+<div style="font-size:10px;color:var(--mt);margin-top:8px">Notice the overlap: NVIDIA, Apple, Microsoft, Amazon, and Meta appear across nearly all 5 funds. That's intentional  - these are the companies driving the AI revolution. The growth funds just give them even heavier weighting.</div>
+</div>
+<div class="ic-hl"><b style="color:var(--ac)">My take:</b> The S&P 500 alone is a phenomenal investment. If that's all you ever do, you'll be wealthy. But if you have conviction about where the world is heading  - AI, automation, cloud  - a growth tilt can meaningfully accelerate your wealth. I've held this through every correction and I haven't sold a share. Time in the market beats timing the market.</div>
+</div>
+
+<div class="card"><div class="ct">Index Funds vs. Actively Managed Mutual Funds</div>
+<div class="ic-b" style="margin-bottom:10px"><b>Index funds</b> are passive  - they just buy every stock in an index like the S&P 500. Super low cost (0.015%), broad diversification, and historically beat most active managers over time. This is the default recommendation for everyone.</div>
+<div class="ic-b" style="margin-bottom:10px"><b>Actively managed mutual funds</b> are run by professional stock pickers who try to beat the market. Most fail. But the ones that succeed  - especially in sectors like tech  - can meaningfully outperform. The tradeoff is higher fees and more concentration risk.</div>
+<div class="ic-b"><b>My approach:</b> I use both. The S&P 500 is my anchor. The 4 growth funds are my conviction bet on technology. It's worked for me since 2018, but I understand the risk that comes with concentration.</div>
+</div>
+
+<div style="padding:16px;background:var(--bg3);border:1px solid var(--ac);border-radius:var(--R);text-align:center;margin-top:14px">
+<div style="font-size:14px;font-weight:600;color:var(--wh);margin-bottom:6px">Want to Know the Exact Funds?</div>
+<div style="font-size:12px;color:var(--mt)">Reach out to me directly and I'm happy to share the specific fund names and tickers.</div>
+</div>
+
+
+<div class="card" style="margin-top:20px"><div class="ct">Alternative Investments</div>
+<div class="ic-b" style="margin-bottom:14px">The 5-fund strategy above is my core portfolio  - where the vast majority of my money goes. But I also allocate a smaller percentage into <b>alternative investments</b> for diversification, asymmetric upside, and because I find them genuinely fascinating. These are higher risk, less liquid, and not for everyone  - but they can be powerful wealth accelerators when used responsibly alongside a strong foundation.</div>
+</div>
+
+<div class="card"><div class="ct">Bitcoin & Cryptocurrency</div>
+<div style="display:grid;grid-template-columns:1fr auto;gap:12px;align-items:start;margin-bottom:12px">
+<div class="ic-b">I believe in allocating <b>5-10% of my portfolio into Bitcoin</b>. Not meme coins. Not altcoin gambling. Bitcoin specifically  - as a long-term store of value and a hedge against inflation and currency devaluation. Institutions, governments, and the largest asset managers on Earth (BlackRock, Fidelity) are now holding Bitcoin. That tells you something.</div>
+<div style="padding:10px 14px;background:var(--bg4);border-radius:var(--Rs);text-align:center;flex:1;max-width:200px"><div style="font-size:10px;font-weight:700;color:var(--mt)">MY ALLOCATION</div><div style="font-family:var(--disp);font-size:22px;font-weight:700;color:var(--am)">5-10%</div><div style="font-size:10px;color:var(--mt)">of total portfolio</div></div>
+</div>
+<div class="ic-b" style="margin-bottom:10px">Bitcoin is volatile  - it can drop 50% in a month. That's exactly why you limit it to 5-10% and <b>never invest money you can't afford to lose</b>. But zoom out: over any 4+ year period in its history, Bitcoin has been positive. It's the best-performing asset of the last decade by a wide margin.</div>
+
+</div>
+
+<div class="card" style="border-top:2px solid var(--am)"><div class="ct">A Note on Real Estate</div>
+<div style="padding:8px 10px;background:var(--bg4);border-radius:var(--Rs);margin-bottom:12px;font-size:12px;color:var(--br)"><b style="color:var(--am)">Why this is separate:</b> Real estate doesn&#8217;t fit into a neat percentage allocation. A single property can represent a large portion of your net worth, so it naturally becomes its own category rather than a 5-10% slice. It&#8217;s a powerful wealth-building tool, but it requires significant capital, education, and patience. Below is what I&#8217;ve learned from my own experience  - not a recommendation that everyone should follow the same path.</div>
+<div class="ic-b" style="margin-bottom:12px">That said, real estate is one of the most powerful wealth-building tools that exists  - not just for appreciation, but for the <b>tax advantages</b> that most people don't understand until they're in it.</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+<div style="padding:10px;background:var(--bg4);border-radius:var(--Rs)"><div style="font-size:10px;font-weight:700;color:var(--ac);margin-bottom:4px">TAX ADVANTAGES</div>
+<div style="font-size:12px;color:var(--br);line-height:1.8">&bull; <b>Depreciation</b>  - deduct the cost of the building over 27.5 years, even if it's going UP in value<br>&bull; <b>Mortgage interest deduction</b><br>&bull; <b>1031 Exchange</b>  - sell a property and defer ALL capital gains by rolling into a new property<br>&bull; <b>Cost segregation</b>  - accelerate depreciation for massive year-one tax write-offs<br>&bull; <b>Pass-through income</b>  - rental income taxed at your rate, offset by deductions above</div></div>
+<div style="padding:10px;background:var(--bg4);border-radius:var(--Rs)"><div style="font-size:10px;font-weight:700;color:var(--ac);margin-bottom:4px">WHY I PREFER DEVELOPMENT</div>
+<div style="font-size:12px;color:var(--br);line-height:1.8">I prefer <b>larger development plays</b>  - ground-up construction, major renovations, multi-unit projects  - over small fix-and-flips. Why?<br><br>&bull; Better ROI per dollar of effort<br>&bull; Better use of my time<br>&bull; Scalable  - one big deal beats ten small ones<br>&bull; Forces from the market side (housing demand, zoning) favor bigger projects<br>&bull; Tax benefits are significantly larger on development deals</div></div>
+</div>
+<div class="ic-b" style="margin-bottom:10px">Flips are very profitable, but they are also a lot of work - especially if you are managing other businesses, have a career, or have other priorities pulling at your time. Don't let anyone scare you into thinking real estate is rocket science. It's not. You can do it. You just have to run the numbers. Men lie, women lie, numbers don't. Math is math.</div>
+<div class="ic-b" style="margin-top:8px"><b>Flips vs. Development:</b> The time, stress, and contractor headaches of a flip versus a development deal aren't proportional to the returns. <b>Think bigger.</b> One well-executed development project can generate more wealth than years of flips combined.</div>
+<div class="ic-hl"><b style="color:var(--ac)">My take:</b> Real estate is one of the few investments where you can use leverage (a mortgage), get tax benefits, earn cash flow, AND build equity simultaneously. It's how generational wealth has been built for centuries. But it requires education, capital, and patience  - don't jump in without understanding the numbers.</div>
+</div>
+
+<div class="card"><div class="ct">Angel Investing & Venture Capital</div>
+<div style="padding:10px 14px;background:var(--acd);border:1px solid var(--ac15);border-radius:var(--Rs);margin-bottom:14px;font-size:12px;color:var(--br)"><b style="color:var(--ac)">What is this?</b> Angel investing and venture capital (VC) is investing in private companies BEFORE they go public. Think of it like being on <b>Shark Tank</b>  - except the companies are real startups, the checks are real, and if you pick right, the returns are life-changing. You're buying equity in a company when it's worth $5 million, hoping it becomes worth $5 billion.</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+<div style="padding:12px;background:var(--bg4);border-radius:var(--Rs)"><div style="font-size:10px;font-weight:700;color:var(--ac);margin-bottom:6px">EARLY STAGE (Seed / Series A)</div>
+<div style="font-size:12px;color:var(--br);line-height:1.8">The company might just be an idea, a prototype, or a small team with early traction. This is the riskiest stage  - most companies at this point will fail completely. But this is also where the <b>biggest returns</b> come from. You're investing at a valuation of $2M-$20M. Typical check: $1K-$25K.<br><br><b>Think:</b> Uber in 2010, Robinhood in 2013, Airbnb in 2009. Nobody knew these names yet.</div></div>
+<div style="padding:12px;background:var(--bg4);border-radius:var(--Rs)"><div style="font-size:10px;font-weight:700;color:var(--ac);margin-bottom:6px">LATE STAGE (Series C-F / Pre-IPO)</div>
+<div style="font-size:12px;color:var(--br);line-height:1.8">The company is already big  - real revenue, real users, real brand. You're investing at a valuation of $500M-$10B+. Less risky than early stage, but the return multiples are smaller. Typical check: $25K-$500K+.<br><br><b>Think:</b> SpaceX, Stripe, or Databricks right before they go public. You know the company works  - you're betting on the IPO pop.</div></div>
+</div>
+
+<div style="margin-bottom:14px"><div style="font-size:11px;font-weight:700;color:var(--ac);margin-bottom:8px">WHAT WOULD $5,000 IN THE SEED ROUND BE WORTH TODAY?</div>
+<div class="tw"><table class="tbl"><thead><tr><th>Company</th><th>Seed Valuation</th><th>Peak / Current Value</th><th>Your $5,000 Becomes...</th><th>Return</th></tr></thead><tbody>
+<tr><td style="color:var(--wh);font-weight:600">Robinhood</td><td>~$5M (2013)</td><td>~$50B peak (IPO 2021)</td><td style="color:var(--ac);font-weight:700;font-family:var(--disp);font-size:16px">~$50,000,000</td><td style="color:var(--ac)">10,000x</td></tr>
+<tr><td style="color:var(--wh);font-weight:600">Airbnb</td><td>~$2.5M (2009)</td><td>~$85B (IPO 2020)</td><td style="color:var(--ac);font-weight:700;font-family:var(--disp);font-size:16px">~$170,000,000</td><td style="color:var(--ac)">34,000x</td></tr>
+<tr><td style="color:var(--wh);font-weight:600">Uber</td><td>~$4M (2010)</td><td>~$160B market cap</td><td style="color:var(--ac);font-weight:700;font-family:var(--disp);font-size:16px">~$200,000,000</td><td style="color:var(--ac)">40,000x</td></tr>
+<tr style="border-top:2px solid var(--bd)"><td style="color:var(--rd);font-weight:600">The Other 97%</td><td>Various</td><td style="color:var(--rd)">$0 (Failed)</td><td style="color:var(--rd);font-weight:700;font-family:var(--disp);font-size:16px">$0</td><td style="color:var(--rd)">-100%</td></tr>
+</tbody></table></div>
+<div style="font-size:10px;color:var(--mt);margin-top:6px;font-style:italic">Rough estimates based on seed valuations and peak market caps. Actual returns depend on share class, dilution, and timing of exit. These are extreme outliers  - not typical outcomes.</div>
+</div>
+
+<div style="padding:12px;background:var(--rdd);border:1px solid rgba(255,82,82,.12);border-radius:var(--Rs);margin-bottom:14px">
+<div style="font-size:11px;font-weight:700;color:var(--rd);margin-bottom:6px">THE REALITY CHECK</div>
+<div style="font-size:12px;color:var(--tx);line-height:1.8">For every Uber, there are <b>hundreds of companies that go to zero</b>. Just like Shark Tank  - you see the success stories on TV, but most deals on that show never make a dime. In venture capital, the industry standard is that <b>6-7 out of every 10 investments fail completely</b>. Another 2-3 return modest amounts. And maybe <b>1 out of 10 hits big enough to make the entire portfolio profitable</b>. That one winner has to be big enough to cover all the losses and then some. That's the game.</div>
+</div>
+
+<div style="padding:12px;background:var(--bg4);border-radius:var(--Rs);margin-bottom:14px">
+<div style="font-size:11px;font-weight:700;color:var(--am);margin-bottom:6px">⚠️ WHO CAN INVEST? (Accredited Investors Only)</div>
+<div style="font-size:12px;color:var(--br);line-height:1.8">The SEC restricts private investments to <b>accredited investors</b>  - people who meet at least one of these criteria:
+<div style="margin:8px 0;padding:8px;background:var(--bg3);border-radius:var(--Rs)"><b style="color:var(--wh)">&bull; Income:</b> $200,000+/year individually<br><b style="color:var(--wh)">&bull; Net Worth:</b> $1,000,000+ in assets</div></div>
+<div style="font-size:12px;color:var(--br);line-height:1.8;margin-top:8px"></div>
+
+<div class="ic-b" style="margin-bottom:12px"><b style="color:var(--wh)">Here's the thing nobody tells you:</b> Getting INTO venture capital deals is nearly impossible. The best deals  - the ones that produce those 1,000x returns  - are incredibly competitive. Thousands of investors are trying to get into the same hot startup. It's like a <b>secret society</b>. The top VC firms (Sequoia, Andreessen Horowitz, Benchmark) get first access. Then their network of partners and friends. By the time a deal reaches "regular" accredited investors, it's usually late-stage at a high valuation with much smaller return potential.</div>
+
+<div class="ic-b" style="margin-bottom:12px">The way in? <b>Relationships.</b> You need a friend who works at a VC firm, a founder who's raising a round, or access to a syndicate (like AngelList) where deals are shared with a broader group. Even then, allocation is limited </div>
+
+<div class="ic-hl"><b style="color:var(--ac)">My take:</b> If you hit once, you're good for life. A small check into the right company at the right time can return more than a lifetime of salary. But the odds are stacked against you, and 90%+ of your picks will go to zero. This is the highest-risk, highest-reward game in investing. It's not for your retirement money. It's for the portion of your portfolio you've mentally written off  - and it only makes sense after everything else is fully funded. If you have any friends in the venture capital world, <b>please connect us  - I'm always looking for access to quality deal flow.</b></div>
+</div>
+
+<div style="padding:12px;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--R);margin-top:14px">
+<div style="font-size:11px;font-weight:700;color:var(--mt);margin-bottom:6px">MY OVERALL PORTFOLIO PHILOSOPHY</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px">
+<div style="padding:10px;background:var(--bg4);border-radius:var(--Rs);text-align:center"><div style="font-family:var(--disp);font-size:20px;font-weight:700;color:var(--ac)">80%+</div><div style="font-size:10px;font-weight:700;color:var(--mt)">Core Investments</div><div style="font-size:10px;color:var(--mt)">5-fund strategy + retirement accounts</div></div>
+<div style="padding:10px;background:var(--bg4);border-radius:var(--Rs);text-align:center"><div style="font-family:var(--disp);font-size:20px;font-weight:700;color:var(--am)">5-10%</div><div style="font-size:10px;font-weight:700;color:var(--mt)">Bitcoin</div><div style="font-size:10px;color:var(--mt)">Long-term hold</div></div>
+
+<div style="padding:10px;background:var(--bg4);border-radius:var(--Rs);text-align:center"><div style="font-family:var(--disp);font-size:20px;font-weight:700;color:var(--rd)">5-10%</div><div style="font-size:10px;font-weight:700;color:var(--mt)">Venture / Angel</div><div style="font-size:10px;color:var(--mt)">High-risk moonshots</div></div>
+</div>
+<div style="margin-top:8px;padding:12px;background:var(--bg4);border-radius:var(--Rs);text-align:center">
+<div style="font-family:var(--disp);font-size:16px;font-weight:700;color:var(--wh)">REAL ESTATE</div>
+<div style="font-size:11px;color:var(--br);margin-top:4px">Primary home + investment properties. No fixed percentage - this is the foundation underneath everything else.</div>
+<div style="display:flex;justify-content:center;gap:20px;margin-top:6px">
+<span style="font-size:10px;color:var(--mt)">Primary Residence</span>
+<span style="font-size:10px;color:var(--mt)">Investment Properties</span>
+<span style="font-size:10px;color:var(--mt)">Development Projects</span>
+</div>
+</div>
+<div style="font-size:10px;color:var(--mt);margin-top:8px;text-align:center">Core portfolio comes first. Always. Alternatives only after the foundation is solid. Real estate is discussed separately below  - it can be a huge wealth builder, but it's its own category.</div>
+</div>
+
+<div style="font-size:10px;color:var(--mt);margin-top:10px;font-style:italic">Past performance does not guarantee future results. All data as of February 2026. These are my personal investments and opinions, not financial advice or recommendations. Expense ratios reduce net returns. Alternative investments carry significant additional risk including total loss of principal.</div>
+</div>
+
+</div>
+
+<!-- TAX CALCULATOR -->
+<div class="sec" id="sec-tax">
+<div class="tl">Income Tax Engine</div><h2 class="tl2">Tax Calculator</h2>
+<p class="ts">See exactly how your income is taxed at every level  - federal brackets, state tax, FICA  - and compare W-2 vs 1099 vs S-Corp.</p>
+<div class="cg"><div>
+<div class="card">
+<div class="ct">Your Income</div>
+<div class="igrp"><label>Gross Annual Income ($)</label><input type="number" class="ninput" id="txInc" value="250000" min="0" step="1000" oninput="runTax()"></div>
+<div class="igrp"><label>Filing Status</label><select class="nselect" id="txFS" onchange="runTax()"><option value="single">Single</option><option value="mfj">Married Filing Jointly</option><option value="mfs">Married Filing Separately</option><option value="hoh">Head of Household</option></select></div>
+<div class="igrp"><label>State</label><select class="nselect" id="txSt" onchange="runTax()"><option value="NY">New York</option><option value="NJ">New Jersey</option><option value="CT">Connecticut</option><option value="PA">Pennsylvania</option><option value="NC">North Carolina</option><option value="SC">South Carolina</option><option value="WV">West Virginia</option><option value="FL">Florida</option><option value="CA">California</option><option value="TX">Texas</option><option value="NV">Nevada</option><option value="WA">Washington</option><option value="IL">Illinois</option><option value="WY">Wyoming</option><option value="NM">New Mexico</option><option value="GA">Georgia</option></select></div>
+<div id="txNYCwrap"><div class="dchk" id="txNYC" style="margin-bottom:8px"><input type="checkbox"><div class="cm"></div><span style="font-size:12px">I live in NYC (adds city tax)</span></div></div>
+<div class="ct" style="margin-top:16px">How Are You Paid?</div>
+<div class="tg" id="txType"><button class="on" data-v="w2">W-2 Employee</button><button data-v="1099">1099 Contractor</button><button data-v="scorp">S-Corp Owner</button></div>
+<div id="txScorpWrap" style="display:none"><div class="igrp"><label>S-Corp Salary ($)</label><input type="number" class="ninput" id="txScSal" value="100000" min="0" step="5000" oninput="runTax()"><div class="tooltip">The "reasonable salary" you pay yourself. Rest is distribution.</div></div></div>
+<div class="igrp"><label>Pre-Tax 401(k) Contribution ($)</label><input type="number" class="ninput" id="tx401k" value="0" min="0" max="69000" step="500" oninput="runTax()"><div class="tooltip">This reduces your taxable income dollar-for-dollar (max $23,500 for employee, $69,000 total for Solo)</div></div>
+</div></div>
+<div><div id="txRes"></div></div>
+</div></div>
+
+<!-- STATE COMPARISON -->
+<div class="sec" id="sec-statecomp">
+<div class="tl">Relocation Analysis</div><h2 class="tl2">State Tax Comparison</h2>
+<p class="ts">Thinking about moving? See exactly how much you'd save (or lose) by comparing two states side-by-side.</p>
+<div class="card"><div class="ct">Setup</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+<div class="igrp"><label>Gross Income ($)</label><input type="number" class="ninput" id="scInc" value="250000" min="0" step="5000" oninput="runSC()"></div>
+<div class="igrp"><label>Filing Status</label><select class="nselect" id="scFS" onchange="runSC()"><option value="single">Single</option><option value="mfj">Married Filing Jointly</option></select></div></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<div class="igrp"><label>Current State</label><select class="nselect" id="scA" onchange="runSC()"><option value="NY">New York</option><option value="NJ">New Jersey</option><option value="CT">Connecticut</option><option value="PA">Pennsylvania</option><option value="NC">North Carolina</option><option value="SC">South Carolina</option><option value="WV">West Virginia</option><option value="FL">Florida</option><option value="CA">California</option><option value="TX">Texas</option><option value="NV">Nevada</option><option value="WA">Washington</option><option value="IL">Illinois</option><option value="WY">Wyoming</option><option value="NM">New Mexico</option><option value="GA">Georgia</option></select></div>
+<div class="igrp"><label>Considering Moving To</label><select class="nselect" id="scB" onchange="runSC()"><option value="FL" selected>Florida</option><option value="TX">Texas</option><option value="CA">California</option><option value="NY">New York</option><option value="NJ">New Jersey</option><option value="NC">North Carolina</option><option value="GA">Georgia</option><option value="WA">Washington</option><option value="NV">Nevada</option><option value="WY">Wyoming</option></select></div></div>
+</div><div id="scRes"></div></div>
+
+<!-- COMPARE SCENARIOS -->
+<div class="sec" id="sec-compare">
+<div class="tl">What-If Analysis</div><h2 class="tl2">Compare Two Scenarios</h2>
+<p class="ts">What if you invest more? Start earlier? Get a higher return? See two paths side-by-side.</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
+<div class="card"><div class="ct">Scenario A</div>
+<div class="igrp"><label>Starting Amount</label><input type="number" class="ninput" id="aI" value="0" oninput="runCmp()"></div>
+<div class="igrp"><label>Monthly</label><input type="number" class="ninput" id="aM" value="300" oninput="runCmp()"></div>
+<div class="igrp"><label>Years</label><input type="number" class="ninput" id="aY" value="30" min="1" max="50" oninput="runCmp()"></div>
+<div class="igrp"><label>Return %</label><input type="number" class="ninput" id="aR" value="10" oninput="runCmp()"></div></div>
+<div class="card"><div class="ct">Scenario B</div>
+<div class="igrp"><label>Starting Amount</label><input type="number" class="ninput" id="bI" value="0" oninput="runCmp()"></div>
+<div class="igrp"><label>Monthly</label><input type="number" class="ninput" id="bM" value="500" oninput="runCmp()"></div>
+<div class="igrp"><label>Years</label><input type="number" class="ninput" id="bY" value="30" min="1" max="50" oninput="runCmp()"></div>
+<div class="igrp"><label>Return %</label><input type="number" class="ninput" id="bR" value="10" oninput="runCmp()"></div></div>
+</div><div id="cmpRes"></div><div class="chart-wrap"><canvas id="cmpChart"></canvas></div></div>
+
+<!-- RULES -->
+<div class="sec" id="sec-rules">
+<div class="tl">My Playbook</div><h2 class="tl2">What I Personally Do</h2>
+<p class="ts">Not financial advice. This is what I do.</p>
+<div id="rulesC"></div></div>
+
+<!-- ACCOUNTS -->
+<div class="sec" id="sec-accounts">
+<div class="tl">Educational Reference</div><h2 class="tl2">Account Types & My Strategy</h2>
+<p class="ts">Plain-English breakdown of retirement accounts, tax advantages, and my personal investment approach.</p>
+<div id="acctRes"></div>
+</div>
+<footer class="ft"><div class="v">ABV Financial Intelligence Platform V3.1 · Educational Use Only</div>
+<div class="d">This platform is for informational and educational purposes only. It is not financial, investment, tax, or legal advice. All projections are estimates based on simplified assumptions. Past performance does not guarantee future results. Consult a qualified professional before making financial decisions.<br>Built by Abe Varughese</div></footer>
+</div>
+
+<script>
+const $f=v=>'$'+Math.round(v).toLocaleString('en-US');
+const $k=v=>{if(Math.abs(v)>=1e6)return(v<0?'-':'')+'$'+(Math.abs(v)/1e6).toFixed(2)+'M';if(Math.abs(v)>=1e3)return(v<0?'-':'')+'$'+(Math.abs(v)/1e3).toFixed(0)+'K';return'$'+Math.round(v)};
+const pct2=(v,t)=>t>0?(v/t*100).toFixed(1)+'%':'0%';
+const CY=new Date().getFullYear();
+
+// TAX DATA (2025)
+const FED={single:[[0,11925,.10],[11925,48475,.12],[48475,103350,.22],[103350,197300,.24],[197300,250525,.32],[250525,626350,.35],[626350,1e15,.37]],mfj:[[0,23850,.10],[23850,96950,.12],[96950,206700,.22],[206700,394600,.24],[394600,501050,.32],[501050,751600,.35],[751600,1e15,.37]],mfs:[[0,11925,.10],[11925,48475,.12],[48475,103350,.22],[103350,197300,.24],[197300,250525,.32],[250525,375800,.35],[375800,1e15,.37]],hoh:[[0,17000,.10],[17000,64850,.12],[64850,103350,.22],[103350,197300,.24],[197300,250500,.32],[250500,626350,.35],[626350,1e15,.37]]};
+const FED_SD={single:15000,mfj:30000,mfs:15000,hoh:22500};
+const FICA={ssR:.062,ssC:176100,medR:.0145,addMedR:.009,addMedT:{single:200000,mfj:250000,mfs:125000,hoh:200000}};
+const ST={NY:{n:'New York',sd:{single:8000,mfj:16050,mfs:8000,hoh:11200},single:[[0,8500,.04],[8500,11700,.045],[11700,13900,.0525],[13900,80650,.055],[80650,215400,.06],[215400,1077550,.0685],[1077550,5000000,.0965],[5000000,25000000,.103],[25000000,1e15,.109]],mfj:[[0,17150,.04],[17150,23600,.045],[23600,27900,.0525],[27900,161550,.055],[161550,323200,.06],[323200,2155350,.0685],[2155350,5000000,.0965],[5000000,25000000,.103],[25000000,1e15,.109]]},NJ:{n:'New Jersey',sd:{},single:[[0,20000,.014],[20000,35000,.0175],[35000,40000,.035],[40000,75000,.05525],[75000,500000,.0637],[500000,1000000,.0897],[1000000,1e15,.1075]],mfj:[[0,20000,.014],[20000,50000,.0175],[50000,70000,.035],[70000,80000,.05525],[80000,150000,.0637],[150000,500000,.0637],[500000,1000000,.0897],[1000000,1e15,.1075]]},CT:{n:'Connecticut',sd:{},single:[[0,10000,.03],[10000,50000,.05],[50000,100000,.055],[100000,200000,.06],[200000,250000,.065],[250000,500000,.069],[500000,1e15,.0699]],mfj:[[0,20000,.03],[20000,100000,.05],[100000,200000,.055],[200000,400000,.06],[400000,500000,.065],[500000,1000000,.069],[1000000,1e15,.0699]]},PA:{n:'Pennsylvania',flat:.0307},NC:{n:'North Carolina',flat:.0425},SC:{n:'South Carolina',sd:{},single:[[0,3460,0],[3460,17330,.03],[17330,1e15,.064]],mfj:[[0,3460,0],[3460,17330,.03],[17330,1e15,.064]]},WV:{n:'West Virginia',sd:{},single:[[0,10000,.0236],[10000,25000,.0315],[25000,40000,.0354],[40000,60000,.0472],[60000,1e15,.0512]],mfj:[[0,10000,.0236],[10000,25000,.0315],[25000,40000,.0354],[40000,60000,.0472],[60000,1e15,.0512]]},FL:{n:'Florida',flat:0},CA:{n:'California',sd:{single:5540,mfj:11080,mfs:5540,hoh:5540},single:[[0,10412,.01],[10412,24684,.02],[24684,38959,.04],[38959,54081,.06],[54081,68350,.08],[68350,349137,.093],[349137,418961,.103],[418961,698271,.113],[698271,1000000,.123],[1000000,1e15,.133]],mfj:[[0,20824,.01],[20824,49368,.02],[49368,77918,.04],[77918,108162,.06],[108162,136700,.08],[136700,698274,.093],[698274,837922,.103],[837922,1396542,.113],[1396542,1e15,.123]]},TX:{n:'Texas',flat:0},NV:{n:'Nevada',flat:0},WA:{n:'Washington',flat:0},IL:{n:'Illinois',flat:.0495},WY:{n:'Wyoming',flat:0},NM:{n:'New Mexico',sd:{},single:[[0,5500,.017],[5500,11000,.032],[11000,16500,.047],[16500,22000,.049],[22000,1e15,.059]],mfj:[[0,8000,.017],[8000,16000,.032],[16000,24000,.047],[24000,33500,.049],[33500,1e15,.059]]},GA:{n:'Georgia',flat:.0539}};
+const NYC_B={single:[[0,12000,.03078],[12000,25000,.03762],[25000,50000,.03819],[50000,1e15,.03876]],mfj:[[0,21600,.03078],[21600,45000,.03762],[45000,90000,.03819],[90000,1e15,.03876]]};
+
+function calcBrk(inc,brk){let t=0,bd=[];for(const[lo,hi,r]of brk){if(inc<=lo)break;const tx=Math.min(inc,hi)-lo,tax=tx*r;if(tax>0)bd.push({lo,hi:Math.min(inc,hi),r,tx,tax});t+=tax}return{t,bd}}
+function calcST(inc,code,fs){const s=ST[code];if(!s)return{t:0,bd:[],n:'?',eff:0};let ti=inc;if(s.sd&&s.sd[fs])ti=Math.max(0,inc-s.sd[fs]);if(s.flat!==undefined){const tax=ti*s.flat;return{t:tax,bd:s.flat>0?[{lo:0,hi:ti,r:s.flat,tx:ti,tax}]:[],n:s.n,eff:inc>0?tax/inc*100:0}}const brk=s[fs]||s.single||[];const res=calcBrk(ti,brk);return{...res,n:s.n,eff:inc>0?res.t/inc*100:0}}
+
+// COMPOUND INTEREST
+function calcFV(P,PMT,rate,yrs){const r=rate/100/12,n=yrs*12;if(rate===0)return{bal:P+PMT*n,contrib:P+PMT*n,interest:0};return{bal:P*Math.pow(1+r,n)+PMT*((Math.pow(1+r,n)-1)/r),contrib:P+PMT*n,interest:P*Math.pow(1+r,n)+PMT*((Math.pow(1+r,n)-1)/r)-(P+PMT*n)}}
+function yearByYear(P,PMT,rate,yrs){const r=rate/100/12;let bal=P,tc=P,data=[];for(let y=1;y<=yrs;y++){let yi=0;for(let m=0;m<12;m++){const i=bal*r;yi+=i;bal+=i+PMT}tc+=PMT*12;data.push({yr:y,bal,contrib:tc,interest:bal-tc,yi})}return data}
+
+// CHARTS
+let calcChartObj=null,retChartObj=null,cmpChartObj=null,nwChartObj=null;
+function getCC(){return{c1:'rgba(0,150,255,.6)',c2:'rgba(0,212,116,.6)',c1b:'rgba(0,150,255,.1)',c2b:'rgba(0,212,116,.1)',grid:'rgba(255,255,255,.04)',mt:'#6b7394',wh:'#e6f1ff'}}
+function mkChart(id,labels,d1,d2,l1,l2,old){if(old)old.destroy();const c=getCC();const ctx=document.getElementById(id);if(!ctx)return null;return new Chart(ctx,{type:'line',data:{labels,datasets:[{label:l1,data:d1,borderColor:c.c2,backgroundColor:c.c2b,fill:true,tension:.3,pointRadius:0,pointHoverRadius:5,borderWidth:2},{label:l2,data:d2,borderColor:c.c1,backgroundColor:c.c1b,fill:true,tension:.3,pointRadius:0,pointHoverRadius:5,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,interaction:{intersect:false,mode:'index'},plugins:{legend:{labels:{color:c.mt,font:{size:11,family:'Inter'},boxWidth:12,padding:16}},tooltip:{backgroundColor:'rgba(0,0,0,.85)',titleColor:c.wh,bodyColor:c.mt,padding:12,cornerRadius:6,callbacks:{label:function(ctx){return ctx.dataset.label+': '+$f(ctx.parsed.y)}}}},scales:{x:{ticks:{color:c.mt,font:{size:10},maxTicksLimit:12},grid:{color:c.grid}},y:{ticks:{color:c.mt,font:{size:10},callback:function(v){return $k(v)}},grid:{color:c.grid}}}}})}
+
+// ========== INVESTMENT CALCULATOR ==========
+function runCalc(){
+  const P=+document.getElementById('cI').value||0,PMT=+document.getElementById('cM').value||0;
+  const cAge=+document.getElementById('cAge').value||31,retAge=+document.getElementById('cRetAge').value||65;
+  const Y=Math.max(retAge-cAge,1),R=+(document.querySelector('#cRateGroup .on')?.dataset.v||10);
+  document.getElementById('cMV').textContent=$f(PMT);document.getElementById('cAgeV').textContent=cAge;document.getElementById('cRetAgeV').textContent=retAge;
+  const res=calcFV(P,PMT,R,Y);
+  // Project to age 90 for chart
+  const projTo=90,projYrs=Math.max(projTo-cAge,Y);
+  const yd=yearByYear(P,PMT,R,projYrs);
+  const cPct=res.bal>0?res.contrib/res.bal*100:0,iPct=res.bal>0?res.interest/res.bal*100:0;
+  let ms=[];[100000,250000,500000,1000000,2000000,5000000].forEach(function(t){const h=yd.find(function(y){return y.bal>=t});if(h)ms.push({t:t,yr:h.yr})});
+  const wait=calcFV(P,PMT,R,Math.max(Y-5,1)),cost=res.bal-wait.bal;
+  let h='<div class="rg"><div class="rc"><div class="rc-l">Balance at Age '+retAge+'</div><div class="rc-v" style="color:var(--ac)">'+$f(res.bal)+'</div><div class="rc-s">'+Y+' years of growth</div></div>';
+  h+='<div class="rc"><div class="rc-l">You Put In</div><div class="rc-v">'+$f(res.contrib)+'</div></div>';
+  h+='<div class="rc"><div class="rc-l">Gains</div><div class="rc-v">'+$f(res.interest)+'</div><div class="rc-s">'+iPct.toFixed(0)+'% is free money</div></div>';
+  h+='<div class="rc"><div class="rc-l">Growth Multiple</div><div class="rc-v">'+(res.contrib>0?(res.bal/res.contrib).toFixed(1):'0')+'x</div></div></div>';
+  h+='<div style="font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--mt);margin-bottom:4px">Your Money vs The Market\'s Money</div>';
+  h+='<div class="pbar"><div style="width:'+cPct+'%;background:var(--cc1);color:var(--bg)">'+(cPct>10?cPct.toFixed(0)+'% You':'')+'</div><div style="width:'+iPct+'%;background:var(--ac);color:var(--bg)">'+(iPct>10?iPct.toFixed(0)+'% Growth':'')+'</div></div>';
+  document.getElementById('calcRes').innerHTML=h;
+  // Chart to age 90
+  // Chart with retirement line and year labels
+  var calcLabels=yd.map(function(y){var age=cAge+y.yr;return age%5===0||y.yr===Y?'Age '+age+' ('+(CY+y.yr)+')':''});
+  
+  if(calcChartObj)calcChartObj.destroy();var cc=getCC();
+  calcChartObj=new Chart(document.getElementById('calcChart'),{type:'line',data:{labels:calcLabels,datasets:[{label:'Total Balance',data:yd.map(function(y){return y.bal}),borderColor:cc.c2,backgroundColor:cc.c2b,fill:true,tension:.3,pointRadius:0,pointHoverRadius:5,borderWidth:2},{label:'Your Contributions',data:yd.map(function(y){return y.contrib}),borderColor:cc.c1,backgroundColor:cc.c1b,fill:true,tension:.3,pointRadius:0,pointHoverRadius:5,borderWidth:2}]},plugins:[],options:{responsive:true,maintainAspectRatio:false,interaction:{intersect:false,mode:'index'},plugins:{legend:{labels:{color:cc.mt,font:{size:11,family:'Inter'},boxWidth:12,padding:16}},tooltip:{backgroundColor:'rgba(0,0,0,.85)',titleColor:cc.wh,bodyColor:cc.mt,padding:12,cornerRadius:6,callbacks:{label:function(ctx){return ctx.dataset.label+': '+$f(ctx.parsed.y)}}}},scales:{x:{ticks:{color:cc.mt,maxTicksLimit:10,autoSkip:true,font:{size:10},maxTicksLimit:12},grid:{color:cc.grid}},y:{ticks:{color:cc.mt,font:{size:10},callback:function(v){return $k(v)}},grid:{color:cc.grid}}}}});
+  let ex='';
+  if(ms.length){ex+='<div style="margin-top:12px"><div style="font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--mt);margin-bottom:6px">Milestones</div>';ms.forEach(function(m){ex+='<div class="ms"><div class="ms-i">'+(m.t>=1e6?'\u{1F3C6}':'\u{1F3AF}')+'</div><div class="ms-t">Hit <b>'+$f(m.t)+'</b></div><div class="ms-v">Year '+m.yr+' &middot; '+(CY+m.yr)+' &middot; Age '+(cAge+m.yr)+'</div></div>'});ex+='</div>'}
+  if(Y>5){ex+='<div style="padding:10px 12px;background:var(--rdd);border:1px solid rgba(255,82,82,.1);border-radius:var(--Rs);margin-top:10px"><div style="font-size:11px;font-weight:700;color:var(--rd);margin-bottom:3px">\u23F0 What If You Wait 5 Years?</div><div style="font-size:12px;color:var(--tx)">Starting at age '+(cAge+5)+' instead: <b>'+$f(wait.bal)+'</b>  - that\'s <b style="color:var(--rd)">'+$f(cost)+' less</b>. Time is your biggest asset.</div></div>'}
+  document.getElementById('calcExtra').innerHTML=ex;
+}
+
+// ========== RETIREMENT PLANNER ==========
+function runRet(){
+  const age=+document.getElementById('rA').value,rAge=+document.getElementById('rR').value,cur=+document.getElementById('rC').value||0,mon=+document.getElementById('rM').value;
+  const R=+(document.querySelector('#rRateGroup .on')?.dataset.v||10),wd=+document.getElementById('rW').value;
+  const ssMo=+document.getElementById('rSS').value||0,penMo=+document.getElementById('rPen').value||0;
+  const ssAnn=ssMo*12,penAnn=penMo*12,extraAnn=ssAnn+penAnn,extraMo=ssMo+penMo;
+  document.getElementById('rAV').textContent=age;document.getElementById('rRV').textContent=rAge;document.getElementById('rMV').textContent=$f(mon);document.getElementById('rWV').textContent=wd+'%';
+  const yrs=Math.max(rAge-age,1),projTo=90,projYrs=Math.max(projTo-age,yrs);
+  const res=calcFV(cur,mon,R,yrs),portInc=res.bal*(wd/100),totalAnn=portInc+extraAnn,totalMo=totalAnn/12;
+  const yd=yearByYear(cur,mon,R,projYrs);
+  var h='<div class="rg"><div class="rc"><div class="rc-l">Nest Egg at '+rAge+'</div><div class="rc-v">'+$f(res.bal)+'</div></div>';
+  h+='<div class="rc"><div class="rc-l">Portfolio Income</div><div class="rc-v">'+$f(portInc)+'</div><div class="rc-s">'+$f(portInc/12)+'/mo at '+wd+'%</div></div>';
+  if(extraAnn>0){h+='<div class="rc"><div class="rc-l">SS + Pension</div><div class="rc-v">'+$f(extraAnn)+'</div><div class="rc-s">'+$f(extraMo)+'/mo extra</div></div>';
+  h+='<div class="rc"><div class="rc-l">Total Retirement Income</div><div class="rc-v" style="color:var(--ac)">'+$f(totalAnn)+'</div><div class="rc-s">'+$f(totalMo)+'/mo total</div></div>'}
+  else{h+='<div class="rc"><div class="rc-l">Monthly Income</div><div class="rc-v">'+$f(portInc/12)+'</div><div class="rc-s">from investments alone</div></div>'}
+  h+='</div>';
+  if(extraAnn>0){h+='<div class="card" style="margin-bottom:14px"><div class="ct">Income Breakdown at Retirement</div>';
+  h+='<div class="tw"><table class="tbl"><thead><tr><th>Source</th><th>Monthly</th><th>Annual</th></tr></thead><tbody>';
+  h+='<tr><td style="color:var(--wh)">Portfolio ('+wd+'% withdrawal)</td><td>'+$f(portInc/12)+'</td><td>'+$f(portInc)+'</td></tr>';
+  if(ssMo>0)h+='<tr><td style="color:var(--wh)">Social Security</td><td>'+$f(ssMo)+'</td><td>'+$f(ssAnn)+'</td></tr>';
+  if(penMo>0)h+='<tr><td style="color:var(--wh)">Pension</td><td>'+$f(penMo)+'</td><td>'+$f(penAnn)+'</td></tr>';
+  h+='<tr style="border-top:2px solid var(--bd)"><td style="font-weight:700;color:var(--ac)">Total</td><td style="font-weight:700;color:var(--ac)">'+$f(totalMo)+'</td><td style="font-weight:700;color:var(--ac)">'+$f(totalAnn)+'</td></tr>';
+  h+='</tbody></table></div>';
+  h+='<div class="note"><b>Remember:</b> Social Security and pension are supplemental. Your investments are the foundation you control. Build your plan around what YOU save  - treat the rest as a bonus.</div></div>'}
+  h+='<div class="card"><div class="ct">Are You On Track?</div><p style="font-size:12px;color:var(--mt);margin-bottom:10px">How much you need saved to generate different income levels from your portfolio (at '+wd+'% withdrawal):'+(extraAnn>0?' SS + Pension adds '+$f(extraAnn)+'/yr on top.':'')+'</p>';
+  h+='<div class="tw"><table class="tbl"><thead><tr><th>Lifestyle Goal</th><th>Need From Portfolio</th><th>Savings Required</th><th>You\'ll Have</th><th>Status</th></tr></thead><tbody>';
+  [10000,20000,30000,50000,75000,100000,150000,200000,300000,500000].forEach(function(goal){var fromPort=Math.max(0,goal-extraAnn),need=fromPort/(wd/100),ok=res.bal>=need;h+='<tr><td style="color:var(--wh)">'+$f(goal)+'/yr</td><td>'+$f(fromPort)+'</td><td>'+$f(need)+'</td><td style="color:var(--ac);font-weight:600">'+$f(res.bal)+'</td><td style="color:'+(ok?'var(--ac)':'var(--rd)')+';font-weight:600">'+(ok?'\u2705 On Track':'\u274C '+$f(need-res.bal)+' short')+'</td></tr>'});
+  h+='</tbody></table></div></div>';
+  if(ssMo===0)h+='<div class="note"><b>About Social Security:</b> Average benefit is ~$2,000/mo. High earners who max out SS taxes: ~$3,800-$4,800/mo at age 67. Check <b>ssa.gov/myaccount</b> for your personal estimate. Enter it above to see how it supplements your retirement.</div>';
+  document.getElementById('retRes').innerHTML=h;
+  var retLabels=yd.map(function(y){var a=age+y.yr;return a%5===0||y.yr===yrs?'Age '+a+' ('+(CY+y.yr)+')':''});
+  
+  if(retChartObj)retChartObj.destroy();var rc=getCC();
+  retChartObj=new Chart(document.getElementById('retChart'),{type:'line',data:{labels:retLabels,datasets:[{label:'Total Balance',data:yd.map(function(y){return y.bal}),borderColor:rc.c2,backgroundColor:rc.c2b,fill:true,tension:.3,pointRadius:0,pointHoverRadius:5,borderWidth:2},{label:'Your Contributions',data:yd.map(function(y){return y.contrib}),borderColor:rc.c1,backgroundColor:rc.c1b,fill:true,tension:.3,pointRadius:0,pointHoverRadius:5,borderWidth:2}]},plugins:[],options:{responsive:true,maintainAspectRatio:false,interaction:{intersect:false,mode:'index'},plugins:{legend:{labels:{color:rc.mt,font:{size:11,family:'Inter'},boxWidth:12,padding:16}},tooltip:{backgroundColor:'rgba(0,0,0,.85)',titleColor:rc.wh,bodyColor:rc.mt,padding:12,cornerRadius:6,callbacks:{label:function(ctx){return ctx.dataset.label+': '+$f(ctx.parsed.y)}}}},scales:{x:{ticks:{color:rc.mt,maxTicksLimit:10,autoSkip:true,font:{size:10},maxTicksLimit:12},grid:{color:rc.grid}},y:{ticks:{color:rc.mt,font:{size:10},callback:function(v){return $k(v)}},grid:{color:rc.grid}}}}});
+}
+
+// ========== NET WORTH BUILDER ==========
+
+function fmtMoney(el){
+  var pos=el.selectionStart;
+  var raw=el.value.replace(/,/g,'');
+  if(raw===''||raw==='-')return;
+  var num=parseFloat(raw);
+  if(isNaN(num))return;
+  var parts=raw.split('.');
+  var intPart=parts[0].replace(/[^0-9-]/g,'');
+  var formatted=parseInt(intPart).toLocaleString('en-US');
+  if(parts.length>1)formatted+='.'+parts[1];
+  var addedCommas=formatted.length-raw.length;
+  el.value=formatted;
+  var newPos=pos+addedCommas;
+  el.setSelectionRange(newPos,newPos);
+}
+function getNum(id){var el=document.getElementById(id);if(!el)return 0;return parseFloat(el.value.replace(/,/g,''))||0}
+function runDual(){
+  if(!document.getElementById('dualAge'))return;
+  var age=+document.getElementById('dualAge').value||21;
+  var ret=+document.getElementById('dualRet').value||65;
+  var rate=(+document.getElementById('dualRate').value||7)/100;
+  var yrs=Math.max(ret-age,1);
+  var annual1=23500,annual2=47000;
+  var bal1=0,bal2=0;
+  for(var y=0;y<yrs;y++){for(var m=0;m<12;m++){bal1=bal1*(1+rate/12)+annual1/12;bal2=bal2*(1+rate/12)+annual2/12}}
+  var diff=bal2-bal1;
+  var h='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px">';
+  h+='<div style="padding:10px;background:var(--bg4);border-radius:var(--Rs);text-align:center"><div style="font-size:10px;font-weight:700;color:var(--mt)">ONE PLAN ($23,500/yr)</div><div style="font-family:var(--disp);font-size:18px;font-weight:700;color:var(--wh);margin-top:4px">'+$f(bal1)+'</div></div>';
+  h+='<div style="padding:10px;background:var(--bg4);border-radius:var(--Rs);text-align:center"><div style="font-size:10px;font-weight:700;color:var(--mt)">TWO PLANS ($47,000/yr)</div><div style="font-family:var(--disp);font-size:18px;font-weight:700;color:var(--ac);margin-top:4px">'+$f(bal2)+'</div></div>';
+  h+='<div style="padding:10px;background:var(--bg4);border-radius:var(--Rs);text-align:center"><div style="font-size:10px;font-weight:700;color:var(--mt)">THE DIFFERENCE</div><div style="font-family:var(--disp);font-size:18px;font-weight:700;color:var(--am);margin-top:4px">+'+$f(diff)+'</div></div>';
+  h+='</div>';
+  h+='<div style="font-size:10px;color:var(--mt);margin-top:6px;text-align:center">Both scenarios assume max contributions at '+((rate*100).toFixed(1))+'% annual return over '+(ret-age)+' years. No employer match included.</div>';
+  document.getElementById('dualRes').innerHTML=h;
+}
+function runSL(){
+  if(!document.getElementById('slBal'))return;
+  var bal=getNum('slBal');
+  var rate=(+document.getElementById('slRate').value||0)/100;
+  var curPay=getNum('slPay');
+  var targetYrs=+document.getElementById('slYrSlider').value||10;
+  document.getElementById('slYrLabel').textContent=targetYrs+(targetYrs===1?' year':' years');
+  
+  if(bal<=0){var slResEl=document.getElementById('slRes'),slPSLFEl=document.getElementById('slPSLF');if(!slResEl)return;slResEl.innerHTML='';if(slPSLFEl)slPSLFEl.style.display='none';return}
+  var slPSLFEl2=document.getElementById('slPSLF');if(slPSLFEl2)slPSLFEl2.style.display='block';
+  
+  var mr=rate/12,n=targetYrs*12;
+  // Calculate required payment for target payoff
+  var reqPay=mr>0?bal*(mr*Math.pow(1+mr,n))/(Math.pow(1+mr,n)-1):bal/n;
+  // Calculate total interest
+  var totalPaid=reqPay*n,totalInt=totalPaid-bal;
+  // Calculate payoff with current payment
+  var curMonths=0,curInt=0,curBal=bal;
+  if(curPay>0&&curPay>bal*mr){
+    while(curBal>0&&curMonths<600){curMonths++;var intChg=curBal*mr;curInt+=intChg;curBal=curBal+intChg-curPay;if(curBal<0)curBal=0}
+  }
+  var curYrs=Math.floor(curMonths/12),curMo=curMonths%12;
+  // PSLF: 120 payments, show what would be forgiven
+  var pslfBal=bal,pslfInt=0;
+  for(var i=0;i<120&&pslfBal>0;i++){var ic=pslfBal*mr;pslfInt+=ic;pslfBal=Math.max(0,pslfBal+ic-curPay)}
+  
+  var payoffDate=new Date();payoffDate.setMonth(payoffDate.getMonth()+n);
+  var moNames=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  
+  var h='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">';
+  h+='<div style="padding:10px;background:var(--bg3);border-radius:var(--Rs)"><div style="font-size:10px;font-weight:700;color:var(--ac);margin-bottom:4px">TO PAY OFF IN '+targetYrs+' YEARS</div>';
+  h+='<div style="font-family:var(--disp);font-size:20px;font-weight:700;color:var(--wh)">'+$f(reqPay)+'/mo</div>';
+  h+='<div style="font-size:11px;color:var(--mt);margin-top:4px">Total interest: <b style="color:var(--rd)">'+$f(totalInt)+'</b></div>';
+  h+='<div style="font-size:11px;color:var(--mt)">Paid off by: <b style="color:var(--ac)">'+moNames[payoffDate.getMonth()]+' '+payoffDate.getFullYear()+'</b></div></div>';
+  
+  if(curPay>0&&curPay>bal*mr){
+    var curDate=new Date();curDate.setMonth(curDate.getMonth()+curMonths);
+    h+='<div style="padding:10px;background:var(--bg3);border-radius:var(--Rs)"><div style="font-size:10px;font-weight:700;color:var(--am);margin-bottom:4px">AT YOUR CURRENT PAYMENT ('+$f(curPay)+'/mo)</div>';
+    h+='<div style="font-family:var(--disp);font-size:20px;font-weight:700;color:var(--wh)">'+curYrs+'yr '+(curMo>0?curMo+'mo':'')+'</div>';
+    h+='<div style="font-size:11px;color:var(--mt);margin-top:4px">Total interest: <b style="color:var(--rd)">'+$f(curInt)+'</b></div>';
+    h+='<div style="font-size:11px;color:var(--mt)">Paid off by: <b style="color:var(--ac)">'+moNames[curDate.getMonth()]+' '+curDate.getFullYear()+'</b></div></div>';
+  } else if(curPay>0){
+    h+='<div style="padding:10px;background:var(--rdd);border-radius:var(--Rs)"><div style="font-size:10px;font-weight:700;color:var(--rd);margin-bottom:4px">⚠️ PAYMENT TOO LOW</div>';
+    h+='<div style="font-size:12px;color:var(--br)">Your '+$f(curPay)+'/mo doesn\'t cover the monthly interest of '+$f(bal*mr)+'. Balance is growing, not shrinking.</div></div>';
+  } else {
+    h+='<div style="padding:10px;background:var(--bg3);border-radius:var(--Rs)"><div style="font-size:10px;font-weight:700;color:var(--mt);margin-bottom:4px">CURRENT PAYMENT</div>';
+    h+='<div style="font-size:12px;color:var(--mt)">Enter your current monthly payment above to compare.</div></div>';
+  }
+  h+='</div>';
+  
+  if(curPay>0&&pslfBal>0){
+    h+='<div style="margin-top:8px;padding:8px;background:var(--acd);border:1px solid var(--ac15);border-radius:var(--Rs);font-size:11px;color:var(--br)">';
+    h+='<b style="color:var(--ac)">PSLF Scenario:</b> After 10 years of '+$f(curPay)+'/mo payments, remaining balance of <b style="color:var(--ac)">'+$f(pslfBal)+'</b> would be forgiven tax-free. You\'d pay '+$f(curPay*120)+' total vs '+$f(totalPaid)+' to pay in full. <b>Savings: '+$f(totalPaid-curPay*120)+'</b></div>';
+  }
+  
+  var slResEl2=document.getElementById('slRes');if(slResEl2)slResEl2.innerHTML=h;
+  runNW(); // Update net worth to include loan
+}
+
+function runNW(){
+  // Cash
+  var cChk=+document.getElementById('nwCashChk').value||0,cCD=+document.getElementById('nwCashCD').value||0,cHY=+document.getElementById('nwCashHY').value||0;
+  var rChk=(+document.getElementById('nwChkR').value||0)/100,rCD=(+document.getElementById('nwCDR').value||0)/100,rHY=(+document.getElementById('nwHYR').value||0)/100;
+  // Retirement - % based with IRS caps
+  var b401=getNum('nw401');
+  var sal401=getNum('nw401sal');
+  var empPct=+document.getElementById('nw401pct').value||0;
+  var matchPct=+document.getElementById('nw401mp').value||0;
+  var empContrib=Math.min(sal401*(empPct/100),23500); // Cap employee at $23,500
+  var empMatch=sal401*(matchPct/100); // Employer match
+  var total401yr=Math.min(empContrib+empMatch,69000); // Cap total at $69,000
+  var r401=(+(document.querySelector('#nw401rg .on')?.dataset.v||10))/100/12;
+  // IRA
+  var bRoth=getNum('nwRoth'),aRoth=+document.getElementById('nwRothA').value||0;
+  var rIRA=(+(document.querySelector('#nwRothRg .on')?.dataset.v||10))/100/12;
+  // Brokerage
+  var bBrok=getNum('nwBrok'),mBrok=+document.getElementById('nwBrokM').value||0;
+  var rBrok=(+(document.querySelector('#nwBrokRg .on')?.dataset.v||10))/100/12;
+  // Real Estate - read from buttons
+  var bHome=getNum('nwHome'),mort=+document.getElementById('nwMort').value||0;
+  var rHome=(+(document.querySelector('#nwHomeRg .on')?.dataset.v||3))/100;
+  var bRE=getNum('nwRE'),reDebt=+document.getElementById('nwREDebt').value||0;
+  var rRE=(+(document.querySelector('#nwRERg .on')?.dataset.v||3))/100;
+  var nwAge=+document.getElementById('nwAge').value||31,nwTo=+document.getElementById('nwTo').value||65;
+  var yrs=Math.max(nwTo-nwAge,1),projYrs=Math.max(90-nwAge,yrs);
+  var vChk=cChk,vCD=cCD,vHY=cHY,v401=b401,vRoth=bRoth,vBrok=bBrok,vHome=bHome,vRE=bRE;
+  var labels=[],dTotal=[],retirementIdx=yrs-1;
+  for(var y=1;y<=projYrs;y++){
+    vChk=vChk*(1+rChk);vCD=vCD*(1+rCD);vHY=vHY*(1+rHY);
+    for(var m=0;m<12;m++){v401=v401*(1+r401)+total401yr/12;vRoth=vRoth*(1+rIRA)+aRoth/12;vBrok=vBrok*(1+rBrok)+mBrok}
+    vHome=vHome*(1+rHome);vRE=vRE*(1+rRE);
+    var age=nwAge+y,yr=CY+y;
+    labels.push('Age '+age+' ('+yr+')');
+    dTotal.push(vChk+vCD+vHY+v401+vRoth+vBrok+Math.max(0,vHome-mort)+Math.max(0,vRE-reDebt));
+  }
+  var slBal=getNum('slBal');
+  var totalCash=vChk+vCD+vHY;
+  var totalAtTarget=dTotal[yrs-1]||0;
+  var capHit=sal401*(empPct/100)>23500;
+  var h='<div class="rg" style="margin-top:14px"><div class="rc"><div class="rc-l">Net Worth at Age '+nwTo+' ('+( CY+yrs)+')</div><div class="rc-v">'+$f(totalAtTarget)+'</div></div>';
+  
+  h+='<div class="rc"><div class="rc-l">IRA</div><div class="rc-v">'+$f(vRoth)+'</div></div>';
+  h+='<div class="rc"><div class="rc-l">Cash</div><div class="rc-v">'+$f(totalCash)+'</div></div>';
+  h+='<div class="rc"><div class="rc-l">Brokerage</div><div class="rc-v">'+$f(vBrok)+'</div></div>';
+  var homeEquity=Math.max(0,vHome-mort),reEquity=Math.max(0,vRE-reDebt);
+  if(bHome>0)h+='<div class="rc"><div class="rc-l">Home Equity</div><div class="rc-v" style="color:var(--am)">'+$f(homeEquity)+'</div></div>';
+  if(slBal>0)h+='<div class="rc"><div class="rc-l">Student Loans</div><div class="rc-v" style="color:var(--rd)">-'+$f(slBal)+'</div><div class="rc-s">Current balance (paying down)</div></div>';
+  if(bRE>0)h+='<div class="rc"><div class="rc-l">Investment Property</div><div class="rc-v" style="color:var(--am)">'+$f(reEquity)+'</div></div>';
+  h+='</div>';
+  h+='<div class="note"><b>401(k) Breakdown:</b> You contribute '+empPct+'% of '+$f(sal401)+' = <b>'+$f(sal401*(empPct/100))+'</b>'+(capHit?' → <b style="color:var(--am)">capped at $23,500</b>':'')+'. Employer adds '+matchPct+'% = <b>'+$f(empMatch)+'</b>. Total: <b style="color:var(--ac)">'+$f(total401yr)+'/yr</b>'+(total401yr>=69000?' (hit $69K IRS max)':'')+'.</div>';
+  document.getElementById('nwRes').innerHTML=h;
+  // Chart with retirement annotation line
+  if(nwChartObj)nwChartObj.destroy();var c=getCC();
+  var retVal=dTotal[retirementIdx]||0;
+  var annotPlugin={id:'retLine',afterDraw:function(chart){if(retirementIdx>=0&&retirementIdx<dTotal.length){var xScale=chart.scales.x,yScale=chart.scales.y;var x=xScale.getPixelForValue(retirementIdx);var ctx=chart.ctx;ctx.save();ctx.beginPath();ctx.setLineDash([6,4]);ctx.strokeStyle='rgba(255,193,7,.6)';ctx.lineWidth=1.5;ctx.moveTo(x,yScale.top);ctx.lineTo(x,yScale.bottom);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='rgba(255,193,7,.9)';ctx.font='bold 11px Inter';ctx.textAlign='center';var midY=(yScale.top+yScale.bottom)/2;ctx.fillText('Retirement (Age '+nwTo+')',x,midY-14);ctx.font='bold 12px Fraunces';ctx.fillStyle='#e6f1ff';ctx.fillText($f(retVal),x,midY+4);ctx.restore()}}};
+  nwChartObj=new Chart(document.getElementById('nwChart'),{type:'line',data:{labels:labels,datasets:[{label:'Total Net Worth',data:dTotal,borderColor:c.c2,backgroundColor:c.c2b,fill:true,tension:.3,pointRadius:0,borderWidth:2.5}]},plugins:[annotPlugin],options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:30}},interaction:{intersect:false,mode:'index'},plugins:{legend:{labels:{color:c.mt,font:{size:11,family:'Inter'},boxWidth:12}},tooltip:{backgroundColor:'rgba(0,0,0,.85)',titleColor:c.wh,bodyColor:c.mt,padding:12,cornerRadius:6,callbacks:{label:function(ctx){return'Net Worth: '+$f(ctx.parsed.y)}}}},scales:{x:{ticks:{color:c.mt,font:{size:10},maxTicksLimit:12},grid:{color:c.grid}},y:{ticks:{color:c.mt,font:{size:10},callback:function(v){return $k(v)}},grid:{color:c.grid}}}}});
+}
+
+// ========== TAX CALCULATOR ==========
+function runTax(){
+  var gross=+document.getElementById('txInc').value||0,fs=document.getElementById('txFS').value,stCode=document.getElementById('txSt').value;
+  var empType=document.querySelector('#txType .on')?.dataset.v||'w2';
+  var isNYC=stCode==='NY'&&document.getElementById('txNYC').classList.contains('checked');
+  var k401=Math.min(+document.getElementById('tx401k').value||0,69000);
+  var scorpSal=empType==='scorp'?Math.min(+document.getElementById('txScSal').value||0,gross):0;
+  document.getElementById('txNYCwrap').style.display=stCode==='NY'?'block':'none';
+  document.getElementById('txScorpWrap').style.display=empType==='scorp'?'block':'none';
+  var ficaInc=gross;if(empType==='scorp')ficaInc=scorpSal;if(empType==='1099')ficaInc=gross*0.9235;
+  var fR=empType==='w2'?1:2,ssTax=Math.min(ficaInc,FICA.ssC)*FICA.ssR*fR,medTax=ficaInc*FICA.medR*fR;
+  var addMedTh=FICA.addMedT[fs]||200000,addMed=ficaInc>addMedTh?(ficaInc-addMedTh)*FICA.addMedR:0;
+  var totalFICA=ssTax+medTax+addMed,seDed=empType==='1099'?totalFICA/2:0;
+  var fedDed=FED_SD[fs]||15000,fedTaxable=Math.max(0,gross-k401-seDed-fedDed);
+  var fedRes=calcBrk(fedTaxable,FED[fs]||FED.single);
+  var stRes=calcST(Math.max(0,gross-k401-seDed),stCode,fs);
+  var nycRes={t:0,bd:[]};if(isNYC){var nycSD=ST.NY.sd[fs]||8000;nycRes=calcBrk(Math.max(0,gross-k401-seDed-nycSD),NYC_B[fs]||NYC_B.single)}
+  var totalTax=fedRes.t+stRes.t+nycRes.t+totalFICA,takeHome=gross-totalTax,effRate=gross>0?totalTax/gross*100:0;
+  var topFedRate=fedRes.bd.length>0?(fedRes.bd[fedRes.bd.length-1].r*100).toFixed(0):'10';
+  var h='<div class="rg"><div class="rc"><div class="rc-l">Gross Income</div><div class="rc-v">'+$f(gross)+'</div></div>';
+  h+='<div class="rc"><div class="rc-l">Total Tax</div><div class="rc-v" style="color:var(--rd)">'+$f(totalTax)+'</div><div class="rc-s">'+effRate.toFixed(1)+'% effective rate</div></div>';
+  h+='<div class="rc"><div class="rc-l">Take-Home Pay</div><div class="rc-v" style="color:var(--ac)">'+$f(takeHome)+'</div><div class="rc-s">'+$f(takeHome/12)+'/month</div></div>';
+  h+='<div class="rc"><div class="rc-l">Top Federal Bracket</div><div class="rc-v">'+topFedRate+'%</div></div></div>';
+  h+='<div class="card"><div class="ct">Where Your Money Goes</div><div class="tw"><table class="tbl"><thead><tr><th>Tax</th><th>Amount</th><th>% of Income</th></tr></thead><tbody>';
+  h+='<tr><td style="color:var(--wh)">Federal Income Tax</td><td style="color:var(--rd);font-weight:600">'+$f(fedRes.t)+'</td><td>'+pct2(fedRes.t,gross)+'</td></tr>';
+  h+='<tr><td style="color:var(--wh)">'+stRes.n+' State Tax</td><td style="color:var(--rd);font-weight:600">'+$f(stRes.t)+'</td><td>'+pct2(stRes.t,gross)+'</td></tr>';
+  if(isNYC)h+='<tr><td style="color:var(--wh)">NYC City Tax</td><td style="color:var(--rd);font-weight:600">'+$f(nycRes.t)+'</td><td>'+pct2(nycRes.t,gross)+'</td></tr>';
+  h+='<tr><td style="color:var(--wh)">Social Security</td><td style="color:var(--rd);font-weight:600">'+$f(ssTax)+'</td><td>'+pct2(ssTax,gross)+'</td></tr>';
+  h+='<tr><td style="color:var(--wh)">Medicare</td><td style="color:var(--rd);font-weight:600">'+$f(medTax+addMed)+'</td><td>'+pct2(medTax+addMed,gross)+'</td></tr>';
+  h+='<tr style="border-top:2px solid var(--bd)"><td style="font-weight:700;color:var(--wh)">Total Tax</td><td style="color:var(--rd);font-weight:700">'+$f(totalTax)+'</td><td style="font-weight:700">'+pct2(totalTax,gross)+'</td></tr>';
+  h+='<tr><td style="font-weight:700;color:var(--ac)">You Keep</td><td style="color:var(--ac);font-weight:700">'+$f(takeHome)+'</td><td style="color:var(--ac);font-weight:700">'+pct2(takeHome,gross)+'</td></tr>';
+  h+='</tbody></table></div></div>';
+  // Federal brackets
+  h+='<div class="card"><div class="ct">Federal Bracket Breakdown</div><p style="font-size:12px;color:var(--mt);margin-bottom:10px">You don\'t pay your top rate on ALL your income. Each bracket only applies to income <b style="color:var(--wh)">within that range</b>.</p>';
+  h+='<div class="tw"><table class="tbl"><thead><tr><th>Rate</th><th>Applies To</th><th>Amount Taxed</th><th>Tax</th></tr></thead><tbody>';
+  fedRes.bd.forEach(function(b){h+='<tr><td style="color:var(--ac);font-weight:700">'+(b.r*100).toFixed(0)+'%</td><td>'+$f(b.lo)+' \u2013 '+(b.hi>=1e12?'\u221E':$f(b.hi))+'</td><td style="color:var(--wh)">'+$f(b.tx)+'</td><td style="color:var(--rd);font-weight:600">'+$f(b.tax)+'</td></tr>'});
+  h+='</tbody></table></div></div>';
+  // State brackets if progressive
+  if(stRes.bd.length>0&&stRes.bd.length>1){h+='<div class="card"><div class="ct">'+stRes.n+' State Brackets</div><div class="tw"><table class="tbl"><thead><tr><th>Rate</th><th>Range</th><th>Taxed</th><th>Tax</th></tr></thead><tbody>';stRes.bd.forEach(function(b){h+='<tr><td style="color:var(--ac)">'+(b.r*100).toFixed(2)+'%</td><td>'+$f(b.lo)+' \u2013 '+(b.hi>=1e12?'\u221E':$f(b.hi))+'</td><td>'+$f(b.tx)+'</td><td style="color:var(--rd)">'+$f(b.tax)+'</td></tr>'});h+='</tbody></table></div></div>'}
+  // S-Corp explainer
+  if(empType==='scorp'){var dist=gross-scorpSal,saved=Math.min(dist,Math.max(0,FICA.ssC-scorpSal))*FICA.ssR*2+dist*FICA.medR*2;h+='<div class="card"><div class="ct">S-Corp Tax Savings</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px"><div style="padding:10px;background:var(--bg4);border-radius:var(--Rs)"><div style="font-size:10px;font-weight:700;color:var(--mt)">YOUR SALARY</div><div style="font-size:18px;font-weight:700;color:var(--wh);font-family:var(--disp)">'+$f(scorpSal)+'</div><div style="font-size:11px;color:var(--mt)">Taxed for FICA (15.3%)</div></div><div style="padding:10px;background:var(--bg4);border-radius:var(--Rs)"><div style="font-size:10px;font-weight:700;color:var(--mt)">YOUR DISTRIBUTION</div><div style="font-size:18px;font-weight:700;color:var(--ac);font-family:var(--disp)">'+$f(dist)+'</div><div style="font-size:11px;color:var(--ac)">No FICA tax on this</div></div></div><div class="ic-hl"><b>You save approximately '+$f(Math.round(saved))+'/year</b> by taking '+$f(dist)+' as distribution instead of salary.</div></div>'}
+  if(empType==='1099')h+='<div class="note"><b>1099 Self-Employment:</b> You pay both halves of FICA (15.3% total). The good news: half is deductible ('+$f(Math.round(seDed))+').</div>';
+  if(k401>0){var mr=fedRes.bd.length>0?fedRes.bd[fedRes.bd.length-1].r:.22;h+='<div class="note"><b>401(k) Impact:</b> Your '+$f(k401)+' contribution saves ~<b style="color:var(--ac)">'+$f(Math.round(k401*mr))+'</b> in federal tax at your '+(mr*100).toFixed(0)+'% bracket.</div>'}
+  document.getElementById('txRes').innerHTML=h;
+}
+
+// ========== STATE COMPARISON ==========
+function runSC(){
+  var inc=+document.getElementById('scInc').value||0,fs=document.getElementById('scFS').value;
+  var sA=document.getElementById('scA').value,sB=document.getElementById('scB').value;
+  function fc(code){var st=calcST(inc,code,fs);var fedDed=FED_SD[fs]||15000;var fed=calcBrk(Math.max(0,inc-fedDed),FED[fs]||FED.single);var ss=Math.min(inc,FICA.ssC)*FICA.ssR,med=inc*FICA.medR,am=inc>FICA.addMedT[fs]?(inc-FICA.addMedT[fs])*FICA.addMedR:0;var fica=ss+med+am;var total=fed.t+st.t+fica;return{fed:fed.t,state:st.t,n:ST[code]?.n||code,fica:fica,total:total,take:inc-total,eff:inc>0?total/inc*100:0,stEff:inc>0?st.t/inc*100:0}}
+  var a=fc(sA),b=fc(sB),diff=a.total-b.total;
+  var h='<div class="card" style="margin-top:14px"><div class="ct">Side-by-Side</div><div class="tw"><table class="tbl"><thead><tr><th></th><th>'+a.n+'</th><th>'+b.n+'</th><th>Difference</th></tr></thead><tbody>';
+  h+='<tr><td style="color:var(--wh)">State Tax</td><td style="color:var(--rd);font-weight:600">'+$f(a.state)+'</td><td style="color:var(--rd);font-weight:600">'+$f(b.state)+'</td><td style="color:'+(b.state<a.state?'var(--ac)':'var(--rd)')+';font-weight:600">'+$f(b.state-a.state)+'</td></tr>';
+  h+='<tr><td style="color:var(--wh)">State Effective Rate</td><td>'+a.stEff.toFixed(2)+'%</td><td>'+b.stEff.toFixed(2)+'%</td><td>'+(b.stEff-a.stEff).toFixed(2)+'%</td></tr>';
+  h+='<tr style="border-top:2px solid var(--bd)"><td style="font-weight:700;color:var(--wh)">Total Tax</td><td style="color:var(--rd);font-weight:700">'+$f(a.total)+'</td><td style="color:var(--rd);font-weight:700">'+$f(b.total)+'</td><td style="font-weight:700">'+$f(Math.abs(diff))+'</td></tr>';
+  h+='<tr><td style="font-weight:700;color:var(--ac)">Take-Home</td><td style="color:var(--ac);font-weight:700">'+$f(a.take)+'</td><td style="color:var(--ac);font-weight:700">'+$f(b.take)+'</td><td style="color:'+(b.take>a.take?'var(--ac)':'var(--rd)')+';font-weight:700">'+$f(b.take-a.take)+'/yr</td></tr>';
+  h+='<tr><td>Monthly Take-Home</td><td>'+$f(a.take/12)+'</td><td>'+$f(b.take/12)+'</td><td style="color:'+(b.take>a.take?'var(--ac)':'var(--rd)')+'">'+$f((b.take-a.take)/12)+'/mo</td></tr>';
+  h+='</tbody></table></div>';
+  if(Math.abs(diff)>100)h+='<div class="note" style="margin-top:8px"><b>'+(diff>0?b.n:a.n)+' saves you '+$f(Math.abs(diff))+'/year.</b> Over 10 years that\'s <b style="color:var(--ac)">'+$f(Math.abs(diff)*10)+'</b>.</div>';
+  h+='</div>';
+  h+='<div class="card"><div class="ct">At Different Income Levels</div><div class="tw"><table class="tbl"><thead><tr><th>Income</th><th>'+ST[sA]?.n+'</th><th>'+ST[sB]?.n+'</th><th>Annual Savings</th></tr></thead><tbody>';
+  [100000,150000,200000,300000,500000,750000,1000000].forEach(function(i){var sa=calcST(i,sA,fs),sb=calcST(i,sB,fs),d=sa.t-sb.t;h+='<tr><td style="color:var(--wh)">'+$f(i)+'</td><td style="color:var(--rd)">'+$f(sa.t)+'</td><td style="color:var(--rd)">'+$f(sb.t)+'</td><td style="color:'+(d>0?'var(--ac)':'var(--rd)')+';font-weight:600">'+(d>0?'Save ':'')+''+$f(Math.abs(d))+'</td></tr>'});
+  h+='</tbody></table></div></div>';
+  document.getElementById('scRes').innerHTML=h;
+}
+
+// ========== COMPARE ==========
+function runCmp(){
+  var a={P:+document.getElementById('aI').value||0,PMT:+document.getElementById('aM').value||0,Y:+document.getElementById('aY').value||30,R:+document.getElementById('aR').value||10};
+  var b={P:+document.getElementById('bI').value||0,PMT:+document.getElementById('bM').value||0,Y:+document.getElementById('bY').value||30,R:+document.getElementById('bR').value||10};
+  var ra=calcFV(a.P,a.PMT,a.R,a.Y),rb=calcFV(b.P,b.PMT,b.R,b.Y);
+  var yaD=yearByYear(a.P,a.PMT,a.R,a.Y),ybD=yearByYear(b.P,b.PMT,b.R,b.Y);
+  var w=ra.bal>rb.bal?'A':'B',diff=Math.abs(ra.bal-rb.bal);
+  var h='<div class="card"><div class="ct">Scenario '+w+' wins by '+$f(diff)+'</div>';
+  h+='<div class="tw"><table class="tbl"><thead><tr><th></th><th>A</th><th>B</th><th>Diff</th></tr></thead><tbody>';
+  h+='<tr><td style="color:var(--wh)">You Invest</td><td>'+$f(ra.contrib)+'</td><td>'+$f(rb.contrib)+'</td><td>'+$f(rb.contrib-ra.contrib)+'</td></tr>';
+  h+='<tr><td style="color:var(--wh)">Interest</td><td style="color:var(--ac)">'+$f(ra.interest)+'</td><td style="color:var(--ac)">'+$f(rb.interest)+'</td><td>'+$f(rb.interest-ra.interest)+'</td></tr>';
+  h+='<tr><td style="color:var(--wh);font-weight:700">Final Balance</td><td style="font-weight:700">'+$f(ra.bal)+'</td><td style="font-weight:700">'+$f(rb.bal)+'</td><td style="color:'+(rb.bal>ra.bal?'var(--ac)':'var(--rd)')+';font-weight:700">'+$f(rb.bal-ra.bal)+'</td></tr>';
+  h+='</tbody></table></div></div>';
+  document.getElementById('cmpRes').innerHTML=h;
+  var maxY=Math.max(a.Y,b.Y),labels=[],dA=[],dB=[];
+  for(var y=1;y<=maxY;y++){labels.push('Year '+y);dA.push(y<=a.Y&&yaD[y-1]?yaD[y-1].bal:null);dB.push(y<=b.Y&&ybD[y-1]?ybD[y-1].bal:null)}
+  cmpChartObj=mkChart('cmpChart',labels,dA,dB,'Scenario A','Scenario B',cmpChartObj);
+}
+
+function buildRules(){
+var rules=[
+{t:"Pay Yourself First  - Automate Everything",b:"The single most important thing I do is automate my investments. The money leaves before I see it.",hl:"I treat investing like a bill. Rent, phone, investments  - in that order."},
+{t:"Start Now  - Even $50/Month",b:"People wait for the perfect time. There isn't one. Even small amounts compound into serious money over decades.",hl:"$200/month at 10% for 35 years = ~$649,000. You only put in $84,000."},
+{t:"Emergency Fund Before Investing",b:"Have 3-6 months of expenses saved in a high-yield savings account first. This keeps you from panic-selling investments."},
+{t:"Kill High-Interest Debt First",b:"Credit card at 24%? Paying that off IS your best investment.",hl:"My order: Emergency fund → High-interest debt → 401(k) match → Max Roth IRA → More debt → Invest more."},
+{t:"Don't Pick Stocks. Don't Time the Market.",b:"I invest in diversified funds. Boring. Works.",hl:"The S&P 500 has returned ~10% annually over 30+ years including every crash."},
+{t:"Take the Employer Match",b:"If your employer matches, take ALL of it. It's an instant 50-100% return.",hl:"Not taking the match = declining a raise."},
+{t:"Solo 401(k) for Business Owners",b:"Self-employed or S-Corp? This is your single best tax tool.",hl:"$40K/year at a 30% rate saves ~$12K in taxes annually."},
+{t:"Backdoor Roth for High Earners",b:"Above income limits? Contribute to Traditional IRA, convert to Roth. Legal. 15 minutes/year.",hl:"$14K/year (couple) at 10% for 30 years = ~$2.5M tax-free."},
+{t:"Keep the Low-Rate Mortgage",b:"Mortgage under 5%? Keep it. Market returns beat it.",hl:"Mortgage 3.5% vs S&P 10% = 6.5% annual arbitrage."}
+];
+var h='';rules.forEach(function(r,i){h+='<div class="ic"><div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><span style="font-family:var(--disp);font-size:20px;font-weight:700;color:var(--ac);min-width:24px">'+(i+1)+'</span><div class="ic-t">'+r.t+'</div></div><div class="ic-b">'+r.b+'</div>'+(r.hl?'<div class="ic-hl"><b style="color:var(--ac)">My take:</b> '+r.hl+'</div>':'')+'</div>'});
+h+='<div class="note"><b>Reminder:</b> This is what I personally do. Not financial advice.</div>';
+document.getElementById('rulesC').innerHTML=h}
+
+function buildAccts(){
+var h='';
+
+// PRIORITY ORDER
+h+='<div class="card"><div class="ct">Priority Order</div>';
+h+='<div class="ic-b" style="margin-bottom:14px"><b>Put your own oxygen mask on before helping others.</b> On an airplane, they tell you to secure your own mask first  - even before your children. Same principle applies to investing. Focus on yourself first. Build your foundation. Then worry about kids\' college, family, etc.</div>';
+
+// PRIORITY 1: 401(k)
+h+='<div style="padding:12px;background:var(--bg4);border-radius:var(--Rs);border-left:3px solid var(--ac);margin-bottom:12px">';
+h+='<div style="font-size:10px;font-weight:700;color:var(--ac);margin-bottom:6px">PRIORITY 1: 401(k)</div>';
+
+h+='<div style="font-size:12px;color:var(--br);line-height:1.8">';
+h+='<b style="color:var(--ac)">Employer Match = Free Money</b><br>';
+h+='If your employer offers a match, this is the first dollar you invest. Period. A typical match is 50-100% of your contribution up to a certain percentage of your salary. That is an instant 50-100% return on every dollar matched before the market even does anything. Not taking the full match is the same as declining a raise.<br><br>';
+
+h+='<b style="color:var(--ac)">How Much Should You Contribute?</b><br>';
+h+='At minimum, contribute enough to get the full employer match. Beyond that:<br>';
+h+='<div style="margin:8px 0;padding:10px;background:var(--bg3);border-radius:var(--Rs)">';
+h+='<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--bd)"><span style="color:var(--mt)">Bare minimum</span><b style="color:var(--am)">10% of salary</b></div>';
+h+='<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--bd)"><span style="color:var(--mt)">What I would do</span><b style="color:var(--ac)">15% of salary</b></div>';
+h+='<div style="display:flex;justify-content:space-between;padding:4px 0"><span style="color:var(--mt)">If you really want to be set</span><b style="color:var(--wh)">20% of salary</b></div>';
+h+='</div>';
+
+h+='<b style="color:var(--ac)">Employee Max (IRS Limits)</b><br>';
+h+='The IRS caps how much you can contribute each year. For 2025: <b style="color:var(--wh)">$23,500/yr</b>. If you\'re 50 or older, you get a catch-up contribution of $7,500, bringing your max to $31,000. The total combined limit (your contribution + employer match) is <b style="color:var(--wh)">$69,000/yr</b>. Once you hit the employee cap, contributions stop automatically regardless of what percentage you elected.<br><br>';
+
+h+='<b style="color:var(--ac)">Age Limits</b><br>';
+h+='You cannot withdraw from your 401(k) without penalty until age <b style="color:var(--wh)">59\u00BD</b>. Early withdrawal = 10% penalty + income tax on the full amount. Limited exceptions exist: hardship withdrawals, Rule of 55 (leave your job at 55+), or loans against your balance (which I generally would not do).';
+h+='</div></div>';
+
+
+// PRIORITY 2: Roth IRA
+h+='<div style="padding:12px;background:var(--bg4);border-radius:var(--Rs);border-left:3px solid var(--ac);margin-bottom:12px">';
+h+='<div style="font-size:10px;font-weight:700;color:var(--ac);margin-bottom:6px">PRIORITY 2: MAX YOUR ROTH IRA</div>';
+h+='<div style="font-size:12px;color:var(--br);line-height:1.8">$7,000/year ($8,000 if 50+). You pay tax NOW, but it grows <b>tax-free forever</b>. No tax when you withdraw in retirement. This is the single best account for young high-earners who expect their tax rate to go up.</div>';
+
+h+='<div style="margin-top:8px;padding:8px;background:var(--bg3);border-radius:var(--Rs);font-size:11px;color:var(--br);line-height:1.7"><b style="color:var(--wh)">Age Limits:</b> You can withdraw your <b>contributions</b> anytime, tax-free and penalty-free (it\'s your money  - you already paid tax on it). However, <b>earnings</b> (the growth) can\'t come out until age <b>59½</b> AND the account has been open for 5+ years. Early withdrawal of earnings = 10% penalty + income tax.<br><br>';
+h+='<b style="color:var(--am)">⚠️ RMDs (Required Minimum Distributions):</b> Roth IRAs have <b>NO RMDs</b> during your lifetime. This is huge. Traditional 401(k)s and Traditional IRAs force you to start withdrawing at age 73 (and pay tax on every dollar). Roth IRAs let your money grow tax-free forever  - you never have to touch it if you don\'t want to. That\'s why Roth is king for generational wealth.</div>';
+
+// Income limit warning
+h+='<div style="margin-top:8px;padding:8px;background:var(--rdd);border:1px solid rgba(255,82,82,.12);border-radius:var(--Rs);font-size:11px;color:var(--br)"><b style="color:var(--rd)">Income Limits:</b> You <b>cannot</b> contribute directly to a Roth IRA if your income exceeds <b>$150,000</b> (single) or <b>$236,000</b> (married filing jointly).</div>';
+
+// Backdoor Roth
+h+='<div style="margin-top:8px;padding:10px;background:var(--bg3);border-radius:var(--Rs)"><div style="font-size:10px;font-weight:700;color:var(--ac);margin-bottom:4px">THE BACKDOOR ROTH (Legal Workaround)</div>';
+h+='<div style="font-size:11px;color:var(--br);line-height:1.7">If you\'re over the income limit: <b>1)</b> Contribute to a Traditional IRA (non-deductible). <b>2)</b> Immediately convert to Roth. That\'s it. 15 minutes once a year. Completely legal  - IRS has confirmed this repeatedly.</div>';
+h+='<div style="font-size:10px;font-weight:700;color:var(--am);margin-top:6px;margin-bottom:4px">⚠️ PRO-RATA RULE WARNING</div>';
+h+='<div style="font-size:11px;color:var(--br);line-height:1.7">If you have pre-tax IRA balances, the IRS taxes the conversion proportionally across ALL your IRAs  - not just the one you\'re converting. This creates a surprise tax bill. <b>Solution:</b> Roll all pre-tax IRA money into your 401(k) first. Then the Backdoor Roth conversion is clean  - no tax surprise.</div></div>';
+h+='</div>';
+
+// PRIORITY 3: Taxable Brokerage
+h+='<div style="padding:12px;background:var(--bg4);border-radius:var(--Rs);border-left:3px solid var(--ac);margin-bottom:12px">';
+h+='<div style="font-size:10px;font-weight:700;color:var(--ac);margin-bottom:6px">PRIORITY 3: TAXABLE BROKERAGE ACCOUNT</div>';
+h+='<div style="font-size:12px;color:var(--br);line-height:1.8">No contribution limits. No income limits. Full flexibility. This is your <b>freedom account</b>  - you can pull money out whenever you want, for whatever you want. Want to buy a car? Fund a real estate deal? Take a year off? No penalties, no age restrictions, no permission needed. Unlike 401(k)s and IRAs, you\'re not locked in until 59½.</div>';
+
+h+='<div style="margin-top:8px;padding:8px;background:var(--bg3);border-radius:var(--Rs);font-size:11px;color:var(--br);line-height:1.7"><b style="color:var(--wh)">The Trade-Off: Capital Gains Tax</b><br>When you <b>sell</b> an investment for a profit, you owe capital gains tax on the gain (not the full amount  - just the profit). There are two types:<br><br>';
+h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0">';
+h+='<div style="padding:8px;background:var(--bg4);border-radius:var(--Rs)"><div style="font-size:10px;font-weight:700;color:var(--ac)">SHORT-TERM GAINS</div><div style="font-size:11px;color:var(--br);margin-top:4px">Held <b>less than 1 year</b>. Taxed at your <b>ordinary income rate</b> (up to 37%). This is why day trading is expensive  - Uncle Sam takes the same cut as your paycheck.</div></div>';
+h+='<div style="padding:8px;background:var(--bg4);border-radius:var(--Rs)"><div style="font-size:10px;font-weight:700;color:var(--ac)">LONG-TERM GAINS</div><div style="font-size:11px;color:var(--br);margin-top:4px">Held <b>1 year or longer</b>. Taxed at preferential rates: <b>0%, 15%, or 20%</b> depending on income. Most people pay 15%. This is why buy-and-hold beats trading  - the tax rate is literally half.</div></div>';
+h+='</div>';
+h+='<b style="color:var(--wh)">Key point:</b> You only pay tax when you SELL. If you buy and hold forever, you pay $0 in capital gains. Unrealized gains are not taxed. That\'s the power of long-term investing  - let it compound without triggering tax events.</div>';
+h+='</div>';
+
+// Mortgage
+h+='<div style="padding:12px;background:var(--bg4);border-radius:var(--Rs);border-left:3px solid var(--am);margin-bottom:12px">';
+h+='<div style="font-size:10px;font-weight:700;color:var(--am);margin-bottom:6px">IF YOUR MORTGAGE IS UNDER 4.5%  - KEEP IT</div>';
+h+='<div style="font-size:12px;color:var(--br);line-height:1.8">Don\'t rush to pay off a low-rate mortgage. If your rate is under 4.5%, your money earns more in the market (historically 7-12%) than you\'d save paying off the house early. Invest the difference instead.</div></div>';
+
+h+='</div>';
+
+// FOR YOUR KIDS SECTION
+h+='<div class="card"><div class="ct">For Your Kids</div>';
+
+// TRUMP ACCOUNTS
+h+='<div style="padding:12px;background:var(--bg4);border-radius:var(--Rs);border-left:3px solid var(--am);margin-bottom:12px">';
+h+='<div style="font-size:11px;font-weight:700;color:var(--am);margin-bottom:6px">TRUMP ACCOUNTS (NEW  - 2026)</div>';
+h+='<div style="font-size:12px;color:var(--br);line-height:1.8">Created under the One Big Beautiful Bill Act (2025). A <b>tax-deferred savings account</b> for children under 18.</div>';
+h+='<div style="margin-top:8px;font-size:11px;color:var(--br);line-height:1.8"><b style="color:var(--wh)">How it works:</b> $1,000 free from the government for babies born 2025-2028. Anyone can contribute up to $5,000/year (parents, grandparents, employers). No withdrawals before age 18. Investments limited to low-cost index funds. Available starting July 4, 2026. Converts to a Traditional IRA at age 18.</div>';
+
+// WHAT YOU CAN USE IT FOR
+h+='<div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:8px">';
+h+='<div style="padding:8px;background:var(--bg3);border-radius:var(--Rs)"><div style="font-size:10px;font-weight:700;color:var(--ac);margin-bottom:4px">✅ WHAT YOU CAN USE IT FOR</div><div style="font-size:11px;color:var(--br);line-height:1.7">After age 18 (converts to Traditional IRA):<br>&bull; Retirement savings<br>&bull; First-time home purchase ($10K lifetime)<br>&bull; Higher education expenses<br>&bull; Any IRA-qualified withdrawal<br>&bull; Anything after 59½ (taxed as income)</div></div>';
+h+='<div style="padding:8px;background:var(--rdd);border-radius:var(--Rs)"><div style="font-size:10px;font-weight:700;color:var(--rd);margin-bottom:4px">❌ WHAT YOU CAN\'T USE IT FOR</div><div style="font-size:11px;color:var(--br);line-height:1.7">Before age 18:<br>&bull; Anything. Period. Money is locked.<br>&bull; No early withdrawals<br>&bull; No loans against the balance<br>&bull; No transfers to parents<br><br>After 18 (before 59½): 10% penalty + tax on non-qualified withdrawals</div></div>';
+h+='</div>';
+
+h+='<div style="margin-top:8px;padding:8px;background:var(--bg3);border-radius:var(--Rs);font-size:11px;color:var(--br);line-height:1.7"><b style="color:var(--wh)">Projected growth:</b> Just the free $1K at 10%: Age 18 = $5,560, Age 65 = $490K+. If you max $5K/yr for 18 years: Age 18 = $279K, Age 65 = $13.5M+.</div>';
+h+='<div style="margin-top:6px;font-size:12px;color:var(--ac);font-weight:600">My take: File Form 4547 and get the free $1,000. It\'s free money. Even if you never contribute another dollar, that $1K becomes almost half a million by retirement.</div></div>';
+
+// 529 PLAN
+h+='<div style="padding:12px;background:var(--bg4);border-radius:var(--Rs);border-left:3px solid var(--ac);margin-bottom:12px">';
+h+='<div style="font-size:11px;font-weight:700;color:var(--ac);margin-bottom:6px">529 PLAN</div>';
+h+='<div style="font-size:12px;color:var(--br);line-height:1.8">Tax-free growth for education expenses. State tax deduction in many states. High contribution limits ($300K+ lifetime per beneficiary). Can change the beneficiary anytime.</div>';
+
+// WHAT YOU CAN USE IT FOR
+h+='<div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:8px">';
+h+='<div style="padding:8px;background:var(--bg3);border-radius:var(--Rs)"><div style="font-size:10px;font-weight:700;color:var(--ac);margin-bottom:4px">✅ QUALIFIED EXPENSES (Tax-Free)</div><div style="font-size:11px;color:var(--br);line-height:1.7">&bull; College tuition, fees, room & board<br>&bull; K-12 tuition (up to $10K/yr)<br>&bull; Trade school / vocational programs<br>&bull; Books, supplies, computers, internet<br>&bull; Student loan repayment ($10K lifetime)<br>&bull; Study abroad programs<br>&bull; After 15 years: roll $35K to Roth IRA</div></div>';
+h+='<div style="padding:8px;background:var(--rdd);border-radius:var(--Rs)"><div style="font-size:10px;font-weight:700;color:var(--rd);margin-bottom:4px">❌ NON-QUALIFIED (Penalty)</div><div style="font-size:11px;color:var(--br);line-height:1.7">&bull; Buying a car<br>&bull; Rent (off-campus, non-school housing)<br>&bull; Travel / transportation costs<br>&bull; Health insurance or medical bills<br>&bull; Paying off credit card debt<br>&bull; Anything not directly tied to education<br><br><b>Penalty:</b> 10% + income tax on earnings for non-qualified withdrawals</div></div>';
+h+='</div>';
+
+// Trump vs 529
+h+='<div style="margin-top:8px;padding:8px;background:var(--bg3);border-radius:var(--Rs);font-size:11px;color:var(--br);line-height:1.7"><b style="color:var(--wh)">Trump Account vs 529:</b> If the goal is education, 529 is probably better  - tax-free withdrawals for school expenses and higher contribution limits. But get the Trump Account $1K regardless  - it\'s free. If you can afford both, do both. They serve different purposes.</div></div>';
+
+// OTHER ACCOUNTS
+h+='<div style="padding:12px;background:var(--bg4);border-radius:var(--Rs);margin-bottom:12px">';
+h+='<div style="font-size:11px;font-weight:700;color:var(--ac);margin-bottom:6px">OTHER KEY ACCOUNTS</div>';
+h+='<div style="font-size:12px;color:var(--br);line-height:1.8"><b style="color:var(--wh)">Solo 401(k):</b> If you\'re self-employed or own an S-Corp  - this is your best tax weapon. Contribute up to $69,000/yr ($76,500 if 50+). Same age 59½ withdrawal rule as regular 401(k).</div>';
+h+='<div style="font-size:12px;color:var(--br);line-height:1.8;margin-top:8px"><b style="color:var(--wh)">HSA · Triple Tax-Advantaged:</b> Pre-tax in. Tax-free growth. Tax-free out for medical. Limit: $4,300 individual / $8,550 family (2025). I don\'t use one  - honestly, I\'m too busy with 100 other things to keep track of medical receipts. But if you have the time and your plan qualifies, this is objectively the most tax-advantaged account in America. Triple tax benefit is unmatched. If you can do it, do it.</div>';
+h+='</div>';
+
+// TRADITIONAL IRA / RMDs
+h+='<div style="padding:12px;background:var(--bg4);border-radius:var(--Rs);border-left:3px solid var(--am);margin-bottom:12px">';
+h+='<div style="font-size:11px;font-weight:700;color:var(--am);margin-bottom:6px">A WORD ON TRADITIONAL IRAs & RMDs</div>';
+h+='<div style="font-size:12px;color:var(--br);line-height:1.8">Traditional IRAs and Traditional 401(k)s give you a tax break <b>now</b> (contributions are tax-deductible), but you pay income tax on <b>every dollar</b> when you withdraw in retirement.</div>';
+h+='<div style="margin-top:8px;padding:8px;background:var(--bg3);border-radius:var(--Rs);font-size:11px;color:var(--br);line-height:1.7"><b style="color:var(--am)">RMDs (Required Minimum Distributions):</b> Starting at age <b>73</b>, the IRS <b>forces</b> you to start withdrawing from Traditional IRAs and 401(k)s  - whether you need the money or not. Each year, you must take out a minimum amount based on your balance and life expectancy. Every dollar withdrawn is taxed as ordinary income.<br><br>';
+h+='<b>Why this matters:</b> If your Traditional accounts have grown to $2M+ by age 73, your forced withdrawals could be $75K-$100K+ per year  - all taxed at your income rate. This can push you into higher tax brackets, increase your Medicare premiums, and make up to 85% of your Social Security taxable. This is why I lean heavily toward <b>Roth accounts</b>  - no RMDs, no forced withdrawals, no surprise tax bills in retirement.</div></div>';
+
+h+='</div>';
+
+
+// ========== RETIREMENT ACCOUNT TYPES ==========
+h+='<div class="card" style="margin-top:18px;border-top:2px solid var(--ac)"><div class="ct">Retirement Account Types - A Simple Guide</div>';
+h+='<div class="ic-b" style="margin-bottom:14px">People see letters and numbers - 401(k), 403(b), 457(b) - and immediately feel overwhelmed. <b style="color:var(--wh)">Don\'t be.</b> These are all just retirement savings accounts. The differences are smaller than you think. Here\'s what each one actually is.</div>';
+
+// --- EMPLOYER SPONSORED ---
+h+='<div style="font-size:11px;font-weight:700;color:var(--ac);margin-bottom:10px">EMPLOYER-SPONSORED PLANS</div>';
+
+// 401(k)
+h+='<div style="padding:12px;background:var(--bg4);border-radius:var(--Rs);margin-bottom:10px;border-left:3px solid var(--ac)">';
+h+='<div style="font-size:14px;font-weight:700;color:var(--wh);margin-bottom:6px">401(k)</div>';
+h+='<div style="font-size:12px;color:var(--br);line-height:1.8">';
+h+='<b style="color:var(--ac)">What it is:</b> A retirement savings account offered by <b>for-profit companies</b>. This is the most common retirement plan in America. Money comes out of your paycheck before taxes (Traditional) or after taxes (Roth), goes into investments you choose, and grows until retirement.<br><br>';
+h+='<b style="color:var(--ac)">Who gets it:</b> Employees of private, for-profit companies - corporations, startups, law firms, accounting firms, most businesses.<br><br>';
+h+='<b style="color:var(--ac)">2025 Limits:</b> $23,500/yr employee contribution ($31,000 if 50+). Total with employer match: $69,000/yr.<br>';
+h+='<b style="color:var(--ac)">Withdrawal:</b> Age 59\u00BD without penalty. Early withdrawal = 10% penalty + income tax.';
+h+='</div></div>';
+
+// 403(b)
+h+='<div style="padding:12px;background:var(--bg4);border-radius:var(--Rs);margin-bottom:10px;border-left:3px solid var(--ac)">';
+h+='<div style="font-size:14px;font-weight:700;color:var(--wh);margin-bottom:6px">403(b)</div>';
+h+='<div style="font-size:12px;color:var(--br);line-height:1.8">';
+h+='<b style="color:var(--ac)">What it is:</b> Essentially the same thing as a 401(k), but for <b>nonprofit organizations</b>. Same contribution limits, same tax advantages, same withdrawal rules. If you work at a hospital, school, university, or church - this is probably what you have.<br><br>';
+h+='<b style="color:var(--ac)">Who gets it:</b> Employees of nonprofits, hospitals, public schools, universities, churches, and 501(c)(3) organizations.<br><br>';
+h+='<b style="color:var(--ac)">2025 Limits:</b> $23,500/yr ($31,000 if 50+). Same as a 401(k).<br>';
+h+='<b style="color:var(--ac)">Withdrawal:</b> Age 59\u00BD without penalty. Same rules as 401(k).<br><br>';
+h+='<b style="color:var(--wh)">Bottom line:</b> If someone tells you they have a 401(k) and you have a 403(b), you are not missing out on anything. They are functionally the same plan. Different number, same rules, same limits, same tax benefits.';
+h+='</div></div>';
+
+// 457(b)
+h+='<div style="padding:12px;background:var(--bg4);border-radius:var(--Rs);margin-bottom:10px;border-left:3px solid var(--am)">';
+h+='<div style="font-size:14px;font-weight:700;color:var(--wh);margin-bottom:6px">457(b)</div>';
+h+='<div style="font-size:12px;color:var(--br);line-height:1.8">';
+h+='<b style="color:var(--ac)">What it is:</b> A retirement plan offered by <b>state and local government employers</b> and some nonprofits. It looks and feels like a 401(k)/403(b), but it has one massive advantage.<br><br>';
+h+='<b style="color:var(--ac)">Who gets it:</b> Government employees (state, county, city, public universities) and some nonprofit/hospital employees.<br><br>';
+h+='<b style="color:var(--ac)">2025 Limits:</b> $23,500/yr ($31,000 if 50+).<br>';
+h+='<div style="margin:8px 0;padding:10px;background:var(--bg3);border-radius:var(--Rs);border:1px solid var(--am)">';
+h+='<b style="color:var(--am)">THE BIG PERK:</b> No 10% early withdrawal penalty before age 59\u00BD. If you leave your employer, you can access this money at any age without the 10% penalty that 401(k) and 403(b) plans charge. You still owe income tax, but no penalty. This makes the 457(b) the most flexible retirement account available.</div><br>';
+h+='<b style="color:var(--wh)">Can you have both a 403(b) AND a 457(b)?</b><br>';
+h+='Some employers - especially hospitals and government entities - offer both. If yours does, this is a <b style="color:var(--ac)">massive opportunity</b> most people don\'t realize they have. The limits are <b>separate</b>. You can max both: $23,500 into the 403(b) + $23,500 into the 457(b) = <b style="color:var(--ac)">$47,000 per year</b> in tax-advantaged retirement savings. Not every institution offers this, but if yours does, take full advantage.';
+h+='</div></div>';
+
+// 403(b) vs 457(b) comparison
+h+='<div style="padding:12px;background:var(--bg3);border-radius:var(--Rs);margin-bottom:10px">';
+h+='<div style="font-size:11px;font-weight:700;color:var(--ac);margin-bottom:8px">403(b) vs 457(b) - SIDE BY SIDE</div>';
+h+='<div class="tw"><table class="tbl"><thead><tr><th></th><th>403(b)</th><th>457(b)</th></tr></thead><tbody>';
+h+='<tr><td style="color:var(--wh)">Offered by</td><td>Nonprofits, hospitals, schools</td><td>Government, some nonprofits</td></tr>';
+h+='<tr><td style="color:var(--wh)">2025 Limit</td><td>$23,500</td><td>$23,500</td></tr>';
+h+='<tr><td style="color:var(--wh)">Employer Match</td><td>Common</td><td>Less common</td></tr>';
+h+='<tr><td style="color:var(--wh)">Early Withdrawal Penalty</td><td style="color:var(--rd)">10% before 59\u00BD</td><td style="color:var(--ac)">No penalty</td></tr>';
+h+='<tr><td style="color:var(--wh)">Roth Option</td><td>Yes</td><td>Yes</td></tr>';
+h+='<tr><td style="color:var(--wh)">Loan Provision</td><td>Usually yes</td><td>Usually no</td></tr>';
+h+='<tr><td style="color:var(--wh)">Stack with other plan?</td><td>Yes, with 457(b)</td><td>Yes, with 403(b) or 401(k)</td></tr>';
+h+='</tbody></table></div>';
+h+='<div style="font-size:11px;color:var(--br);margin-top:8px;line-height:1.6"><b style="color:var(--wh)">Which should you prioritize?</b> If your employer matches on the 403(b), always contribute enough to get the full match first - that is free money. After that, the 457(b)\'s no-penalty withdrawal makes it more flexible. If you can afford to max both, do both. $47,000/yr in tax-advantaged space is hard to beat.</div>';
+h+='</div>';
+
+// Solo 401(k)
+h+='<div style="padding:12px;background:var(--bg4);border-radius:var(--Rs);margin-bottom:10px;border-left:3px solid var(--ac)">';
+h+='<div style="font-size:14px;font-weight:700;color:var(--wh);margin-bottom:6px">Solo 401(k)</div>';
+h+='<div style="font-size:12px;color:var(--br);line-height:1.8">';
+h+='<b style="color:var(--ac)">What it is:</b> A 401(k) designed for self-employed individuals or business owners with no employees (other than a spouse). You act as both the employee AND the employer, so you can contribute on both sides.<br><br>';
+h+='<b style="color:var(--ac)">Who gets it:</b> Freelancers, consultants, sole proprietors, single-member LLCs, S-Corp owners with no W-2 employees.<br><br>';
+h+='<b style="color:var(--ac)">2025 Limits:</b> Up to $69,000/yr ($76,500 if 50+). Employee side: $23,500. Employer side: up to 25% of compensation.<br>';
+h+='<b style="color:var(--ac)">Withdrawal:</b> Same as 401(k) - age 59\u00BD, 10% penalty for early withdrawal.';
+h+='</div></div>';
+
+// --- TRADITIONAL VS ROTH ---
+h+='<div style="font-size:11px;font-weight:700;color:var(--ac);margin:16px 0 10px">TRADITIONAL vs ROTH - WITHIN YOUR RETIREMENT ACCOUNT</div>';
+h+='<div style="font-size:12px;color:var(--br);line-height:1.8;margin-bottom:10px">Most 401(k), 403(b), and 457(b) plans now offer both a Traditional and Roth option. This is not a different account - it is a choice within the same plan. Here is the difference:</div>';
+
+h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">';
+// Traditional card
+h+='<div style="padding:12px;background:var(--bg4);border-radius:var(--Rs);border-top:3px solid var(--am)">';
+h+='<div style="font-size:13px;font-weight:700;color:var(--am);margin-bottom:6px">Traditional (Pre-Tax)</div>';
+h+='<div style="font-size:11px;color:var(--br);line-height:1.7">';
+h+='Tax break <b>now</b>. Contributions reduce your taxable income today. You pay income tax when you withdraw in retirement.<br><br>';
+h+='<b style="color:var(--wh)">Example:</b> You earn $200K. You put $23,500 into Traditional. Your taxable income drops to $176,500. At a 32% bracket, that saves you roughly <b style="color:var(--ac)">$7,520 on this year\'s tax bill</b>.<br><br>';
+h+='<b style="color:var(--am)">Best for:</b> High-income earners. The higher your tax bracket now, the more valuable the immediate deduction.';
+h+='</div></div>';
+// Roth card
+h+='<div style="padding:12px;background:var(--bg4);border-radius:var(--Rs);border-top:3px solid var(--ac)">';
+h+='<div style="font-size:13px;font-weight:700;color:var(--ac);margin-bottom:6px">Roth (After-Tax)</div>';
+h+='<div style="font-size:11px;color:var(--br);line-height:1.7">';
+h+='No tax break now. You pay taxes on the money today. But everything - contributions AND growth - comes out <b>completely tax-free</b> in retirement. No RMDs either. (RMD = Required Minimum Distribution. The IRS forces you to start withdrawing money at age 73 whether you need it or not, and every dollar is taxed as income. Roth has no such requirement - your money can sit and grow tax-free for as long as you want.)<br><br>';
+h+='<b style="color:var(--wh)">Example:</b> You earn $60K. Your effective tax rate is relatively low. You put $10,000 into Roth. You pay tax on it now (not a big hit), and decades of growth come out <b style="color:var(--ac)">100% tax-free</b>.<br><br>';
+h+='<b style="color:var(--ac)">Best for:</b> Anyone who wants tax-free growth - early career professionals, mid-career earners. You do not have to be in a low bracket to benefit from Roth.';
+h+='</div></div>';
+h+='</div>';
+
+// My take on Trad vs Roth
+h+='<div style="padding:10px;background:var(--bg3);border-radius:var(--Rs);margin-bottom:10px">';
+h+='<div style="font-size:11px;font-weight:700;color:var(--ac);margin-bottom:6px">WHAT I WOULD DO</div>';
+h+='<div style="font-size:12px;color:var(--br);line-height:1.8">';
+h+='<div style="font-size:11px;color:var(--mt);font-style:italic;margin-bottom:10px">These are rough ballpark guidelines. Depending on your specific situation - debt, expenses, surplus cash year over year, family obligations - the right answer may be different. Everyone\'s situation is unique. This is just a starting framework.</div>';
+
+h+='<div style="margin:8px 0;padding:10px;background:var(--bg4);border-radius:var(--Rs)">';
+h+='<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--bd)"><span style="color:var(--mt)">Under $100K</span><b style="color:var(--ac)">100% Roth</b></div>';
+h+='<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--bd)"><span style="color:var(--mt)">$100K - $200K</span><b style="color:var(--ac)">Lean Roth, or start mixing</b></div>';
+h+='<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--bd)"><span style="color:var(--mt)">$200K - $400K</span><b style="color:var(--am)">50/50 Split</b></div>';
+h+='<div style="display:flex;justify-content:space-between;padding:6px 0"><span style="color:var(--mt)">$400K+</span><b style="color:var(--am)">Traditional + some Roth</b></div>';
+h+='</div>';
+
+h+='<b style="color:var(--wh)">Under $100K:</b> Roth, no question. Your tax bill is not that high right now, so the Traditional deduction does not save you much. Lock in tax-free growth for decades.<br><br>';
+h+='<b style="color:var(--wh)">$100K - $200K:</b> Still lean Roth, or start mixing. You are in the 22-24% bracket. That is not high enough to make the Traditional deduction life-changing. Roth is still very competitive here.<br><br>';
+h+='<b style="color:var(--wh)">$200K - $400K:</b> This is where the 50/50 split makes real sense. You are in the 32-35% brackets. The Traditional deduction saves you real money, but you also want tax-free money in retirement. Split your contributions half Traditional, half Roth. Best of both worlds.<br><br>';
+h+='<b style="color:var(--wh)">$400K+:</b> Traditional gives you the biggest deduction at 35-37%. But if you have surplus cash, <b style="color:var(--ac)">mix in Roth</b>. You can afford the tax hit now, and you will thank yourself in retirement. Every dollar you put in Roth is a dollar the IRS will never touch again.<br><br>';
+
+
+h+='</div></div>';
+
+// --- OTHER PLANS ---
+h+='<div style="font-size:11px;font-weight:700;color:var(--ac);margin:16px 0 10px">OTHER RETIREMENT PLANS</div>';
+
+// Pension
+h+='<div style="padding:12px;background:var(--bg4);border-radius:var(--Rs);margin-bottom:10px;border-left:3px solid var(--am)">';
+h+='<div style="font-size:14px;font-weight:700;color:var(--wh);margin-bottom:6px">Pension (Defined Benefit Plan)</div>';
+h+='<div style="font-size:12px;color:var(--br);line-height:1.8">';
+h+='<b style="color:var(--ac)">What it is:</b> Your employer promises to pay you a specific monthly amount for the rest of your life when you retire. The amount is usually based on a formula: <b>years of service x a percentage x your salary</b>. You do not choose investments, you do not manage anything. Your employer funds it and takes on the investment risk.<br><br>';
+h+='<b style="color:var(--wh)">Simple example:</b> You work at a hospital for 25 years. Your average salary is $115,000. The pension formula is 1.5% per year of service. Your monthly pension = 25 x 1.5% x $115,000 / 12 = <b style="color:var(--ac)">$3,594/month for life</b>. That is $43,125/year, guaranteed, every year, until you die.<br><br>';
+h+='<b style="color:var(--ac)">Who gets it:</b> Government employees, union workers, some hospital systems, some large corporations. Pensions are becoming rare in the private sector but are still common in healthcare and government.<br><br>';
+h+='<div style="padding:8px;background:var(--rdd);border:1px solid rgba(255,82,82,.12);border-radius:var(--Rs);margin:6px 0"><b style="color:var(--rd)">Do not rely on your pension alone.</b> A pension is a great foundation, but it is rarely enough to maintain your lifestyle in retirement. Most pensions replace 30-50% of your pre-retirement income at best. You should always invest on top of your pension - max your 403(b), open a Roth IRA, build a brokerage account. Think of the pension as a floor, not a ceiling.</div>';
+h+='</div></div>';
+
+// Cash Balance Plan
+h+='<div style="padding:12px;background:var(--bg4);border-radius:var(--Rs);margin-bottom:10px;border-left:3px solid var(--am)">';
+h+='<div style="font-size:14px;font-weight:700;color:var(--wh);margin-bottom:6px">Cash Balance Plan</div>';
+h+='<div style="font-size:12px;color:var(--br);line-height:1.8">';
+h+='<b style="color:var(--ac)">What it is:</b> A cash balance plan is technically a type of pension, but it looks and feels different. Instead of promising you a monthly payment for life, your employer gives you what looks like an <b>account with a balance</b> - like a 401(k) balance. Every year, your employer credits your account with a set amount (a percentage of your salary) and a guaranteed interest rate.<br><br>';
+h+='<b style="color:var(--wh)">Why it confuses people:</b> You log into your benefits portal and see a balance - maybe $45,000, maybe $120,000. It looks like a 401(k). But you did not contribute that money. Your employer did. And unlike a 401(k), you do not pick the investments. The balance grows at a guaranteed rate (often 3-5%) set by your employer. It is your employer\'s money they are setting aside for you.<br><br>';
+h+='<b style="color:var(--ac)">What happens when you leave or retire:</b> You can take the balance as a <b>lump sum</b> (roll it into an IRA) or convert it into a monthly annuity payment. Most people take the lump sum and roll it over so they control the investments.<br><br>';
+h+='<b style="color:var(--wh)">Key things to know:</b><br>';
+h+='- You do not contribute to it. Your employer funds it entirely.<br>';
+h+='- The balance you see is yours, but it grows at whatever rate your employer set - not market returns.<br>';
+h+='- If you leave before you are vested (usually 3-5 years), you may forfeit some or all of it.<br>';
+h+='- It is essentially free retirement money on top of everything else you are doing.<br><br>';
+h+='<b style="color:var(--ac)">If you have one:</b> Check your vesting schedule. Once vested, that balance is yours. It is a nice bonus on top of your 403(b)/401(k) contributions - think of it as your employer investing for your retirement without you having to do anything.';
+h+='</div></div>';
+
+
+
+h+='</div>'; // close card
+
+document.getElementById('acctRes').innerHTML=h;
+}
+document.addEventListener('DOMContentLoaded',function(){
+  // Nav
+  document.querySelectorAll('.nt').forEach(function(t){t.addEventListener('click',function(){document.querySelectorAll('.nt').forEach(function(x){x.classList.remove('a')});document.querySelectorAll('.sec').forEach(function(x){x.classList.remove('a')});t.classList.add('a');document.getElementById('sec-'+t.dataset.s).classList.add('a')})});
+  // Rate toggle buttons
+  ['cRateGroup','rRateGroup'].forEach(function(gid){document.querySelectorAll('#'+gid+' button').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('#'+gid+' button').forEach(function(x){x.classList.remove('on')});b.classList.add('on');if(gid==='cRateGroup')runCalc();else runRet()})})});
+  // Tax type toggles
+  document.querySelectorAll('#txType button').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('#txType button').forEach(function(x){x.classList.remove('on')});b.classList.add('on');document.getElementById('txScorpWrap').style.display=b.dataset.v==='scorp'?'block':'none';runTax()})});
+  // NYC checkbox
+  var nycEl=document.getElementById('txNYC');if(nycEl)nycEl.addEventListener('click',function(e){e.preventDefault();this.classList.toggle('checked');runTax()});
+  // Disclaimer checkbox
+  var dChk=document.getElementById('dChk');if(dChk)dChk.addEventListener('click',function(e){e.preventDefault();this.classList.toggle('checked')});
+  // Run all on load
+  // NW rate toggle buttons
+  document.querySelectorAll('.nwrg button').forEach(function(b){b.addEventListener('click',function(){b.parentElement.querySelectorAll('button').forEach(function(x){x.classList.remove('on')});b.classList.add('on');runNW()})});
+  runDual();runSL();runCalc();runRet();runNW();runTax();runSC();runCmp();buildRules();buildAccts();
+});
+
+</script>
+<div id="discModal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box">
+<div style="background:var(--bg2);border:1px solid var(--bd);border-radius:12px;max-width:520px;width:100%;padding:24px 28px;text-align:center">
+<div style="font-family:var(--disp);font-size:22px;font-weight:700;color:var(--wh);margin-bottom:12px">ABV Financial Intelligence</div>
+<div style="font-size:12.5px;color:var(--br);line-height:1.7;text-align:left;margin-bottom:16px">
+I built this to help anyone learn about personal finance, investing, real estate, and taxes. Explore three sections from the top nav: <b style="color:var(--ac)">Personal Finance</b>, <b style="color:var(--ac)">Tax Grievance Guide</b>, and <b style="color:var(--ac)">Real Estate Calculators</b>.<br><br>
+<b style="color:var(--wh)">This is not financial, investment, tax, or legal advice.</b> Everything here is for educational purposes only. Consult a qualified professional before making any decisions.<br><br>
+The difference between paying attention and not can be <b style="color:var(--ac)">millions of dollars over your lifetime</b>. Play with the numbers.
+</div>
+<button onclick="document.getElementById('discModal').style.display='none'" style="background:var(--ac);color:#000000;border:none;padding:12px 28px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--body)">I Agree - This Is Not Financial or Legal Advice<br><span style="font-size:11px;font-weight:400;opacity:.8">Wow, Abe is really a nice guy huh?</span></button>
+</div>
+</div>
+</body></html>

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Joseph Psychiatry — ADHD, Anxiety & Depression Care | Virtual Psychiatry in New York</title>
+<meta name="description" content="Expert ADHD, anxiety, and depression care from a board-certified psychiatrist. Evening telehealth appointments that fit your schedule. Serving all of New York State.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+<style>
+/* Homepage-specific styles */
+.hero{min-height:100vh;display:flex;align-items:center;padding-top:100px;position:relative;overflow:hidden;background:var(--cream)}
+.hero::before{content:'';position:absolute;top:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(200,167,76,.08) 0%,transparent 70%);border-radius:50%;pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:-100px;left:-100px;width:400px;height:400px;background:radial-gradient(circle,rgba(15,56,35,.04) 0%,transparent 70%);border-radius:50%;pointer-events:none}
+.hero-inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.hero-content{position:relative;z-index:2}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;background:var(--green-light);border-radius:var(--radius-pill);font-size:13px;font-weight:500;color:var(--green-deep);margin-bottom:28px;animation:fadeUp .8s ease forwards}
+.hero-badge-dot{width:6px;height:6px;background:var(--green-soft);border-radius:50%;animation:pulse-soft 2s ease infinite}
+.hero h1{font-family:'Instrument Serif',serif;font-size:clamp(40px,5vw,62px);line-height:1.1;color:var(--green-deep);margin-bottom:24px;font-weight:400;letter-spacing:-1px;animation:fadeUp .8s ease .1s forwards;opacity:0}
+.hero h1 em{font-style:italic;color:var(--terracotta)}
+.hero-subtitle{font-size:18px;line-height:1.7;color:var(--text-secondary);margin-bottom:40px;max-width:480px;animation:fadeUp .8s ease .2s forwards;opacity:0}
+.hero-actions{display:flex;gap:16px;align-items:center;flex-wrap:wrap;animation:fadeUp .8s ease .3s forwards;opacity:0}
+.hero-proof{display:flex;align-items:center;gap:16px;margin-top:40px;animation:fadeUp .8s ease .4s forwards;opacity:0}
+.hero-proof-avatars{display:flex}
+.hero-proof-avatar{width:36px;height:36px;border-radius:50%;border:2px solid var(--cream);margin-left:-8px;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:14px}
+.hero-proof-avatar:first-child{margin-left:0}
+.hero-proof-text{font-size:14px;color:var(--text-muted);line-height:1.4}
+.hero-proof-text strong{color:var(--green-deep);font-weight:600}
+.hero-visual{position:relative;animation:fadeIn 1s ease .3s forwards;opacity:0}
+.hero-card{background:var(--white);border-radius:var(--radius-lg);padding:40px;box-shadow:var(--shadow-lg);position:relative;overflow:hidden}
+.hero-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--green-deep),var(--terracotta),var(--gold))}
+.hero-card-header{display:flex;align-items:center;gap:16px;margin-bottom:28px}
+.hero-card-avatar{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--terracotta),var(--terracotta-light));display:flex;align-items:center;justify-content:center;color:white;font-family:'Instrument Serif',serif;font-size:22px}
+.hero-card-info h3{font-size:16px;font-weight:600;color:var(--green-deep)}
+.hero-card-info p{font-size:13px;color:var(--text-muted);margin-top:2px}
+.hero-card-checklist{display:flex;flex-direction:column;gap:14px}
+.hero-card-check{display:flex;align-items:center;gap:12px;font-size:15px;color:var(--text-secondary)}
+.hero-card-check-icon{width:24px;height:24px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;color:var(--green-deep);font-size:13px;flex-shrink:0}
+.hero-float-1{position:absolute;top:-20px;right:-20px;background:var(--white);border-radius:var(--radius-md);padding:14px 20px;box-shadow:var(--shadow-md);display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500;color:var(--green-deep);animation:float 4s ease infinite}
+.hero-float-2{position:absolute;bottom:40px;left:-30px;background:var(--white);border-radius:var(--radius-md);padding:14px 20px;box-shadow:var(--shadow-md);font-size:14px;color:var(--text-secondary);animation:float 4s ease 1s infinite}
+.hero-float-2 .rating{color:var(--gold);font-size:13px;letter-spacing:1px}
+.hero-float-2 .label{font-weight:600;color:var(--green-deep);margin-top:4px}
+.trust-bar{padding:32px 0;background:var(--white);border-top:1px solid rgba(15,56,35,.06);border-bottom:1px solid rgba(15,56,35,.06)}
+.trust-bar-inner{display:flex;justify-content:center;align-items:center;gap:48px;flex-wrap:wrap}
+.trust-item{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text-muted)}
+.trust-item strong{color:var(--text-primary);font-weight:600}
+.relate{background:var(--white);padding:100px 0}
+.relate-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:56px}
+.relate-card{background:var(--cream);border-radius:var(--radius-md);padding:32px 28px;transition:all .4s;border:1px solid transparent;cursor:default}
+.relate-card:hover{background:var(--white);border-color:rgba(15,56,35,.1);box-shadow:var(--shadow-md);transform:translateY(-4px)}
+.relate-card-emoji{font-size:28px;margin-bottom:16px;display:block}
+.relate-card h3{font-size:16px;font-weight:600;color:var(--green-deep);margin-bottom:10px;line-height:1.3}
+.relate-card p{font-size:14px;line-height:1.65;color:var(--text-muted)}
+.specialties{background:var(--green-deep);padding:100px 0;position:relative;overflow:hidden}
+.specialties::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 20% 50%,rgba(45,122,80,.3) 0%,transparent 60%);pointer-events:none}
+.specialties .section-label{color:var(--terracotta-light)}.specialties .section-heading{color:var(--white)}.specialties .section-subtitle{color:rgba(255,255,255,.65)}
+.specialty-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:56px;position:relative;z-index:2}
+.specialty-card{background:rgba(255,255,255,.07);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius-lg);padding:36px 30px;transition:all .4s}
+.specialty-card:hover{background:rgba(255,255,255,.12);transform:translateY(-4px);border-color:rgba(255,255,255,.2)}
+.specialty-card.featured{background:rgba(255,255,255,.12);border-color:var(--terracotta);position:relative}
+.specialty-card.featured::before{content:'Our Specialty';position:absolute;top:-12px;left:30px;background:var(--terracotta);color:white;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:4px 14px;border-radius:var(--radius-pill)}
+.specialty-icon{width:48px;height:48px;border-radius:12px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:20px}
+.specialty-card h3{color:var(--white);font-size:20px;font-weight:600;margin-bottom:12px}
+.specialty-card p{color:rgba(255,255,255,.6);font-size:14px;line-height:1.7}
+.specialty-card ul{list-style:none;margin-top:16px;display:flex;flex-direction:column;gap:8px}
+.specialty-card ul li{color:rgba(255,255,255,.7);font-size:14px;display:flex;align-items:center;gap:8px}
+.specialty-card ul li::before{content:'✓';color:var(--terracotta-light);font-weight:700;font-size:12px}
+.how-it-works{background:var(--cream);padding:100px 0}
+.steps-container{margin-top:64px;display:flex;flex-direction:column;position:relative}
+.step{display:grid;grid-template-columns:80px 1fr;gap:40px;padding:40px 0;position:relative}
+.step:not(:last-child)::after{content:'';position:absolute;left:39px;top:80px;bottom:0;width:2px;background:linear-gradient(to bottom,var(--green-soft),rgba(15,56,35,.1))}
+.step-number{width:80px;height:80px;border-radius:50%;background:var(--green-deep);display:flex;align-items:center;justify-content:center;color:white;font-family:'Instrument Serif',serif;font-size:28px;flex-shrink:0;position:relative;z-index:2}
+.step-content h3{font-family:'Instrument Serif',serif;font-size:26px;color:var(--green-deep);margin-bottom:6px;font-weight:400}
+.step-content .step-subtitle{font-size:14px;color:var(--terracotta);font-weight:500;margin-bottom:12px}
+.step-content p{font-size:16px;line-height:1.7;color:var(--text-secondary);max-width:500px}
+.doctor-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:80px;align-items:center;margin-top:56px}
+.doctor-image{width:100%;aspect-ratio:4/5;background:linear-gradient(135deg,var(--terracotta),var(--terracotta-light));border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.doctor-image-placeholder{color:white;text-align:center;font-family:'Instrument Serif',serif;font-size:28px;padding:40px;line-height:1.3}
+.doctor-image-placeholder span{display:block;font-family:'DM Sans',sans-serif;font-size:14px;margin-top:8px;opacity:.8}
+.doctor-credentials{position:absolute;bottom:-16px;right:-16px;background:var(--white);border-radius:var(--radius-md);padding:16px 24px;box-shadow:var(--shadow-lg)}
+.doctor-credentials p{font-size:13px;color:var(--text-muted)}
+.doctor-credentials strong{display:block;font-size:15px;color:var(--green-deep);margin-bottom:2px}
+.doctor-content h3{font-family:'Instrument Serif',serif;font-size:clamp(28px,3vw,38px);color:var(--green-deep);line-height:1.2;margin-bottom:24px;font-weight:400}
+.doctor-content h3 em{color:var(--terracotta)}
+.doctor-text{font-size:16px;line-height:1.8;color:var(--text-secondary);margin-bottom:16px}
+.testimonials{background:var(--cream-warm);padding:100px 0}
+.testimonial-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:56px}
+.testimonial-card{background:var(--white);border-radius:var(--radius-lg);padding:32px;box-shadow:var(--shadow-sm);transition:all .3s;display:flex;flex-direction:column}
+.testimonial-card:hover{box-shadow:var(--shadow-md);transform:translateY(-4px)}
+.testimonial-stars{color:var(--gold);font-size:14px;letter-spacing:2px;margin-bottom:16px}
+.testimonial-text{font-size:15px;line-height:1.7;color:var(--text-secondary);flex:1;margin-bottom:20px;font-style:italic}
+.testimonial-author{display:flex;align-items:center;gap:12px;padding-top:16px;border-top:1px solid var(--green-light)}
+.testimonial-avatar{width:40px;height:40px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--green-deep);font-weight:600;font-family:'Instrument Serif',serif}
+.testimonial-name{font-size:14px;font-weight:600;color:var(--green-deep)}
+.testimonial-desc{font-size:12px;color:var(--text-muted);margin-top:2px}
+.stats{background:var(--white);padding:80px 0}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;text-align:center}
+.stat-number{font-family:'Instrument Serif',serif;font-size:48px;color:var(--green-deep);line-height:1;margin-bottom:8px}
+.stat-label{font-size:14px;color:var(--text-muted);line-height:1.4}
+.faq-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:80px;margin-top:56px}
+@media(max-width:1024px){
+  .hero-inner{grid-template-columns:1fr;gap:48px}.hero-visual{max-width:500px}.hero{min-height:auto;padding:120px 0 60px}
+  .doctor-grid{grid-template-columns:1fr;gap:48px}.faq-grid{grid-template-columns:1fr;gap:48px}
+}
+@media(max-width:768px){
+  .relate-grid{grid-template-columns:1fr}.specialty-cards{grid-template-columns:1fr}
+  .testimonial-grid{grid-template-columns:1fr}.stats-grid{grid-template-columns:repeat(2,1fr)}
+  .hero-float-1,.hero-float-2{display:none}
+  .hero-actions{flex-direction:column;align-items:stretch}.hero-actions a{text-align:center;justify-content:center}
+}
+</style>
+</head>
+<body>
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><div class="nav-logo-icon">JP</div><span class="nav-logo-text">Joseph Psychiatry</span></a>
+    <div class="nav-links">
+      <a href="what-we-treat.html">What We Treat</a>
+      <a href="what-to-expect.html">What to Expect</a>
+      <a href="about.html">About Us</a>
+      <a href="contact.html">Contact</a>
+      <a href="sms:+15162001835" class="nav-text-btn">💬 Text Us</a>
+      <a href="schedule.html" class="nav-cta">Book Free Consult →</a>
+    </div>
+    <button class="nav-hamburger" onclick="toggleMobile()"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-menu-close" onclick="toggleMobile()">✕</button>
+  <a href="index.html" onclick="toggleMobile()">Home</a>
+  <a href="what-we-treat.html" onclick="toggleMobile()">What We Treat</a>
+  <a href="what-to-expect.html" onclick="toggleMobile()">What to Expect</a>
+  <a href="about.html" onclick="toggleMobile()">About Us</a>
+  <a href="contact.html" onclick="toggleMobile()">Contact</a>
+  <a href="sms:+15162001835">Text Us</a>
+  <a href="schedule.html">Book Free Consult</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-content">
+        <div class="hero-badge"><span class="hero-badge-dot"></span> Accepting new patients in New York</div>
+        <h1>You're not broken.<br>Your brain just works <em>differently.</em></h1>
+        <p class="hero-subtitle">Expert ADHD, anxiety, and depression care from a psychiatrist-led team that takes the time to understand you. Evening telehealth visits that fit your schedule — from anywhere in New York.</p>
+        <div class="hero-actions">
+          <a href="schedule.html" class="btn-primary">Book Your Free Consult →</a>
+          <a href="sms:+15162001835" class="btn-secondary">💬 Text Us Anytime</a>
+        </div>
+        <div class="hero-proof">
+          <div class="hero-proof-avatars">
+            <div class="hero-proof-avatar">S</div><div class="hero-proof-avatar">M</div><div class="hero-proof-avatar">K</div><div class="hero-proof-avatar">A</div>
+          </div>
+          <div class="hero-proof-text"><strong>2,000+ patients</strong> cared for across<br>hospital, clinic, and private practice</div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-card">
+          <div class="hero-card-header">
+            <div class="hero-card-avatar">JP</div>
+            <div class="hero-card-info"><h3>Joseph Psychiatry</h3><p>Led by Dr. Amanda Joseph, MD</p></div>
+          </div>
+          <div class="hero-card-checklist">
+            <div class="hero-card-check"><div class="hero-card-check-icon">✓</div> ADHD specialist — adults & professionals</div>
+            <div class="hero-card-check"><div class="hero-card-check-icon">✓</div> Psychiatrist-led care team (NPs & PAs)</div>
+            <div class="hero-card-check"><div class="hero-card-check-icon">✓</div> Evening appointments (6–9 PM)</div>
+            <div class="hero-card-check"><div class="hero-card-check-icon">✓</div> 100% telehealth — from your couch</div>
+            <div class="hero-card-check"><div class="hero-card-check-icon">✓</div> Aetna & Blue Cross Blue Shield accepted</div>
+            <div class="hero-card-check"><div class="hero-card-check-icon">✓</div> Free 10-minute consult call to start</div>
+          </div>
+        </div>
+        <div class="hero-float-1"><span class="icon">🎥</span> Video visits from anywhere in NY</div>
+        <div class="hero-float-2"><div class="rating">★★★★★</div><div class="label">Patient-rated care</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST BAR -->
+<div class="trust-bar"><div class="container"><div class="trust-bar-inner">
+  <div class="trust-item">🩺 <span><strong>Psychiatrist-led</strong> care team</span></div>
+  <div class="trust-item">🏥 <span><strong>7+ years</strong> clinical experience</span></div>
+  <div class="trust-item">🌙 <span><strong>Evening hours</strong> after work</span></div>
+  <div class="trust-item">💳 <span><strong>Aetna & BCBS</strong> accepted</span></div>
+  <div class="trust-item">📱 <span><strong>100% virtual</strong> from home</span></div>
+</div></div></div>
+
+<!-- SOUND FAMILIAR -->
+<section class="relate">
+  <div class="container">
+    <div class="animate-on-scroll">
+      <div class="section-label">Sound familiar?</div>
+      <div class="section-heading">You hold it all together on the<br>outside. But inside, it's <span class="serif italic">exhausting.</span></div>
+      <p class="section-subtitle">If any of these resonate, you're not alone — and you're in the right place.</p>
+    </div>
+    <div class="relate-grid">
+      <div class="relate-card animate-on-scroll delay-1"><span class="relate-card-emoji">🧠</span><h3>"I have 47 tabs open in my brain at all times"</h3><p>You're constantly juggling thoughts, forgetting things you just said you'd do, and feeling like you can't turn your brain off — even when you're exhausted.</p></div>
+      <div class="relate-card animate-on-scroll delay-2"><span class="relate-card-emoji">🎭</span><h3>"Everyone thinks I have it together"</h3><p>You're excelling at work or school, but no one sees the hours of anxiety, the last-minute scrambles, or how hard you work just to keep up.</p></div>
+      <div class="relate-card animate-on-scroll delay-3"><span class="relate-card-emoji">📚</span><h3>"I can't focus no matter how hard I try"</h3><p>You read the same paragraph five times. You sit down to study or work and two hours later you've done everything except the thing you needed to do.</p></div>
+      <div class="relate-card animate-on-scroll delay-1"><span class="relate-card-emoji">📋</span><h3>"I make lists for my lists"</h3><p>Planners, apps, sticky notes — you've tried every system. They work for a week and then you're back to feeling scattered and behind.</p></div>
+      <div class="relate-card animate-on-scroll delay-2"><span class="relate-card-emoji">😰</span><h3>"The anxiety never really goes away"</h3><p>There's a constant low-level hum of worry. Am I doing enough? Did I forget something? What if they figure out I'm not as capable as they think?</p></div>
+      <div class="relate-card animate-on-scroll delay-3"><span class="relate-card-emoji">🌊</span><h3>"Some days I just can't get started"</h3><p>The motivation isn't there. You know what you need to do but you physically cannot start. And then the guilt spiral begins.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- SPECIALTIES -->
+<section class="specialties">
+  <div class="container">
+    <div class="animate-on-scroll">
+      <div class="section-label">What We Treat</div>
+      <div class="section-heading">Expert care, tailored to<br><span class="serif italic">how you actually feel.</span></div>
+      <p class="section-subtitle">We specialize in the conditions that busy, driven people deal with most — but rarely talk about.</p>
+    </div>
+    <div class="specialty-cards">
+      <div class="specialty-card featured animate-on-scroll delay-1">
+        <div class="specialty-icon">🧠</div><h3>ADHD</h3>
+        <p>ADHD doesn't always look like what you'd expect — especially when you're high-functioning. We understand the unique ways it shows up when you've spent years masking and compensating.</p>
+        <ul><li>Difficulty focusing despite being capable</li><li>Emotional dysregulation & rejection sensitivity</li><li>Executive function challenges</li><li>Late diagnosis in adulthood</li><li>Evidence-based medication management</li></ul>
+      </div>
+      <div class="specialty-card animate-on-scroll delay-2">
+        <div class="specialty-icon">💭</div><h3>Anxiety</h3>
+        <p>That constant inner critic telling you everything will go wrong — we help quiet the noise and build real coping strategies.</p>
+        <ul><li>Generalized anxiety</li><li>Social anxiety</li><li>Panic attacks</li><li>Performance anxiety</li><li>Imposter syndrome</li></ul>
+      </div>
+      <div class="specialty-card animate-on-scroll delay-3">
+        <div class="specialty-icon">🌧️</div><h3>Depression</h3>
+        <p>Sometimes it's not sadness — it's numbness, exhaustion, or just going through the motions. We meet you wherever you are.</p>
+        <ul><li>Persistent low mood</li><li>Loss of motivation</li><li>Burnout & emotional fatigue</li><li>Difficulty finding joy</li><li>Medication & ongoing support</li></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-it-works">
+  <div class="container">
+    <div class="animate-on-scroll">
+      <div class="section-label">How It Works</div>
+      <div class="section-heading">Getting started is <span class="serif italic">easier than you think.</span></div>
+      <p class="section-subtitle">Three simple steps. No waitlists. No judgment. Just real help.</p>
+    </div>
+    <div class="steps-container">
+      <div class="step animate-on-scroll delay-1"><div class="step-number">1</div><div class="step-content"><h3>Book a Free Consult Call</h3><div class="step-subtitle">10 minutes · Free · No commitment</div><p>A quick, no-pressure phone call to understand what you're looking for, answer your questions, and make sure we're the right fit. You can book online or just text us.</p></div></div>
+      <div class="step animate-on-scroll delay-2"><div class="step-number">2</div><div class="step-content"><h3>Your First Visit — The Deep Dive</h3><div class="step-subtitle">60 minutes · Video call · Comprehensive</div><p>You'll be matched with a dedicated provider on our care team — an experienced NP or PA — who takes the time to really understand your story. Your symptoms, your history, what's worked and what hasn't. No rushed 15-minute appointments.</p></div></div>
+      <div class="step animate-on-scroll delay-3"><div class="step-number">3</div><div class="step-content"><h3>Ongoing Care That Grows With You</h3><div class="step-subtitle">Regular check-ins · Adjustments · Support</div><p>Your provider meets with you regularly to track progress and fine-tune your treatment — all under Dr. Joseph's clinical oversight. You get the consistency of one provider who knows you, backed by the expertise of the full team.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- OUR TEAM -->
+<section class="doctor" id="doctor" style="background:var(--white);padding:100px 0">
+  <div class="container">
+    <div class="animate-on-scroll"><div class="section-label">Our Care Team</div></div>
+    <div class="doctor-grid">
+      <div class="doctor-image-wrapper animate-on-scroll" style="position:relative">
+        <div class="doctor-image"><div class="doctor-image-placeholder">Dr. Amanda Joseph<span>MD · Medical Director</span></div></div>
+        <div class="doctor-credentials"><strong>Board-Certified Psychiatrist</strong><p>Medical Director · 7+ years</p></div>
+      </div>
+      <div class="doctor-content animate-on-scroll delay-2">
+        <h3>Psychiatrist-designed care,<br>delivered by a team that <em>knows you.</em></h3>
+        <p class="doctor-text">Joseph Psychiatry was founded by Dr. Amanda Joseph, a board-certified psychiatrist with over 7 years of experience across hospital, outpatient, and private practice settings. As Medical Director, she designed every aspect of how care is delivered here — from our evaluation process to our treatment protocols.</p>
+        <p class="doctor-text">Your ongoing care is provided by our team of experienced nurse practitioners and physician assistants, all working under Dr. Joseph's direct supervision and clinical guidance. This means you get the consistency of a dedicated provider who knows your story, backed by the expertise of a psychiatrist overseeing your entire treatment plan.</p>
+        <div class="quote-box"><p>"Every provider on our team follows the same approach I would take myself — thorough, thoughtful, and tailored to the individual. That's the standard, no exceptions."</p><cite>— Dr. Amanda Joseph, MD · Medical Director</cite></div>
+        <div class="info-box"><h4>How our care model works:</h4>
+          <div class="info-box-item"><span class="marker">✦</span><span><strong>Dr. Joseph</strong> sets the clinical direction and oversees all treatment plans</span></div>
+          <div class="info-box-item"><span class="marker">✦</span><span><strong>Your dedicated NP or PA</strong> provides your appointments, prescriptions, and ongoing care</span></div>
+          <div class="info-box-item"><span class="marker">✦</span><span><strong>Regular collaboration</strong> ensures your care plan stays consistent, informed, and evolving with you</span></div>
+        </div>
+        <div class="insurance-badges" style="margin-top:24px">
+          <span class="insurance-badge">✓ Aetna</span><span class="insurance-badge">✓ Blue Cross Blue Shield</span><span class="insurance-badge">✓ Anthem</span><span class="insurance-badge">✓ Empire</span><span class="insurance-badge">✓ Private Pay</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div class="container">
+    <div class="animate-on-scroll">
+      <div class="section-label">Patient Stories</div>
+      <div class="section-heading">Real patients, real progress,<br>real <span class="serif italic">relief.</span></div>
+    </div>
+    <div class="testimonial-grid">
+      <div class="testimonial-card animate-on-scroll delay-1"><div class="testimonial-stars">★★★★★</div><p class="testimonial-text">"I was struggling through my last year of college and thought I was just burnt out. Turns out I have ADHD. Within weeks of starting treatment, everything clicked — I could actually sit down and study without my brain fighting me."</p><div class="testimonial-author"><div class="testimonial-avatar">J</div><div><div class="testimonial-name">J.L.</div><div class="testimonial-desc">College senior, 22</div></div></div></div>
+      <div class="testimonial-card animate-on-scroll delay-2"><div class="testimonial-stars">★★★★★</div><p class="testimonial-text">"The evening appointments are a lifesaver. I don't have to sneak away from work or make excuses. And the video visits mean I can do it from home after a long day. My provider really takes the time to check in and adjust things when needed."</p><div class="testimonial-author"><div class="testimonial-avatar">M</div><div><div class="testimonial-name">M.R.</div><div class="testimonial-desc">Marketing manager, 34</div></div></div></div>
+      <div class="testimonial-card animate-on-scroll delay-3"><div class="testimonial-stars">★★★★★</div><p class="testimonial-text">"I've been to psychiatrists who spent 10 minutes with me and handed me a prescription. The team here actually took the time to understand everything — my history, my goals, what wasn't working. I finally feel like someone gets it."</p><div class="testimonial-author"><div class="testimonial-avatar">A</div><div><div class="testimonial-name">A.T.</div><div class="testimonial-desc">Law student, 26</div></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats">
+  <div class="container"><div class="stats-grid">
+    <div class="stat-item animate-on-scroll delay-1"><div class="stat-number">7+</div><div class="stat-label">Years of clinical<br>experience</div></div>
+    <div class="stat-item animate-on-scroll delay-2"><div class="stat-number">2,000+</div><div class="stat-label">Patients cared for<br>across settings</div></div>
+    <div class="stat-item animate-on-scroll delay-3"><div class="stat-number">6–9 PM</div><div class="stat-label">Evening appointments<br>that fit your life</div></div>
+    <div class="stat-item animate-on-scroll delay-4"><div class="stat-number">100%</div><div class="stat-label">Virtual care from<br>anywhere in NY</div></div>
+  </div></div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" style="background:var(--cream)">
+  <div class="container">
+    <div class="faq-grid">
+      <div class="animate-on-scroll">
+        <div class="section-label">Common Questions</div>
+        <div class="section-heading" style="font-size:36px">Everything you<br>want to know.</div>
+        <p style="font-size:16px;line-height:1.7;color:var(--text-secondary);margin-top:16px">Still have questions? Text us anytime at <a href="sms:+15162001835" style="color:var(--green-deep);font-weight:600">(516) 200-1835</a>.</p>
+      </div>
+      <div class="faq-items animate-on-scroll delay-2">
+        <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">Do I need a referral to schedule?<span class="faq-icon">+</span></button><div class="faq-answer"><p>Nope! You can book directly with us. Just schedule a free 10-minute consult call and we'll take it from there. No referral, no paperwork to start.</p></div></div>
+        <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">What insurance do you accept?<span class="faq-icon">+</span></button><div class="faq-answer"><p>We accept Aetna and Blue Cross Blue Shield (including Anthem, Empire, and affiliated plans). We also offer private pay options. We'll verify your benefits before your first appointment.</p></div></div>
+        <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">How do virtual appointments work?<span class="faq-icon">+</span></button><div class="faq-answer"><p>It's a secure video call — just like FaceTime or Zoom, but HIPAA-compliant. You log in from your phone, tablet, or computer from wherever you're comfortable.</p></div></div>
+        <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">Will I see a psychiatrist or another provider?<span class="faq-icon">+</span></button><div class="faq-answer"><p>Your care is provided by a dedicated nurse practitioner or physician assistant on our team, all working under the direct supervision of Dr. Joseph. You'll have one consistent provider who knows your story, backed by psychiatrist-level oversight of your treatment plan.</p></div></div>
+        <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">I think I might have ADHD but I've never been diagnosed. Can you help?<span class="faq-icon">+</span></button><div class="faq-answer"><p>Absolutely — this is one of the most common reasons people come to us. Many adults aren't diagnosed until well into adulthood. During your intake, we'll do a thorough evaluation and figure out what's going on together.</p></div></div>
+        <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">Why only evening hours?<span class="faq-icon">+</span></button><div class="faq-answer"><p>Because our patients are busy — students, professionals, parents — and shouldn't have to choose between their career and their care. We schedule between 6–9 PM so you never have to take time off.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container"><div class="cta-inner animate-on-scroll">
+    <h2>Ready to finally feel like<br>your brain is <em>working with you?</em></h2>
+    <p>Start with a free 10-minute consult call. No commitment, no pressure — just a conversation to see if we're the right fit.</p>
+    <div class="cta-buttons">
+      <a href="schedule.html" class="btn-white">Book Your Free Consult →</a>
+      <a href="sms:+15162001835" class="btn-ghost">💬 Text Us at (516) 200-1835</a>
+    </div>
+    <p class="cta-note">Free · 10 minutes · No commitment · Completely confidential</p>
+  </div></div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo"><div class="nav-logo-icon">JP</div><span class="nav-logo-text">Joseph Psychiatry</span></a>
+        <p>Expert ADHD, anxiety, and depression care from a board-certified psychiatrist. Virtual evening appointments serving all of New York State.</p>
+        <div class="footer-crisis">⚠️ Not for emergencies. If you are in crisis, call <strong>911</strong> or the Suicide & Crisis Lifeline at <strong>988</strong>.</div>
+      </div>
+      <div class="footer-col"><h4>Navigate</h4><a href="what-we-treat.html">What We Treat</a><a href="what-to-expect.html">What to Expect</a><a href="about.html">About Us</a><a href="contact.html">Contact</a><a href="schedule.html">Book a Consult</a></div>
+      <div class="footer-col"><h4>Contact</h4><a href="tel:+15166000316">📞 (516) 600-0316</a><a href="sms:+15162001835">💬 (516) 200-1835</a><a href="mailto:admin@josephpsych.com">✉️ admin@josephpsych.com</a></div>
+      <div class="footer-col"><h4>Legal</h4><a href="legal.html#hipaa">HIPAA Privacy Notice</a><a href="legal.html#privacy">Privacy Policy</a><a href="legal.html#terms">Terms of Service</a><a href="legal.html#telehealth">Telehealth Consent</a></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Joseph Psychiatry PLLC. All rights reserved.</span><span>1575 Hillside Avenue, New Hyde Park, NY 11040</span></div>
+  </div>
+</footer>
+<script src="scripts.js"></script>
+<!-- Cal floating-popup embed code begins -->
+<script type="text/javascript">
+  (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+Cal("init", "10min", {origin:"https://app.cal.com"});
+  Cal.ns["10min"]("floatingButton", {"calLink":"josephpsych/10min","config":{"layout":"month_view","useSlotsViewOnSmallScreen":"true"},"buttonText":"Free Consult","buttonColor":"#0B2E15","buttonTextColor":"#F2F0E6"});
+  Cal.ns["10min"]("ui", {"cssVarsPerTheme":{"light":{"cal-brand":"#0B2E15"},"dark":{"cal-brand":"#F2F0E6"}},"hideEventTypeDetails":false,"layout":"month_view"});
+</script>
+<!-- Cal floating-popup embed code ends -->
+</body>
+</html>

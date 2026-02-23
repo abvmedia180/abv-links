@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tax Grievance Guide — ABV Financial Intelligence</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%2300d474'/%3E%3Cstop offset='100%25' stop-color='%2300b862'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='6' fill='%23080a0f'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='Georgia,serif' font-weight='700' font-size='16' fill='url(%23g)'%3EABV%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,700;9..144,800&family=Fraunces:ital,opsz,wght@1,9..144,400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js">
+// ── SECTION NAV SCROLL SPY ──
+(function(){
+  var navLinks = document.querySelectorAll('.section-nav-inner a');
+  var sections = [];
+  navLinks.forEach(function(a){
+    var id = a.getAttribute('href').replace('#','');
+    var el = document.getElementById(id);
+    if(el) sections.push({el:el, link:a});
+  });
+  window.addEventListener('scroll', function(){
+    var scrollPos = window.scrollY + 140;
+    var active = null;
+    sections.forEach(function(s){
+      if(s.el.offsetTop <= scrollPos) active = s;
+    });
+    navLinks.forEach(function(a){a.classList.remove('active')});
+    if(active) active.link.classList.add('active');
+  });
+})();
+</script>
+<style>
+:root {
+  --bg:#080a0f;--bg2:#0c0f16;--bg3:#111521;--bg4:#161b2b;
+  --bd:#1e2740;--bd2:#283350;
+  --mt:#6b7394;--tx:#a0a8c0;--br:#ccd6f6;--wh:#e6f1ff;
+  --ac:#00d474;--ac2:#00b862;--acd:rgba(0,212,116,.06);--ac15:rgba(0,212,116,.15);
+  --rd:#ff5252;--rdd:rgba(255,82,82,.06);--am:#ffc107;
+  --R:8px;--Rs:5px;--sans:'Inter',system-ui,sans-serif;--disp:'Fraunces',Georgia,serif;
+  /* Legacy mappings */
+  --surface: var(--bg3);--surface2: var(--bg4);--border: var(--bd);
+  --text: var(--tx);--text-dim: var(--mt);--accent: var(--ac);
+  --accent-glow: var(--acd);--warn: var(--rd);--gold: var(--am);
+  --success: var(--ac);--radius: var(--R);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--bd); border-radius: 3px; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--wh);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+
+
+/* ── NAV ── */
+nav {
+  position: fixed; top:0; left:0; right:0; z-index: 100;
+  background: rgba(12,15,20,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+}
+nav .inner {
+  max-width: 1100px; margin:0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 60px;
+}
+nav .logo {
+  font-family: var(--disp);
+  font-size: 18px; color: var(--accent);
+  text-decoration: none;
+}
+nav .links { display:flex; gap:20px; flex-wrap: wrap; }
+nav .links a {
+  color: var(--mt); text-decoration:none; font-size:13px; font-weight:500;
+  transition: color .2s; white-space: nowrap;
+}
+nav .links a:hover, nav .links a.active { color: var(--accent); }
+@media(max-width:700px) {
+  nav .links { display:none; }
+}
+
+/* tab bar replaced by section-nav */
+.tab-btn {
+  background: none; border: none; color: var(--mt);
+  font-family: var(--sans); font-size: 13px; font-weight: 600;
+  padding: 14px 20px; cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all .2s; white-space: nowrap;
+}
+.tab-btn:hover { color: var(--wh); }
+.tab-btn.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* ── HERO ── */
+.hero {
+  padding: 120px 24px 40px;
+  text-align: center;
+  background: radial-gradient(ellipse at 50% 0%, rgba(0,212,116,0.06) 0%, transparent 60%);
+}
+.hero h1 {
+  font-family: var(--disp);
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  line-height: 1.15;
+  margin-bottom: 16px;
+}
+.hero h1 span { color: var(--ac); }
+.hero p { color: var(--mt); font-size: 17px; max-width: 640px; margin: 0 auto 24px; }
+
+.hero .stat-row {
+  display: flex; gap: 32px; justify-content: center; flex-wrap: wrap;
+  margin-top: 28px;
+}
+.hero .stat { text-align: center; }
+.hero .stat .num {
+  font-family: var(--disp);
+  font-size: 2.2rem; color: var(--am);
+}
+.hero .stat .label { font-size: 13px; color: var(--mt); margin-top:2px; }
+
+.badge {
+  display: inline-block;
+  background: var(--acd);
+  color: var(--ac);
+  font-size: 12px; font-weight: 700;
+  padding: 6px 16px; border-radius: 20px;
+  margin-bottom: 14px;
+  border: 1px solid var(--ac15);
+  letter-spacing:.5px; text-transform:uppercase;
+}
+
+/* ── DATE NOTICE ── */
+.date-notice {
+  max-width: 740px; margin: 0 auto 24px;
+  background: rgba(255,193,7,0.06);
+  border: 1px solid rgba(255,193,7,0.15);
+  border-radius: var(--Rs);
+  padding: 12px 16px;
+  font-size: 13px; color: var(--am);
+  text-align: center; line-height: 1.5;
+}
+
+/* ── DISCLAIMER ── */
+.disclaimer-box {
+  max-width: 740px; margin: 0 auto 20px;
+  background: #1a1510;
+  border: 1px solid #4a3820;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 13px; color: #c4a060;
+  text-align: center; line-height: 1.5;
+}
+
+/* ── SECTIONS ── */
+section {
+  max-width: 900px; margin: 0 auto;
+  padding: 60px 24px;
+}
+section h2 {
+  font-family: var(--disp);
+  font-size: 2rem; margin-bottom: 12px;
+}
+section h3 {
+  font-family: var(--disp);
+  font-size: 1.35rem; margin-bottom: 8px; color: var(--accent);
+}
+section p { color: var(--mt); margin-bottom: 16px; }
+section a { color: var(--accent); }
+
+/* ── TAB PANELS ── */
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ── CARDS ── */
+.card {
+  background: var(--bg3);
+  border: 1px solid var(--bd);
+  border-radius: var(--R);
+  padding: 24px;
+  margin-bottom: 16px;
+  transition: border-color .2s;
+}
+.card:hover { border-color: var(--bd2); }
+.card.highlight {
+  border-color: var(--ac);
+  box-shadow: 0 0 30px var(--acd);
+}
+
+/* ── FORM ELEMENTS ── */
+label.field { display: block; margin-bottom: 20px; }
+label.field .lbl {
+  display: block; font-size: 13px; font-weight: 600;
+  color: var(--mt); margin-bottom: 6px;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+label.field input, label.field select, label.field textarea {
+  width: 100%;
+  background: var(--bg4);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: var(--wh);
+  font-size: 16px;
+  font-family: var(--sans);font-variant-numeric:tabular-nums;
+  transition: border-color .2s;
+}
+label.field textarea {
+  min-height: 120px; resize: vertical;
+  font-family: var(--sans);
+  font-size: 14px; line-height: 1.6;
+}
+label.field input:focus, label.field select:focus, label.field textarea:focus {
+  outline: none;
+  border-color: var(--ac);
+  box-shadow: 0 0 0 3px var(--acd);
+}
+label.field input::placeholder, label.field textarea::placeholder { color: #4a5568; }
+label.field .hint { font-size: 12px; color: #5a6478; margin-top: 4px; }
+
+/* ── RESULTS ── */
+.results-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  margin: 24px 0;
+}
+@media(max-width:600px) { .results-grid { grid-template-columns: 1fr; } }
+.result-box {
+  background: var(--bg4);
+  border: 1px solid var(--bd);
+  border-radius: var(--Rs);
+  padding: 16px;
+}
+.result-box .r-label {
+  font-size: 10px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; color: var(--mt);
+  text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;
+}
+.result-box .r-value {
+  font-family: var(--sans);font-variant-numeric:tabular-nums;
+  font-size: 1.5rem; font-weight: 700;
+  color: var(--accent);
+}
+.result-box.big { grid-column: 1/-1; text-align:center; border-color: var(--ac); }
+.result-box.big .r-value { font-size: 2rem; color: var(--am); }
+
+/* ── COPY BOX ── */
+.copy-section { margin-top: 28px; }
+.copy-section h4 {
+  font-size: 14px; font-weight: 600; color: var(--mt);
+  text-transform: uppercase; letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+.copy-box {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  font-family: var(--sans);font-variant-numeric:tabular-nums;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--wh);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+
+/* ── SAVINGS CALC ── */
+.savings-inputs {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;
+  margin-bottom: 20px;
+}
+@media(max-width:600px) { .savings-inputs { grid-template-columns: 1fr; } }
+
+
+
+/* ── STEPS ── */
+.step {
+  display: flex; gap: 20px;
+  margin-bottom: 32px;
+}
+.step-num {
+  flex-shrink: 0;
+  width: 44px; height: 44px;
+  background: var(--ac);
+  color: var(--bg);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 18px;
+}
+.step-content { flex:1; }
+.step-content h3 {
+  color: var(--wh); margin-bottom: 8px;
+  font-family: var(--sans); font-weight: 700; font-size:1.1rem;
+}
+.step-content p { color: var(--tx); font-size: 13px; }
+
+/* ── TIP / WARN ── */
+.tip {
+  background: rgba(255,193,7,0.06);
+  border: 1px solid rgba(255,193,7,0.15);
+  border-radius: var(--Rs);
+  padding: 16px 20px;
+  margin: 16px 0;
+  font-size: 13px;
+  color: var(--am);
+  line-height: 1.6;
+}
+.tip strong { color: var(--am); }
+.warn-box {
+  background: var(--rdd);
+  border: 1px solid rgba(255,82,82,0.15);
+  border-radius: var(--Rs);
+  padding: 16px 20px;
+  margin: 16px 0;
+  font-size: 13px;
+  color: var(--rd);
+  line-height: 1.6;
+}
+
+/* ── GLOSSARY ── */
+.glossary-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+}
+@media(max-width:600px) { .glossary-grid { grid-template-columns: 1fr; } }
+.g-item {
+  background: var(--bg4);
+  border: 1px solid var(--bd);
+  border-radius: var(--Rs);
+  padding: 14px;
+}
+.g-item .g-term { font-weight: 700; color: var(--ac); margin-bottom: 4px; font-size:13px; }
+.g-item .g-def { font-size: 12px; color: var(--mt); line-height: 1.6; }
+
+/* ── CHECKLIST ── */
+.checklist {
+  list-style: none; padding: 0; margin: 16px 0;
+}
+.checklist li {
+  display: flex; align-items: flex-start; gap: 12px;
+  margin-bottom: 12px; color: var(--tx); font-size: 13px;
+  line-height: 1.5;
+}
+.checklist li .check-icon {
+  flex-shrink: 0;
+  width: 24px; height: 24px;
+  background: var(--acd);
+  border: 1px solid var(--ac15);
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--accent); font-size: 14px; font-weight: 700;
+  margin-top: 1px;
+  cursor: pointer;
+  transition: all .2s;
+}
+.checklist li .check-icon.checked {
+  background: var(--ac);
+  color: var(--bg);
+}
+.checklist li.checked-item { color: #5a6478; text-decoration: line-through; }
+
+/* ── FAQ ── */
+.faq-item {
+  background: var(--bg3);
+  border: 1px solid var(--bd);
+  border-radius: var(--R);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.faq-q {
+  padding: 14px 20px;
+  font-weight: 600; font-size: 14px;
+  color: var(--wh);
+  cursor: pointer;
+  display: flex; justify-content: space-between; align-items: center;
+  transition: background .2s;
+}
+.faq-q:hover { background: var(--bg4); }
+.faq-q .arrow {
+  color: var(--accent); font-size: 18px;
+  transition: transform .3s;
+}
+.faq-q.open .arrow { transform: rotate(180deg); }
+.faq-a {
+  display: none;
+  padding: 0 20px 16px;
+  color: var(--tx); font-size: 13px; line-height: 1.7;
+}
+.faq-a.open { display: block; }
+
+/* ── DIVIDER ── */
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--bd), transparent);
+  margin: 0 auto;
+  max-width: 400px;
+}
+
+/* ── FOOTER ── */
+footer {
+  text-align:center; padding: 32px 24px;
+  font-size: 12px; color: var(--mt);
+  border-top: 1px solid var(--bd);
+  line-height: 1.7;
+}
+footer a { color: var(--ac); text-decoration:none; }
+
+/* ── HIDDEN ── */
+.hidden { display:none !important; }
+
+/* ── ANIM ── */
+@keyframes fadeUp {
+  from { opacity:0; transform: translateY(20px); }
+  to { opacity:1; transform: translateY(0); }
+}
+.fade-up { animation: fadeUp .5s ease-out both; }
+
+/* ── PROGRESS TRACKER ── */
+.progress-bar-container {
+  max-width: 900px; margin: 0 auto;
+  padding: 0 24px 20px;
+}
+.progress-bar-bg {
+  background: var(--surface2);
+  border-radius: 8px;
+  height: 8px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--ac), var(--ac2));
+  border-radius: 8px;
+  transition: width .5s ease;
+  width: 0%;
+}
+.progress-label {
+  font-size: 12px; color: var(--mt);
+  margin-top: 6px; text-align: center;
+}
+
+/* ══ SITE-WIDE NAVIGATION ══ */
+.site-nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(8,10,15,.98);backdrop-filter:blur(20px);border-bottom:1px solid var(--bd);height:48px;display:flex;align-items:center;padding:0 20px}
+.site-nav-inner{max-width:1400px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.site-logo{font-family:var(--disp);font-size:15px;font-weight:600;color:var(--wh);text-decoration:none;white-space:nowrap;flex-shrink:0}
+.site-logo em{font-style:italic;color:var(--ac)}
+.site-links{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.site-links::-webkit-scrollbar{display:none}
+.site-links a{padding:6px 14px;font-size:11.5px;font-weight:600;color:var(--mt);text-decoration:none;border-radius:var(--Rs);transition:all .2s;white-space:nowrap;font-family:var(--sans)}
+.site-links a:hover{color:var(--tx);background:var(--bg4)}
+.site-links a.active{color:var(--ac);background:var(--acd)}
+@media(max-width:600px){.site-nav{height:auto;padding:8px 16px}.site-nav-inner{flex-direction:column;gap:6px}.site-logo{font-size:13px}.site-links{justify-content:center}.site-links a{font-size:10px;padding:5px 10px}}
+@media(max-width:480px){.site-links a{font-size:9.5px;padding:4px 8px}}
+</style>
+</head>
+<body>
+
+<div class="site-nav"><div class="site-nav-inner">
+<a href="index.html" class="site-logo">ABV <em>Financial Intelligence</em></a>
+<div class="site-links"><a href="index.html">Personal Finance</a><a href="grievance.html" class="active">Tax Grievance Guide</a><a href="flip-calculator.html">Real Estate Calculators</a></div>
+</div></div>
+
+<!-- SECTION NAV -->
+<div class="section-nav">
+<div class="section-nav-inner">
+<a href="#why">Why File</a>
+<a href="#steps">How to File</a>
+<a href="#calculator">Calculator</a>
+<a href="#savings">Savings</a>
+<a href="#faq">FAQ</a>
+<a href="#glossary">Glossary</a>
+<a href="#checklist">Checklist</a>
+</div></div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="date-notice">
+    <strong>&#9888; As of February 2026.</strong> The numbers, multipliers, and Level of Assessment change every year.
+    Always verify the current year's figures before filing. What you see here applies to the <strong>2027/2028 tax year</strong>.
+  </div>
+
+  <div class="badge">Tax Year 2027/2028 · Filing Period: Jan 2 – Mar 2, 2026</div>
+  <h1 style="font-family:var(--disp)">Nassau County <em style="font-style:italic;color:var(--ac)">Tax Grievance</em> Guide</h1>
+  <p>Calculate your reduction, get your Part B and Part D responses, estimate your savings, and learn exactly how to file — all in one place. Free. No attorney needed.</p>
+
+  <div class="stat-row">
+    <div class="stat"><div class="num">80%+</div><div class="label">of self-filers got reductions</div></div>
+    <div class="stat"><div class="num">$0</div><div class="label">cost & risk to file</div></div>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-bar-container">
+  <div class="progress-bar-bg">
+    <div class="progress-bar-fill" id="progress-fill"></div>
+  </div>
+  <div class="progress-label" id="progress-label">Complete the steps below to file your grievance</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- WHY YOU SHOULD FILE                                -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section id="why">
+  <h2>Why You Should File Every Year</h2>
+  <div class="card">
+    <p style="color:var(--wh); font-size:16px; line-height:1.7;">
+      Nassau County froze the assessment rolls again this year while home prices continued to rise. That means the Level of Assessment (LOA) keeps getting more inaccurate. The projected LOA for 2027/2028 is <strong style="color:var(--am)">0.00053</strong> — meaning the county is treating assessed values as if they represent only 0.053% of a home's true market value.
+    </p>
+    <p style="color:var(--wh); font-size:16px; line-height:1.7;">
+      When you multiply your assessed value by <strong style="color:var(--am)">1,866</strong> (the working multiplier for this LOA), you get what the county <em>implies</em> your home is worth. For many homeowners, that number is wildly higher than what the home could actually sell for. That gap is what makes you over-assessed — and that's what a grievance corrects.
+    </p>
+    <p style="color:var(--wh); font-size:16px; line-height:1.7;">
+      Even if your home seems properly assessed, you should still file. When your neighbor gets a reduction and you don't, the tax burden shifts to you. Filing protects you. There is <strong style="color:var(--ac)">zero risk</strong> — your assessment cannot be increased because you filed a grievance. You can only save money or stay the same.
+    </p>
+  </div>
+
+  <div class="tip">
+    <strong>Key insight:</strong> The county freezes the assessment rolls, but home prices keep climbing. Every year they don't update the rolls, the system becomes more inaccurate — and more favorable for homeowners who file grievances. This has been happening for 5 consecutive years.
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- HOW TO FILE - STEP BY STEP                         -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section id="steps">
+  <h2>Step-by-Step: How to File Your Grievance</h2>
+  <p>The entire process takes about 20–30 minutes. Follow these steps in order.</p>
+
+  <div class="warn-box" style="margin-bottom:32px;">
+    <strong>&#9200; Critical warning:</strong> The AROW system times out after 20 minutes of inactivity and all unsaved work is lost. Smart strategy: Complete Parts A, B, and F first to get your confirmation number, then come back for Parts D and E.
+  </div>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <h3>Register with ARC</h3>
+      <p>Go to <strong style="color:var(--wh)">askarcnassau.com</strong> and click "ARROW" in the left menu, then "Register with ARC." Fill in all required fields using an email you check frequently. Create your user ID and password. Click "Complete Registration" <strong>once</strong> — then check your email (and spam folder) for a confirmation link. After confirming, log in.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <h3>Start Filing Using the Sales Locator</h3>
+      <p>After logging in, click <strong style="color:var(--wh)">"Sales Locator"</strong> to search for your property. Enter your house number and street name only — don't include "Street," "Ave," "Road," etc., because the system uses abbreviations. Verify that your property details (square footage, bedrooms, bathrooms) are roughly accurate.</p>
+    </div>
+  </div>
+
+  <div class="tip">
+    <strong>Search tip:</strong> If your property doesn't appear, try just your house number + the first word of your street name. The system is finicky with abbreviations.
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <h3>Find Your Comparable Sales</h3>
+      <p>Click "Find Sales." The system will show recently sold homes similar to yours. <strong style="color:var(--am)">Use the first 5 homes that come up.</strong> This is the single most important piece of advice — using the system's first 5 results means nobody can accuse you of cherry-picking, and these homes are almost always in your neighborhood with similar size and style.</p>
+    </div>
+  </div>
+
+  <div class="warn-box">
+    <strong>What counts as a comp:</strong> Only actual sold homes count. Not your neighbor's assessment. Not Zestimates. Not foreclosures, short sales, or sales between family members. ARC can only consider actual closed sales. You can also find comps on Zillow (closed sales only), Realty.com, or MLS listings.
+  </div>
+
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-content">
+      <h3>Select Comps & Get Your Numbers</h3>
+      <p>Check the boxes next to your first 5 comps, then click <strong style="color:var(--wh)">"Check Selected Properties"</strong> or <strong style="color:var(--wh)">"Continue to Submit."</strong> The system calculates adjustments and gives you a <strong style="color:var(--am)">Weighted Adjusted Sale Price</strong>. That's the key number. Write it down, then enter it into the <strong style="color:var(--ac)">Grievance Calculator</strong> below along with your Taxable Market Value.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">5</div>
+    <div class="step-content">
+      <h3>Complete Part A — Property Information</h3>
+      <p>Enter your Parcel ID or search by address. List <strong>all co-owners</strong> (spouse, parent, etc.) — only people listed on the application can contact ARC about the appeal. Choose <strong>electronic communication</strong> so you receive offers by email (this cannot be changed after the filing period ends).</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">6</div>
+    <div class="step-content">
+      <h3>Complete Part B — Market Value Estimate</h3>
+      <p>Paste the <strong style="color:var(--am)">Part B number</strong> from the <strong style="color:var(--ac)">Grievance Calculator</strong> below. Enter it as a plain number — no dollar signs, no decimals, no commas. Double-check for extra zeros. Remember: this number is your <em>floor</em>. ARC cannot reduce your assessment below what you request here.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">7</div>
+    <div class="step-content">
+      <h3>Complete Part D — Other Facts</h3>
+      <p>Click the pink "Display" tab to open Part D. The <strong style="color:var(--ac)">Grievance Calculator</strong> below generates a ready-to-paste paragraph for the "Other Facts" text box. Just copy it and paste it in — that's all you need here.</p>
+    </div>
+  </div>
+
+  <div class="tip">
+    <strong>Don't skip Part D.</strong> 85% of filers leave it blank. The calculator below generates a ready-to-paste statement for you — just copy it in.
+  </div>
+
+  <div class="step">
+    <div class="step-num">8</div>
+    <div class="step-content">
+      <h3>Part F — Certification & Submit</h3>
+      <p>Enter the CAPTCHA (it's not case sensitive), select "Owner" from the dropdown, review everything, and click <strong style="color:var(--rd)">"Submit Application Form" ONCE AND ONLY ONCE.</strong></p>
+    </div>
+  </div>
+
+  <div class="warn-box">
+    <strong>&#9888; DO NOT click Submit more than once.</strong> Multiple clicks create duplicate applications, which result in an automatic denial until the extras are withdrawn. Click once, wait for the confirmation screen, and save your confirmation number immediately.
+  </div>
+
+  <div class="step">
+    <div class="step-num">9</div>
+    <div class="step-content">
+      <h3>Wait for Your Decision</h3>
+      <p>You'll receive a confirmation email. Then you wait. Decisions typically come between <strong style="color:var(--am)">September and November</strong> by email. <strong style="color:var(--rd)">You MUST open the email and ACCEPT the offer</strong>, or the reduction does not count. Check your spam folder regularly during that window. The reduction affects October 2027 school taxes and January 2028 county taxes.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- STEP 1: CALCULATOR                                 -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section id="calculator">
+  <h2>Grievance Calculator</h2>
+  <p>After you've selected your top 5 comps in Sales Locator, plug these two numbers into the calculator. Everything below will auto-populate — no buttons to click.</p>
+
+  <div class="card highlight">
+    <label class="field">
+      <span class="lbl">Average Adjusted Sale Price (Calculated from AROW)</span>
+      <input type="text" id="wasp" inputmode="numeric" placeholder="$0">
+      <span class="hint">This appears after you select your 5 comps and click "Check Selected Properties" in Sales Locator.</span>
+    </label>
+    <label class="field" style="margin-bottom:0;">
+      <span class="lbl">Taxable Market Value (Calculated from AROW)</span>
+      <input type="text" id="tmv" inputmode="numeric" placeholder="$0">
+      <span class="hint">Found on your property's assessment page. Your assessed value (TAV) = this ÷ 1,000.</span>
+    </label>
+  </div>
+
+  <!-- RESULTS (always visible, shows dashes until numbers entered) -->
+  <div id="results" class="fade-up">
+    <div class="results-grid">
+      <div class="result-box">
+        <div class="r-label">Your Assessed Value (TAV)</div>
+        <div class="r-value" id="r-tav">—</div>
+      </div>
+      <div class="result-box">
+        <div class="r-label">County Implies Your Home Is Worth</div>
+        <div class="r-value" id="r-county-fmv">—</div>
+      </div>
+      <div class="result-box">
+        <div class="r-label">Your Comps Say It's Worth</div>
+        <div class="r-value" id="r-comps-fmv">—</div>
+      </div>
+      <div class="result-box">
+        <div class="r-label">What Your AV Should Be</div>
+        <div class="r-value" id="r-correct-av">—</div>
+      </div>
+      <div class="result-box big">
+        <div class="r-label">Reduction Requested</div>
+        <div class="r-value" id="r-reduction">—</div>
+      </div>
+    </div>
+
+    <!-- Visualization -->
+    <div class="card" style="margin-top:20px;">
+      <h3 style="margin-bottom:16px;">Visual Breakdown</h3>
+      <canvas id="grievance-chart" height="200"></canvas>
+    </div>
+
+    <!-- PART B -->
+    <div class="copy-section">
+      <h4 style="color:#fff; font-size:18px;">&#x1F4CB; Copy the Number Below Into Part B</h4>
+      <p style="font-size:14px; color:#fff; margin-bottom:10px;">This is your requested full market value. Enter this exact number in Part B of the AROW form. No dollar signs, no decimals, no commas — just the number.</p>
+<div class="copy-box" id="partb-box" style="border-color:var(--gold); background:rgba(255,217,61,0.06);"><span id="partb-text" style="color:#fff; font-size:22px;">—</span></div>
+      <div class="tip" style="margin-top:14px;">
+        <strong>Important:</strong> The number you put in Part B is your <em>floor</em>. ARC cannot reduce your assessment below what you request. This is not a negotiating starting point — enter the number the calculator gives you.
+      </div>
+    </div>
+
+    <!-- PART D -->
+    <div class="copy-section">
+      <h4 style="color:#fff; font-size:18px;">&#x1F4DD; Copy the Statement Below Into Part D</h4>
+      <p style="font-size:14px; color:#fff; margin-bottom:10px;">Paste everything below into the “Other Facts” text box in Part D of your AROW application.</p>
+<div class="copy-box" id="partd-box" style="border-color:var(--ac); background:rgba(78,205,196,0.06);"><span id="partd-text" style="color:#fff;">Enter both values above and your Part D statement will appear here.</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- SAVINGS ESTIMATOR                                  -->
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- SAVINGS ESTIMATOR                                  -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section id="savings">
+  <h2>Savings Estimator</h2>
+  <p>Look up your property taxes at <a href="https://lrv.nassaucountyny.gov/" target="_blank">lrv.nassaucountyny.gov</a> and enter the amounts below. Check the "School Taxes" and "General Taxes" tabs on that site. Your savings will calculate automatically.</p>
+
+  <div class="card" id="savings-card">
+    <div class="savings-inputs">
+      <label class="field">
+        <span class="lbl">Total School Taxes</span>
+        <input type="text" id="school-tax" inputmode="numeric" placeholder="$0">
+      </label>
+      <label class="field">
+        <span class="lbl">Nassau County Taxes</span>
+        <input type="text" id="county-tax" inputmode="numeric" placeholder="$0">
+      </label>
+      <label class="field">
+        <span class="lbl">Town Taxes</span>
+        <input type="text" id="town-tax" inputmode="numeric" placeholder="$0">
+      </label>
+    </div>
+  </div>
+
+  <div id="savings-results" class="fade-up">
+    <div class="results-grid" style="margin-bottom:20px;">
+      <div class="result-box">
+        <div class="r-label">Annual Savings If Full Reduction Granted</div>
+        <div class="r-value" id="r-annual-savings">—</div>
+      </div>
+      <div class="result-box">
+        <div class="r-label">Annual Savings — Conservative (5% Reduction)</div>
+        <div class="r-value" id="r-conservative">—</div>
+      </div>
+      <div class="result-box">
+        <div class="r-label">5-Year Savings If Full Reduction Granted</div>
+        <div class="r-value" id="r-5yr">—</div>
+      </div>
+      <div class="result-box">
+        <div class="r-label">5-Year Savings — Conservative (5% Reduction)</div>
+        <div class="r-value" id="r-5yr-conservative">—</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- WHAT TO EXPECT AFTER FILING                        -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section id="expect">
+  <h2>After You File — What to Expect</h2>
+
+  <div class="card">
+    <h3>When You Get an Offer</h3>
+    <p style="color:var(--ac); font-size:15px; margin-bottom:12px;"><strong>If the reduction is 5–6% or more:</strong> Accept it. You can always file again next year for an additional reduction.</p>
+    <p style="color:var(--gold); font-size:15px; margin-bottom:12px;"><strong>If the reduction is 2–4%:</strong> Generally accept it and file again next year. Something is better than nothing, and reductions compound over time.</p>
+    <p style="color:var(--rd); font-size:15px; margin-bottom:12px;"><strong>If denied or under 2%:</strong> Consider filing for a Second Review or SCAR (Small Claims Assessment Review) through the County Clerk's office.</p>
+  </div>
+
+  <div class="tip">
+    <strong>&#x1F6E1; Your assessment CANNOT be raised because you filed.</strong> There are only two possible outcomes: (1) your assessment stays the same, or (2) you receive a reduction offer. There is zero risk.
+  </div>
+
+  <div class="card">
+    <h3>Making Changes After Submitting</h3>
+    <p>You can make changes until March 2, 2026. Go to "Appeal Filing/Status/Change" → set the tax year to 2027–28 → "Search for Appeals" (leave fields empty) → click your application → make changes → click <strong>"Submit Changes"</strong> in that specific section. <strong style="color:var(--rd)">Never click "Submit Application" again</strong> — that creates a duplicate.</p>
+  </div>
+
+  <div class="card">
+    <h3>Special Situations</h3>
+    <p><strong style="color:var(--wh)">Recently Purchased (last 3 years):</strong> Your purchase price is your best evidence. In Part D, write: "I purchased my home on [date] for $[price]. At the correct LOA of .0053, my assessed value should be no higher than [purchase price × .00053]." Upload your closing papers.</p>
+    <p><strong style="color:var(--wh)">Two-Family Homes:</strong> If the system doesn't show two-family comps, use one-family comps and note in Part D: "This is a two-family home. The only meaningful difference is an extra kitchen, which adds approximately $30,000 in value over comparable one-family homes."</p>
+    <p><strong style="color:var(--wh)">Recent Renovation or Extension:</strong> You are not required to disclose work until a Certificate of Occupancy (CO) has been issued. File based on what the county currently has on record.</p>
+    <p><strong style="color:var(--wh)">Can't Find Good Comps:</strong> If you can't find comparable homes that are the exact same style, focus on square footage, living area, and room counts instead. Professional firms face the same challenge — work with what's available.</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- FAQ                                                -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section id="faq">
+  <h2>Frequently Asked Questions</h2>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">Can my assessment go UP because I filed a grievance? <span class="arrow">▼</span></div>
+    <div class="faq-a">No. According to ARC, there are only two possible outcomes: (1) your assessment stays the same, or (2) you receive a reduction offer. Your assessment cannot increase from filing. There is zero risk.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">Do I have to file every year? <span class="arrow">▼</span></div>
+    <div class="faq-a">Yes, you should file every year. Because the Level of Assessment changes annually and other homes in your school district may receive reductions, the tax burden can shift to you if you don't file. Filing every year protects you from subsidizing your neighbors' reductions.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">What is the Part B number and why does it matter? <span class="arrow">▼</span></div>
+    <div class="faq-a">Part B is where you enter what you believe your property's full market value is. This is your floor — ARC cannot reduce your assessment below the value you request. It's not a negotiating starting point, so enter the calculated number accurately. No dollar signs, no decimals.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">I recently purchased my home. Can I still grieve? <span class="arrow">▼</span></div>
+    <div class="faq-a">Yes. However, your recent purchase price is strong evidence of current market value and won't be ignored during review. If your purchase price is less than the county's implied FMV (your assessed value × 1,866), you have a solid case. Upload your closing papers as supporting documentation.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">I can't find comps that are the same style as my house. What do I do? <span class="arrow">▼</span></div>
+    <div class="faq-a">Work with what's available. If you can't find similar styles, professional grievance firms can't either. Focus on square footage, living area, and room counts instead. Think like a buyer — if they couldn't find their preferred style, what alternative would they consider?</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">Can I compare my neighbor's assessment to mine? <span class="arrow">▼</span></div>
+    <div class="faq-a">No. ARC is not allowed to consider assessed values of other properties — that's how the law is written. Reviews must be based on actual home sales (closed transactions) only. Only sold homes count as comparables.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">What if I accidentally clicked Submit twice? <span class="arrow">▼</span></div>
+    <div class="faq-a">Duplicate applications result in automatic denial until the extras are withdrawn. Go to "Appeal Filing/Status/Change" and withdraw the duplicate(s). Only one application per parcel is allowed.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">What adjustments does the system make to comps? <span class="arrow">▼</span></div>
+    <div class="faq-a">The Sales Locator automatically adjusts comp sale prices for differences in lot size, square footage, bathrooms, and other features. A home that sold for $600,000 might adjust down to $575,000 or lower. Don't assume you can only use sales below your target value — the adjustments may work in your favor.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">What does "living area" mean in the assessment? <span class="arrow">▼</span></div>
+    <div class="faq-a">Living area includes first and second floors only. It does not include the basement, garage, attic, or any unfinished space. If the county's records show incorrect living area square footage, contact the Department of Assessment at (516) 571-1500.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">What if the Sales Locator says I'm fairly assessed? <span class="arrow">▼</span></div>
+    <div class="faq-a">The Sales Locator is not an official appraisal and it may not reflect the correct Level of Assessment. You can still file even if the Sales Locator results suggest a fair assessment. Many homeowners who the system says are "fairly assessed" still receive reductions through ARC.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">When is the deadline? <span class="arrow">▼</span></div>
+    <div class="faq-a">The filing period for the 2027/2028 tax year is <strong>January 2, 2026 through March 2, 2026</strong>. File early — the website crashes on the last day, and there are no guaranteed extensions. There is no advantage to waiting.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">Who do I contact if I have questions? <span class="arrow">▼</span></div>
+    <div class="faq-a">ARC Customer Service: (516) 571-3214 · arc@nassaucountyny.gov · Monday–Friday, 9 AM – 4:30 PM. For property record corrections: Department of Assessment at (516) 571-1500 or ncassessor@nassaucountyny.gov.</div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- KEY FORMULAS                                       -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section id="formulas">
+  <h2>The Key Formulas (2027/2028)</h2>
+  <div class="card">
+    <p style="color:var(--wh); font-family:'JetBrains Mono',monospace; font-size:14px; line-height:2.4;">
+      Assessed Value (TAV) = Taxable Market Value ÷ 1,000<br>
+      County's Implied FMV = TAV × 1,866<br>
+      Correct Assessed Value = Comp FMV × 0.00053<br>
+      Part B Value = Correct Assessed Value × 1,000<br>
+      <span style="color:var(--gold);">LOA = 0.00053 &nbsp;|&nbsp; Multiplier = 1,866</span>
+    </p>
+  </div>
+  <div class="tip">
+    <strong>Even if you don't understand the math, file anyway.</strong> You can file the form with just Parts A, B, and F completed. If you're clearly over-assessed, the system will pick it up and give you a reduction. Over 80% of self-filers got reductions last year. You have nothing to lose.
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- GLOSSARY                                           -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section id="glossary">
+  <h2>Quick Reference Glossary</h2>
+  <div class="glossary-grid">
+    <div class="g-item"><div class="g-term">LOA (Level of Assessment)</div><div class="g-def">The ratio between assessed value and fair market value. Projected at 0.00053 for 2027/2028. Changes every year.</div></div>
+    <div class="g-item"><div class="g-term">FMV (Fair Market Value)</div><div class="g-def">What your home could realistically sell for on the open market today.</div></div>
+    <div class="g-item"><div class="g-term">AV / TAV (Assessed Value)</div><div class="g-def">The number the county assigns to your property. Taxable Market Value ÷ 1,000 = your TAV.</div></div>
+    <div class="g-item"><div class="g-term">AROW / ARROW</div><div class="g-def">Assessment Review on the Web — the county's online system for filing grievances and finding comps.</div></div>
+    <div class="g-item"><div class="g-term">ARC</div><div class="g-def">Assessment Review Commission — the body that reviews your grievance and issues decisions.</div></div>
+    <div class="g-item"><div class="g-term">SCAR</div><div class="g-def">Small Claims Assessment Review — the court-level appeal if you disagree with ARC's decision. Filed through the County Clerk.</div></div>
+    <div class="g-item"><div class="g-term">Comps (Comparables)</div><div class="g-def">Recently sold homes similar to yours used as evidence. Must be actual closed sales — not assessed values of unsold homes.</div></div>
+    <div class="g-item"><div class="g-term">1,866 Multiplier</div><div class="g-def">1 ÷ 0.00053 ≈ 1,866 (rounded). Multiply your TAV by this to see what the county implies your home is worth.</div></div>
+    <div class="g-item"><div class="g-term">Sales Locator</div><div class="g-def">ARC's tool that finds comparable sales and calculates adjustments automatically. For single/two/three-family homes only.</div></div>
+    <div class="g-item"><div class="g-term">Part B</div><div class="g-def">Where you enter your requested market value. This is your floor — ARC cannot go lower than what you enter here.</div></div>
+    <div class="g-item"><div class="g-term">Part D</div><div class="g-def">The "Other Facts" section where you describe anything affecting your property's value. 85% of filers skip it — don't be one of them.</div></div>
+    <div class="g-item"><div class="g-term">Dept. of Assessment</div><div class="g-def">Sets property values. Contact them for record corrections: (516) 571-1500.</div></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- FILING CHECKLIST                                   -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section id="checklist">
+  <h2>Filing Checklist</h2>
+  <p>Use this to make sure you haven't missed anything.</p>
+  <div class="card">
+    <ul class="checklist" id="filing-checklist">
+      <li><span class="check-icon" onclick="toggleCheck(this)">✓</span>Registered with ARC at askarcnassau.com</li>
+      <li><span class="check-icon" onclick="toggleCheck(this)">✓</span>Found my property in Sales Locator and verified details</li>
+      <li><span class="check-icon" onclick="toggleCheck(this)">✓</span>Clicked "Find Sales" and selected first 5 comps</li>
+      <li><span class="check-icon" onclick="toggleCheck(this)">✓</span>Noted my Taxable Market Value and Weighted Adjusted Sale Price</li>
+      <li><span class="check-icon" onclick="toggleCheck(this)">✓</span>Used the Grievance Calculator to get my Part B and Part D numbers</li>
+      <li><span class="check-icon" onclick="toggleCheck(this)">✓</span>Completed Part A — listed all co-owners, chose electronic communication</li>
+      <li><span class="check-icon" onclick="toggleCheck(this)">✓</span>Completed Part B — entered my requested market value (no $, no decimals)</li>
+      <li><span class="check-icon" onclick="toggleCheck(this)">✓</span>Completed Part D — pasted my "Other Facts" statement</li>
+      <li><span class="check-icon" onclick="toggleCheck(this)">✓</span>Completed Part F — CAPTCHA, selected "Owner," reviewed everything</li>
+      <li><span class="check-icon" onclick="toggleCheck(this)">✓</span>Clicked "Submit Application Form" exactly ONCE</li>
+      <li><span class="check-icon" onclick="toggleCheck(this)">✓</span>Saved my confirmation number and confirmation email</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- FOOTER                                             -->
+<!-- ═══════════════════════════════════════════════════ -->
+<footer>
+  <p style="color:var(--mt); font-size:14px; line-height:1.8; max-width:700px; margin:0 auto;">
+    The grievance method and knowledge on this page was provided courtesy of <strong style="color:var(--wh)">Jeff Gold</strong> and his years of volunteer work helping Nassau County homeowners save on their property taxes. If you'd prefer to have a professional handle your grievance instead of doing it yourself, you can hire his firm for one low flat rate at <a href="https://jeffgoldflatrategrievances.com/" target="_blank">jeffgoldflatrategrievances.com</a>.
+  </p>
+  <p style="margin-top:16px; font-size:12px; color: #3d4558;">
+    Filing deadline: March 2, 2026 · Tax Year 2027/2028 · As of February 2026 · Numbers change every year
+  </p>
+</footer>
+
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- JAVASCRIPT                                         -->
+<!-- ═══════════════════════════════════════════════════ -->
+<script>
+// ── STATE ──
+let STATE = {};
+let grievanceChart = null;
+
+// ── FORMATTING HELPERS ──
+function parseNum(str) {
+  if (!str) return 0;
+  return parseInt(str.replace(/[^0-9]/g, ''), 10) || 0;
+}
+function fmt(n) { return n.toLocaleString('en-US'); }
+function fmtDollar(n) { return '$' + n.toLocaleString('en-US'); }
+
+// ── AUTO-FORMAT: dollar signs + commas as you type ──
+function autoFormatDollar(input) {
+  const raw = input.value.replace(/[^0-9]/g, '');
+  if (!raw) { input.value = ''; return; }
+  const num = parseInt(raw, 10);
+  input.value = '$' + num.toLocaleString('en-US');
+}
+
+// Attach to all numeric inputs
+document.addEventListener('DOMContentLoaded', function() {
+  ['wasp', 'tmv'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('input', function() {
+        autoFormatDollar(this);
+        autoCalculate();
+      });
+    }
+  });
+  ['school-tax', 'county-tax', 'town-tax'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('input', function() {
+        autoFormatDollar(this);
+        autoCalcSavings();
+      });
+    }
+  });
+});
+
+// ── PROGRESS TRACKER ──
+function updateProgress() {
+  let steps = 0;
+  if (STATE.tav) steps += 50;
+  const hasSavings = parseNum(document.getElementById('school-tax')?.value) > 0 ||
+                     parseNum(document.getElementById('county-tax')?.value) > 0 ||
+                     parseNum(document.getElementById('town-tax')?.value) > 0;
+  if (STATE.tav && hasSavings) steps += 50;
+  const fill = document.getElementById('progress-fill');
+  const label = document.getElementById('progress-label');
+  fill.style.width = steps + '%';
+  if (steps === 0) label.textContent = 'Complete the steps below to file your grievance';
+  else if (steps < 100) label.textContent = steps + '% complete — keep going!';
+  else label.textContent = '\u2713 All steps complete — you\'re ready to file!';
+}
+
+// ── MAIN CALCULATOR (auto-runs on input) ──
+function autoCalculate() {
+  const tmvRaw = parseNum(document.getElementById('tmv').value);
+  const wasp = parseNum(document.getElementById('wasp').value);
+
+  if (!tmvRaw || !wasp) {
+    document.getElementById('r-tav').textContent = '\u2014';
+    document.getElementById('r-county-fmv').textContent = '\u2014';
+    document.getElementById('r-comps-fmv').textContent = '\u2014';
+    document.getElementById('r-correct-av').textContent = '\u2014';
+    document.getElementById('r-reduction').textContent = '\u2014';
+    document.getElementById('partb-text').textContent = '\u2014';
+    document.getElementById('partd-text').textContent = 'Enter both values above and your Part D statement will appear here.';
+    STATE = {};
+    if (grievanceChart) { grievanceChart.destroy(); grievanceChart = null; }
+    updateProgress();
+    return;
+  }
+
+  const LOA = 0.00053;
+  const MULT = 1866;
+  const tav = Math.round(tmvRaw / 1000);
+  const countyFMV = tav * MULT;
+  const correctAV = Math.round(wasp * LOA);
+  const partB = correctAV * 1000;
+  const reductionPct = ((tav - correctAV) / tav * 100).toFixed(1);
+  const gap = countyFMV - wasp;
+
+  STATE = { tav, countyFMV, wasp, correctAV, partB, reductionPct, gap, LOA, MULT };
+
+  document.getElementById('r-tav').textContent = fmt(tav);
+  document.getElementById('r-county-fmv').textContent = fmtDollar(countyFMV);
+  document.getElementById('r-comps-fmv').textContent = fmtDollar(wasp);
+  document.getElementById('r-correct-av').textContent = fmt(correctAV);
+  document.getElementById('r-reduction').textContent = `${fmt(tav)} \u2192 ${fmt(correctAV)}  (${reductionPct}% reduction)`;
+
+  document.getElementById('partb-text').textContent = fmt(partB);
+
+  const partDText = 'My house at the correct LOA of .00053 is being valued at ' + fmtDollar(countyFMV) + '. The first five AROW comps indicate a fair market value of ' + fmtDollar(wasp) + ', which at the correct level of assessment .00053 equals ' + fmt(correctAV) + '. Please review and revise. Thank you.';
+  document.getElementById('partd-text').textContent = partDText;
+
+  var scrollY = window.scrollY;
+  renderChart();
+  window.scrollTo(0, scrollY);
+  updateProgress();
+  autoCalcSavings();
+}
+
+function renderChart() {
+  const ctx = document.getElementById('grievance-chart').getContext('2d');
+  if (grievanceChart) grievanceChart.destroy();
+  grievanceChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['County Says Your Home Is Worth', 'Comps Say It\'s Worth', 'Gap (Overassessment)'],
+      datasets: [{
+        data: [STATE.countyFMV, STATE.wasp, STATE.gap],
+        backgroundColor: ['rgba(255,82,82,0.25)', 'rgba(0,212,116,0.25)', 'rgba(255,193,7,0.25)'],
+        borderColor: ['#ff5252', '#00d474', '#ffc107'],
+        borderWidth: 2,
+        borderRadius: 8,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: function(ctx) { return fmtDollar(ctx.raw); } } }
+      },
+      scales: {
+        y: { beginAtZero: true, grid: { color: 'rgba(30,39,64,.3)' }, ticks: { color: '#6b7394', callback: v => v >= 1000000 ? '$' + (v/1000000).toFixed(1) + 'M' : '$' + (v/1000) + 'k' } },
+        x: { grid: { display: false }, ticks: { color: '#6b7394', font: { size: 11 } } }
+      }
+    }
+  });
+}
+
+// ── SAVINGS ESTIMATOR (auto-runs on input) ──
+function autoCalcSavings() {
+  const schoolTax = parseNum(document.getElementById('school-tax').value);
+  const countyTax = parseNum(document.getElementById('county-tax').value);
+  const townTax = parseNum(document.getElementById('town-tax').value);
+
+  if ((!schoolTax && !countyTax && !townTax) || !STATE.tav) {
+    document.getElementById('r-annual-savings').textContent = '\u2014';
+    document.getElementById('r-conservative').textContent = '\u2014';
+    document.getElementById('r-5yr').textContent = '\u2014';
+    document.getElementById('r-5yr-conservative').textContent = '\u2014';
+    return;
+  }
+
+  const totalTax = schoolTax + countyTax + townTax;
+  const reductionPct = parseFloat(STATE.reductionPct);
+  const fullSavings = Math.round(totalTax * (reductionPct / 100));
+  const fivePctSavings = Math.round(totalTax * 0.05);
+  const fiveYearFull = fullSavings * 5;
+  const fiveYearConservative = fivePctSavings * 5;
+
+  document.getElementById('r-annual-savings').textContent = '~' + fmtDollar(fullSavings) + '/yr';
+  document.getElementById('r-conservative').textContent = '~' + fmtDollar(fivePctSavings) + '/yr';
+  document.getElementById('r-5yr').textContent = '~' + fmtDollar(fiveYearFull);
+  document.getElementById('r-5yr-conservative').textContent = '~' + fmtDollar(fiveYearConservative);
+  updateProgress();
+}
+
+// ── FAQ TOGGLE ──
+function toggleFaq(el) {
+  el.classList.toggle('open');
+  const answer = el.nextElementSibling;
+  answer.classList.toggle('open');
+}
+
+// ── CHECKLIST ──
+function toggleCheck(el) {
+  el.classList.toggle('checked');
+}
+
+// ── SECTION NAV SCROLL SPY ──
+(function(){
+  var navLinks = document.querySelectorAll('.section-nav-inner a');
+  var sections = [];
+  navLinks.forEach(function(a){
+    var id = a.getAttribute('href').replace('#','');
+    var el = document.getElementById(id);
+    if(el) sections.push({el:el, link:a});
+  });
+  window.addEventListener('scroll', function(){
+    var scrollPos = window.scrollY + 140;
+    var active = null;
+    sections.forEach(function(s){
+      if(s.el.offsetTop <= scrollPos) active = s;
+    });
+    navLinks.forEach(function(a){a.classList.remove('active')});
+    if(active) active.link.classList.add('active');
+  });
+})();
+</script>
+
+</body>
+</html>

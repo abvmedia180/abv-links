@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kind Steward Foundation</title>
+    <meta name="description" content="Kind Steward Foundation is a private foundation providing humanitarian relief in Ethiopia and the United States, with a focus on life changing medical care, community development, and direct assistance.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --green: #2D5A3D;
+            --green-pale: #EDF3EF;
+            --green-glow: #B8D4C0;
+            --text: #2A2A2A;
+            --text-soft: #6A6A6A;
+            --white: #FFFFFF;
+            --bg: #FAFAFA;
+            --line: #E5E5E5;
+            --font-display: 'Playfair Display', Georgia, serif;
+            --font-body: 'DM Sans', -apple-system, sans-serif;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--white);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            min-height: 100vh;
+            background: var(--green);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 4rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -15%;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(255,255,255,0.035) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-logo {
+            margin-bottom: 2.5rem;
+            opacity: 0;
+            animation: fadeUp 1s ease 0.2s forwards;
+        }
+
+        .hero-logo svg { width: 68px; height: 68px; }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(2.8rem, 6.5vw, 5rem);
+            font-weight: 700;
+            color: var(--white);
+            line-height: 1.08;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeUp 1s ease 0.4s forwards;
+        }
+
+        .hero-title em {
+            font-style: italic;
+            font-weight: 400;
+            color: var(--green-glow);
+        }
+
+        .hero-subtitle {
+            font-family: var(--font-body);
+            font-size: clamp(1rem, 2vw, 1.15rem);
+            font-weight: 300;
+            color: rgba(255,255,255,0.65);
+            max-width: 460px;
+            line-height: 1.7;
+            opacity: 0;
+            animation: fadeUp 1s ease 0.6s forwards;
+        }
+
+        .hero-scroll {
+            margin-top: 3.5rem;
+            opacity: 0;
+            animation: fadeUp 1s ease 1s forwards;
+        }
+
+        .hero-scroll svg {
+            width: 20px; height: 20px;
+            color: rgba(255,255,255,0.3);
+            animation: bobble 2.5s ease-in-out infinite;
+        }
+
+        @keyframes bobble {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(6px); }
+        }
+
+        /* ===== SHARED ===== */
+        .section-label {
+            font-family: var(--font-body);
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--green);
+            margin-bottom: 1.75rem;
+            opacity: 0;
+            transform: translateY(16px);
+        }
+
+        .section-label.visible { animation: fadeUp 0.8s ease forwards; }
+
+        .section-rule {
+            width: 36px;
+            height: 1px;
+            background: var(--line);
+            margin: 0 auto 3rem;
+        }
+
+        /* ===== WHY WE EXIST ===== */
+        .why {
+            padding: 5.5rem 2rem 5rem;
+            background: var(--white);
+        }
+
+        .why-inner {
+            max-width: 720px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .why-lead {
+            font-family: var(--font-display);
+            font-size: clamp(1.5rem, 3vw, 2.1rem);
+            font-weight: 500;
+            line-height: 1.5;
+            color: var(--text);
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(16px);
+        }
+
+        .why-lead.visible { animation: fadeUp 0.8s ease 0.1s forwards; }
+
+        .why-body {
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.85;
+            color: var(--text-soft);
+            text-align: left;
+            opacity: 0;
+            transform: translateY(16px);
+        }
+
+        .why-body.visible { animation: fadeUp 0.8s ease 0.2s forwards; }
+
+        .why-body p + p { margin-top: 1.25rem; }
+
+        /* ===== MISSION ===== */
+        .mission {
+            padding: 5rem 2rem;
+            background: var(--bg);
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .mission-inner {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .mission-lead {
+            font-family: var(--font-display);
+            font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+            font-weight: 500;
+            line-height: 1.5;
+            color: var(--text);
+            margin-bottom: 1.75rem;
+            opacity: 0;
+            transform: translateY(16px);
+        }
+
+        .mission-lead.visible { animation: fadeUp 0.8s ease 0.1s forwards; }
+
+        .mission-body {
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.85;
+            color: var(--text-soft);
+            opacity: 0;
+            transform: translateY(16px);
+        }
+
+        .mission-body.visible { animation: fadeUp 0.8s ease 0.2s forwards; }
+
+        /* ===== WHAT WE DO ===== */
+        .focus {
+            padding: 5rem 2rem 5.5rem;
+            background: var(--white);
+        }
+
+        .focus-inner { max-width: 960px; margin: 0 auto; }
+        .focus .section-label { text-align: center; }
+
+        .focus-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
+        }
+
+        .focus-card {
+            background: var(--bg);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 2.25rem 1.75rem 2rem;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .focus-card.visible { animation: fadeUp 0.7s ease forwards; }
+        .focus-card:nth-child(2).visible { animation-delay: 0.08s; }
+        .focus-card:nth-child(3).visible { animation-delay: 0.16s; }
+
+        .focus-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        .focus-badge {
+            font-family: var(--font-body);
+            font-size: 0.58rem;
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--green);
+            background: var(--green-pale);
+            padding: 0.25rem 0.7rem;
+            border-radius: 100px;
+            display: inline-block;
+            margin-bottom: 1.25rem;
+        }
+
+        .focus-spacer {
+            height: calc(0.58rem + 0.5rem + 1.25rem);
+        }
+
+        .focus-icon {
+            width: 46px; height: 46px;
+            background: var(--white);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 1.25rem;
+        }
+
+        .focus-icon svg { width: 22px; height: 22px; color: var(--green); }
+
+        .focus-card h3 {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.6rem;
+        }
+
+        .focus-card p {
+            font-family: var(--font-body);
+            font-size: 0.88rem;
+            font-weight: 400;
+            color: var(--text-soft);
+            line-height: 1.7;
+        }
+
+        /* ===== WHERE WE WORK ===== */
+        .where {
+            padding: 4rem 2rem 4.5rem;
+            background: var(--bg);
+            border-top: 1px solid var(--line);
+        }
+
+        .where-inner { max-width: 860px; margin: 0 auto; text-align: center; }
+
+        .where-badges {
+            display: flex;
+            justify-content: center;
+            gap: 0.65rem;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+            opacity: 0;
+            transform: translateY(16px);
+        }
+
+        .where-badges.visible { animation: fadeUp 0.8s ease 0.1s forwards; }
+
+        .badge {
+            background: var(--white);
+            border: 1px solid var(--line);
+            border-radius: 100px;
+            padding: 0.5rem 1.2rem;
+            font-family: var(--font-body);
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--green);
+            display: flex; align-items: center; gap: 0.4rem;
+        }
+
+        .badge-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--green);
+            opacity: 0.5;
+        }
+
+        /* ===== VALUES ===== */
+        .values {
+            padding: 5rem 2rem;
+            background: var(--green);
+            color: var(--white);
+        }
+
+        .values-inner { max-width: 860px; margin: 0 auto; text-align: center; }
+        .values .section-label { color: rgba(255,255,255,0.45); }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2.5rem;
+            margin-top: 2rem;
+        }
+
+        .value-item { opacity: 0; transform: translateY(16px); }
+        .value-item.visible { animation: fadeUp 0.7s ease forwards; }
+        .value-item:nth-child(2).visible { animation-delay: 0.08s; }
+        .value-item:nth-child(3).visible { animation-delay: 0.16s; }
+
+        .value-word {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 0.6rem;
+        }
+
+        .value-desc {
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            font-weight: 300;
+            color: rgba(255,255,255,0.6);
+            line-height: 1.7;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: var(--green);
+            border-top: 1px solid rgba(255,255,255,0.08);
+            padding: 2.5rem 2rem 3rem;
+            text-align: center;
+        }
+
+        .footer-name {
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: var(--white);
+            margin-bottom: 0.3rem;
+        }
+
+        .footer-status {
+            font-family: var(--font-body);
+            font-size: 0.7rem;
+            font-weight: 400;
+            color: rgba(255,255,255,0.35);
+            letter-spacing: 0.03em;
+            margin-bottom: 1.25rem;
+        }
+
+        .footer-email {
+            font-family: var(--font-body);
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--green-glow);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.3s ease;
+        }
+
+        .footer-email:hover { border-bottom-color: var(--green-glow); }
+
+        .footer-leadership {
+            margin-top: 1rem;
+            font-family: var(--font-body);
+            font-size: 0.58rem;
+            font-weight: 400;
+            color: rgba(255,255,255,0.18);
+            line-height: 1.6;
+            letter-spacing: 0.02em;
+        }
+
+        .footer-copy {
+            margin-top: 1.75rem;
+            font-size: 0.65rem;
+            color: rgba(255,255,255,0.18);
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .focus-grid, .values-grid { grid-template-columns: 1fr; }
+            .focus-grid { gap: 1rem; }
+            .values-grid { gap: 2rem; }
+            .hero { padding: 3rem 1.5rem; }
+            .why, .mission, .focus, .where, .values { padding-left: 1.5rem; padding-right: 1.5rem; }
+            .focus-spacer { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-logo">
+            <svg viewBox="0 0 68 68" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="34" cy="34" r="32" stroke="rgba(255,255,255,0.18)" stroke-width="1.5"/>
+                <path d="M34 17 C34 17, 23 23, 23 31 C23 38, 28 42, 34 47 C40 42, 45 38, 45 31 C45 23, 34 17, 34 17Z" stroke="rgba(255,255,255,0.55)" stroke-width="1.5" fill="none"/>
+                <path d="M34 25 L34 40" stroke="rgba(184,212,192,0.45)" stroke-width="1"/>
+                <path d="M29 32.5 L39 32.5" stroke="rgba(184,212,192,0.45)" stroke-width="1"/>
+            </svg>
+        </div>
+        <h1 class="hero-title">Kind Steward<br><em>Foundation</em></h1>
+        <p class="hero-subtitle">Giving where it truly matters.</p>
+        <div class="hero-scroll">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- WHY WE EXIST -->
+    <section class="why">
+        <div class="why-inner">
+            <p class="section-label">Why We Exist</p>
+            <p class="why-lead">We started Kind Steward Foundation because we believe that giving should actually change lives, not get lost along the way.</p>
+            <div class="why-body">
+                <p>Our board members have spent years supporting charitable causes. Over time, a pattern became clear: donations were mismanaged, impact was unclear, and there was little accountability for how funds were used. After enough of those experiences, the answer became simple. If you truly want to make a difference, sometimes you have to do it yourself.</p>
+                <p>As Christians, we believe that everything we have is a gift from God and that we are called to give generously. But Scripture also calls us to be good stewards. Generosity without accountability is incomplete. That conviction is at the heart of this foundation. We created Kind Steward so that every dollar, every resource, and every hour of effort is directed with purpose, transparency, and care.</p>
+                <p>Our board members are active, working professionals who lead busy lives. They did not start this foundation because they had extra time. They started it because they could no longer accept the alternative. We hold each other accountable, we stay close to the work, and we make sure that the people we serve actually receive the help that was intended for them.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- OUR MISSION -->
+    <section class="mission">
+        <div class="mission-inner">
+            <p class="section-label">Our Mission</p>
+            <p class="mission-lead">Kind Steward Foundation is a private foundation providing direct humanitarian assistance in Ethiopia and the United States.</p>
+            <div class="mission-body">
+                <p>Our primary focus is funding life changing medical operations in Ethiopia, working alongside trusted partners on the ground to reach individuals who would otherwise go without treatment. Beyond medical care, we support community development initiatives in the region, including clean water access and other projects that address the needs of local communities. Here in the United States, we partner with churches, charities, and good causes, with an emphasis on communities in New York, Texas, and Florida.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- WHAT WE DO -->
+    <section class="focus">
+        <div class="focus-inner">
+            <p class="section-label">What We Do</p>
+            <div class="focus-grid">
+
+                <div class="focus-card">
+                    <span class="focus-badge">Primary Focus</span>
+                    <div class="focus-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/>
+                        </svg>
+                    </div>
+                    <h3>Medical Care</h3>
+                    <p>Funding life changing medical operations in Ethiopia for individuals who would otherwise go without treatment.</p>
+                </div>
+
+                <div class="focus-card">
+                    <div class="focus-spacer"></div>
+                    <div class="focus-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"/>
+                        </svg>
+                    </div>
+                    <h3>Community Development</h3>
+                    <p>Supporting initiatives in Ethiopia including clean water infrastructure, wells, and other projects driven by the needs of local communities.</p>
+                </div>
+
+                <div class="focus-card">
+                    <div class="focus-spacer"></div>
+                    <div class="focus-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z"/>
+                        </svg>
+                    </div>
+                    <h3>Domestic Assistance</h3>
+                    <p>Partnering with churches, charities, and good causes in need across the United States, with a focus on New York, Texas, and Florida.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- WHERE WE WORK -->
+    <section class="where">
+        <div class="where-inner">
+            <p class="section-label">Where We Help</p>
+            <div class="where-badges">
+                <span class="badge"><span class="badge-dot"></span>Ethiopia</span>
+                <span class="badge"><span class="badge-dot"></span>New York</span>
+                <span class="badge"><span class="badge-dot"></span>Texas</span>
+                <span class="badge"><span class="badge-dot"></span>Florida</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- VALUES -->
+    <section class="values">
+        <div class="values-inner">
+            <p class="section-label">Our Values</p>
+            <div class="values-grid">
+                <div class="value-item">
+                    <p class="value-word">Compassion</p>
+                    <p class="value-desc">Every action begins with empathy and a genuine desire to understand the needs of those we serve.</p>
+                </div>
+                <div class="value-item">
+                    <p class="value-word">Accountability</p>
+                    <p class="value-desc">We hold ourselves and each other to the highest standard, ensuring every resource is used with intention and integrity.</p>
+                </div>
+                <div class="value-item">
+                    <p class="value-word">Stewardship</p>
+                    <p class="value-desc">We believe that what we are given is meant to be used wisely. We take that responsibility seriously in everything we do.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p class="footer-name">Kind Steward Foundation</p>
+        <p class="footer-status">A 501(c)(3) Private Foundation</p>
+        <a href="mailto:info@kindsteward.org" class="footer-email">info@kindsteward.org</a>
+        <p class="footer-copy">&copy; 2026 Kind Steward Foundation. All rights reserved.</p>
+        <p class="footer-leadership">Day to day operations led by Abe Varughese, President, and Kevin Alexander, Vice President.</p>
+    </footer>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15, rootMargin: '0px 0px -30px 0px' });
+
+        document.querySelectorAll('.section-label, .why-lead, .why-body, .mission-lead, .mission-body, .focus-card, .where-badges, .value-item').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

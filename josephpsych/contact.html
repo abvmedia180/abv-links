@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact Us — Joseph Psychiatry | Call, Text, or Email</title>
+<meta name="description" content="Reach Joseph Psychiatry by phone, text, or email. We respond quickly and make getting in touch as easy as possible.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+<style>
+.hours-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:48px}
+.hours-card{background:var(--white);border-radius:var(--radius-lg);padding:32px;box-shadow:var(--shadow-sm)}
+.hours-card h3{font-size:18px;font-weight:600;color:var(--green-deep);margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.hours-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--green-light);font-size:14px}
+.hours-row:last-child{border-bottom:none}
+.hours-row .day{color:var(--text-secondary)}
+.hours-row .time{font-weight:600;color:var(--green-deep)}
+.messaging-section{background:var(--white)}
+.messaging-box{background:var(--green-deep);border-radius:var(--radius-lg);padding:56px;color:white;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;position:relative;overflow:hidden}
+.messaging-box::before{content:'';position:absolute;top:0;right:0;width:400px;height:400px;background:radial-gradient(circle,rgba(196,119,109,.15) 0%,transparent 60%);pointer-events:none}
+.messaging-content{position:relative;z-index:2}
+.messaging-content h3{font-family:'Instrument Serif',serif;font-size:32px;font-weight:400;margin-bottom:16px}
+.messaging-content p{font-size:16px;line-height:1.7;color:rgba(255,255,255,.65);margin-bottom:24px}
+.messaging-features{position:relative;z-index:2;display:flex;flex-direction:column;gap:16px}
+.messaging-feature{display:flex;align-items:flex-start;gap:12px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius-md);padding:20px}
+.messaging-feature .icon{font-size:20px;flex-shrink:0;margin-top:2px}
+.messaging-feature h4{font-size:15px;font-weight:600;margin-bottom:4px}
+.messaging-feature p{font-size:13px;color:rgba(255,255,255,.6);line-height:1.5}
+.address-section{background:var(--cream)}
+.address-card{background:var(--white);border-radius:var(--radius-lg);padding:40px;max-width:600px;margin:0 auto;text-align:center;box-shadow:var(--shadow-sm)}
+.address-card h3{font-size:20px;font-weight:600;color:var(--green-deep);margin-bottom:12px}
+.address-card p{font-size:15px;color:var(--text-secondary);line-height:1.7;margin-bottom:4px}
+.address-note{font-size:13px;color:var(--text-muted);margin-top:16px;font-style:italic}
+@media(max-width:768px){.hours-grid{grid-template-columns:1fr}.messaging-box{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="scroll-progress" id="scrollProgress"></div>
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><div class="nav-logo-icon">JP</div><span class="nav-logo-text">Joseph Psychiatry</span></a>
+    <div class="nav-links">
+      <a href="what-we-treat.html">What We Treat</a>
+      <a href="what-to-expect.html">What to Expect</a>
+      <a href="about.html">About Us</a>
+      <a href="contact.html" class="active">Contact</a>
+      <a href="sms:+15162001835" class="nav-text-btn">💬 Text Us</a>
+      <a href="schedule.html" class="nav-cta">Book Free Consult →</a>
+    </div>
+    <button class="nav-hamburger" onclick="toggleMobile()"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-menu-close" onclick="toggleMobile()">✕</button>
+  <a href="index.html">Home</a><a href="what-we-treat.html">What We Treat</a><a href="what-to-expect.html">What to Expect</a><a href="about.html">About Us</a><a href="contact.html">Contact</a><a href="sms:+15162001835">Text Us</a><a href="schedule.html">Book Free Consult</a>
+</div>
+
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb"><a href="index.html">Home</a> / Contact</div>
+    <h1>Getting in touch should be<br>the <em>easy</em> part.</h1>
+    <p>Call, text, or email — whichever works for you. We respond quickly because we know waiting around for a callback isn't great for anyone's mental health.</p>
+  </div>
+</section>
+
+<!-- CONTACT CARDS -->
+<section style="background:var(--cream)">
+  <div class="container">
+    <div class="contact-grid animate-on-scroll">
+      <a href="tel:+15166000316" class="contact-card">
+        <span class="contact-card-icon">📞</span>
+        <h3>Call Us</h3>
+        <p>For appointments, questions, or consultations</p>
+        <span class="contact-value">(516) 600-0316</span>
+      </a>
+      <a href="sms:+15162001835" class="contact-card">
+        <span class="contact-card-icon">💬</span>
+        <h3>Text Us</h3>
+        <p>Quick questions, scheduling, or just to say hi</p>
+        <span class="contact-value">(516) 200-1835</span>
+      </a>
+      <a href="mailto:admin@josephpsych.com" class="contact-card">
+        <span class="contact-card-icon">✉️</span>
+        <h3>Email Us</h3>
+        <p>For detailed inquiries or document sharing</p>
+        <span class="contact-value">admin@josephpsych.com</span>
+      </a>
+      <a href="schedule.html" class="contact-card">
+        <span class="contact-card-icon">📅</span>
+        <h3>Book a Free Consult</h3>
+        <p>10-minute call, no cost, no commitment</p>
+        <span class="contact-value">Schedule Online →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- HOURS -->
+<section style="background:var(--white)">
+  <div class="container">
+    <div class="animate-on-scroll" style="text-align:center">
+      <div class="section-label">Hours & Availability</div>
+      <div class="section-heading">Built around your <span class="serif italic">schedule.</span></div>
+      <p class="section-subtitle" style="margin:0 auto">We keep evening hours specifically so you never have to choose between work and your mental health.</p>
+    </div>
+    <div class="hours-grid">
+      <div class="hours-card animate-on-scroll delay-1">
+        <h3>🌙 Appointment Hours</h3>
+        <div class="hours-row"><span class="day">Monday – Friday</span><span class="time">6:00 PM – 9:00 PM</span></div>
+        <div class="hours-row"><span class="day">Saturday</span><span class="time">Limited availability</span></div>
+        <div class="hours-row"><span class="day">Sunday</span><span class="time">Closed</span></div>
+        <p style="font-size:13px;color:var(--text-muted);margin-top:16px">All appointments are via secure video call. No in-person visits.</p>
+      </div>
+      <div class="hours-card animate-on-scroll delay-2">
+        <h3>📱 Office / Admin Hours</h3>
+        <div class="hours-row"><span class="day">Monday – Friday</span><span class="time">9:00 AM – 5:00 PM</span></div>
+        <div class="hours-row"><span class="day">Saturday – Sunday</span><span class="time">Closed</span></div>
+        <div class="hours-row"><span class="day">Text / Spruce Messages</span><span class="time">Monitored daily</span></div>
+        <p style="font-size:13px;color:var(--text-muted);margin-top:16px">For scheduling, insurance, prescription refills, and general questions.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPRUCE MESSAGING -->
+<section class="messaging-section" style="padding:100px 0">
+  <div class="container">
+    <div class="messaging-box animate-on-scroll">
+      <div class="messaging-content">
+        <h3>Secure messaging that doesn't suck.</h3>
+        <p>Once you're an active patient, you can message your care team anytime through Spruce — our secure, HIPAA-compliant messaging platform. No phone trees. No "press 1 for..." menus. Just direct access to the people taking care of you.</p>
+        <a href="schedule.html" class="btn-white" style="display:inline-flex">Become a Patient →</a>
+      </div>
+      <div class="messaging-features">
+        <div class="messaging-feature"><span class="icon">💊</span><div><h4>Prescription Refills</h4><p>Request refills without scheduling a full appointment</p></div></div>
+        <div class="messaging-feature"><span class="icon">❓</span><div><h4>Quick Questions</h4><p>Side effect concerns, dosage questions, scheduling changes</p></div></div>
+        <div class="messaging-feature"><span class="icon">📋</span><div><h4>Updates Between Visits</h4><p>Let your provider know how things are going between sessions</p></div></div>
+        <div class="messaging-feature"><span class="icon">🔒</span><div><h4>Fully Encrypted</h4><p>HIPAA-compliant, secure, and private — always</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ADDRESS -->
+<section class="address-section">
+  <div class="container">
+    <div class="animate-on-scroll">
+      <div class="address-card">
+        <h3>📍 Practice Address</h3>
+        <p><strong>Joseph Psychiatry PLLC</strong></p>
+        <p>1575 Hillside Avenue</p>
+        <p>New Hyde Park, NY 11040</p>
+        <p class="address-note">Joseph Psychiatry is a 100% telehealth practice. All appointments are conducted via secure video call. This address is our administrative office — there are no in-person patient visits at this location.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EMERGENCY -->
+<section style="background:var(--white);padding:64px 0">
+  <div class="container-narrow" style="text-align:center">
+    <div class="animate-on-scroll">
+      <div style="background:var(--terracotta-bg);border-radius:var(--radius-lg);padding:40px">
+        <h3 style="font-size:20px;font-weight:600;color:var(--terracotta);margin-bottom:12px">⚠️ In Crisis?</h3>
+        <p style="font-size:15px;color:var(--text-secondary);line-height:1.7;max-width:500px;margin:0 auto 20px">If you or someone you know is in immediate danger, please call 911. For mental health crises, contact the resources below.</p>
+        <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+          <a href="tel:911" class="btn-primary" style="background:var(--terracotta)">Call 911</a>
+          <a href="tel:988" class="btn-secondary" style="border-color:var(--terracotta);color:var(--terracotta)">988 Suicide & Crisis Lifeline</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container"><div class="cta-inner animate-on-scroll">
+    <h2>Ready to start the <em>conversation?</em></h2>
+    <p>Book your free 10-minute consult call or just text us. Getting started is easier than you think.</p>
+    <div class="cta-buttons">
+      <a href="schedule.html" class="btn-white">Book Your Free Consult →</a>
+      <a href="sms:+15162001835" class="btn-ghost">💬 Text Us at (516) 200-1835</a>
+    </div>
+    <p class="cta-note">Free · 10 minutes · No commitment · Completely confidential</p>
+  </div></div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand"><a href="index.html" class="nav-logo"><div class="nav-logo-icon">JP</div><span class="nav-logo-text">Joseph Psychiatry</span></a><p>Expert ADHD, anxiety, and depression care from a board-certified psychiatrist. Virtual evening appointments serving all of New York State.</p><div class="footer-crisis">⚠️ Not for emergencies. If you are in crisis, call <strong>911</strong> or the Suicide & Crisis Lifeline at <strong>988</strong>.</div></div>
+      <div class="footer-col"><h4>Navigate</h4><a href="what-we-treat.html">What We Treat</a><a href="what-to-expect.html">What to Expect</a><a href="about.html">About Us</a><a href="contact.html">Contact</a><a href="schedule.html">Book a Consult</a></div>
+      <div class="footer-col"><h4>Contact</h4><a href="tel:+15166000316">📞 (516) 600-0316</a><a href="sms:+15162001835">💬 (516) 200-1835</a><a href="mailto:admin@josephpsych.com">✉️ admin@josephpsych.com</a></div>
+      <div class="footer-col"><h4>Legal</h4><a href="legal.html#hipaa">HIPAA Privacy Notice</a><a href="legal.html#privacy">Privacy Policy</a><a href="legal.html#terms">Terms of Service</a><a href="legal.html#telehealth">Telehealth Consent</a></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Joseph Psychiatry PLLC. All rights reserved.</span><span>1575 Hillside Avenue, New Hyde Park, NY 11040</span></div>
+  </div>
+</footer>
+<script src="scripts.js"></script>
+<!-- Cal floating-popup embed code begins -->
+<script type="text/javascript">
+  (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+Cal("init", "10min", {origin:"https://app.cal.com"});
+  Cal.ns["10min"]("floatingButton", {"calLink":"josephpsych/10min","config":{"layout":"month_view","useSlotsViewOnSmallScreen":"true"},"buttonText":"Free Consult","buttonColor":"#0B2E15","buttonTextColor":"#F2F0E6"});
+  Cal.ns["10min"]("ui", {"cssVarsPerTheme":{"light":{"cal-brand":"#0B2E15"},"dark":{"cal-brand":"#F2F0E6"}},"hideEventTypeDetails":false,"layout":"month_view"});
+</script>
+<!-- Cal floating-popup embed code ends -->
+</body>
+</html>

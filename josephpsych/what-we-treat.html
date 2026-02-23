@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What We Treat — ADHD, Anxiety & Depression | Joseph Psychiatry</title>
+<meta name="description" content="We specialize in adult ADHD, anxiety, and depression. Learn about the conditions we treat and how our psychiatrist-led team provides expert, personalized care.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+<style>
+.condition-section{padding:80px 0;border-bottom:1px solid rgba(15,56,35,.08)}
+.condition-section:last-of-type{border-bottom:none}
+.condition-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
+.condition-grid.reverse{direction:rtl}.condition-grid.reverse>*{direction:ltr}
+.condition-tag{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:var(--radius-pill);font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:16px}
+.condition-tag.adhd{background:#f0e6ff;color:#6b21a8}
+.condition-tag.anxiety{background:#e0f2fe;color:#0369a1}
+.condition-tag.depression{background:#fef3c7;color:#92400e}
+.condition-tag.featured{background:var(--terracotta-bg);color:var(--terracotta)}
+.symptom-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px}
+.symptom-item{display:flex;align-items:flex-start;gap:10px;font-size:14px;line-height:1.5;color:var(--text-secondary);padding:12px;background:var(--white);border-radius:var(--radius-sm);box-shadow:var(--shadow-sm)}
+.symptom-item .check{color:var(--green-soft);font-weight:700;flex-shrink:0;margin-top:1px}
+.approach-box{background:var(--green-lightest);border-radius:var(--radius-lg);padding:32px;margin-top:32px}
+.approach-box h4{font-size:16px;font-weight:600;color:var(--green-deep);margin-bottom:16px}
+.approach-item{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:var(--text-secondary);line-height:1.6;margin-bottom:10px}
+.approach-item:last-child{margin-bottom:0}
+.approach-item .marker{color:var(--terracotta);font-weight:700;flex-shrink:0}
+.overlap-section{background:var(--green-deep);padding:80px 0;color:white;position:relative;overflow:hidden}
+.overlap-section::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 70% 50%,rgba(45,122,80,.2) 0%,transparent 60%);pointer-events:none}
+.overlap-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px;position:relative;z-index:2}
+.overlap-card{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius-md);padding:28px;text-align:center}
+.overlap-card .icon{font-size:36px;margin-bottom:12px;display:block}
+.overlap-card h3{font-size:16px;font-weight:600;margin-bottom:8px}
+.overlap-card p{font-size:14px;line-height:1.6;color:rgba(255,255,255,.6)}
+.nav-conditions{display:flex;gap:16px;justify-content:center;margin-bottom:8px;flex-wrap:wrap}
+.nav-condition{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:var(--white);border-radius:var(--radius-pill);font-size:15px;font-weight:500;color:var(--green-deep);text-decoration:none;box-shadow:var(--shadow-sm);transition:all .3s;border:1px solid transparent}
+.nav-condition:hover{border-color:var(--green-deep);box-shadow:var(--shadow-md);transform:translateY(-2px)}
+@media(max-width:768px){.condition-grid,.condition-grid.reverse{grid-template-columns:1fr;direction:ltr}.symptom-grid{grid-template-columns:1fr}.overlap-cards{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="scroll-progress" id="scrollProgress"></div>
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><div class="nav-logo-icon">JP</div><span class="nav-logo-text">Joseph Psychiatry</span></a>
+    <div class="nav-links">
+      <a href="what-we-treat.html" class="active">What We Treat</a>
+      <a href="what-to-expect.html">What to Expect</a>
+      <a href="about.html">About Us</a>
+      <a href="contact.html">Contact</a>
+      <a href="sms:+15162001835" class="nav-text-btn">💬 Text Us</a>
+      <a href="schedule.html" class="nav-cta">Book Free Consult →</a>
+    </div>
+    <button class="nav-hamburger" onclick="toggleMobile()"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-menu-close" onclick="toggleMobile()">✕</button>
+  <a href="index.html">Home</a><a href="what-we-treat.html">What We Treat</a><a href="what-to-expect.html">What to Expect</a><a href="about.html">About Us</a><a href="contact.html">Contact</a><a href="sms:+15162001835">Text Us</a><a href="schedule.html">Book Free Consult</a>
+</div>
+
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb"><a href="index.html">Home</a> / What We Treat</div>
+    <h1>We don't treat everything.<br>We treat <em>this</em> really well.</h1>
+    <p>ADHD, anxiety, and depression — the conditions that high-functioning people deal with most, but rarely get the care they deserve for.</p>
+  </div>
+</section>
+
+<!-- JUMP NAV -->
+<section style="background:var(--cream);padding:40px 0">
+  <div class="container" style="text-align:center">
+    <p style="font-size:14px;color:var(--text-muted);margin-bottom:16px">Jump to a condition:</p>
+    <div class="nav-conditions">
+      <a href="#adhd" class="nav-condition">🧠 ADHD</a>
+      <a href="#anxiety" class="nav-condition">💭 Anxiety</a>
+      <a href="#depression" class="nav-condition">🌧️ Depression</a>
+    </div>
+  </div>
+</section>
+
+<!-- ADHD -->
+<section class="condition-section" id="adhd" style="background:var(--white)">
+  <div class="container">
+    <div class="condition-grid">
+      <div class="animate-on-scroll">
+        <span class="condition-tag featured">✦ Our Specialty</span>
+        <div class="section-heading" style="font-size:36px">ADHD in Adults</div>
+        <p style="font-size:16px;line-height:1.8;color:var(--text-secondary);margin-bottom:16px">ADHD doesn't always look like the kid bouncing off the walls in class. For many adults — especially high-functioning ones — it looks like chronic disorganization, emotional overwhelm, an inability to "just do the thing," and years of being told you're "smart but not reaching your potential."</p>
+        <p style="font-size:16px;line-height:1.8;color:var(--text-secondary);margin-bottom:16px">Many of our patients weren't diagnosed until their 20s or 30s. They've built elaborate coping systems — color-coded planners, alarms for everything, sheer willpower — but underneath, they're exhausted from trying to keep up with a brain that works differently than what the world expects.</p>
+        <p style="font-size:16px;line-height:1.8;color:var(--text-secondary)">We get it. ADHD is our primary focus, and we understand the nuances that generalist providers often miss — especially in adults who've learned to mask their symptoms.</p>
+        
+        <div class="quote-box">
+          <p>"I was 28 when I got diagnosed. I cried — not because I was upset, but because everything in my life suddenly made sense."</p>
+          <cite>— Joseph Psychiatry patient</cite>
+        </div>
+      </div>
+      <div class="animate-on-scroll delay-2">
+        <h3 style="font-size:18px;font-weight:600;color:var(--green-deep);margin-bottom:16px">Does this sound like you?</h3>
+        <div class="symptom-grid">
+          <div class="symptom-item"><span class="check">✓</span>Difficulty focusing despite being smart and capable</div>
+          <div class="symptom-item"><span class="check">✓</span>Chronic procrastination — even on things you want to do</div>
+          <div class="symptom-item"><span class="check">✓</span>Emotional reactivity and rejection sensitivity</div>
+          <div class="symptom-item"><span class="check">✓</span>Forgetfulness, losing things, missing deadlines</div>
+          <div class="symptom-item"><span class="check">✓</span>Hyperfocus on some things, can't focus on others</div>
+          <div class="symptom-item"><span class="check">✓</span>Restlessness or feeling mentally "revved up"</div>
+          <div class="symptom-item"><span class="check">✓</span>Difficulty with time management and planning</div>
+          <div class="symptom-item"><span class="check">✓</span>"Paralysis" — knowing what to do but can't start</div>
+          <div class="symptom-item"><span class="check">✓</span>Impulsive decisions (spending, texting, career changes)</div>
+          <div class="symptom-item"><span class="check">✓</span>Brain fog, mental fatigue, or burnout</div>
+        </div>
+        <div class="approach-box">
+          <h4>Our approach to ADHD:</h4>
+          <div class="approach-item"><span class="marker">→</span>Thorough 60-minute evaluation — not a 5-question checklist</div>
+          <div class="approach-item"><span class="marker">→</span>Evidence-based medication management, tailored to your life</div>
+          <div class="approach-item"><span class="marker">→</span>Ongoing follow-ups to fine-tune dosage and monitor progress</div>
+          <div class="approach-item"><span class="marker">→</span>Assessment for co-occurring anxiety and depression (very common)</div>
+          <div class="approach-item"><span class="marker">→</span>Practical strategies alongside medication — not just pills</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ANXIETY -->
+<section class="condition-section" id="anxiety" style="background:var(--cream)">
+  <div class="container">
+    <div class="condition-grid reverse">
+      <div class="animate-on-scroll">
+        <span class="condition-tag anxiety">💭 Core Focus</span>
+        <div class="section-heading" style="font-size:36px">Anxiety</div>
+        <p style="font-size:16px;line-height:1.8;color:var(--text-secondary);margin-bottom:16px">Anxiety isn't always panic attacks and racing hearts. For many people, it's a constant low-level hum — a running commentary in your head questioning every decision, replaying every conversation, and bracing for the worst even when things are going well.</p>
+        <p style="font-size:16px;line-height:1.8;color:var(--text-secondary);margin-bottom:16px">You might look calm on the outside, but inside you're running through worst-case scenarios, second-guessing yourself, or feeling that tight knot in your chest that never quite goes away. And sometimes, anxiety and ADHD are so intertwined it's hard to know where one ends and the other begins.</p>
+        <p style="font-size:16px;line-height:1.8;color:var(--text-secondary)">We'll help you untangle what's actually going on — and build a treatment plan that addresses the root cause, not just the surface symptoms.</p>
+      </div>
+      <div class="animate-on-scroll delay-2">
+        <h3 style="font-size:18px;font-weight:600;color:var(--green-deep);margin-bottom:16px">Common anxiety symptoms:</h3>
+        <div class="symptom-grid">
+          <div class="symptom-item"><span class="check">✓</span>Constant worry that's hard to control</div>
+          <div class="symptom-item"><span class="check">✓</span>Overthinking and "what if" spirals</div>
+          <div class="symptom-item"><span class="check">✓</span>Physical symptoms — tightness, GI issues, tension</div>
+          <div class="symptom-item"><span class="check">✓</span>Difficulty sleeping or racing thoughts at night</div>
+          <div class="symptom-item"><span class="check">✓</span>Panic attacks or intense fear episodes</div>
+          <div class="symptom-item"><span class="check">✓</span>Avoidance of situations that trigger anxiety</div>
+          <div class="symptom-item"><span class="check">✓</span>Social anxiety or fear of judgment</div>
+          <div class="symptom-item"><span class="check">✓</span>Imposter syndrome — feeling like a fraud</div>
+        </div>
+        <div class="approach-box">
+          <h4>Our approach to anxiety:</h4>
+          <div class="approach-item"><span class="marker">→</span>Comprehensive evaluation to understand your specific anxiety pattern</div>
+          <div class="approach-item"><span class="marker">→</span>Assessment for overlapping ADHD (commonly misdiagnosed as "just anxiety")</div>
+          <div class="approach-item"><span class="marker">→</span>Medication management when appropriate — SSRIs, SNRIs, and more</div>
+          <div class="approach-item"><span class="marker">→</span>Regular check-ins to adjust and optimize treatment</div>
+          <div class="approach-item"><span class="marker">→</span>Coordination with therapists if you're in talk therapy</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEPRESSION -->
+<section class="condition-section" id="depression" style="background:var(--white)">
+  <div class="container">
+    <div class="condition-grid">
+      <div class="animate-on-scroll">
+        <span class="condition-tag depression">🌧️ Core Focus</span>
+        <div class="section-heading" style="font-size:36px">Depression</div>
+        <p style="font-size:16px;line-height:1.8;color:var(--text-secondary);margin-bottom:16px">Depression doesn't always look like what you'd expect. It's not always sadness — sometimes it's numbness. Sometimes it's getting through your day on autopilot, going through the motions, and wondering why nothing feels like it used to.</p>
+        <p style="font-size:16px;line-height:1.8;color:var(--text-secondary);margin-bottom:16px">For high-functioning people, depression can be especially insidious. You're still showing up, still performing, still checking boxes — but the energy it takes is enormous, and the things you used to enjoy just... don't hit the same way anymore.</p>
+        <p style="font-size:16px;line-height:1.8;color:var(--text-secondary)">We understand that depression isn't a character flaw — it's a medical condition that responds to proper treatment. And getting the right treatment starts with someone who takes the time to really understand what you're going through.</p>
+      </div>
+      <div class="animate-on-scroll delay-2">
+        <h3 style="font-size:18px;font-weight:600;color:var(--green-deep);margin-bottom:16px">Signs to look for:</h3>
+        <div class="symptom-grid">
+          <div class="symptom-item"><span class="check">✓</span>Persistent low mood or emotional numbness</div>
+          <div class="symptom-item"><span class="check">✓</span>Loss of interest in things you used to enjoy</div>
+          <div class="symptom-item"><span class="check">✓</span>Fatigue and low energy — even after sleeping</div>
+          <div class="symptom-item"><span class="check">✓</span>Difficulty concentrating or making decisions</div>
+          <div class="symptom-item"><span class="check">✓</span>Changes in appetite or sleep patterns</div>
+          <div class="symptom-item"><span class="check">✓</span>Withdrawal from social activities</div>
+          <div class="symptom-item"><span class="check">✓</span>Feelings of worthlessness or excessive guilt</div>
+          <div class="symptom-item"><span class="check">✓</span>Going through the motions without meaning</div>
+        </div>
+        <div class="approach-box">
+          <h4>Our approach to depression:</h4>
+          <div class="approach-item"><span class="marker">→</span>Thorough evaluation to distinguish depression from burnout, grief, or ADHD</div>
+          <div class="approach-item"><span class="marker">→</span>Evidence-based medication management (SSRIs, SNRIs, atypicals, and more)</div>
+          <div class="approach-item"><span class="marker">→</span>Ongoing monitoring for response, side effects, and dose optimization</div>
+          <div class="approach-item"><span class="marker">→</span>Holistic approach — we consider sleep, lifestyle, and comorbidities</div>
+          <div class="approach-item"><span class="marker">→</span>Coordination with your therapist for an integrated care plan</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OVERLAP -->
+<section class="overlap-section">
+  <div class="container">
+    <div class="animate-on-scroll" style="text-align:center;position:relative;z-index:2">
+      <div class="section-label" style="color:var(--terracotta-light)">The Overlap</div>
+      <div class="section-heading" style="color:white;max-width:700px;margin:0 auto 12px">These conditions rarely<br>travel <span class="serif italic">alone.</span></div>
+      <p style="font-size:17px;color:rgba(255,255,255,.6);max-width:560px;margin:0 auto">Many of our patients come in thinking they have one condition and discover they actually have two or three. That's exactly why a thorough evaluation matters.</p>
+    </div>
+    <div class="overlap-cards">
+      <div class="overlap-card animate-on-scroll delay-1">
+        <span class="icon">🧠 + 💭</span>
+        <h3>ADHD + Anxiety</h3>
+        <p>Extremely common. ADHD creates chaos → anxiety steps in to over-compensate → you're exhausted from managing both. Treating one without addressing the other rarely works.</p>
+      </div>
+      <div class="overlap-card animate-on-scroll delay-2">
+        <span class="icon">🧠 + 🌧️</span>
+        <h3>ADHD + Depression</h3>
+        <p>Years of struggling, masking, and feeling like you're "not living up to your potential" can lead to depression. We address the ADHD — and the emotional toll it's taken.</p>
+      </div>
+      <div class="overlap-card animate-on-scroll delay-3">
+        <span class="icon">💭 + 🌧️</span>
+        <h3>Anxiety + Depression</h3>
+        <p>They often feed each other — anxiety drains your energy, depression saps your motivation, and the cycle continues. An integrated approach breaks the loop.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NOT A FIT -->
+<section style="background:var(--cream)">
+  <div class="container-narrow">
+    <div class="animate-on-scroll" style="text-align:center">
+      <div class="section-heading" style="font-size:32px">A note on what we <span class="serif italic">don't</span> treat.</div>
+      <p style="font-size:16px;line-height:1.8;color:var(--text-secondary);max-width:600px;margin:0 auto 32px">We believe in being upfront about our scope. We specialize in ADHD, anxiety, and depression in adults. We're not the right fit for every situation, and that's okay — getting you to the right care matters more than taking on everything.</p>
+      <div class="info-box" style="text-align:left;max-width:600px;margin:0 auto">
+        <h4>We don't currently treat:</h4>
+        <div class="info-box-item"><span class="marker">—</span>Children or adolescents (under 18)</div>
+        <div class="info-box-item"><span class="marker">—</span>Bipolar disorder or schizophrenia spectrum conditions</div>
+        <div class="info-box-item"><span class="marker">—</span>Active substance use disorders</div>
+        <div class="info-box-item"><span class="marker">—</span>Eating disorders as a primary condition</div>
+        <div class="info-box-item"><span class="marker">—</span>Patients requiring inpatient or crisis-level care</div>
+      </div>
+      <p style="font-size:14px;color:var(--text-muted);margin-top:20px">If you're not sure whether we're the right fit, <a href="schedule.html" style="color:var(--green-deep);font-weight:600">book a free consult</a> and we'll let you know — honestly.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container"><div class="cta-inner animate-on-scroll">
+    <h2>Think this might be <em>your thing?</em></h2>
+    <p>Whether you know exactly what's going on or you just know something feels off — let's talk. The consult is free and there's zero pressure.</p>
+    <div class="cta-buttons">
+      <a href="schedule.html" class="btn-white">Book Your Free Consult →</a>
+      <a href="sms:+15162001835" class="btn-ghost">💬 Text Us at (516) 200-1835</a>
+    </div>
+    <p class="cta-note">Free · 10 minutes · No commitment · Completely confidential</p>
+  </div></div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand"><a href="index.html" class="nav-logo"><div class="nav-logo-icon">JP</div><span class="nav-logo-text">Joseph Psychiatry</span></a><p>Expert ADHD, anxiety, and depression care from a board-certified psychiatrist. Virtual evening appointments serving all of New York State.</p><div class="footer-crisis">⚠️ Not for emergencies. If you are in crisis, call <strong>911</strong> or the Suicide & Crisis Lifeline at <strong>988</strong>.</div></div>
+      <div class="footer-col"><h4>Navigate</h4><a href="what-we-treat.html">What We Treat</a><a href="what-to-expect.html">What to Expect</a><a href="about.html">About Us</a><a href="contact.html">Contact</a><a href="schedule.html">Book a Consult</a></div>
+      <div class="footer-col"><h4>Contact</h4><a href="tel:+15166000316">📞 (516) 600-0316</a><a href="sms:+15162001835">💬 (516) 200-1835</a><a href="mailto:admin@josephpsych.com">✉️ admin@josephpsych.com</a></div>
+      <div class="footer-col"><h4>Legal</h4><a href="legal.html#hipaa">HIPAA Privacy Notice</a><a href="legal.html#privacy">Privacy Policy</a><a href="legal.html#terms">Terms of Service</a><a href="legal.html#telehealth">Telehealth Consent</a></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Joseph Psychiatry PLLC. All rights reserved.</span><span>1575 Hillside Avenue, New Hyde Park, NY 11040</span></div>
+  </div>
+</footer>
+<script src="scripts.js"></script>
+<!-- Cal floating-popup embed code begins -->
+<script type="text/javascript">
+  (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+Cal("init", "10min", {origin:"https://app.cal.com"});
+  Cal.ns["10min"]("floatingButton", {"calLink":"josephpsych/10min","config":{"layout":"month_view","useSlotsViewOnSmallScreen":"true"},"buttonText":"Free Consult","buttonColor":"#0B2E15","buttonTextColor":"#F2F0E6"});
+  Cal.ns["10min"]("ui", {"cssVarsPerTheme":{"light":{"cal-brand":"#0B2E15"},"dark":{"cal-brand":"#F2F0E6"}},"hideEventTypeDetails":false,"layout":"month_view"});
+</script>
+<!-- Cal floating-popup embed code ends -->
+</body>
+</html>
