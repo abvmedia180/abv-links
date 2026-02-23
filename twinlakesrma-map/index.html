@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Twin Lakes Ranch — Interactive Plat Map</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -85,7 +85,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
 .grp-dot{width:8px;height:8px;border-radius:50%}
 
 /* === MAP === */
-#map{flex:1;position:relative;overflow:hidden;background:#d5d0c4;cursor:grab}
+#map{flex:1;position:relative;overflow:hidden;background:#d5d0c4;cursor:grab;touch-action:none}
 #map.drag{cursor:grabbing}
 #map.tool-pen,#map.tool-hl{cursor:crosshair}
 #map.tool-text{cursor:text}
@@ -240,7 +240,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
     width:100%;min-width:100%;border-right:none!important;border-left:none!important;
     border-bottom:1px solid #30363d;
     position:absolute;left:0;right:0;z-index:15;
-    max-height:30vh;overflow-y:auto;
+    max-height:33vh;overflow-y:auto;
     transition:max-height .2s ease;
   }
   .panel.collapsed{max-height:auto;position:relative;overflow:visible}
@@ -477,6 +477,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
     <button class="cb" id="zi" title="Zoom In (+)">+</button>
     <button class="cb" id="zo" title="Zoom Out (-)">−</button>
     <button class="cb" id="zr" title="Fit (0)">⟲</button>
+    <button class="cb" id="zc" title="Center on Selection (C)" style="font-size:12px;margin-top:2px;border-top:1px solid #30363d">⊙</button>
   </div>
 
   <div id="info">
@@ -852,6 +853,8 @@ function updateRPVisibility() {
 
 // ===== SELECT LOT =====
 function selLot(n) {
+  // Toggle: if already selected, deselect it
+  if (curLot === n) { closeInfo(); return; }
   clearSelection(); curLot = n;
   if (lotDots[n]) lotDots[n].forEach(c => { c.style.display=''; c.classList.add('show'); });
   if (lotLabels[n]) lotLabels[n].forEach(t => t.classList.add('show'));
@@ -863,11 +866,13 @@ function selLot(n) {
   if (P[n] && P[n].length > 1) h += `<div class="ic"><div class="ic-l">Sheets</div><div class="ic-v ylw">Shown on both Sheet 1 &amp; 2</div></div>`;
   document.getElementById('info-b').innerHTML = h;
   document.getElementById('info').classList.add('show');
-  panToCoord(P[n][0]);
+  zoomToCoord(P[n][0]);
 }
 
 // ===== SELECT ROAD POINT =====
 function selPoint(g, idx) {
+  // Toggle: if already selected, deselect it
+  if (curPoint && curPoint.g === g && curPoint.idx === idx) { closeInfo(); return; }
   clearSelection(); curPoint = { g, idx };
   const grp = ROAD_POINTS[g], pt = grp.points[idx], color = grp.color;
   rpEls[g][idx].dots.forEach(c => c.classList.add('hi'));
@@ -881,7 +886,7 @@ function selPoint(g, idx) {
   if (pt.desc) h += `<div class="in"><h4>Description</h4><p>${pt.desc}</p></div>`;
   document.getElementById('info-b').innerHTML = h;
   document.getElementById('info').classList.add('show');
-  panToCoord(pt.dots[0]);
+  zoomToCoord(pt.dots[0]);
 }
 
 // ===== CLEAR / CLOSE =====
@@ -915,6 +920,42 @@ function panToCoord(coords) {
   }
 }
 
+// Smart zoom: centers on coords and zooms in. Mobile zooms more aggressively.
+function zoomToCoord(coords) {
+  if (!coords) return;
+  const [cxp, cyp] = coords;
+  const cx = cxp/100*IW, cy = cyp/100*IH;
+  const r = mc.getBoundingClientRect();
+  const isMobile = window.innerWidth <= 760;
+  // Mobile: zoom to ~3.5x for a close-up view. Desktop: ~1.8x for context.
+  const targetScale = isMobile ? Math.min(3.5, 12) : Math.min(1.8, 12);
+  const ns = Math.max(targetScale, scale); // only zoom in, never zoom out from current
+  // If already zoomed in more than target, just center without changing zoom
+  if (scale >= targetScale * 0.9) {
+    px = r.width/2 - cx*scale; py = r.height/2 - cy*scale; upd();
+    return;
+  }
+  scale = ns;
+  px = r.width/2 - cx*scale;
+  py = r.height/2 - cy*scale;
+  upd();
+}
+
+// Center View button: zoom+center on current selection, or fit all if nothing selected
+function centerView() {
+  if (curLot && P[curLot]) {
+    zoomToCoord(P[curLot][0]);
+    toast('Centered on Lot ' + curLot);
+  } else if (curPoint) {
+    const pt = ROAD_POINTS[curPoint.g].points[curPoint.idx];
+    zoomToCoord(pt.dots[0]);
+    toast('Centered on ' + curPoint.g + pt.num);
+  } else {
+    fit();
+    toast('View reset');
+  }
+}
+
 // ===== SEARCH =====
 document.getElementById('lot-search').addEventListener('input', e => buildLotList(e.target.value));
 document.getElementById('pt-search').addEventListener('input', e => buildPtList(e.target.value));
@@ -931,7 +972,8 @@ function fit() {
 }
 const img = document.getElementById('img');
 img.onload = fit; if (img.complete) fit();
-window.addEventListener('resize', fit);
+// On resize, only re-fit if nothing is selected (avoids losing your place)
+window.addEventListener('resize', () => { if (!curLot && !curPoint) fit(); });
 
 function screenToSvg(clientX, clientY) {
   const r = mc.getBoundingClientRect();
@@ -1556,9 +1598,13 @@ mc.addEventListener('touchstart', e => {
       toast('P' + dotCounter + ' placed');
     }
   }
-}, {passive:true});
+  // Prevent browser zoom — let our map handle all touch gestures
+  if (e.touches.length >= 2) e.preventDefault();
+}, {passive:false});
 
 mc.addEventListener('touchmove', e => {
+  // Prevent browser zoom/scroll on the map area
+  e.preventDefault();
   if (e.touches.length === 1) {
     if (drag) { px=e.touches[0].clientX-sx; py=e.touches[0].clientY-sy; upd(); }
     if (touchDrawing && touchPath) {
@@ -1575,7 +1621,7 @@ mc.addEventListener('touchmove', e => {
     const my=(e.touches[0].clientY+e.touches[1].clientY)/2-mc.getBoundingClientRect().top;
     px=mx-(mx-px)*(ns/scale); py=my-(my-py)*(ns/scale); scale=ns; upd();
   }
-}, {passive:true});
+}, {passive:false});
 
 mc.addEventListener('touchend', () => { drag=false; touchDrawing=false; touchPath=null; });
 
@@ -1614,6 +1660,7 @@ document.getElementById('zo').onclick = () => {
   px=cw-(cw-px)*(ns/scale);py=ch-(ch-py)*(ns/scale);scale=ns;upd();
 };
 document.getElementById('zr').onclick = fit;
+document.getElementById('zc').onclick = centerView;
 
 // ===== KEYBOARD =====
 document.addEventListener('keydown', e => {
@@ -1633,6 +1680,7 @@ document.addEventListener('keydown', e => {
   if (e.key==='r'&&noMod) setTool('measure');
   if (e.key==='s'&&noMod) setTool('screenshot');
   if (e.key==='i'&&noMod) document.getElementById('info-btn').click();
+  if (e.key==='c'&&noMod) centerView();
   if ((e.ctrlKey||e.metaKey) && e.key==='z') { e.preventDefault(); document.getElementById('undo-btn').click(); }
 });
 
