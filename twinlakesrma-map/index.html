@@ -688,6 +688,7 @@ for (const g in ROAD_POINTS) {
 
 // ===== STATE =====
 let curFilter = null, curLot = null, curPoint = null;
+let curLotSheetIdx = 0, curPointSheetIdx = 0; // track which sheet position we're viewing
 let activeTool = 'pan';
 
 // ===== MOBILE: COLLAPSIBLE PANELS =====
@@ -853,9 +854,17 @@ function updateRPVisibility() {
 
 // ===== SELECT LOT =====
 function selLot(n) {
-  // Toggle: if already selected, deselect it
-  if (curLot === n) { closeInfo(); return; }
-  clearSelection(); curLot = n;
+  // If already selected: cycle between sheet positions if multiple, otherwise deselect
+  if (curLot === n) {
+    if (P[n] && P[n].length > 1) {
+      curLotSheetIdx = (curLotSheetIdx + 1) % P[n].length;
+      zoomToCoord(P[n][curLotSheetIdx]);
+      toast('Lot ' + n + ' · Sheet ' + (curLotSheetIdx + 1));
+      return;
+    }
+    closeInfo(); return;
+  }
+  clearSelection(); curLot = n; curLotSheetIdx = 0;
   if (lotDots[n]) lotDots[n].forEach(c => { c.style.display=''; c.classList.add('show'); });
   if (lotLabels[n]) lotLabels[n].forEach(t => t.classList.add('show'));
   const li = lotList.querySelector(`[data-lot="${n}"]`);
@@ -863,7 +872,7 @@ function selLot(n) {
   document.getElementById('info-t').textContent = 'Lot ' + n;
   let h = '';
   if (OWNERS[n]) h += `<div class="ic"><div class="ic-l">Owner</div><div class="ic-v blu">${OWNERS[n]}</div></div>`;
-  if (P[n] && P[n].length > 1) h += `<div class="ic"><div class="ic-l">Sheets</div><div class="ic-v ylw">Shown on both Sheet 1 &amp; 2</div></div>`;
+  if (P[n] && P[n].length > 1) h += `<div class="ic"><div class="ic-l">Sheets</div><div class="ic-v ylw">Shown on both Sheet 1 &amp; 2 · Click again to switch</div></div>`;
   document.getElementById('info-b').innerHTML = h;
   document.getElementById('info').classList.add('show');
   zoomToCoord(P[n][0]);
@@ -871,9 +880,18 @@ function selLot(n) {
 
 // ===== SELECT ROAD POINT =====
 function selPoint(g, idx) {
-  // Toggle: if already selected, deselect it
-  if (curPoint && curPoint.g === g && curPoint.idx === idx) { closeInfo(); return; }
-  clearSelection(); curPoint = { g, idx };
+  // If already selected: cycle between sheet positions if multiple, otherwise deselect
+  if (curPoint && curPoint.g === g && curPoint.idx === idx) {
+    const pt = ROAD_POINTS[g].points[idx];
+    if (pt.dots.length > 1) {
+      curPointSheetIdx = (curPointSheetIdx + 1) % pt.dots.length;
+      zoomToCoord(pt.dots[curPointSheetIdx]);
+      toast(g + pt.num + ' · Sheet ' + (curPointSheetIdx + 1));
+      return;
+    }
+    closeInfo(); return;
+  }
+  clearSelection(); curPoint = { g, idx }; curPointSheetIdx = 0;
   const grp = ROAD_POINTS[g], pt = grp.points[idx], color = grp.color;
   rpEls[g][idx].dots.forEach(c => c.classList.add('hi'));
   rpEls[g][idx].labels.forEach(t => t.classList.add('hi'));
@@ -882,7 +900,7 @@ function selPoint(g, idx) {
   const rname = grp.name ? ` — ${grp.name}` : '';
   document.getElementById('info-t').innerHTML = `<span style="color:${color}">●</span> Point ${g}${pt.num}`;
   let h = `<div class="ic"><div class="ic-l">Road</div><div class="ic-v" style="color:${color}">${g}${rname}</div></div>`;
-  if (pt.dots.length > 1) h += `<div class="ic"><div class="ic-l">Sheets</div><div class="ic-v ylw">Shown on both Sheet 1 &amp; 2</div></div>`;
+  if (pt.dots.length > 1) h += `<div class="ic"><div class="ic-l">Sheets</div><div class="ic-v ylw">Shown on both Sheet 1 &amp; 2 · Click again to switch</div></div>`;
   if (pt.desc) h += `<div class="in"><h4>Description</h4><p>${pt.desc}</p></div>`;
   document.getElementById('info-b').innerHTML = h;
   document.getElementById('info').classList.add('show');
@@ -937,15 +955,17 @@ function zoomToCoord(coords) {
   upd();
 }
 
-// Center View button: zoom+center on current selection, or fit all if nothing selected
+// Center View button: zoom+center on current selection (at current sheet index), or fit all
 function centerView() {
   if (curLot && P[curLot]) {
-    zoomToCoord(P[curLot][0]);
-    toast('Centered on Lot ' + curLot);
+    const idx = Math.min(curLotSheetIdx, P[curLot].length - 1);
+    zoomToCoord(P[curLot][idx]);
+    toast('Centered on Lot ' + curLot + (P[curLot].length > 1 ? ' · Sheet ' + (idx + 1) : ''));
   } else if (curPoint) {
     const pt = ROAD_POINTS[curPoint.g].points[curPoint.idx];
-    zoomToCoord(pt.dots[0]);
-    toast('Centered on ' + curPoint.g + pt.num);
+    const idx = Math.min(curPointSheetIdx, pt.dots.length - 1);
+    zoomToCoord(pt.dots[idx]);
+    toast('Centered on ' + curPoint.g + pt.num + (pt.dots.length > 1 ? ' · Sheet ' + (idx + 1) : ''));
   } else {
     fit();
     toast('View reset');
