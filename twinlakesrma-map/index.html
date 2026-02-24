@@ -498,21 +498,21 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
     <h3>📍 What is this?</h3>
     <p>The Twin Lakes RMA board built this tool to help our community explore and reference the recorded survey of our subdivision. The background image is a direct copy of the survey on file — it spans two pages, so you'll see both as you scroll up and down.</p>
 
-    <h3>🏠 Lots (Left Panel)</h3>
-    <p>All 59 lots are listed on the left. Click any lot to highlight its location on the map. Some lots appear on both survey pages — you'll see a <strong style="color:#d29922">1&amp;2</strong> badge when that's the case, and the lot will be marked in both places.</p>
+    <h3>🏠 Lots</h3>
+    <p>All 59 lots are listed in the Lots panel. Click any lot to highlight its location on the map. Some lots appear on both survey pages — you'll see a <strong style="color:#d29922">1&amp;2</strong> badge when that's the case, and the lot will be marked in both places.</p>
 
-    <h3>🛤️ Road Points (Right Panel)</h3>
-    <p>On the right, you'll find reference points along each road, organized by letter: <strong style="color:#ef4444">A — Lakeside Lane</strong>, <strong style="color:#f97316">B — Creekside Court</strong>, <strong style="color:#eab308">C — Twin Lakes Trail</strong>, and <strong style="color:#22c55e">D — Westlake Court</strong>. Click any point (e.g., A1, A2) to jump to that location. Points that appear on both pages will show on both.</p>
+    <h3>🛤️ Road Points</h3>
+    <p>Reference points along each road are organized by letter: <strong style="color:#ef4444">A — Lakeside Lane</strong>, <strong style="color:#f97316">B — Creekside Court</strong>, <strong style="color:#eab308">C — Twin Lakes Trail</strong>, and <strong style="color:#22c55e">D — Westlake Court</strong>. Click any point (e.g., A1, A2) to jump to that location. Points that appear on both pages will show on both.</p>
 
-    <h3>✏️ Markup Tools (Top Toolbar)</h3>
-    <p>Use the toolbar above the map to draw, highlight, add text, or drop mark points (P1, P2, P3…). There's also an eraser, undo, and a screenshot tool that lets you select an area and save it as an image.</p>
+    <h3>✏️ Markup Tools</h3>
+    <p>Use the toolbar to draw, highlight, add text, or drop mark points (P1, P2, P3…). There's also an eraser, undo, and a screenshot tool that lets you select an area and save it as an image.</p>
     <p><strong style="color:#c9d1d9">Tip:</strong> To move a markup you've placed, click the <strong style="color:#c9d1d9">✥</strong> (four-arrow) button next to the eraser, then drag any annotation to reposition it.</p>
 
     <div class="note">⚠️ <strong>Accuracy Note:</strong> The survey image is the recorded document. All lot markers, road points, and tools were placed by the RMA board and may not be 100% precise. If you spot an error, please let the board know so we can correct it.</div>
   </div>
   <div class="modal-footer">
     <p style="font-size:10px;color:#8b949e;text-align:center;margin-bottom:10px;width:100%">To see these instructions again, click the <strong style="color:#c9d1d9">ⓘ</strong> button on the top toolbar.</p>
-    <button id="modal-continue">Continue to Map</button>
+    <button id="modal-continue" onclick="(function(){var o=document.getElementById('modal-overlay');o.classList.add('hidden');setTimeout(function(){o.style.display='none'},300)})()">Continue to Map</button>
   </div>
 </div>
 </div>
@@ -578,8 +578,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
   <div id="ctrls">
     <button class="cb" id="zi" title="Zoom In (+)">+</button>
     <button class="cb" id="zo" title="Zoom Out (-)">−</button>
-    <button class="cb" id="zr" title="Fit (0)">⟲</button>
-    <button class="cb" id="zc" title="Center on Selection (C)" style="font-size:12px;margin-top:2px;border-top:1px solid #30363d">⊙</button>
+    <button class="cb" id="zc" title="Fit / Center on Selection (0 or C)" style="font-size:12px;margin-top:2px;border-top:1px solid #30363d">⊙</button>
   </div>
 
   <div id="info">
@@ -619,6 +618,23 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
 </div>
 
 <script>
+// ===== MODAL CLOSE (early init — must work even if later code errors) =====
+function closeModal() {
+  var o = document.getElementById('modal-overlay');
+  if (!o) return;
+  o.classList.add('hidden');
+  setTimeout(function(){ o.style.display = 'none'; }, 300);
+}
+(function(){
+  var btn = document.getElementById('modal-continue');
+  if (btn) {
+    btn.onclick = closeModal;
+    btn.addEventListener('touchend', function(e){ e.preventDefault(); closeModal(); }, {passive:false});
+  }
+  var ov = document.getElementById('modal-overlay');
+  if (ov) ov.addEventListener('click', function(e){ if (e.target === ov) closeModal(); });
+})();
+
 const IW = 4000, IH = 5397;
 
 // ===== LOT DATA =====
@@ -2058,7 +2074,6 @@ document.getElementById('zo').onclick = () => {
   const cw=mc.clientWidth/2,ch=mc.clientHeight/2,ns=Math.max(0.08,scale/1.4);
   px=cw-(cw-px)*(ns/scale);py=ch-(ch-py)*(ns/scale);scale=ns;upd();
 };
-document.getElementById('zr').onclick = fit;
 document.getElementById('zc').onclick = centerView;
 
 // ===== KEYBOARD =====
@@ -2067,7 +2082,7 @@ document.addEventListener('keydown', e => {
   if (e.key==='Escape') closeInfo();
   if (e.key==='+'||e.key==='=') document.getElementById('zi').click();
   if (e.key==='-') document.getElementById('zo').click();
-  if (e.key==='0') document.getElementById('zr').click();
+  if (e.key==='0') centerView();
   const noMod = !e.ctrlKey && !e.metaKey;
   if (e.key==='v'&&noMod) setTool('pan');
   if (e.key==='p'&&noMod) setTool('pen');
@@ -2088,27 +2103,13 @@ function mk(tag,cls){const e=document.createElement(tag);e.className=cls;return 
 let tt;
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2200);}
 
-// ===== WELCOME MODAL =====
-const modalOverlay = document.getElementById('modal-overlay');
-function closeModal() {
-  modalOverlay.classList.add('hidden');
-  setTimeout(() => { modalOverlay.style.display = 'none'; }, 300);
-}
-document.getElementById('modal-continue').onclick = closeModal;
-// Fix mobile: ensure touch works on continue button
-document.getElementById('modal-continue').addEventListener('touchend', (e) => {
-  e.preventDefault();
-  closeModal();
-}, {passive:false});
+// ===== WELCOME MODAL (info-btn re-open only — closeModal defined at top) =====
 document.getElementById('info-btn').onclick = () => {
-  modalOverlay.classList.add('no-backdrop');
-  modalOverlay.style.display = 'flex';
-  requestAnimationFrame(() => { modalOverlay.classList.remove('hidden'); });
+  const ov = document.getElementById('modal-overlay');
+  ov.classList.add('no-backdrop');
+  ov.style.display = 'flex';
+  requestAnimationFrame(() => { ov.classList.remove('hidden'); });
 };
-// Close modal on overlay click (not modal itself)
-modalOverlay.addEventListener('click', e => {
-  if (e.target === modalOverlay) closeModal();
-});
 
 
 // ===== MINIMAP =====
@@ -2246,7 +2247,7 @@ document.getElementById('lot-search').addEventListener('input', e => {
   applySearchGlow(e.target.value);
 });
 
-// ===== ANNOTATION SAVE / LOAD =====
+// ===== ANNOTATION SERIALIZATION (kept for potential future use) =====
 function serializeAnnotations() {
   const data = [];
   drawHistory.forEach(el => {
@@ -2432,8 +2433,4 @@ buildPtList();
 updatePtStats();
 updateRPVisibility();
 // Apply shared view from URL hash (after image loads)
-img.addEventListener('load', applyShareHash);
-if (img.complete) setTimeout(applyShareHash, 100);
-</script>
-</body>
-</html>
+img.addEventListe
