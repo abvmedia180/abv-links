@@ -263,7 +263,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
     flex-direction:column;
     position:relative;
     overflow:hidden;
-    padding-top:68px;
+    padding-top:118px;
   }
 
   /* --- 1. TITLE BAR (pulled OUT of panel flow, fixed at very top) --- */
@@ -276,41 +276,48 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
     border-bottom:1px solid #30363d;
   }
   #title-bar h1{font-size:11px;letter-spacing:0.5px;margin-bottom:0}
-  #title-bar .subtitle{font-size:7px;line-height:1.2}
+  #title-bar .subtitle{display:none}
   #title-bar .org{font-size:8px;margin-top:1px;gap:3px}
   #title-bar .org::before{width:5px;height:5px}
 
   /* --- 2. MOBILE TAB BAR (below title bar) --- */
   #mobile-tabs{
     display:flex;
+    flex-direction:column;
     position:fixed;
     top:38px;left:0;right:0;
     z-index:19;
     background:#0d1117;
-    border-bottom:1px solid #30363d;
-    height:30px;
   }
   #mobile-tabs .mtab{
-    flex:1;padding:6px 8px;text-align:center;
-    font-size:10px;font-weight:700;letter-spacing:0.3px;
+    width:100%;padding:6px 12px;text-align:left;
+    font-size:12px;font-weight:700;letter-spacing:0.3px;
     color:#8b949e;cursor:pointer;
-    border:none;background:transparent;
-    border-bottom:2px solid transparent;
+    border:none;background:#0d1117;
+    border-bottom:1px solid #30363d;
     transition:all .15s;
+    display:flex;align-items:center;justify-content:space-between;
   }
+  #mobile-tabs .mtab::after{content:'▸';font-size:10px;color:#8b949e;transition:transform .15s}
+  #mobile-tabs .mtab.active::after{content:'▾'}
   #mobile-tabs .mtab.active{
-    color:#58a6ff;border-bottom-color:#58a6ff;background:#161b22;
+    color:#58a6ff;background:#0d1117;
   }
+  #mobile-tabs .mtab:nth-child(1){color:#58a6ff}
+  #mobile-tabs .mtab:nth-child(2){color:#f97316}
   #mobile-tabs .mtab:nth-child(2).active{
-    color:#f97316;border-bottom-color:#f97316;
+    color:#f97316;
   }
+  .mtab-content{display:flex;flex-direction:column;align-items:flex-start}
+  .mtab-title{font-size:12px;font-weight:700}
+  .mtab-sub{font-size:9px;color:#8b949e;font-weight:400;line-height:1.3}
 
   /* --- 3. PANELS (fixed overlays below title bar + tab bar) --- */
   .panel{
     width:100%!important;min-width:100%!important;
     border-right:none!important;border-left:none!important;
     position:fixed;left:0;right:0;
-    top:68px;
+    top:118px;
     z-index:15;
     max-height:0;
     overflow:hidden;
@@ -325,18 +332,13 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
     max-height:calc(45vh - 80px);
     overflow-y:auto;
   }
-  #right-panel{top:68px;bottom:auto;border-top:none}
+  #right-panel{top:118px;bottom:auto;border-top:none}
   .panel.collapsed{max-height:0;overflow:hidden}
 
-  /* Panel headers: compact but VISIBLE */
+  /* Panel headers: hidden on mobile since tab bar shows them */
   .panel-hdr{
-    padding:5px 12px;
-    background:#0d1117;
-    border-bottom:1px solid #30363d;
+    display:none!important;
   }
-  .panel-hdr h2{font-size:10px;margin-bottom:0}
-  .panel-hdr h2::after{font-size:8px}
-  .panel-hdr .sub{display:none}
 
   /* Hide non-essential panel elements */
   .panel-stats{display:none!important}
@@ -385,13 +387,17 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
     left:8px;right:auto;
     border-radius:5px;
   }
-  #minimap.collapsed{width:auto;height:auto;border-radius:6px;padding:4px 8px;min-width:0}
+  #minimap.collapsed{width:auto;height:auto;border-radius:8px;padding:6px 10px;min-width:0;background:#161b22;border:1px solid #30363d}
   #minimap.collapsed #minimap-toggle{
     position:static;transform:none;font-size:0;
     width:auto;height:auto;background:transparent;
-    display:flex;align-items:center;gap:3px;
+    display:flex;flex-direction:column;align-items:center;gap:2px;
   }
-  #minimap.collapsed #minimap-toggle::before{content:'🗺';font-size:13px}
+  #minimap.collapsed #minimap-toggle::before{
+    content:'';display:block;width:20px;height:20px;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2358a6ff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20'/%3E%3Cpath d='M2 12h20'/%3E%3C/svg%3E");
+    background-size:contain;background-repeat:no-repeat;
+  }
   #minimap.collapsed #minimap-toggle::after{content:'Map';font-size:8px;color:#8b949e;font-weight:600;letter-spacing:0.3px}
 
   /* --- 8. COORD BAR (bottom center, ultra-compact) --- */
@@ -629,8 +635,8 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
 
 <!-- MOBILE TAB BAR -->
 <div id="mobile-tabs">
-  <button class="mtab active" data-panel="left-panel">Lots</button>
-  <button class="mtab" data-panel="right-panel">Road Points</button>
+  <button class="mtab active" data-panel="left-panel"><span class="mtab-content"><span class="mtab-title">Lots</span><span class="mtab-sub">Click a lot to highlight on map</span></span></button>
+  <button class="mtab" data-panel="right-panel"><span class="mtab-content"><span class="mtab-title">Road Points</span><span class="mtab-sub">Click a point to highlight on map</span></span></button>
 </div>
 
 <!-- LEFT PANEL: LOTS -->
