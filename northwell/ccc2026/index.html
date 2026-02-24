@@ -502,7 +502,7 @@ body::after { content: ''; position: fixed; inset: 0; background-image: url("dat
    FULLSCREEN BUTTON
    ═══════════════════════════════════════════ */
 .fullscreen-btn {
-  position: fixed; bottom: 12px; right: 100px; z-index: 500;
+  position: fixed; bottom: 12px; right: 56px; z-index: 500;
   width: 36px; height: 36px; border-radius: 50%;
   border: 1px solid rgba(255,255,255,0.1); background: rgba(0,40,85,0.6);
   color: rgba(255,255,255,0.5); font-size: 0.85rem; cursor: pointer;
@@ -530,7 +530,7 @@ body::after { content: ''; position: fixed; inset: 0; background-image: url("dat
   color: var(--northwell-gold); margin: 0 2px; letter-spacing: 1px;
 }
 .kb-hint-btn {
-  position: fixed; bottom: 12px; right: 144px; z-index: 500;
+  position: fixed; bottom: 12px; right: 100px; z-index: 500;
   width: 36px; height: 36px; border-radius: 50%;
   border: 1px solid rgba(255,255,255,0.1); background: rgba(0,40,85,0.6);
   color: rgba(255,255,255,0.5); font-size: 0.75rem; cursor: pointer;
@@ -538,6 +538,55 @@ body::after { content: ''; position: fixed; inset: 0; background-image: url("dat
   backdrop-filter: blur(10px); font-family: var(--font-display); font-weight: 700;
 }
 .kb-hint-btn:hover { color: white; border-color: rgba(255,255,255,0.3); }
+
+/* Lo-Fi Music Button */
+.lofi-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.1); background: rgba(0,40,85,0.6);
+  color: rgba(255,255,255,0.5); font-size: 0.85rem; cursor: pointer;
+  transition: var(--transition); display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(10px); position: relative; z-index: 2;
+}
+.lofi-btn:hover { color: white; border-color: rgba(255,255,255,0.3); }
+.lofi-btn.playing { color: var(--northwell-gold); border-color: rgba(242,169,0,0.4); background: rgba(242,169,0,0.12); animation: lofiPulse 3s ease-in-out infinite; }
+@keyframes lofiPulse { 0%,100% { box-shadow: none; } 50% { box-shadow: 0 0 12px 2px rgba(242,169,0,0.15); } }
+.lofi-vol-wrap {
+  position: absolute; bottom: 44px; left: 50%; transform: translateX(-50%);
+  background: linear-gradient(135deg, rgba(0,40,85,0.92), rgba(0,26,58,0.92));
+  border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
+  padding: 14px 10px; backdrop-filter: blur(30px); box-shadow: 0 8px 32px rgba(0,0,0,0.45);
+  display: none; flex-direction: column; align-items: center; gap: 8px; width: 44px;
+}
+.lofi-vol-wrap.active { display: flex; }
+.lofi-vol-wrap input[type="range"] {
+  -webkit-appearance: none; appearance: none;
+  width: 90px; height: 4px; border-radius: 4px;
+  background: linear-gradient(90deg, var(--northwell-accent), var(--northwell-gold));
+  outline: none; cursor: pointer;
+  transform: rotate(-90deg); transform-origin: center center;
+  margin: 36px 0;
+}
+.lofi-vol-wrap input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: white; border: 2px solid var(--northwell-gold);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3); cursor: pointer;
+}
+.lofi-vol-pct {
+  font-family: var(--font-display); font-size: 0.6rem; font-weight: 600;
+  color: var(--northwell-gold); letter-spacing: 1px;
+}
+
+/* T-Swift Button */
+.tswift-btn {
+  position: fixed; bottom: 12px; right: 188px; z-index: 500;
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid rgba(255,180,200,0.2); background: rgba(255,180,200,0.08);
+  color: rgba(255,200,215,0.6); font-size: 0.75rem; cursor: pointer;
+  transition: var(--transition); display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(10px); text-decoration: none;
+}
+.tswift-btn:hover { color: #ffc8d9; border-color: rgba(255,180,200,0.5); background: rgba(255,180,200,0.18); transform: scale(1.1); }
 
 @media (max-width: 900px) {
   .header h1 { font-size: 1.8rem; letter-spacing: 4px; }
@@ -688,6 +737,14 @@ body::after { content: ''; position: fixed; inset: 0; background-image: url("dat
   </div>
 </div>
 
+<a class="tswift-btn" href="https://youtu.be/WWY06TxIrh4?si=IIPKcmJF7-wOkPwT" target="_blank" rel="noopener" title="T-Swift Mode">TS</a>
+<div style="position:fixed;bottom:12px;right:144px;z-index:500;">
+  <button class="lofi-btn" id="lofi-btn" onclick="toggleLofi()" oncontextmenu="event.preventDefault();toggleLofiVol();" title="Lo-Fi Music · Right-click for volume" style="position:static;">&#9835;</button>
+  <div class="lofi-vol-wrap" id="lofi-vol-wrap">
+    <div class="lofi-vol-pct" id="lofi-vol-pct">35%</div>
+    <input type="range" id="lofi-vol-slider" min="0" max="100" value="35" oninput="adjustLofiVolume(this.value)">
+  </div>
+</div>
 <button class="kb-hint-btn" id="kb-hint-btn" onclick="toggleKeyboardHints()" title="Keyboard Shortcuts">&#9000;</button>
 <div class="keyboard-hints" id="keyboard-hints">
   <kbd>SPACE</kbd> Reveal Answer / Dismiss<br>
@@ -698,14 +755,6 @@ body::after { content: ''; position: fixed; inset: 0; background-image: url("dat
 </div>
 
 <button class="fullscreen-btn" id="fullscreen-btn" onclick="toggleFullscreen()" title="Toggle Fullscreen">&#x26F6;</button>
-<div class="sound-group">
-  <button class="sound-toggle" id="sound-toggle" onclick="toggleVolumeSlider()" title="Volume">&#128266;</button>
-  <div class="volume-slider-wrap" id="volume-slider-wrap">
-    <div class="volume-pct" id="volume-pct">80%</div>
-    <input type="range" id="volume-slider" min="0" max="100" value="80" oninput="adjustVolume(this.value)">
-    <button class="sound-mute-btn" onclick="toggleSound()" title="Mute / Unmute">&#128263;</button>
-  </div>
-</div>
 <button class="settings-btn" onclick="toggleSettings()" title="Settings">&#9881;</button>
 <div class="settings-panel" id="settings-panel">
   <h3>Settings</h3>
@@ -778,13 +827,228 @@ var gameStartTime = null;
 var dailyDoublesHit = 0;
 var thinkMusicNodes = null;
 var victoryShown = false;
+var lofiPlaying = false;
+var lofiIntervals = [];
+var lofiOscillators = [];
+var lofiMasterGain = null;
 
 /* ═══════════════════════════════════════════════════
    AUDIO ENGINE
    ═══════════════════════════════════════════════════ */
-function initAudio() { 
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); 
+function initAudio() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   if (audioCtx.state === 'suspended') audioCtx.resume();
+}
+
+/* ═══════════════════════════════════════════════════
+   🎵 GAME SHOW CLASSIC — BACKGROUND MUSIC ENGINE
+   Upbeat pizzicato bass + bright staccato melody +
+   light rhythmic pulse. Loops infinitely via bar system.
+   ═══════════════════════════════════════════════════ */
+function startLofi() {
+  initAudio();
+  lofiPlaying = true;
+  lofiIntervals = [];
+  lofiOscillators = [];
+
+  lofiMasterGain = audioCtx.createGain();
+  var lofiVol = (window._lofiVolume !== undefined) ? window._lofiVolume : 0.35;
+  lofiMasterGain.gain.setValueAtTime(0, audioCtx.currentTime);
+  lofiMasterGain.gain.linearRampToValueAtTime(lofiVol, audioCtx.currentTime + 2);
+  lofiMasterGain.connect(audioCtx.destination);
+
+  var BPM = 132;
+  var beatDur = 60 / BPM;
+  var barDur = beatDur * 4;
+
+  var chords = [
+    [130.81, 164.81, 196.00],
+    [110.00, 130.81, 164.81],
+    [87.31, 110.00, 130.81],
+    [98.00, 123.47, 146.83],
+    [130.81, 164.81, 196.00],
+    [110.00, 130.81, 164.81],
+    [87.31, 110.00, 130.81],
+    [98.00, 130.81, 164.81],
+  ];
+
+  var bassLines = [
+    [130.81, 0, 130.81, 146.83],
+    [110.00, 0, 130.81, 110.00],
+    [87.31, 0, 110.00, 87.31],
+    [98.00, 0, 110.00, 98.00],
+    [130.81, 0, 146.83, 130.81],
+    [110.00, 0, 98.00, 110.00],
+    [87.31, 0, 87.31, 98.00],
+    [98.00, 0, 123.47, 98.00],
+  ];
+
+  var melodyBars = [
+    [{ beat: 0, note: 523.25, dur: 0.12 }, { beat: 1.5, note: 587.33, dur: 0.08 }, { beat: 2, note: 659.26, dur: 0.15 }],
+    [{ beat: 0, note: 523.25, dur: 0.1 }, { beat: 2, note: 440.00, dur: 0.12 }, { beat: 3, note: 493.88, dur: 0.08 }],
+    [{ beat: 0.5, note: 440.00, dur: 0.12 }, { beat: 1.5, note: 523.25, dur: 0.1 }, { beat: 3, note: 349.23, dur: 0.15 }],
+    [{ beat: 0, note: 392.00, dur: 0.12 }, { beat: 1, note: 493.88, dur: 0.1 }, { beat: 2.5, note: 587.33, dur: 0.12 }, { beat: 3.5, note: 523.25, dur: 0.1 }],
+    [{ beat: 0, note: 659.26, dur: 0.15 }, { beat: 1, note: 587.33, dur: 0.08 }, { beat: 2.5, note: 523.25, dur: 0.12 }],
+    [{ beat: 0.5, note: 440.00, dur: 0.12 }, { beat: 2, note: 523.25, dur: 0.1 }, { beat: 3, note: 440.00, dur: 0.08 }],
+    [{ beat: 0, note: 349.23, dur: 0.12 }, { beat: 1.5, note: 440.00, dur: 0.1 }, { beat: 2.5, note: 523.25, dur: 0.15 }],
+    [{ beat: 0, note: 493.88, dur: 0.1 }, { beat: 1, note: 587.33, dur: 0.12 }, { beat: 2, note: 659.26, dur: 0.2 }],
+  ];
+
+  function playPizzBass(freq, time, vol) {
+    if (!lofiPlaying) return;
+    var osc = audioCtx.createOscillator();
+    var gain = audioCtx.createGain();
+    var filter = audioCtx.createBiquadFilter();
+    osc.type = 'triangle';
+    osc.frequency.value = freq;
+    filter.type = 'lowpass';
+    filter.frequency.value = 1200;
+    filter.Q.value = 2;
+    gain.gain.setValueAtTime(0.001, time);
+    gain.gain.linearRampToValueAtTime(vol, time + 0.015);
+    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.22);
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(lofiMasterGain);
+    osc.start(time);
+    osc.stop(time + 0.25);
+  }
+
+  function playStaccatoMelody(freq, time, dur, vol) {
+    if (!lofiPlaying) return;
+    var osc = audioCtx.createOscillator();
+    var gain = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0.001, time);
+    gain.gain.linearRampToValueAtTime(vol, time + 0.01);
+    gain.gain.setValueAtTime(vol, time + dur * 0.6);
+    gain.gain.exponentialRampToValueAtTime(0.001, time + dur);
+    osc.connect(gain);
+    gain.connect(lofiMasterGain);
+    osc.start(time);
+    osc.stop(time + dur + 0.05);
+  }
+
+  function playRhythmTick(time, accent) {
+    if (!lofiPlaying) return;
+    var bufferSize = audioCtx.sampleRate * 0.04;
+    var buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    var data = buffer.getChannelData(0);
+    for (var i = 0; i < bufferSize; i++) { data[i] = (Math.random() * 2 - 1); }
+    var source = audioCtx.createBufferSource();
+    source.buffer = buffer;
+    var filter = audioCtx.createBiquadFilter();
+    filter.type = 'highpass';
+    filter.frequency.value = accent ? 6000 : 8000;
+    var gain = audioCtx.createGain();
+    gain.gain.setValueAtTime(accent ? 0.045 : 0.025, time);
+    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
+    source.connect(filter);
+    filter.connect(gain);
+    gain.connect(lofiMasterGain);
+    source.start(time);
+    source.stop(time + 0.06);
+  }
+
+  function playChordPad(notes, time) {
+    if (!lofiPlaying) return;
+    notes.forEach(function(freq) {
+      var osc = audioCtx.createOscillator();
+      var gain = audioCtx.createGain();
+      var filter = audioCtx.createBiquadFilter();
+      osc.type = 'sine';
+      osc.frequency.value = freq * 2;
+      filter.type = 'lowpass';
+      filter.frequency.value = 600;
+      gain.gain.setValueAtTime(0.001, time);
+      gain.gain.linearRampToValueAtTime(0.012, time + 0.3);
+      gain.gain.setValueAtTime(0.012, time + barDur * 0.7);
+      gain.gain.exponentialRampToValueAtTime(0.001, time + barDur);
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(lofiMasterGain);
+      osc.start(time);
+      osc.stop(time + barDur + 0.1);
+    });
+  }
+
+  function scheduleLoop() {
+    if (!lofiPlaying) return;
+    var startTime = audioCtx.currentTime + 0.1;
+
+    for (var bar = 0; bar < 8; bar++) {
+      var barStart = startTime + (bar * barDur);
+      var barIdx = bar % 8;
+
+      playChordPad(chords[barIdx], barStart);
+
+      var bass = bassLines[barIdx];
+      for (var b = 0; b < 4; b++) {
+        if (bass[b] > 0) {
+          playPizzBass(bass[b], barStart + (b * beatDur), 0.07);
+        }
+      }
+
+      var melNotes = melodyBars[barIdx];
+      melNotes.forEach(function(m) {
+        playStaccatoMelody(m.note, barStart + (m.beat * beatDur), m.dur, 0.06);
+      });
+
+      for (var eighth = 0; eighth < 8; eighth++) {
+        var tickTime = barStart + (eighth * beatDur * 0.5);
+        var accent = (eighth === 0 || eighth === 4);
+        playRhythmTick(tickTime, accent);
+      }
+    }
+
+    var totalLoopDur = 8 * barDur;
+    var tid = setTimeout(function() {
+      scheduleLoop();
+    }, (totalLoopDur - 0.5) * 1000);
+    lofiIntervals.push(tid);
+  }
+
+  scheduleLoop();
+}
+
+function stopLofi() {
+  lofiPlaying = false;
+  lofiIntervals.forEach(function(t) { clearTimeout(t); });
+  lofiIntervals = [];
+  if (lofiMasterGain) {
+    try {
+      lofiMasterGain.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 1.0);
+    } catch(e) {}
+  }
+  setTimeout(function() { lofiMasterGain = null; }, 1200);
+}
+
+function toggleLofi() {
+  var btn = document.getElementById('lofi-btn');
+  if (lofiPlaying) {
+    stopLofi();
+    btn.classList.remove('playing');
+    btn.title = 'Lo-Fi Music · Right-click for volume';
+  } else {
+    startLofi();
+    btn.classList.add('playing');
+    btn.title = 'Stop Lo-Fi · Right-click for volume';
+  }
+}
+
+function toggleLofiVol() {
+  document.getElementById('lofi-vol-wrap').classList.toggle('active');
+}
+
+function adjustLofiVolume(val) {
+  var lofiVol = val / 100;
+  document.getElementById('lofi-vol-pct').textContent = val + '%';
+  if (lofiPlaying && lofiMasterGain) {
+    try { lofiMasterGain.gain.setValueAtTime(lofiVol * 0.5, audioCtx.currentTime); } catch(e) {}
+  }
+  // Store for next startLofi call
+  window._lofiVolume = lofiVol;
 }
 
 function playTone(freq, duration, type, vol) {
@@ -1858,6 +2122,10 @@ function adjustVolume(val) {
   if (musicNodes && musicNodes.masterGain) {
     try { musicNodes.masterGain.gain.setValueAtTime(masterVolume, audioCtx.currentTime); } catch(e) {}
   }
+  // Apply to lo-fi if playing
+  if (lofiPlaying && lofiMasterGain) {
+    try { lofiMasterGain.gain.setValueAtTime(masterVolume * 0.35, audioCtx.currentTime); } catch(e) {}
+  }
 }
 
 function resetGame() {
@@ -1886,8 +2154,7 @@ function dismissSplash() {
   // Play orchestral swell
   setTimeout(function() { playBoardRevealSwell(); }, 300);
   
-  // Start game show music after swell
-  setTimeout(function() { startGameShowMusic(); }, 2500);
+  // Game show music removed — use lo-fi button instead
   
   // Reveal board with cascade
   setTimeout(function() { 
@@ -2329,10 +2596,11 @@ document.addEventListener('keydown', function(e) {
    ═══════════════════════════════════════════ */
 // Close volume slider when clicking elsewhere
 document.addEventListener('click', function(e) {
-  var wrap = document.getElementById('volume-slider-wrap');
-  var group = e.target.closest('.sound-group');
-  if (!group && wrap.classList.contains('active')) {
-    wrap.classList.remove('active');
+  // Close lo-fi volume popup if clicking outside
+  var lofiWrap = document.getElementById('lofi-vol-wrap');
+  if (lofiWrap && lofiWrap.classList.contains('active')) {
+    var lofiParent = e.target.closest('[oncontextmenu]') || e.target.closest('.lofi-vol-wrap');
+    if (!lofiParent) lofiWrap.classList.remove('active');
   }
 });
 
