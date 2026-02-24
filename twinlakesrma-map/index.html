@@ -236,27 +236,46 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
 }
 @media(max-width:760px){
   #app{flex-direction:column;position:relative}
+
+  /* === MOBILE TABBED PANEL === */
+  #mobile-tabs{
+    display:flex;position:absolute;top:0;left:0;right:0;z-index:16;
+    background:#0d1117;border-bottom:1px solid #30363d;
+  }
+  #mobile-tabs .mtab{
+    flex:1;padding:8px 6px;text-align:center;font-size:10px;font-weight:700;
+    letter-spacing:0.3px;color:#8b949e;cursor:pointer;border:none;background:transparent;
+    border-bottom:2px solid transparent;transition:all .15s;
+  }
+  #mobile-tabs .mtab.active{color:#58a6ff;border-bottom-color:#58a6ff;background:#161b22}
+  #mobile-tabs .mtab:nth-child(2).active{color:#f97316;border-bottom-color:#f97316}
+
+  /* Panels become overlaid drawers below the tabs */
   .panel{
     width:100%;min-width:100%;border-right:none!important;border-left:none!important;
     border-bottom:1px solid #30363d;
     position:absolute;left:0;right:0;z-index:15;
-    max-height:33vh;overflow-y:auto;
+    top:36px;
+    max-height:0;overflow:hidden;
     transition:max-height .2s ease;
   }
-  .panel.collapsed{max-height:auto;position:relative;overflow:visible}
-  .panel.collapsed .item-list,
-  .panel.collapsed .search-wrap,
-  .panel.collapsed .filter-area,
-  .panel.collapsed .panel-stats{display:none}
-  .panel.collapsed{min-height:auto}
-  #left-panel{top:0}
-  #right-panel{bottom:0;top:auto;border-bottom:none;border-top:1px solid #30363d}
-  .panel-hdr h2::after{content:'▸'}
-  .panel:not(.collapsed) .panel-hdr h2::after{content:'▾'}
-  #title-bar .subtitle{display:none}
-  #title-bar{padding:6px 10px}
-  #title-bar h1{font-size:11px}
-  #title-bar .org{font-size:9px;margin-top:2px}
+  .panel.mobile-active{max-height:28vh;overflow-y:auto}
+  .panel.mobile-active .item-list{max-height:calc(28vh - 44px);overflow-y:auto}
+  #right-panel{top:36px;bottom:auto;border-top:none}
+
+  /* Hide elements not needed on mobile */
+  .panel-hdr{display:none}
+  #title-bar{display:none}
+  .panel-stats{display:none!important}
+  .filter-area{display:none!important}
+  .panel .sub{display:none}
+
+  /* Compact search on mobile */
+  .search-wrap{padding:4px 8px;border-bottom:1px solid #30363d}
+  .search-wrap input{padding:5px 7px;font-size:10px}
+
+  /* Hide old collapsed styles */
+  .panel.collapsed{max-height:0;overflow:hidden}
 
   /* Compact toolbar along left side */
   #toolbar{
@@ -283,6 +302,12 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
   .tb-label{display:none}
   #stroke-size{display:none}
 }
+/* Hide mobile tabs on desktop */
+#mobile-tabs{display:none}
+body.light #mobile-tabs{background:#fff;border-color:#d0d7de}
+body.light #mobile-tabs .mtab{color:#57606a}
+body.light #mobile-tabs .mtab.active{color:#0969da;border-bottom-color:#0969da;background:#f6f8fa}
+body.light #mobile-tabs .mtab:nth-child(2).active{color:#bc4c00;border-bottom-color:#bc4c00}
 
 /* === WELCOME MODAL === */
 #modal-overlay{
@@ -543,6 +568,12 @@ body.light .inline-text-editor{background:rgba(255,255,255,0.8);border-color:#09
 </div>
 
 <div id="app">
+
+<!-- MOBILE TAB BAR -->
+<div id="mobile-tabs">
+  <button class="mtab active" data-panel="left-panel">Lots</button>
+  <button class="mtab" data-panel="right-panel">Road Points</button>
+</div>
 
 <!-- LEFT PANEL: LOTS -->
 <div class="panel panel-l" id="left-panel">
@@ -816,33 +847,63 @@ let curFilter = null, curLot = null, curPoint = null;
 let curLotSheetIdx = 0, curPointSheetIdx = 0; // track which sheet position we're viewing
 let activeTool = 'pan';
 
-// ===== MOBILE: COLLAPSIBLE PANELS =====
-function setupCollapse() {
-  if (window.innerWidth > 760) return;
-  document.getElementById('left-panel').classList.add('collapsed');
-  document.getElementById('right-panel').classList.add('collapsed');
-}
-document.getElementById('lot-hdr').onclick = () => {
+// ===== MOBILE: TABBED PANELS =====
+let mobileActivePanel = null; // 'left-panel' or 'right-panel' or null (collapsed)
+function setupMobile() {
   if (window.innerWidth > 760) return;
   const lp = document.getElementById('left-panel');
   const rp = document.getElementById('right-panel');
-  lp.classList.toggle('collapsed');
-  // Collapse the other panel when opening this one
-  if (!lp.classList.contains('collapsed')) rp.classList.add('collapsed');
+  lp.classList.remove('mobile-active');
+  rp.classList.remove('mobile-active');
+  mobileActivePanel = null;
+}
+// Tab click handler
+document.querySelectorAll('#mobile-tabs .mtab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    if (window.innerWidth > 760) return;
+    const panelId = tab.dataset.panel;
+    const lp = document.getElementById('left-panel');
+    const rp = document.getElementById('right-panel');
+    const tabs = document.querySelectorAll('#mobile-tabs .mtab');
+
+    if (mobileActivePanel === panelId) {
+      // Tapping active tab collapses it
+      lp.classList.remove('mobile-active');
+      rp.classList.remove('mobile-active');
+      tabs.forEach(t => t.classList.remove('active'));
+      mobileActivePanel = null;
+      return;
+    }
+
+    // Switch to tapped tab
+    lp.classList.remove('mobile-active');
+    rp.classList.remove('mobile-active');
+    tabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(panelId).classList.add('mobile-active');
+    mobileActivePanel = panelId;
+  });
+});
+
+// Also keep old header clicks working (for desktop)
+document.getElementById('lot-hdr').onclick = () => {
+  if (window.innerWidth > 760) return;
+  // On mobile, simulate tab click for Lots
+  document.querySelector('#mobile-tabs .mtab[data-panel="left-panel"]').click();
 };
 document.getElementById('pt-hdr').onclick = () => {
   if (window.innerWidth > 760) return;
-  const lp = document.getElementById('left-panel');
-  const rp = document.getElementById('right-panel');
-  rp.classList.toggle('collapsed');
-  // Collapse the other panel when opening this one
-  if (!rp.classList.contains('collapsed')) lp.classList.add('collapsed');
+  document.querySelector('#mobile-tabs .mtab[data-panel="right-panel"]').click();
 };
-setupCollapse();
+
+setupMobile();
 window.addEventListener('resize', () => {
   if (window.innerWidth > 760) {
-    document.getElementById('left-panel').classList.remove('collapsed');
-    document.getElementById('right-panel').classList.remove('collapsed');
+    document.getElementById('left-panel').classList.remove('mobile-active');
+    document.getElementById('right-panel').classList.remove('mobile-active');
+    mobileActivePanel = null;
+  } else {
+    setupMobile();
   }
 });
 
@@ -977,6 +1038,15 @@ function updateRPVisibility() {
   }
 }
 
+// Helper: collapse mobile panel after selection so map is visible
+function collapseMobilePanel() {
+  if (window.innerWidth > 760) return;
+  document.getElementById('left-panel').classList.remove('mobile-active');
+  document.getElementById('right-panel').classList.remove('mobile-active');
+  // Keep tab highlighted but panel hidden
+  mobileActivePanel = null;
+}
+
 // ===== SELECT LOT =====
 function selLot(n) {
   // If already selected: cycle between sheet positions if multiple, otherwise deselect
@@ -1001,6 +1071,7 @@ function selLot(n) {
   document.getElementById('info-b').innerHTML = h;
   document.getElementById('info').classList.add('show');
   zoomToCoord(P[n][0]);
+  collapseMobilePanel();
 }
 
 // ===== SELECT ROAD POINT =====
@@ -1030,6 +1101,7 @@ function selPoint(g, idx) {
   document.getElementById('info-b').innerHTML = h;
   document.getElementById('info').classList.add('show');
   zoomToCoord(pt.dots[0]);
+  collapseMobilePanel();
 }
 
 // ===== CLEAR / CLOSE =====
