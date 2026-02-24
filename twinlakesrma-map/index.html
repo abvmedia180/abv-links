@@ -248,11 +248,11 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
 
   /* === MOBILE TABBED PANEL === */
   #mobile-tabs{
-    display:flex;position:absolute;top:0;left:0;right:0;z-index:16;
-    background:#0d1117;border-bottom:1px solid #30363d;
+    display:flex;position:fixed;top:0;left:0;right:0;z-index:16;
+    background:#0d1117;border-bottom:1px solid #30363d;height:34px;
   }
   #mobile-tabs .mtab{
-    flex:1;padding:8px 6px;text-align:center;font-size:10px;font-weight:700;
+    flex:1;padding:7px 6px;text-align:center;font-size:10px;font-weight:700;
     letter-spacing:0.3px;color:#8b949e;cursor:pointer;border:none;background:transparent;
     border-bottom:2px solid transparent;transition:all .15s;
   }
@@ -263,14 +263,17 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
   .panel{
     width:100%;min-width:100%;border-right:none!important;border-left:none!important;
     border-bottom:1px solid #30363d;
-    position:absolute;left:0;right:0;z-index:15;
-    top:36px;
+    position:fixed;left:0;right:0;z-index:15;
+    top:34px;
     max-height:0;overflow:hidden;
     transition:max-height .2s ease;
   }
-  .panel.mobile-active{max-height:28vh;overflow-y:auto}
-  .panel.mobile-active .item-list{max-height:calc(28vh - 44px);overflow-y:auto}
-  #right-panel{top:36px;bottom:auto;border-top:none}
+  .panel.mobile-active{max-height:25vh;overflow-y:auto}
+  .panel.mobile-active .item-list{max-height:calc(25vh - 40px);overflow-y:auto}
+  #right-panel{top:34px;bottom:auto;border-top:none}
+
+  /* Map fills entire screen below tabs */
+  #map{position:fixed!important;top:34px;left:0;right:0;bottom:0}
 
   /* Hide elements not needed on mobile */
   .panel-hdr{display:none}
@@ -288,28 +291,35 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
 
   /* Compact toolbar along left side */
   #toolbar{
-    top:50%;right:auto;left:6px;transform:translateY(-50%);
-    flex-direction:column;max-width:36px!important;
+    top:50%;right:auto;left:4px;transform:translateY(-50%);
+    flex-direction:column;max-width:34px!important;
     padding:3px 2px;gap:1px;border-radius:6px;
     align-items:center;
   }
-  .tb{width:28px;min-height:28px;font-size:12px;padding:2px 0}
+  .tb{width:26px;min-height:26px;font-size:11px;padding:2px 0}
   .tb-tip{display:none}
   .tb-sep{width:80%;height:1px;margin:1px 0}
   .tb-label{display:none}
   #stroke-size{display:none}
-  #ctrls{top:auto;bottom:50px;right:6px}
+
+  /* Right controls: only +, -, pin on mobile */
+  #ctrls{top:auto;bottom:44px;right:6px}
   .cb{width:28px;height:28px;font-size:13px}
-  #legend-panel{left:4px;bottom:4px;width:180px}
-  #measure-info{top:auto;bottom:10px;left:50%;font-size:10px}
-  #minimap{width:80px;height:108px;top:42px;left:6px}
-  #coord-display{bottom:6px;font-size:9px;padding:2px 6px}
-  .coord-input{width:36px;font-size:9px}
+  #z100,#grid-btn,#rotate-btn,#quick-ss-btn{display:none!important}
+  #zc{display:none!important}
+
+  /* Hide legend on mobile */
+  #legend-panel{display:none!important}
+
+  /* Minimap: small, bottom-right, starts minimized via JS */
+  #minimap{width:60px;height:81px;top:auto;bottom:110px;left:auto;right:6px}
+
+  /* Coord bar: tiny on mobile */
+  #coord-display{bottom:4px;font-size:8px;padding:1px 4px;gap:4px}
+  .coord-input{width:28px;font-size:8px}
   #share-view-btn{display:none}
-}
-@media(max-width:420px){
-  .tb-label{display:none}
-  #stroke-size{display:none}
+
+  #measure-info{top:auto;bottom:10px;left:50%;font-size:10px}
 }
 /* Hide mobile tabs on desktop */
 #mobile-tabs{display:none}
@@ -1291,7 +1301,7 @@ let moveTarget = null, moveStartSvg = null, moveOrigTransform = null;
 
 // ===== MOUSE EVENTS =====
 mc.addEventListener('mousedown', e => {
-  if (e.target.closest('#info,#ctrls,#toolbar')) return;
+  if (e.target.closest('#info,#ctrls,#toolbar,#coord-display')) return;
 
   // Move tool — start drag on draw element
   if (activeTool === 'move' && e.target !== drawSvg && drawSvg.contains(e.target)) {
@@ -1701,7 +1711,7 @@ function addMeasurePoint(svgX, svgY) {
 
 mc.addEventListener('mousedown', e => {
   if (activeTool !== 'measure') return;
-  if (e.target.closest('#info,#ctrls,#toolbar,#legend-panel,#measure-info')) return;
+  if (e.target.closest('#info,#ctrls,#toolbar,#legend-panel,#measure-info,#coord-display')) return;
   e.preventDefault();
   e.stopPropagation();
   const [svgX, svgY] = screenToSvg(e.clientX, e.clientY);
@@ -1710,7 +1720,7 @@ mc.addEventListener('mousedown', e => {
 
 mc.addEventListener('dblclick', e => {
   if (activeTool !== 'measure') return;
-  if (e.target.closest('#info,#ctrls,#toolbar,#legend-panel,#measure-info')) return;
+  if (e.target.closest('#info,#ctrls,#toolbar,#legend-panel,#measure-info,#coord-display')) return;
   e.preventDefault();
   // Double-click finishes the measurement (the two single clicks already added points)
   if (measurePoints.length >= 2) {
@@ -1767,7 +1777,7 @@ mc.addEventListener('wheel', e => {
 // ===== TOUCH (pan + pinch + draw) =====
 let ltd=0, touchDrawing=false, touchPath=null;
 mc.addEventListener('touchstart', e => {
-  if (e.target.closest('#info,#ctrls,#toolbar,#legend-panel,#modal-overlay')) return;
+  if (e.target.closest('#info,#ctrls,#toolbar,#legend-panel,#modal-overlay,#coord-display')) return;
 
   if (e.touches.length === 2) {
     // Pinch zoom — always works regardless of tool
@@ -2241,6 +2251,11 @@ document.getElementById('minimap-toggle').onclick = e => {
     setTimeout(() => { drawMinimap(); updateMinimapViewport(); }, 50);
   }
 };
+
+// Start minimap collapsed on mobile
+if (window.innerWidth <= 760) {
+  minimapEl.classList.add('collapsed');
+}
 
 img.addEventListener('load', () => setTimeout(drawMinimap, 200));
 if (img.complete) setTimeout(drawMinimap, 200);
