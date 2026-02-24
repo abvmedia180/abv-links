@@ -263,28 +263,32 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
     flex-direction:column;
     position:relative;
     overflow:hidden;
+    padding-top:68px;
   }
 
-  /* --- 1. TITLE BAR (compact, part of left panel but always visible via structure) --- */
+  /* --- 1. TITLE BAR (pulled OUT of panel flow, fixed at very top) --- */
   #title-bar{
-    padding:6px 12px 4px;
+    position:fixed!important;
+    top:0;left:0;right:0;
+    z-index:20;
+    padding:5px 12px 3px;
     background:#0d1117;
-    border-bottom:none;
+    border-bottom:1px solid #30363d;
   }
   #title-bar h1{font-size:11px;letter-spacing:0.5px;margin-bottom:0}
   #title-bar .subtitle{font-size:7px;line-height:1.2}
   #title-bar .org{font-size:8px;margin-top:1px;gap:3px}
   #title-bar .org::before{width:5px;height:5px}
 
-  /* --- 2. MOBILE TAB BAR --- */
+  /* --- 2. MOBILE TAB BAR (below title bar) --- */
   #mobile-tabs{
     display:flex;
-    position:absolute;
-    top:0;left:0;right:0;
-    z-index:16;
+    position:fixed;
+    top:38px;left:0;right:0;
+    z-index:19;
     background:#0d1117;
     border-bottom:1px solid #30363d;
-    height:32px;
+    height:30px;
   }
   #mobile-tabs .mtab{
     flex:1;padding:6px 8px;text-align:center;
@@ -301,12 +305,12 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
     color:#f97316;border-bottom-color:#f97316;
   }
 
-  /* --- 3. PANELS (absolute overlays below tab bar) --- */
+  /* --- 3. PANELS (fixed overlays below title bar + tab bar) --- */
   .panel{
     width:100%!important;min-width:100%!important;
     border-right:none!important;border-left:none!important;
-    position:absolute;left:0;right:0;
-    top:32px;
+    position:fixed;left:0;right:0;
+    top:68px;
     z-index:15;
     max-height:0;
     overflow:hidden;
@@ -321,7 +325,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
     max-height:calc(45vh - 80px);
     overflow-y:auto;
   }
-  #right-panel{top:32px;bottom:auto;border-top:none}
+  #right-panel{top:68px;bottom:auto;border-top:none}
   .panel.collapsed{max-height:0;overflow:hidden}
 
   /* Panel headers: compact but VISIBLE */
@@ -374,24 +378,37 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
   #z100,#grid-btn,#rotate-btn,#quick-ss-btn{display:none!important}
   #zc{display:none!important}
 
-  /* --- 7. MINIMAP (small, bottom-right, above zoom) --- */
+  /* --- 7. MINIMAP (small, bottom-LEFT, away from zoom controls) --- */
   #minimap{
     width:50px;height:68px;
-    top:auto;bottom:120px;
-    left:auto;right:8px;
+    top:auto;bottom:36px;
+    left:8px;right:auto;
     border-radius:5px;
   }
-  #minimap.collapsed{width:28px;height:28px;border-radius:5px}
+  #minimap.collapsed{width:auto;height:auto;border-radius:6px;padding:4px 8px;min-width:0}
+  #minimap.collapsed #minimap-toggle{
+    position:static;transform:none;font-size:0;
+    width:auto;height:auto;background:transparent;
+    display:flex;align-items:center;gap:3px;
+  }
+  #minimap.collapsed #minimap-toggle::before{content:'🗺';font-size:13px}
+  #minimap.collapsed #minimap-toggle::after{content:'Map';font-size:8px;color:#8b949e;font-weight:600;letter-spacing:0.3px}
 
-  /* --- 8. COORD BAR (bottom center, minimal) --- */
-  #coord-display{bottom:6px;font-size:8px;padding:2px 6px;gap:4px}
-  .coord-input{width:32px;font-size:8px}
+  /* --- 8. COORD BAR (bottom center, ultra-compact) --- */
+  #coord-display{bottom:4px;font-size:0;padding:2px 5px;gap:2px;left:50%;transform:translateX(-50%)}
+  #coord-display>span{font-size:7px}
+  #coord-display .sep{font-size:7px}
+  .coord-input{width:22px;font-size:7px;padding:0 1px}
   #share-view-btn{display:none}
 
   /* --- MISC MOBILE OVERRIDES --- */
   #legend-panel{display:none!important}
   #measure-info{top:auto;bottom:12px;left:50%;font-size:10px}
-  #anno-count{bottom:6px;right:auto;left:6px;font-size:9px}
+  #anno-count{
+    bottom:auto;top:4px;right:8px;left:auto;
+    font-size:8px;padding:2px 6px;
+    background:rgba(22,27,34,0.85);border-radius:4px;
+  }
 }
 /* Hide mobile tabs on desktop */
 #mobile-tabs{display:none}
@@ -1848,6 +1865,7 @@ mc.addEventListener('wheel', e => {
 
 // ===== TOUCH (pan + pinch + draw) =====
 let ltd=0, touchDrawing=false, touchPath=null;
+let pendingDotTouch=null, pendingTextTouch=null;
 mc.addEventListener('touchstart', e => {
   if (e.target.closest('#info,#ctrls,#toolbar,#legend-panel,#modal-overlay,#coord-display')) return;
 
@@ -1927,42 +1945,29 @@ mc.addEventListener('touchstart', e => {
       drawHistory.push(touchPath);
       updateAnnoCount();
     } else if (activeTool === 'dot') {
-      const pNum = getNextDotNumber();
-      const [svgX, svgY] = screenToSvg(e.touches[0].clientX, e.touches[0].clientY);
-      const g = document.createElementNS('http://www.w3.org/2000/svg','g');
-      g._dotLabel = 'P' + pNum;
-      const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
-      c.setAttribute('cx', svgX); c.setAttribute('cy', svgY);
-      c.setAttribute('r', drawSize * 3);
-      c.setAttribute('fill', '#00d4ff');
-      c.setAttribute('stroke','#fff'); c.setAttribute('stroke-width', 2);
-      c.setAttribute('opacity','0.9');
-      g.appendChild(c);
-      const t = document.createElementNS('http://www.w3.org/2000/svg','text');
-      t.setAttribute('x', svgX); t.setAttribute('y', svgY - drawSize * 3 - 10);
-      t.setAttribute('fill', '#00d4ff');
-      t.setAttribute('font-size', Math.max(28, drawSize * 6));
-      t.setAttribute('font-weight','800');
-      t.setAttribute('text-anchor','middle');
-      t.setAttribute('font-family','Segoe UI, system-ui, sans-serif');
-      t.setAttribute('paint-order','stroke');
-      t.setAttribute('stroke','rgba(0,0,0,0.8)');
-      t.setAttribute('stroke-width','4px');
-      t.textContent = 'P' + pNum;
-      g.appendChild(t);
-      drawSvg.appendChild(g);
-      drawHistory.push(g);
-      updateAnnoCount();
-      toast('P' + pNum + ' placed');
+      // Don't place dot on touchstart — wait for touchend
+      // This prevents: (a) pinch-zoom placing a dot, (b) double-placement from synthesized mousedown
+      pendingDotTouch = { cx: e.touches[0].clientX, cy: e.touches[0].clientY };
+      e.preventDefault(); // block synthesized mousedown/click
+    } else if (activeTool === 'text') {
+      // Same treatment for text tool on mobile: defer to touchend, prevent double
+      pendingTextTouch = { cx: e.touches[0].clientX, cy: e.touches[0].clientY };
+      e.preventDefault();
     }
   }
   // Prevent browser zoom — let our map handle all touch gestures
-  if (e.touches.length >= 2) e.preventDefault();
+  if (e.touches.length >= 2) { e.preventDefault(); pendingDotTouch = null; pendingTextTouch = null; }
 }, {passive:false});
 
 mc.addEventListener('touchmove', e => {
   // Prevent browser zoom/scroll on the map area
   e.preventDefault();
+  // Cancel pending dot/text if user drags (it's a pan, not a tap)
+  if (pendingDotTouch || pendingTextTouch) {
+    const t0 = e.touches[0];
+    if (pendingDotTouch && (Math.abs(t0.clientX - pendingDotTouch.cx) > 8 || Math.abs(t0.clientY - pendingDotTouch.cy) > 8)) pendingDotTouch = null;
+    if (pendingTextTouch && (Math.abs(t0.clientX - pendingTextTouch.cx) > 8 || Math.abs(t0.clientY - pendingTextTouch.cy) > 8)) pendingTextTouch = null;
+  }
   if (e.touches.length === 1) {
     if (drag) { px=e.touches[0].clientX-sx; py=e.touches[0].clientY-sy; upd(); }
     if (touchDrawing && touchPath) {
@@ -1981,7 +1986,49 @@ mc.addEventListener('touchmove', e => {
   }
 }, {passive:false});
 
-mc.addEventListener('touchend', () => { drag=false; touchDrawing=false; touchPath=null; });
+mc.addEventListener('touchend', e => {
+  // Place dot on touchend (not touchstart) to avoid pinch-zoom false placement
+  if (pendingDotTouch && activeTool === 'dot') {
+    const pdt = pendingDotTouch;
+    pendingDotTouch = null;
+    const pNum = getNextDotNumber();
+    const [svgX, svgY] = screenToSvg(pdt.cx, pdt.cy);
+    const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+    g._dotLabel = 'P' + pNum;
+    const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx', svgX); c.setAttribute('cy', svgY);
+    c.setAttribute('r', drawSize * 3);
+    c.setAttribute('fill', '#00d4ff');
+    c.setAttribute('stroke','#fff'); c.setAttribute('stroke-width', 2);
+    c.setAttribute('opacity','0.9');
+    g.appendChild(c);
+    const t2 = document.createElementNS('http://www.w3.org/2000/svg','text');
+    t2.setAttribute('x', svgX); t2.setAttribute('y', svgY - drawSize * 3 - 10);
+    t2.setAttribute('fill', '#00d4ff');
+    t2.setAttribute('font-size', Math.max(28, drawSize * 6));
+    t2.setAttribute('font-weight','800');
+    t2.setAttribute('text-anchor','middle');
+    t2.setAttribute('font-family','Segoe UI, system-ui, sans-serif');
+    t2.setAttribute('paint-order','stroke');
+    t2.setAttribute('stroke','rgba(0,0,0,0.8)');
+    t2.setAttribute('stroke-width','4px');
+    t2.textContent = 'P' + pNum;
+    g.appendChild(t2);
+    drawSvg.appendChild(g);
+    drawHistory.push(g);
+    updateAnnoCount();
+    toast('P' + pNum + ' placed');
+  }
+  // Place text on touchend too
+  if (pendingTextTouch && activeTool === 'text') {
+    const ptt = pendingTextTouch;
+    pendingTextTouch = null;
+    const [svgX, svgY] = screenToSvg(ptt.cx, ptt.cy);
+    openInlineTextEditor(svgX, svgY, drawColor, drawSize * 8, null);
+  }
+  drag=false; touchDrawing=false; touchPath=null;
+  pendingDotTouch=null; pendingTextTouch=null;
+});
 
 // Click background to deselect
 mc.addEventListener('click', e => {
