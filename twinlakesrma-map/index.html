@@ -158,7 +158,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
 }
 .tb-tip{font-size:7px;color:#6e7681;line-height:1;pointer-events:none;letter-spacing:0.2px;margin-top:1px}
 .tb:hover{background:#21262d;color:#c9d1d9}
-.tb.on{background:#1f6feb;color:#fff}
+.tb.on{background:#1f6feb;color:#fff;box-shadow:0 0 0 2px #58a6ff,0 2px 8px rgba(31,111,235,0.5)}
 .tb-sep{width:1px;background:#30363d;margin:4px 1px;flex-shrink:0}
 .tb input[type="color"]{
   position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;
@@ -293,10 +293,10 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
   .cb{width:28px;height:28px;font-size:13px}
   #legend-panel{left:4px;bottom:4px;width:180px}
   #measure-info{top:auto;bottom:10px;left:50%;font-size:10px}
-  #minimap{width:100px;height:135px;bottom:6px;left:6px}
+  #minimap{width:80px;height:108px;top:42px;left:6px}
   #coord-display{bottom:6px;font-size:9px;padding:2px 6px}
-  #save-load-bar{top:auto;bottom:42px;left:6px}
-  .sl-btn{font-size:8px;padding:3px 5px}
+  .coord-input{width:36px;font-size:9px}
+  #share-view-btn{display:none}
 }
 @media(max-width:420px){
   .tb-label{display:none}
@@ -304,15 +304,11 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
 }
 /* Hide mobile tabs on desktop */
 #mobile-tabs{display:none}
-body.light #mobile-tabs{background:#fff;border-color:#d0d7de}
-body.light #mobile-tabs .mtab{color:#57606a}
-body.light #mobile-tabs .mtab.active{color:#0969da;border-bottom-color:#0969da;background:#f6f8fa}
-body.light #mobile-tabs .mtab:nth-child(2).active{color:#bc4c00;border-bottom-color:#bc4c00}
 
 /* === WELCOME MODAL === */
 #modal-overlay{
   position:fixed;inset:0;z-index:999;
-  background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);
+  background:rgba(0,0,0,0.85);
   display:flex;align-items:center;justify-content:center;
   padding:20px;
   opacity:1;transition:opacity .3s;
@@ -353,7 +349,10 @@ body.light #mobile-tabs .mtab:nth-child(2).active{color:#bc4c00;border-bottom-co
   padding:10px 40px;border-radius:8px;border:none;
   background:#1f6feb;color:#fff;font-size:14px;font-weight:700;
   cursor:pointer;transition:all .15s;letter-spacing:0.3px;
+  touch-action:manipulation;-webkit-tap-highlight-color:transparent;
 }
+#modal-overlay{touch-action:auto}
+#modal{touch-action:auto}
 #modal-continue:hover{background:#388bfd;transform:translateY(-1px);box-shadow:0 4px 12px rgba(31,111,235,0.4)}
 
 /* === MEASURE TOOL === */
@@ -393,7 +392,7 @@ body.light #mobile-tabs .mtab:nth-child(2).active{color:#bc4c00;border-bottom-co
 
 /* === MINIMAP === */
 #minimap{
-  position:absolute;bottom:10px;left:10px;z-index:6;
+  position:absolute;top:8px;left:8px;z-index:6;
   width:160px;height:216px;background:#0d1117;border:1px solid #30363d;border-radius:8px;
   overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,0.5);cursor:pointer;
   transition:opacity .2s, transform .2s;opacity:0.85;
@@ -424,9 +423,20 @@ body.light #mobile-tabs .mtab:nth-child(2).active{color:#bc4c00;border-bottom-co
   font-family:'SF Mono',Consolas,monospace;white-space:nowrap;
   box-shadow:0 2px 8px rgba(0,0,0,0.3);
 }
-#coord-display.show{display:flex;gap:10px;align-items:center}
-#coord-display .val{color:#58a6ff;font-weight:600}
+#coord-display.show{display:flex;gap:8px;align-items:center}
+.coord-input{
+  width:48px;background:transparent;border:1px solid transparent;border-radius:3px;
+  color:#58a6ff;font-weight:600;font-size:10px;font-family:inherit;
+  text-align:center;padding:1px 2px;outline:none;
+}
+.coord-input:hover{border-color:#30363d}
+.coord-input:focus{border-color:#58a6ff;background:#0d1117}
 #coord-display .sep{color:#30363d}
+#share-view-btn{
+  background:transparent;border:none;color:#8b949e;cursor:pointer;font-size:12px;
+  padding:0 2px;transition:color .1s;
+}
+#share-view-btn:hover{color:#58a6ff}
 
 /* === SEARCH HIGHLIGHT GLOW === */
 .lot-dot.search-glow{
@@ -440,71 +450,11 @@ body.light #mobile-tabs .mtab:nth-child(2).active{color:#bc4c00;border-bottom-co
 }
 .lot-label.search-glow{opacity:0.9!important;fill:#58a6ff;font-size:13px}
 
-/* === THEME (LIGHT MODE) === */
-body.light{background:#f0f0f0;color:#24292f}
-body.light #app{background:#f0f0f0}
-body.light .panel{background:#fff;border-color:#d0d7de}
-body.light .panel-hdr{background:#f6f8fa;border-color:#d0d7de}
-body.light #title-bar{background:#f6f8fa;border-color:#d0d7de}
-body.light .search-wrap input{background:#fff;border-color:#d0d7de;color:#24292f}
-body.light .filter-area{border-color:#d0d7de}
-body.light .chip{background:#f6f8fa;border-color:#d0d7de;color:#24292f}
-body.light .li:hover{background:#f6f8fa}
-body.light .li.act{background:#ddf4ff}
-body.light .li .owner{color:#57606a}
-body.light .pi:hover{background:#f6f8fa}
-body.light .pi.act{background:#ddf4ff}
-body.light .pi .pdesc{color:#57606a}
-body.light .grp-hdr{color:#24292f}
-body.light .panel-stats{border-color:#d0d7de;color:#57606a}
-body.light #map{background:#e8e4d8}
-body.light #toolbar{background:#fff;border-color:#d0d7de}
-body.light .tb{color:#57606a}
-body.light .tb:hover{background:#f6f8fa;color:#24292f}
-body.light .tb.on{background:#0969da;color:#fff}
-body.light .tb-sep{background:#d0d7de}
-body.light .cb{background:#fff;border-color:#d0d7de;color:#24292f}
-body.light .cb:hover{background:#f6f8fa;border-color:#0969da;color:#0969da}
-body.light #info{background:#fff;border-color:#0969da}
-body.light #info-head{background:#fff;border-color:#d0d7de}
-body.light .ic{background:#f6f8fa;border-color:#d0d7de}
-body.light .ic-l{color:#57606a}
-body.light .ic-v{color:#24292f}
-body.light #toast{background:#0969da}
-body.light #anno-count{background:#fff;border-color:#d0d7de;color:#57606a}
-body.light #coord-display{background:#fff;border-color:#d0d7de;color:#57606a}
-body.light #minimap{background:#fff;border-color:#d0d7de}
-body.light #legend-panel{background:#fff;border-color:#d0d7de}
-body.light .legend-hdr{border-color:#d0d7de}
-body.light #stroke-size{background:#fff;border-color:#d0d7de;color:#24292f}
-body.light #modal{background:#fff;border-color:#d0d7de}
-body.light .modal-top{border-color:#d0d7de}
-body.light .modal-body p{color:#24292f}
-body.light .modal-footer{border-color:#d0d7de;background:#fff}
-body.light .item-list::-webkit-scrollbar-track{background:#fff}
-body.light .item-list::-webkit-scrollbar-thumb{background:#d0d7de}
-body.light #measure-info{background:#fff;border-color:#d0d7de;color:#24292f}
 
-/* === ANNOTATION SAVE/LOAD === */
-#save-load-bar{
-  position:absolute;top:8px;left:8px;z-index:6;display:flex;gap:2px;
-}
-.sl-btn{
-  padding:4px 8px;border-radius:5px;border:1px solid #30363d;
-  background:#161b22;color:#8b949e;font-size:9px;font-weight:600;
-  cursor:pointer;transition:all .1s;white-space:nowrap;
-  display:flex;align-items:center;gap:3px;
-}
-.sl-btn:hover{background:#21262d;color:#c9d1d9;border-color:#58a6ff}
-.sl-btn.has-save{border-color:#7ee787;color:#7ee787}
-body.light .sl-btn{background:#fff;border-color:#d0d7de;color:#57606a}
-body.light .sl-btn:hover{background:#f6f8fa;color:#24292f;border-color:#0969da}
-body.light .sl-btn.has-save{border-color:#1a7f37;color:#1a7f37}
 
 /* === INLINE TEXT EDITOR === */
 .inline-text-editor{box-shadow:0 2px 12px rgba(88,166,255,0.3)}
 .inline-text-editor:focus{border-color:#58a6ff}
-body.light .inline-text-editor{background:rgba(255,255,255,0.8);border-color:#0969da}
 
 /* === SMOOTH ZOOM === */
 #wrap.animating{transition:transform .25s cubic-bezier(0.25,0.1,0.25,1)}
@@ -555,7 +505,7 @@ body.light .inline-text-editor{background:rgba(255,255,255,0.8);border-color:#09
     <p>On the right, you'll find reference points along each road, organized by letter: <strong style="color:#ef4444">A — Lakeside Lane</strong>, <strong style="color:#f97316">B — Creekside Court</strong>, <strong style="color:#eab308">C — Twin Lakes Trail</strong>, and <strong style="color:#22c55e">D — Westlake Court</strong>. Click any point (e.g., A1, A2) to jump to that location. Points that appear on both pages will show on both.</p>
 
     <h3>✏️ Markup Tools (Top Toolbar)</h3>
-    <p>Use the toolbar above the map to draw, highlight, add text, or drop mark points (P1, P2, P3…). There's also an eraser, undo, and a screenshot tool that lets you select an area and save it as an image. You can save your annotations using the 💾 button (top-left) so they persist between sessions.</p>
+    <p>Use the toolbar above the map to draw, highlight, add text, or drop mark points (P1, P2, P3…). There's also an eraser, undo, and a screenshot tool that lets you select an area and save it as an image.</p>
     <p><strong style="color:#c9d1d9">Tip:</strong> To move a markup you've placed, click the <strong style="color:#c9d1d9">✥</strong> (four-arrow) button next to the eraser, then drag any annotation to reposition it.</p>
 
     <div class="note">⚠️ <strong>Accuracy Note:</strong> The survey image is the recorded document. All lot markers, road points, and tools were placed by the RMA board and may not be 100% precise. If you spot an error, please let the board know so we can correct it.</div>
@@ -599,8 +549,8 @@ body.light .inline-text-editor{background:rgba(255,255,255,0.8);border-color:#09
   <div id="toolbar">
     <button class="tb on" data-tool="pan" title="Pan (V)">✋<span class="tb-tip">Pan</span></button>
     <div class="tb-sep"></div>
-    <button class="tb" data-tool="pen" title="Pen (P)">✏️<span class="tb-tip">Pen</span></button>
-    <button class="tb" data-tool="hl" title="Highlighter (H)">🖍️<span class="tb-tip">Highlight</span></button>
+    <button class="tb" data-tool="pen" title="Pen (P)"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg><span class="tb-tip">Pen</span></button>
+    <button class="tb" data-tool="hl" title="Highlighter (H)"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg><span class="tb-tip">Highlight</span></button>
     <button class="tb" data-tool="text" title="Text (T)">T<span class="tb-tip">Text</span></button>
     <button class="tb" data-tool="dot" title="Mark Point (D)">●<span class="tb-tip">Mark</span></button>
     <div class="tb-sep"></div>
@@ -618,10 +568,10 @@ body.light .inline-text-editor{background:rgba(255,255,255,0.8);border-color:#09
     <button class="tb" id="clear-btn" title="Clear All">🗑<span class="tb-tip">Clear All</span></button>
     <div class="tb-sep"></div>
     <button class="tb" data-tool="measure" title="Measure distance (R)">📏<span class="tb-tip">Ruler</span></button>
+    <div class="tb-sep"></div>
     <button class="tb" data-tool="screenshot" title="Screenshot area (S)"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 7V3h4"/><path d="M17 3h4v4"/><path d="M21 17v4h-4"/><path d="M7 21H3v-4"/></svg><span class="tb-tip">Screenshot</span></button>
     <div class="tb-sep"></div>
     <button class="tb" id="legend-btn" title="Toggle Legend">🗺️<span class="tb-tip">Legend</span></button>
-    <button class="tb" id="theme-btn" title="Toggle Light/Dark (L)">🌓<span class="tb-tip">Theme</span></button>
     <button class="tb" id="info-btn" title="Help & Info (I)"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><span class="tb-tip">Help</span></button>
   </div>
 
@@ -641,13 +591,8 @@ body.light .inline-text-editor{background:rgba(255,255,255,0.8);border-color:#09
   <div id="sel-rect"></div>
   <div id="eraser-cursor"></div>
   <div id="measure-info"></div>
-  <div id="coord-display"><span>X: <span class="val" id="coord-x">—</span></span><span class="sep">|</span><span>Y: <span class="val" id="coord-y">—</span></span><span class="sep">|</span><span>Zoom: <span class="val" id="coord-z">—</span></span></div>
+  <div id="coord-display"><span>X: <input class="coord-input" id="coord-x" value="—" title="X % — edit to navigate"></span><span class="sep">|</span><span>Y: <input class="coord-input" id="coord-y" value="—" title="Y % — edit to navigate"></span><span class="sep">|</span><span>Zoom: <input class="coord-input" id="coord-z" value="—" title="Zoom % — edit to set zoom"></span><span class="sep">|</span><button id="share-view-btn" title="Copy shareable link">🔗</button></div>
   <div id="minimap"><button id="minimap-toggle">◳</button><canvas id="minimap-canvas"></canvas><div class="viewport-rect" id="minimap-vp"></div></div>
-  <div id="save-load-bar">
-    <button class="sl-btn" id="save-anno-btn" title="Save annotations to browser">💾 Save</button>
-    <button class="sl-btn" id="load-anno-btn" title="Load saved annotations">📂 Load</button>
-    <button class="sl-btn" id="clear-save-btn" title="Delete saved annotations">🗑</button>
-  </div>
   <div id="legend-panel" class="show">
     <div class="legend-hdr"><h3>Legend</h3><button id="legend-minimize" title="Minimize legend">▾</button></div>
     <div class="legend-body">
@@ -2134,7 +2079,6 @@ document.addEventListener('keydown', e => {
   if (e.key==='r'&&noMod) setTool('measure');
   if (e.key==='s'&&noMod) setTool('screenshot');
   if (e.key==='i'&&noMod) document.getElementById('info-btn').click();
-  if (e.key==='l'&&noMod) document.getElementById('theme-btn').click();
   if (e.key==='c'&&noMod) centerView();
   if ((e.ctrlKey||e.metaKey) && e.key==='z') { e.preventDefault(); document.getElementById('undo-btn').click(); }
 });
@@ -2146,10 +2090,16 @@ function toast(m){const t=document.getElementById('toast');t.textContent=m;t.cla
 
 // ===== WELCOME MODAL =====
 const modalOverlay = document.getElementById('modal-overlay');
-document.getElementById('modal-continue').onclick = () => {
+function closeModal() {
   modalOverlay.classList.add('hidden');
   setTimeout(() => { modalOverlay.style.display = 'none'; }, 300);
-};
+}
+document.getElementById('modal-continue').onclick = closeModal;
+// Fix mobile: ensure touch works on continue button
+document.getElementById('modal-continue').addEventListener('touchend', (e) => {
+  e.preventDefault();
+  closeModal();
+}, {passive:false});
 document.getElementById('info-btn').onclick = () => {
   modalOverlay.classList.add('no-backdrop');
   modalOverlay.style.display = 'flex';
@@ -2157,25 +2107,9 @@ document.getElementById('info-btn').onclick = () => {
 };
 // Close modal on overlay click (not modal itself)
 modalOverlay.addEventListener('click', e => {
-  if (e.target === modalOverlay) {
-    modalOverlay.classList.add('hidden');
-    setTimeout(() => { modalOverlay.style.display = 'none'; }, 300);
-  }
+  if (e.target === modalOverlay) closeModal();
 });
 
-// ===== THEME TOGGLE =====
-function applyTheme(light) {
-  document.body.classList.toggle('light', light);
-  localStorage.setItem('tl-theme', light ? 'light' : 'dark');
-  document.getElementById('theme-btn').textContent = light ? '☀️' : '🌓';
-  // Redraw minimap when theme changes
-  if (typeof drawMinimap === 'function') setTimeout(drawMinimap, 100);
-}
-document.getElementById('theme-btn').onclick = () => {
-  applyTheme(!document.body.classList.contains('light'));
-};
-// Restore theme
-if (localStorage.getItem('tl-theme') === 'light') applyTheme(true);
 
 // ===== MINIMAP =====
 const minimapCanvas = document.getElementById('minimap-canvas');
@@ -2188,7 +2122,7 @@ function drawMinimap() {
   minimapCanvas.width = cw * 2; minimapCanvas.height = ch * 2;
   minimapCtx.scale(2, 2);
   // Draw background
-  minimapCtx.fillStyle = document.body.classList.contains('light') ? '#e8e4d8' : '#d5d0c4';
+  minimapCtx.fillStyle = '#d5d0c4';
   minimapCtx.fillRect(0, 0, cw, ch);
   // Draw plat image scaled
   try { minimapCtx.drawImage(img, 0, 0, cw, ch); } catch(e) {}
@@ -2259,22 +2193,22 @@ let lastMouseSvg = null;
 const coordDisplay = document.getElementById('coord-display');
 
 function updateCoordDisplay() {
+  const coordX = document.getElementById('coord-x');
+  const coordY = document.getElementById('coord-y');
+  const coordZ = document.getElementById('coord-z');
+  // Don't overwrite while user is editing
+  if (document.activeElement === coordX || document.activeElement === coordY || document.activeElement === coordZ) return;
   if (lastMouseSvg) {
-    const xPct = (lastMouseSvg[0] / IW * 100).toFixed(1);
-    const yPct = (lastMouseSvg[1] / IH * 100).toFixed(1);
-    document.getElementById('coord-x').textContent = xPct + '%';
-    document.getElementById('coord-y').textContent = yPct + '%';
+    coordX.value = (lastMouseSvg[0] / IW * 100).toFixed(1) + '%';
+    coordY.value = (lastMouseSvg[1] / IH * 100).toFixed(1) + '%';
   }
-  document.getElementById('coord-z').textContent = (scale * 100).toFixed(0) + '%';
+  coordZ.value = (scale * 100).toFixed(0) + '%';
 }
 
 mc.addEventListener('mousemove', e => {
   lastMouseSvg = screenToSvg(e.clientX, e.clientY);
   coordDisplay.classList.add('show');
   updateCoordDisplay();
-});
-mc.addEventListener('mouseleave', () => {
-  coordDisplay.classList.remove('show');
 });
 
 // ===== SEARCH HIGHLIGHT ON MAP =====
@@ -2427,34 +2361,45 @@ function loadAnnotations(data) {
   updateAnnoCount();
 }
 
-document.getElementById('save-anno-btn').onclick = () => {
-  const data = serializeAnnotations();
-  if (data.length === 0) { toast('No annotations to save'); return; }
-  localStorage.setItem('tl-annotations', JSON.stringify(data));
-  document.getElementById('save-anno-btn').classList.add('has-save');
-  toast('Saved ' + data.length + ' annotation' + (data.length !== 1 ? 's' : ''));
-};
-
-document.getElementById('load-anno-btn').onclick = () => {
-  const raw = localStorage.getItem('tl-annotations');
-  if (!raw) { toast('No saved annotations found'); return; }
-  try {
-    const data = JSON.parse(raw);
-    loadAnnotations(data);
-    toast('Loaded ' + data.length + ' annotation' + (data.length !== 1 ? 's' : ''));
-  } catch(e) { toast('Failed to load — data corrupted'); }
-};
-
-document.getElementById('clear-save-btn').onclick = () => {
-  localStorage.removeItem('tl-annotations');
-  document.getElementById('save-anno-btn').classList.remove('has-save');
-  toast('Saved annotations deleted');
-};
-
-// Show indicator if saved data exists
-if (localStorage.getItem('tl-annotations')) {
-  document.getElementById('save-anno-btn').classList.add('has-save');
+// ===== EDITABLE COORDINATES + SHARE =====
+function applyCoordInputs() {
+  const xVal = parseFloat(document.getElementById('coord-x').value);
+  const yVal = parseFloat(document.getElementById('coord-y').value);
+  const zVal = parseFloat(document.getElementById('coord-z').value);
+  if (!isNaN(zVal) && zVal > 0) {
+    scale = zVal / 100;
+  }
+  if (!isNaN(xVal) && !isNaN(yVal)) {
+    const targetX = xVal / 100 * IW;
+    const targetY = yVal / 100 * IH;
+    px = mc.clientWidth / 2 - targetX * scale;
+    py = mc.clientHeight / 2 - targetY * scale;
+  }
+  upd();
 }
+
+document.getElementById('coord-x').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); applyCoordInputs(); e.target.blur(); } e.stopPropagation(); });
+document.getElementById('coord-y').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); applyCoordInputs(); e.target.blur(); } e.stopPropagation(); });
+document.getElementById('coord-z').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); applyCoordInputs(); e.target.blur(); } e.stopPropagation(); });
+
+// Share button — copies a link with the current view encoded in the hash
+document.getElementById('share-view-btn').onclick = () => {
+  const r = mc.getBoundingClientRect();
+  const centerSvgX = (r.width / 2 - px) / scale;
+  const centerSvgY = (r.height / 2 - py) / scale;
+  const xPct = (centerSvgX / IW * 100).toFixed(1);
+  const yPct = (centerSvgY / IH * 100).toFixed(1);
+  const z = scale.toFixed(3);
+  const hash = `#v=${z},${xPct},${yPct}`;
+  const url = window.location.origin + window.location.pathname + hash;
+  navigator.clipboard.writeText(url).then(() => {
+    toast('View link copied!');
+  }).catch(() => {
+    // Fallback
+    window.location.hash = hash;
+    toast('Link updated in address bar');
+  });
+};
 
 // ===== SMOOTH ZOOM (animated transitions for button zoom) =====
 function smoothZoom(targetScale, centerX, centerY) {
