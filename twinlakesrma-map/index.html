@@ -180,6 +180,15 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
   display:flex;align-items:center;justify-content:center;transition:all .1s;
 }
 .cb:hover{background:#21262d;border-color:#58a6ff;color:#58a6ff}
+.cb.on{background:#1f6feb;color:#fff;border-color:#58a6ff}
+#grid-overlay{
+  position:absolute;inset:0;pointer-events:none;z-index:3;opacity:0;transition:opacity .2s;
+  background-image:
+    linear-gradient(rgba(88,166,255,0.15) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(88,166,255,0.15) 1px, transparent 1px);
+  background-size:200px 200px;
+}
+#grid-overlay.show{opacity:1}
 
 /* === INFO PANEL === */
 #info{
@@ -463,7 +472,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
 @media print{
   body{background:#fff!important;overflow:visible!important}
   #app{display:block!important;height:auto!important}
-  .panel,#toolbar,#ctrls,#info,#toast,#anno-count,#eraser-cursor,#modal-overlay,#legend-panel,#measure-info{display:none!important}
+  .panel,#toolbar,#ctrls,#info,#toast,#anno-count,#eraser-cursor,#modal-overlay,#legend-panel,#measure-info,#grid-overlay{display:none!important}
   #map{position:static!important;overflow:visible!important;background:#fff!important;width:100%!important;height:auto!important}
   #wrap{position:static!important;transform:none!important}
   #img{width:100%!important;height:auto!important}
@@ -544,6 +553,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
     <img id="img" src="plat_combined_web.jpg" alt="Twin Lakes Plat — Sheet 1 & Sheet 2">
     <svg id="svg" xmlns="http://www.w3.org/2000/svg"></svg>
     <svg id="draw-svg" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div id="grid-overlay"></div>
   </div>
 
   <div id="toolbar">
@@ -579,6 +589,11 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
     <button class="cb" id="zi" title="Zoom In (+)">+</button>
     <button class="cb" id="zo" title="Zoom Out (-)">−</button>
     <button class="cb" id="zc" title="Fit / Center on Selection (0 or C)" style="font-size:12px;margin-top:2px;border-top:1px solid #30363d">⊙</button>
+    <button class="cb" id="z100" title="Zoom to 100%" style="font-size:9px;font-weight:700;margin-top:2px;border-top:1px solid #30363d">1:1</button>
+    <button class="cb" id="grid-btn" title="Toggle Grid Overlay" style="font-size:13px">⊞</button>
+    <button class="cb" id="rotate-btn" title="Rotate 90°" style="font-size:13px">↻</button>
+    <button class="cb" id="quick-pin-btn" title="Drop a Pin" style="font-size:13px">📌</button>
+    <button class="cb" id="quick-ss-btn" title="Quick Screenshot" style="font-size:12px">📷</button>
   </div>
 
   <div id="info">
@@ -2076,6 +2091,47 @@ document.getElementById('zo').onclick = () => {
 };
 document.getElementById('zc').onclick = centerView;
 
+// ===== ZOOM TO 100% =====
+document.getElementById('z100').onclick = () => {
+  const cw = mc.clientWidth / 2, ch = mc.clientHeight / 2;
+  const ns = 1; // 100% = scale 1
+  px = cw - (cw - px) * (ns / scale);
+  py = ch - (ch - py) * (ns / scale);
+  scale = ns;
+  upd();
+  toast('Zoom: 100%');
+};
+
+// ===== GRID OVERLAY TOGGLE =====
+let gridOn = false;
+document.getElementById('grid-btn').onclick = () => {
+  gridOn = !gridOn;
+  document.getElementById('grid-overlay').classList.toggle('show', gridOn);
+  document.getElementById('grid-btn').classList.toggle('on', gridOn);
+  toast(gridOn ? 'Grid on' : 'Grid off');
+};
+
+// ===== ROTATE 90° =====
+let rotation = 0;
+document.getElementById('rotate-btn').onclick = () => {
+  rotation = (rotation + 90) % 360;
+  const wrap = document.getElementById('wrap');
+  // Apply rotation on top of existing transform
+  wrap.style.transform = `translate(${px}px,${py}px) scale(${scale}) rotate(${rotation}deg)`;
+  toast('Rotated ' + rotation + '°');
+};
+// ===== DROP A PIN (quick shortcut) =====
+document.getElementById('quick-pin-btn').onclick = () => {
+  setTool('dot');
+  toast('Tap the map to drop a pin');
+};
+
+// ===== QUICK SCREENSHOT (visible area) =====
+document.getElementById('quick-ss-btn').onclick = () => {
+  const mapRect = mc.getBoundingClientRect();
+  captureArea(0, 0, mapRect.width, mapRect.height);
+};
+
 // ===== KEYBOARD =====
 document.addEventListener('keydown', e => {
   if (e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA') return;
@@ -2156,10 +2212,10 @@ function updateMinimapViewport() {
   minimapVp.style.height = Math.min(mh, vh) + 'px';
 }
 
-// Override upd to also update minimap + coords
+// Override upd to also update minimap + coords + rotation
 const _origUpd = upd;
 function upd() {
-  mw.style.transform = `translate(${px}px,${py}px) scale(${scale})`;
+  mw.style.transform = `translate(${px}px,${py}px) scale(${scale})${rotation ? ` rotate(${rotation}deg)` : ''}`;
   updateMinimapViewport();
   updateCoordDisplay();
 }
@@ -2433,4 +2489,8 @@ buildPtList();
 updatePtStats();
 updateRPVisibility();
 // Apply shared view from URL hash (after image loads)
-img.addEventListe
+img.addEventListener('load', applyShareHash);
+if (img.complete) setTimeout(applyShareHash, 100);
+</script>
+</body>
+</html>
