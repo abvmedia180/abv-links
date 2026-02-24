@@ -272,8 +272,12 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
   #stroke-size{display:none}
   #ctrls{top:auto;bottom:50px;right:6px}
   .cb{width:28px;height:28px;font-size:13px}
-  #legend-panel{right:4px;width:220px;top:48px}
+  #legend-panel{left:4px;bottom:4px;width:180px}
   #measure-info{top:auto;bottom:10px;left:50%;font-size:10px}
+  #minimap{width:100px;height:135px;bottom:6px;left:6px}
+  #coord-display{bottom:6px;font-size:9px;padding:2px 6px}
+  #save-load-bar{top:auto;bottom:42px;left:6px}
+  .sl-btn{font-size:8px;padding:3px 5px}
 }
 @media(max-width:420px){
   .tb-label{display:none}
@@ -328,7 +332,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
 #modal-continue:hover{background:#388bfd;transform:translateY(-1px);box-shadow:0 4px 12px rgba(31,111,235,0.4)}
 
 /* === MEASURE TOOL === */
-#measure-line{pointer-events:none}
+#measure-line{pointer-events:auto}
 #measure-label{
   font-size:14px;font-weight:800;fill:#00d4ff;text-anchor:middle;
   paint-order:stroke;stroke:#000;stroke-width:3px;dominant-baseline:central;pointer-events:none;
@@ -343,25 +347,142 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
 
 /* === LEGEND PANEL === */
 #legend-panel{
-  position:absolute;top:54px;right:8px;z-index:8;
+  position:absolute;bottom:8px;left:8px;z-index:8;
   background:#161b22;border:1px solid #30363d;border-radius:8px;
-  width:240px;max-height:70vh;overflow-y:auto;display:none;
-  box-shadow:0 8px 24px rgba(0,0,0,0.5);
+  width:200px;overflow:hidden;display:none;
+  box-shadow:0 4px 16px rgba(0,0,0,0.4);transition:all .2s;
 }
 #legend-panel.show{display:block}
+#legend-panel.minimized .legend-body{display:none}
+#legend-panel.minimized{width:auto}
 #legend-panel::-webkit-scrollbar{width:4px}
 #legend-panel::-webkit-scrollbar-thumb{background:#30363d;border-radius:3px}
-.legend-hdr{padding:10px 14px;border-bottom:1px solid #30363d;display:flex;justify-content:space-between;align-items:center}
-.legend-hdr h3{font-size:12px;font-weight:700;color:#58a6ff}
-.legend-hdr button{width:20px;height:20px;border:none;background:transparent;color:#8b949e;cursor:pointer;font-size:13px;border-radius:4px}
-.legend-hdr button:hover{background:#21262d;color:#f85149}
-.legend-body{padding:10px 14px}
+.legend-hdr{padding:6px 10px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;user-select:none}
+.legend-hdr h3{font-size:11px;font-weight:700;color:#58a6ff}
+.legend-hdr button{width:20px;height:20px;border:none;background:transparent;color:#8b949e;cursor:pointer;font-size:13px;border-radius:4px;line-height:1}
+.legend-hdr button:hover{background:#21262d;color:#58a6ff}
+.legend-body{padding:4px 10px 8px}
 .legend-item{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:11px;color:#c9d1d9}
 .legend-swatch{width:14px;height:14px;border-radius:3px;flex-shrink:0}
-.legend-section{font-size:9px;font-weight:700;color:#8b949e;text-transform:uppercase;letter-spacing:0.5px;margin:10px 0 4px;padding-top:6px;border-top:1px solid #21262d}
-.legend-section:first-child{margin-top:0;padding-top:0;border-top:none}
-#legend-notes{width:100%;min-height:60px;background:#0d1117;border:1px solid #30363d;border-radius:6px;color:#c9d1d9;font-size:11px;padding:6px 8px;resize:vertical;outline:none;font-family:inherit;margin-top:6px}
-#legend-notes:focus{border-color:#58a6ff}
+
+
+/* === MINIMAP === */
+#minimap{
+  position:absolute;bottom:10px;left:10px;z-index:6;
+  width:160px;height:216px;background:#0d1117;border:1px solid #30363d;border-radius:8px;
+  overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,0.5);cursor:pointer;
+  transition:opacity .2s, transform .2s;opacity:0.85;
+}
+#minimap:hover{opacity:1;transform:scale(1.02)}
+#minimap canvas{width:100%;height:100%;display:block}
+#minimap .viewport-rect{
+  position:absolute;border:2px solid #58a6ff;background:rgba(88,166,255,0.12);
+  pointer-events:none;border-radius:1px;transition:all .05s;
+  box-shadow:0 0 6px rgba(88,166,255,0.4);
+}
+#minimap-toggle{
+  position:absolute;top:3px;right:3px;width:16px;height:16px;border-radius:3px;
+  border:none;background:rgba(0,0,0,0.5);color:#8b949e;font-size:9px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;z-index:1;
+}
+#minimap-toggle:hover{background:rgba(255,255,255,0.15);color:#fff}
+#minimap.collapsed{width:32px;height:32px;border-radius:6px}
+#minimap.collapsed canvas{display:none}
+#minimap.collapsed .viewport-rect{display:none}
+#minimap.collapsed #minimap-toggle{top:50%;left:50%;transform:translate(-50%,-50%)}
+
+/* === COORDINATE DISPLAY === */
+#coord-display{
+  position:absolute;bottom:10px;left:50%;transform:translateX(-50%);z-index:5;
+  background:#161b22;border:1px solid #30363d;border-radius:6px;
+  padding:3px 10px;font-size:10px;color:#8b949e;display:none;
+  font-family:'SF Mono',Consolas,monospace;white-space:nowrap;
+  box-shadow:0 2px 8px rgba(0,0,0,0.3);
+}
+#coord-display.show{display:flex;gap:10px;align-items:center}
+#coord-display .val{color:#58a6ff;font-weight:600}
+#coord-display .sep{color:#30363d}
+
+/* === SEARCH HIGHLIGHT GLOW === */
+.lot-dot.search-glow{
+  display:block!important;
+  fill:rgba(88,166,255,0.3);stroke:#58a6ff;stroke-width:4;
+  animation:searchPulse 1.2s ease-in-out infinite;
+}
+@keyframes searchPulse{
+  0%,100%{r:26;opacity:0.6}
+  50%{r:34;opacity:0.3}
+}
+.lot-label.search-glow{opacity:0.9!important;fill:#58a6ff;font-size:13px}
+
+/* === THEME (LIGHT MODE) === */
+body.light{background:#f0f0f0;color:#24292f}
+body.light #app{background:#f0f0f0}
+body.light .panel{background:#fff;border-color:#d0d7de}
+body.light .panel-hdr{background:#f6f8fa;border-color:#d0d7de}
+body.light #title-bar{background:#f6f8fa;border-color:#d0d7de}
+body.light .search-wrap input{background:#fff;border-color:#d0d7de;color:#24292f}
+body.light .filter-area{border-color:#d0d7de}
+body.light .chip{background:#f6f8fa;border-color:#d0d7de;color:#24292f}
+body.light .li:hover{background:#f6f8fa}
+body.light .li.act{background:#ddf4ff}
+body.light .li .owner{color:#57606a}
+body.light .pi:hover{background:#f6f8fa}
+body.light .pi.act{background:#ddf4ff}
+body.light .pi .pdesc{color:#57606a}
+body.light .grp-hdr{color:#24292f}
+body.light .panel-stats{border-color:#d0d7de;color:#57606a}
+body.light #map{background:#e8e4d8}
+body.light #toolbar{background:#fff;border-color:#d0d7de}
+body.light .tb{color:#57606a}
+body.light .tb:hover{background:#f6f8fa;color:#24292f}
+body.light .tb.on{background:#0969da;color:#fff}
+body.light .tb-sep{background:#d0d7de}
+body.light .cb{background:#fff;border-color:#d0d7de;color:#24292f}
+body.light .cb:hover{background:#f6f8fa;border-color:#0969da;color:#0969da}
+body.light #info{background:#fff;border-color:#0969da}
+body.light #info-head{background:#fff;border-color:#d0d7de}
+body.light .ic{background:#f6f8fa;border-color:#d0d7de}
+body.light .ic-l{color:#57606a}
+body.light .ic-v{color:#24292f}
+body.light #toast{background:#0969da}
+body.light #anno-count{background:#fff;border-color:#d0d7de;color:#57606a}
+body.light #coord-display{background:#fff;border-color:#d0d7de;color:#57606a}
+body.light #minimap{background:#fff;border-color:#d0d7de}
+body.light #legend-panel{background:#fff;border-color:#d0d7de}
+body.light .legend-hdr{border-color:#d0d7de}
+body.light #stroke-size{background:#fff;border-color:#d0d7de;color:#24292f}
+body.light #modal{background:#fff;border-color:#d0d7de}
+body.light .modal-top{border-color:#d0d7de}
+body.light .modal-body p{color:#24292f}
+body.light .modal-footer{border-color:#d0d7de;background:#fff}
+body.light .item-list::-webkit-scrollbar-track{background:#fff}
+body.light .item-list::-webkit-scrollbar-thumb{background:#d0d7de}
+body.light #measure-info{background:#fff;border-color:#d0d7de;color:#24292f}
+
+/* === ANNOTATION SAVE/LOAD === */
+#save-load-bar{
+  position:absolute;top:8px;left:8px;z-index:6;display:flex;gap:2px;
+}
+.sl-btn{
+  padding:4px 8px;border-radius:5px;border:1px solid #30363d;
+  background:#161b22;color:#8b949e;font-size:9px;font-weight:600;
+  cursor:pointer;transition:all .1s;white-space:nowrap;
+  display:flex;align-items:center;gap:3px;
+}
+.sl-btn:hover{background:#21262d;color:#c9d1d9;border-color:#58a6ff}
+.sl-btn.has-save{border-color:#7ee787;color:#7ee787}
+body.light .sl-btn{background:#fff;border-color:#d0d7de;color:#57606a}
+body.light .sl-btn:hover{background:#f6f8fa;color:#24292f;border-color:#0969da}
+body.light .sl-btn.has-save{border-color:#1a7f37;color:#1a7f37}
+
+/* === INLINE TEXT EDITOR === */
+.inline-text-editor{box-shadow:0 2px 12px rgba(88,166,255,0.3)}
+.inline-text-editor:focus{border-color:#58a6ff}
+body.light .inline-text-editor{background:rgba(255,255,255,0.8);border-color:#0969da}
+
+/* === SMOOTH ZOOM === */
+#wrap.animating{transition:transform .25s cubic-bezier(0.25,0.1,0.25,1)}
 
 /* === PRINT STYLES === */
 @media print{
@@ -409,7 +530,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
     <p>On the right, you'll find reference points along each road, organized by letter: <strong style="color:#ef4444">A — Lakeside Lane</strong>, <strong style="color:#f97316">B — Creekside Court</strong>, <strong style="color:#eab308">C — Twin Lakes Trail</strong>, and <strong style="color:#22c55e">D — Westlake Court</strong>. Click any point (e.g., A1, A2) to jump to that location. Points that appear on both pages will show on both.</p>
 
     <h3>✏️ Markup Tools (Top Toolbar)</h3>
-    <p>Use the toolbar above the map to draw, highlight, add text, or drop numbered marker dots (P1, P2, P3…). There's also an eraser, undo, and a screenshot tool that lets you select an area and save it as an image. All markups are temporary — they'll clear when you reload the page.</p>
+    <p>Use the toolbar above the map to draw, highlight, add text, or drop mark points (P1, P2, P3…). There's also an eraser, undo, and a screenshot tool that lets you select an area and save it as an image. You can save your annotations using the 💾 button (top-left) so they persist between sessions.</p>
     <p><strong style="color:#c9d1d9">Tip:</strong> To move a markup you've placed, click the <strong style="color:#c9d1d9">✥</strong> (four-arrow) button next to the eraser, then drag any annotation to reposition it.</p>
 
     <div class="note">⚠️ <strong>Accuracy Note:</strong> The survey image is the recorded document. All lot markers, road points, and tools were placed by the RMA board and may not be 100% precise. If you spot an error, please let the board know so we can correct it.</div>
@@ -446,13 +567,11 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
 
   <div id="toolbar">
     <button class="tb on" data-tool="pan" title="Pan (V)">✋<span class="tb-tip">Pan</span></button>
-    <button class="tb" data-tool="pen" title="Pen (P)">✏️<span class="tb-tip">Pen</span></button>
-    <button class="tb" data-tool="hl" title="Highlighter (H)">🖍️<span class="tb-tip">Hilite</span></button>
-    <button class="tb" data-tool="text" title="Text (T)">T<span class="tb-tip">Text</span></button>
-    <button class="tb" data-tool="dot" title="Marker Dot (D)">●<span class="tb-tip">Dot</span></button>
     <div class="tb-sep"></div>
-    <button class="tb" data-tool="move" title="Move annotation (M)">✥<span class="tb-tip">Move</span></button>
-    <button class="tb" data-tool="eraser" title="Eraser (E)"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 21h10"/><path d="m5.5 12.5 5-5a2.12 2.12 0 0 1 3 0l3 3a2.12 2.12 0 0 1 0 3l-5 5H7l-3-3a2 2 0 0 1 0-2.83Z"/></svg><span class="tb-tip">Erase</span></button>
+    <button class="tb" data-tool="pen" title="Pen (P)">✏️<span class="tb-tip">Pen</span></button>
+    <button class="tb" data-tool="hl" title="Highlighter (H)">🖍️<span class="tb-tip">Highlight</span></button>
+    <button class="tb" data-tool="text" title="Text (T)">T<span class="tb-tip">Text</span></button>
+    <button class="tb" data-tool="dot" title="Mark Point (D)">●<span class="tb-tip">Mark</span></button>
     <div class="tb-sep"></div>
     <div class="tb" title="Drawing Color">
       <span class="color-preview" id="color-prev" style="background:#ff4444"></span>
@@ -460,16 +579,18 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
       <span class="tb-tip">Color</span>
     </div>
     <label class="tb-label">Size</label>
-    <input type="number" id="stroke-size" value="4" min="1" max="40">
+    <input type="number" id="stroke-size" value="6" min="1" max="40">
     <div class="tb-sep"></div>
+    <button class="tb" data-tool="move" title="Move annotation (M)">✥<span class="tb-tip">Move</span></button>
+    <button class="tb" data-tool="eraser" title="Eraser (E)"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 21h10"/><path d="m5.5 12.5 5-5a2.12 2.12 0 0 1 3 0l3 3a2.12 2.12 0 0 1 0 3l-5 5H7l-3-3a2 2 0 0 1 0-2.83Z"/></svg><span class="tb-tip">Erase</span></button>
     <button class="tb" id="undo-btn" title="Undo (Ctrl+Z)">↩<span class="tb-tip">Undo</span></button>
-    <button class="tb" id="clear-btn" title="Clear All">🗑<span class="tb-tip">Clear</span></button>
+    <button class="tb" id="clear-btn" title="Clear All">🗑<span class="tb-tip">Clear All</span></button>
     <div class="tb-sep"></div>
     <button class="tb" data-tool="measure" title="Measure distance (R)">📏<span class="tb-tip">Ruler</span></button>
-    <button class="tb" data-tool="screenshot" title="Screenshot area (S)"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 7V3h4"/><path d="M17 3h4v4"/><path d="M21 17v4h-4"/><path d="M7 21H3v-4"/></svg><span class="tb-tip">Snap</span></button>
+    <button class="tb" data-tool="screenshot" title="Screenshot area (S)"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 7V3h4"/><path d="M17 3h4v4"/><path d="M21 17v4h-4"/><path d="M7 21H3v-4"/></svg><span class="tb-tip">Screenshot</span></button>
     <div class="tb-sep"></div>
-    <button class="tb" id="legend-btn" title="Legend & Notes">🗺️<span class="tb-tip">Legend</span></button>
-    <div class="tb-sep"></div>
+    <button class="tb" id="legend-btn" title="Toggle Legend">🗺️<span class="tb-tip">Legend</span></button>
+    <button class="tb" id="theme-btn" title="Toggle Light/Dark (L)">🌓<span class="tb-tip">Theme</span></button>
     <button class="tb" id="info-btn" title="Help & Info (I)"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><span class="tb-tip">Help</span></button>
   </div>
 
@@ -489,16 +610,20 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
   <div id="sel-rect"></div>
   <div id="eraser-cursor"></div>
   <div id="measure-info"></div>
-  <div id="legend-panel">
-    <div class="legend-hdr"><h3>Legend & Notes</h3><button id="legend-close">✕</button></div>
+  <div id="coord-display"><span>X: <span class="val" id="coord-x">—</span></span><span class="sep">|</span><span>Y: <span class="val" id="coord-y">—</span></span><span class="sep">|</span><span>Zoom: <span class="val" id="coord-z">—</span></span></div>
+  <div id="minimap"><button id="minimap-toggle">◳</button><canvas id="minimap-canvas"></canvas><div class="viewport-rect" id="minimap-vp"></div></div>
+  <div id="save-load-bar">
+    <button class="sl-btn" id="save-anno-btn" title="Save annotations to browser">💾 Save</button>
+    <button class="sl-btn" id="load-anno-btn" title="Load saved annotations">📂 Load</button>
+    <button class="sl-btn" id="clear-save-btn" title="Delete saved annotations">🗑</button>
+  </div>
+  <div id="legend-panel" class="show">
+    <div class="legend-hdr"><h3>Legend</h3><button id="legend-minimize" title="Minimize legend">▾</button></div>
     <div class="legend-body">
-      <div class="legend-section">Road Colors</div>
       <div class="legend-item"><span class="legend-swatch" style="background:#ef4444"></span>A — Lakeside Lane</div>
       <div class="legend-item"><span class="legend-swatch" style="background:#f97316"></span>B — Creekside Court</div>
       <div class="legend-item"><span class="legend-swatch" style="background:#eab308"></span>C — Twin Lakes Trail</div>
       <div class="legend-item"><span class="legend-swatch" style="background:#22c55e"></span>D — Westlake Court</div>
-      <div class="legend-section">Notes</div>
-      <textarea id="legend-notes" placeholder=""></textarea>
     </div>
   </div>
 </div>
@@ -997,10 +1122,26 @@ function screenToSvg(clientX, clientY) {
 }
 
 // ===== DRAWING STATE =====
-let drawColor = '#ff4444', drawSize = 4;
+let drawColor = '#ff4444', drawSize = 6;
 let drawing = false, curPath = null;
 let drawHistory = [];
 let dotCounter = 0;
+let usedDotNumbers = new Set(); // Track which P-numbers are currently in use
+
+function getNextDotNumber() {
+  // Find the lowest available number starting from 1
+  let n = 1;
+  while (usedDotNumbers.has(n)) n++;
+  usedDotNumbers.add(n);
+  dotCounter = Math.max(dotCounter, n);
+  return n;
+}
+
+function releaseDotNumber(label) {
+  // Parse "P3" -> 3 and remove from used set
+  const m = label.match(/^P(\d+)$/);
+  if (m) usedDotNumbers.delete(parseInt(m[1]));
+}
 let selecting = false, selStart = null;
 
 document.getElementById('draw-color').addEventListener('input', e => {
@@ -1065,6 +1206,9 @@ mc.addEventListener('mousemove', e => {
 mc.addEventListener('mouseleave', () => { if (activeTool === 'eraser') hideEraserCursor(); });
 mc.addEventListener('mouseenter', e => { if (activeTool === 'eraser') { showEraserCursor(); moveEraserCursor(e.clientX, e.clientY); } });
 
+// ===== PER-TOOL DEFAULT SIZES =====
+const TOOL_SIZES = { text: 2, dot: 4, pen: 6, hl: 8 };
+
 // ===== TOOLBAR =====
 function setTool(tool) {
   activeTool = tool;
@@ -1072,6 +1216,11 @@ function setTool(tool) {
   const btn = document.querySelector(`[data-tool="${tool}"]`);
   if (btn) btn.classList.add('on');
   mc.className = (tool === 'pan') ? '' : 'tool-' + tool;
+  // Set per-tool default size
+  if (TOOL_SIZES[tool] !== undefined) {
+    drawSize = TOOL_SIZES[tool];
+    document.getElementById('stroke-size').value = drawSize;
+  }
   // Toggle interactive modes on draw SVG
   drawSvg.classList.remove('interactive');
   drawSvg.style.pointerEvents = '';
@@ -1082,8 +1231,8 @@ function setTool(tool) {
   if (tool === 'eraser') { showEraserCursor(); } else { hideEraserCursor(); }
   // Clear any lingering selection rect
   if (tool !== 'screenshot') { selecting = false; document.getElementById('sel-rect').style.display = 'none'; }
-  // Clear measure when switching away
-  if (tool !== 'measure' && typeof clearMeasure === 'function') clearMeasure();
+  // Ruler persists when switching away, but starting a new measurement clears the old one
+  if (tool === 'measure' && typeof clearMeasure === 'function') clearMeasure();
 }
 document.querySelectorAll('.tb[data-tool]').forEach(btn => {
   btn.onclick = () => setTool(btn.dataset.tool);
@@ -1125,10 +1274,16 @@ mc.addEventListener('mousedown', e => {
     return;
   }
 
-  // Eraser tool: click dots/text to delete group, or draw to partially erase pen/hl
+  // Eraser tool: click dots/text/ruler to delete, or draw to partially erase pen/hl
   if (activeTool === 'eraser') {
     e.preventDefault();
     const clicked = e.target;
+    // Check if clicked on a ruler/measure element — erase entire measurement
+    if (measureGroup && (measureGroup.contains(clicked) || measureLabels.some(l => l === clicked || l.contains(clicked)))) {
+      clearMeasure();
+      toast('Ruler erased');
+      return;
+    }
     // Check if clicked a dot group child (circle or text inside a <g>)
     let found = null;
     if (clicked !== drawSvg && drawSvg.contains(clicked)) {
@@ -1140,7 +1295,9 @@ mc.addEventListener('mousedown', e => {
       }
     }
     if (found && found.tagName === 'g') {
-      // It's a dot group — delete the whole group
+      // It's a mark point group — delete and release the number
+      if (found._dotLabel) releaseDotNumber(found._dotLabel);
+      else { const txt = found.querySelector('text'); if (txt) releaseDotNumber(txt.textContent); }
       const idx = drawHistory.indexOf(found);
       if (idx !== -1) drawHistory.splice(idx, 1);
       found.remove();
@@ -1201,22 +1358,11 @@ mc.addEventListener('mousedown', e => {
     drawHistory.push(curPath);
     updateAnnoCount();
   } else if (activeTool === 'text') {
-    const txt = prompt('Enter text:');
-    if (txt) {
-      const t = document.createElementNS('http://www.w3.org/2000/svg','text');
-      t.setAttribute('x', svgX); t.setAttribute('y', svgY);
-      t.setAttribute('fill', drawColor);
-      t.setAttribute('font-size', drawSize * 8);
-      t.setAttribute('font-weight','700');
-      t.setAttribute('font-family','Segoe UI, system-ui, sans-serif');
-      t.textContent = txt;
-      drawSvg.appendChild(t);
-      drawHistory.push(t);
-      updateAnnoCount();
-    }
+    openInlineTextEditor(svgX, svgY, drawColor, drawSize * 8, null);
   } else if (activeTool === 'dot') {
-    dotCounter++;
+    const pNum = getNextDotNumber();
     const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+    g._dotLabel = 'P' + pNum;
     const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
     c.setAttribute('cx', svgX); c.setAttribute('cy', svgY);
     c.setAttribute('r', drawSize * 3);
@@ -1234,12 +1380,12 @@ mc.addEventListener('mousedown', e => {
     t.setAttribute('paint-order','stroke');
     t.setAttribute('stroke','rgba(0,0,0,0.8)');
     t.setAttribute('stroke-width','4px');
-    t.textContent = 'P' + dotCounter;
+    t.textContent = 'P' + pNum;
     g.appendChild(t);
     drawSvg.appendChild(g);
     drawHistory.push(g);
     updateAnnoCount();
-    toast('P' + dotCounter + ' placed');
+    toast('P' + pNum + ' placed');
   }
 });
 
@@ -1293,6 +1439,21 @@ window.addEventListener('mouseup', e => {
 });
 
 // ===== SCREENSHOT CAPTURE (fixed) =====
+let screenshotCounter = 0;
+function getScreenshotFilename() {
+  screenshotCounter++;
+  // Central Time = UTC - 6 (CST) or UTC - 5 (CDT)
+  // Use America/Chicago timezone
+  const now = new Date();
+  const ct = new Date(now.toLocaleString('en-US', { timeZone: 'America/Chicago' }));
+  const mm = String(ct.getMonth() + 1).padStart(2, '0');
+  const dd = String(ct.getDate()).padStart(2, '0');
+  const yyyy = ct.getFullYear();
+  const hh = String(ct.getHours()).padStart(2, '0');
+  const min = String(ct.getMinutes()).padStart(2, '0');
+  return `twinlakesrma-map-screenshot-${mm}-${dd}-${yyyy}-screenshot${screenshotCounter}-${hh}${min}.png`;
+}
+
 function captureArea(sx, sy, sw, sh) {
   toast('Capturing...');
   const svgX1 = (sx - px) / scale;
@@ -1320,7 +1481,41 @@ function captureArea(sx, sy, sw, sh) {
         clone.setAttribute('width', sw);
         clone.setAttribute('height', sh);
         clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-        // Inline the mask defs so they resolve in standalone SVG
+
+        // Inline computed styles so labels/text survive serialization
+        // Walk the ORIGINAL SVG elements and copy their computed styles onto cloned counterparts
+        const origEls = svgEl.querySelectorAll('circle, text, path, line, rect, g');
+        const cloneEls = clone.querySelectorAll('circle, text, path, line, rect, g');
+        const styleProps = ['opacity','fill','stroke','stroke-width','font-size','font-weight',
+          'font-family','text-anchor','dominant-baseline','paint-order','stroke-dasharray',
+          'stroke-linecap','stroke-linejoin','display','visibility'];
+        for (let i = 0; i < origEls.length && i < cloneEls.length; i++) {
+          const cs = window.getComputedStyle(origEls[i]);
+          const ce = cloneEls[i];
+          styleProps.forEach(prop => {
+            const val = cs.getPropertyValue(prop);
+            if (val && val !== '' && val !== 'none' && val !== 'normal') {
+              // For display:none or visibility:hidden, skip element entirely
+              if (prop === 'display' && val === 'none') { ce.setAttribute('display','none'); return; }
+              if (prop === 'visibility' && val === 'hidden') { ce.setAttribute('visibility','hidden'); return; }
+              // Set as SVG attribute (these override CSS in standalone SVG)
+              if (prop === 'font-size' || prop === 'font-weight' || prop === 'font-family') {
+                ce.setAttribute(prop, val);
+              } else if (prop === 'paint-order') {
+                ce.style.paintOrder = val;
+              } else {
+                ce.setAttribute(prop, val);
+              }
+            }
+          });
+          // Force hidden elements with opacity 0 (like non-.show lot-labels) to stay hidden
+          // But show elements that HAVE the .show class
+          if (origEls[i].classList.contains('lot-label') || origEls[i].classList.contains('rp-label')) {
+            const computedOpacity = cs.getPropertyValue('opacity');
+            ce.setAttribute('opacity', computedOpacity);
+          }
+        }
+
         const data = new XMLSerializer().serializeToString(clone);
         const svgImg = new Image();
         svgImg.onload = () => { ctx.drawImage(svgImg, 0, 0, sw, sh); resolve(); };
@@ -1330,13 +1525,14 @@ function captureArea(sx, sy, sw, sh) {
     });
   }
 
+  const ssFilename = getScreenshotFilename();
   renderSvgToCanvas(svg).then(() => renderSvgToCanvas(drawSvg)).then(() => {
     // Try toDataURL first (more reliable cross-browser), fallback to toBlob
     try {
       const dataUrl = canvas.toDataURL('image/png');
       const a = document.createElement('a');
       a.href = dataUrl;
-      a.download = 'twin-lakes-capture-' + new Date().toISOString().slice(0,19).replace(/[:T]/g,'-') + '.png';
+      a.download = ssFilename;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -1349,7 +1545,7 @@ function captureArea(sx, sy, sw, sh) {
           if (!blob) { toast('Screenshot failed — try again'); setTool('pan'); return; }
           const a = document.createElement('a');
           a.href = URL.createObjectURL(blob);
-          a.download = 'twin-lakes-capture-' + new Date().toISOString().slice(0,19).replace(/[:T]/g,'-') + '.png';
+          a.download = ssFilename;
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
@@ -1442,7 +1638,7 @@ function addMeasurePoint(svgX, svgY) {
     label.style.paintOrder = 'stroke';
     label.setAttribute('stroke', '#000');
     label.setAttribute('stroke-width', '3px');
-    label.setAttribute('pointer-events', 'none');
+    label.setAttribute('pointer-events', 'auto');
     label.textContent = Math.round(dist) + ' px';
     drawSvg.appendChild(label);
     measureLabels.push(label);
@@ -1470,7 +1666,7 @@ mc.addEventListener('dblclick', e => {
   e.preventDefault();
   // Double-click finishes the measurement (the two single clicks already added points)
   if (measurePoints.length >= 2) {
-    toast('Measurement complete · Click Ruler or press R to start new');
+    toast('Measurement complete · Ruler stays visible · Use eraser to remove');
   }
   // Stop adding points — user can click Ruler again or press R to clear and restart
   setTool('pan');
@@ -1493,18 +1689,23 @@ function applyShareHash() {
 }
 
 // ===== LEGEND PANEL =====
+const legendPanel = document.getElementById('legend-panel');
+const legendMinBtn = document.getElementById('legend-minimize');
+// Legend toggle button shows/hides the full panel
 document.getElementById('legend-btn').onclick = () => {
-  document.getElementById('legend-panel').classList.toggle('show');
+  legendPanel.classList.toggle('show');
 };
-document.getElementById('legend-close').onclick = () => {
-  document.getElementById('legend-panel').classList.remove('show');
+// Minimize toggle — collapse body but keep header visible
+legendMinBtn.onclick = (e) => {
+  e.stopPropagation();
+  legendPanel.classList.toggle('minimized');
+  legendMinBtn.textContent = legendPanel.classList.contains('minimized') ? '▸' : '▾';
 };
-// Save/load legend notes
-const legendNotes = document.getElementById('legend-notes');
-legendNotes.value = localStorage.getItem('tl-legend-notes') || '';
-legendNotes.addEventListener('input', () => {
-  localStorage.setItem('tl-legend-notes', legendNotes.value);
-});
+// Also clicking the header toggles minimize
+document.querySelector('.legend-hdr').onclick = () => {
+  legendPanel.classList.toggle('minimized');
+  legendMinBtn.textContent = legendPanel.classList.contains('minimized') ? '▸' : '▾';
+};
 
 // ===== WHEEL ZOOM =====
 mc.addEventListener('wheel', e => {
@@ -1529,8 +1730,14 @@ mc.addEventListener('touchstart', e => {
 
   if (e.touches.length === 1) {
     if (activeTool === 'eraser') {
-      // Check if touch landed on a dot group or text annotation
+      // Check if touch landed on ruler — erase entire measurement
       const touchEl = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY);
+      if (measureGroup && (measureGroup.contains(touchEl) || measureLabels.some(l => l === touchEl || l.contains(touchEl)))) {
+        clearMeasure();
+        toast('Ruler erased');
+        return;
+      }
+      // Check if touch landed on a dot group or text annotation
       let found = null;
       if (touchEl && touchEl !== drawSvg && drawSvg.contains(touchEl)) {
         let el = touchEl;
@@ -1540,6 +1747,10 @@ mc.addEventListener('touchstart', e => {
         }
       }
       if (found && (found.tagName === 'g' || found.tagName === 'text')) {
+        if (found.tagName === 'g') {
+          if (found._dotLabel) releaseDotNumber(found._dotLabel);
+          else { const txt = found.querySelector('text'); if (txt) releaseDotNumber(txt.textContent); }
+        }
         const idx = drawHistory.indexOf(found);
         if (idx !== -1) drawHistory.splice(idx, 1);
         found.remove();
@@ -1586,9 +1797,10 @@ mc.addEventListener('touchstart', e => {
       drawHistory.push(touchPath);
       updateAnnoCount();
     } else if (activeTool === 'dot') {
-      dotCounter++;
+      const pNum = getNextDotNumber();
       const [svgX, svgY] = screenToSvg(e.touches[0].clientX, e.touches[0].clientY);
       const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+      g._dotLabel = 'P' + pNum;
       const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
       c.setAttribute('cx', svgX); c.setAttribute('cy', svgY);
       c.setAttribute('r', drawSize * 3);
@@ -1606,12 +1818,12 @@ mc.addEventListener('touchstart', e => {
       t.setAttribute('paint-order','stroke');
       t.setAttribute('stroke','rgba(0,0,0,0.8)');
       t.setAttribute('stroke-width','4px');
-      t.textContent = 'P' + dotCounter;
+      t.textContent = 'P' + pNum;
       g.appendChild(t);
       drawSvg.appendChild(g);
       drawHistory.push(g);
       updateAnnoCount();
-      toast('P' + dotCounter + ' placed');
+      toast('P' + pNum + ' placed');
     }
   }
   // Prevent browser zoom — let our map handle all touch gestures
@@ -1647,10 +1859,161 @@ mc.addEventListener('click', e => {
   if (e.target===mc||e.target===mw||e.target===img) closeInfo();
 });
 
+// ===== INLINE TEXT EDITOR =====
+let activeTextEditor = null;
+function openInlineTextEditor(svgX, svgY, color, fontSize, existingTextEl) {
+  if (activeTextEditor) closeInlineTextEditor(true); // commit any open editor
+  const wrapEl = document.getElementById('wrap');
+  // Convert SVG coords to screen px relative to #map
+  const screenX = svgX * scale + px;
+  const screenY = svgY * scale + py;
+  const screenFontSize = Math.max(12, fontSize * scale);
+
+  const editor = document.createElement('div');
+  editor.contentEditable = 'true';
+  editor.className = 'inline-text-editor';
+  editor.style.cssText = `
+    position:absolute;left:${screenX}px;top:${screenY - screenFontSize * 1.1}px;
+    font-size:${screenFontSize}px;font-weight:700;font-family:'Segoe UI',system-ui,sans-serif;
+    color:${color};min-width:40px;min-height:${screenFontSize + 4}px;
+    outline:none;border:2px solid #58a6ff;border-radius:3px;
+    background:rgba(0,0,0,0.3);padding:2px 4px;white-space:pre-wrap;
+    z-index:20;line-height:1.2;cursor:text;
+  `;
+  if (existingTextEl) {
+    // Populate from existing SVG text (may have tspans for multiline)
+    const tspans = existingTextEl.querySelectorAll('tspan');
+    if (tspans.length > 0) {
+      editor.innerText = Array.from(tspans).map(ts => ts.textContent).join('\n');
+    } else {
+      editor.innerText = existingTextEl.textContent;
+    }
+  }
+  mc.appendChild(editor);
+  editor.focus();
+
+  // Select all text in editor for easy replacement
+  const sel = window.getSelection();
+  const range = document.createRange();
+  range.selectNodeContents(editor);
+  sel.removeAllRanges();
+  sel.addRange(range);
+
+  activeTextEditor = {
+    el: editor, svgX, svgY, color, fontSize, existingTextEl
+  };
+
+  // Escape to cancel, click-away to commit
+  editor._onKeyDown = (e) => {
+    if (e.key === 'Escape') { e.preventDefault(); closeInlineTextEditor(false); }
+    // Shift+Enter inserts newline (default contentEditable behavior)
+    // Enter alone commits the text
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); closeInlineTextEditor(true); }
+    e.stopPropagation(); // prevent keyboard shortcuts
+  };
+  editor._onBlur = () => {
+    setTimeout(() => closeInlineTextEditor(true), 100);
+  };
+  editor.addEventListener('keydown', editor._onKeyDown);
+  editor.addEventListener('blur', editor._onBlur);
+}
+
+function closeInlineTextEditor(commit) {
+  if (!activeTextEditor) return;
+  const { el, svgX, svgY, color, fontSize, existingTextEl } = activeTextEditor;
+  activeTextEditor = null;
+  el.removeEventListener('keydown', el._onKeyDown);
+  el.removeEventListener('blur', el._onBlur);
+  const rawText = el.innerText.trim();
+  el.remove();
+
+  if (!commit || !rawText) {
+    // If editing existing and cancelled or empty, remove it if empty
+    if (existingTextEl && !rawText && commit) {
+      const idx = drawHistory.indexOf(existingTextEl);
+      if (idx !== -1) drawHistory.splice(idx, 1);
+      existingTextEl.remove();
+      updateAnnoCount();
+    }
+    return;
+  }
+
+  const lines = rawText.split('\n');
+
+  if (existingTextEl) {
+    // Update existing text element
+    existingTextEl.textContent = '';
+    if (lines.length === 1) {
+      existingTextEl.textContent = lines[0];
+    } else {
+      lines.forEach((line, i) => {
+        const tspan = document.createElementNS('http://www.w3.org/2000/svg','tspan');
+        tspan.setAttribute('x', existingTextEl.getAttribute('x'));
+        if (i === 0) {
+          tspan.setAttribute('dy', '0');
+        } else {
+          tspan.setAttribute('dy', '1.2em');
+        }
+        tspan.textContent = line;
+        existingTextEl.appendChild(tspan);
+      });
+    }
+  } else {
+    // Create new text element
+    const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x', svgX); t.setAttribute('y', svgY);
+    t.setAttribute('fill', color);
+    t.setAttribute('font-size', fontSize);
+    t.setAttribute('font-weight','700');
+    t.setAttribute('font-family','Segoe UI, system-ui, sans-serif');
+    t._isUserText = true;
+    if (lines.length === 1) {
+      t.textContent = lines[0];
+    } else {
+      lines.forEach((line, i) => {
+        const tspan = document.createElementNS('http://www.w3.org/2000/svg','tspan');
+        tspan.setAttribute('x', svgX);
+        if (i === 0) {
+          tspan.setAttribute('dy', '0');
+        } else {
+          tspan.setAttribute('dy', '1.2em');
+        }
+        tspan.textContent = line;
+        t.appendChild(tspan);
+      });
+    }
+    drawSvg.appendChild(t);
+    drawHistory.push(t);
+    updateAnnoCount();
+  }
+}
+
+// Double-click on existing text to edit
+drawSvg.addEventListener('dblclick', (e) => {
+  if (activeTool === 'measure') return; // don't interfere with measure double-click
+  let target = e.target;
+  // Walk up if we clicked a tspan
+  if (target.tagName === 'tspan') target = target.parentElement;
+  // Check if it's a user text annotation in drawHistory
+  if (target.tagName === 'text' && drawHistory.includes(target)) {
+    e.preventDefault(); e.stopPropagation();
+    const x = parseFloat(target.getAttribute('x'));
+    const y = parseFloat(target.getAttribute('y'));
+    const color = target.getAttribute('fill') || drawColor;
+    const fontSize = parseFloat(target.getAttribute('font-size')) || drawSize * 8;
+    openInlineTextEditor(x, y, color, fontSize, target);
+  }
+});
+
 // ===== UNDO / CLEAR =====
 document.getElementById('undo-btn').onclick = () => {
   if (!drawHistory.length) return;
   const last = drawHistory.pop();
+  // Release mark point number if it was a dot group
+  if (last.tagName === 'g') {
+    if (last._dotLabel) releaseDotNumber(last._dotLabel);
+    else { const txt = last.querySelector('text'); if (txt) releaseDotNumber(txt.textContent); }
+  }
   last.remove();
   updateAnnoCount();
   toast('Undo');
@@ -1660,8 +2023,11 @@ document.getElementById('clear-btn').onclick = () => {
   drawHistory.forEach(el => el.remove());
   drawHistory = [];
   dotCounter = 0;
+  usedDotNumbers.clear();
   // Also clear any eraser mask strokes (black paths in eraseMask)
   eraseMask.querySelectorAll('path').forEach(p => p.remove());
+  // Clear ruler measurement too
+  if (typeof clearMeasure === 'function') clearMeasure();
   updateAnnoCount();
   toast('Annotations cleared');
 };
@@ -1696,6 +2062,7 @@ document.addEventListener('keydown', e => {
   if (e.key==='r'&&noMod) setTool('measure');
   if (e.key==='s'&&noMod) setTool('screenshot');
   if (e.key==='i'&&noMod) document.getElementById('info-btn').click();
+  if (e.key==='l'&&noMod) document.getElementById('theme-btn').click();
   if (e.key==='c'&&noMod) centerView();
   if ((e.ctrlKey||e.metaKey) && e.key==='z') { e.preventDefault(); document.getElementById('undo-btn').click(); }
 });
@@ -1723,6 +2090,323 @@ modalOverlay.addEventListener('click', e => {
     setTimeout(() => { modalOverlay.style.display = 'none'; }, 300);
   }
 });
+
+// ===== THEME TOGGLE =====
+function applyTheme(light) {
+  document.body.classList.toggle('light', light);
+  localStorage.setItem('tl-theme', light ? 'light' : 'dark');
+  document.getElementById('theme-btn').textContent = light ? '☀️' : '🌓';
+  // Redraw minimap when theme changes
+  if (typeof drawMinimap === 'function') setTimeout(drawMinimap, 100);
+}
+document.getElementById('theme-btn').onclick = () => {
+  applyTheme(!document.body.classList.contains('light'));
+};
+// Restore theme
+if (localStorage.getItem('tl-theme') === 'light') applyTheme(true);
+
+// ===== MINIMAP =====
+const minimapCanvas = document.getElementById('minimap-canvas');
+const minimapCtx = minimapCanvas.getContext('2d');
+const minimapEl = document.getElementById('minimap');
+const minimapVp = document.getElementById('minimap-vp');
+
+function drawMinimap() {
+  const cw = minimapEl.clientWidth, ch = minimapEl.clientHeight;
+  minimapCanvas.width = cw * 2; minimapCanvas.height = ch * 2;
+  minimapCtx.scale(2, 2);
+  // Draw background
+  minimapCtx.fillStyle = document.body.classList.contains('light') ? '#e8e4d8' : '#d5d0c4';
+  minimapCtx.fillRect(0, 0, cw, ch);
+  // Draw plat image scaled
+  try { minimapCtx.drawImage(img, 0, 0, cw, ch); } catch(e) {}
+  // Draw road point dots
+  for (const g in ROAD_POINTS) {
+    const color = ROAD_POINTS[g].color;
+    ROAD_POINTS[g].points.forEach(pt => {
+      pt.dots.forEach(([cxp,cyp]) => {
+        minimapCtx.fillStyle = color;
+        minimapCtx.beginPath();
+        minimapCtx.arc(cxp/100*cw, cyp/100*ch, 2, 0, Math.PI*2);
+        minimapCtx.fill();
+      });
+    });
+  }
+}
+
+function updateMinimapViewport() {
+  if (minimapEl.classList.contains('collapsed')) return;
+  const mw2 = minimapEl.clientWidth, mh = minimapEl.clientHeight;
+  const mapW = mc.clientWidth, mapH = mc.clientHeight;
+  // Calculate what portion of the image is visible
+  const vx = -px / scale / IW * mw2;
+  const vy = -py / scale / IH * mh;
+  const vw = mapW / scale / IW * mw2;
+  const vh = mapH / scale / IH * mh;
+  minimapVp.style.left = Math.max(0, vx) + 'px';
+  minimapVp.style.top = Math.max(0, vy) + 'px';
+  minimapVp.style.width = Math.min(mw2, vw) + 'px';
+  minimapVp.style.height = Math.min(mh, vh) + 'px';
+}
+
+// Override upd to also update minimap + coords
+const _origUpd = upd;
+function upd() {
+  mw.style.transform = `translate(${px}px,${py}px) scale(${scale})`;
+  updateMinimapViewport();
+  updateCoordDisplay();
+}
+
+// Click minimap to navigate
+minimapEl.addEventListener('click', e => {
+  if (e.target === document.getElementById('minimap-toggle')) return;
+  const rect = minimapEl.getBoundingClientRect();
+  const mx = (e.clientX - rect.left) / rect.width;
+  const my = (e.clientY - rect.top) / rect.height;
+  // Center the map view on this point
+  const targetX = mx * IW;
+  const targetY = my * IH;
+  px = mc.clientWidth / 2 - targetX * scale;
+  py = mc.clientHeight / 2 - targetY * scale;
+  upd();
+});
+
+document.getElementById('minimap-toggle').onclick = e => {
+  e.stopPropagation();
+  minimapEl.classList.toggle('collapsed');
+  if (!minimapEl.classList.contains('collapsed')) {
+    setTimeout(() => { drawMinimap(); updateMinimapViewport(); }, 50);
+  }
+};
+
+img.addEventListener('load', () => setTimeout(drawMinimap, 200));
+if (img.complete) setTimeout(drawMinimap, 200);
+
+// ===== COORDINATE DISPLAY =====
+let lastMouseSvg = null;
+const coordDisplay = document.getElementById('coord-display');
+
+function updateCoordDisplay() {
+  if (lastMouseSvg) {
+    const xPct = (lastMouseSvg[0] / IW * 100).toFixed(1);
+    const yPct = (lastMouseSvg[1] / IH * 100).toFixed(1);
+    document.getElementById('coord-x').textContent = xPct + '%';
+    document.getElementById('coord-y').textContent = yPct + '%';
+  }
+  document.getElementById('coord-z').textContent = (scale * 100).toFixed(0) + '%';
+}
+
+mc.addEventListener('mousemove', e => {
+  lastMouseSvg = screenToSvg(e.clientX, e.clientY);
+  coordDisplay.classList.add('show');
+  updateCoordDisplay();
+});
+mc.addEventListener('mouseleave', () => {
+  coordDisplay.classList.remove('show');
+});
+
+// ===== SEARCH HIGHLIGHT ON MAP =====
+let searchGlowEls = [];
+function clearSearchGlow() {
+  searchGlowEls.forEach(el => { el.classList.remove('search-glow'); if (el._wasHidden) el.style.display = 'none'; });
+  searchGlowEls = [];
+}
+
+function applySearchGlow(query) {
+  clearSearchGlow();
+  if (!query || query.length < 1) return;
+  const s = query.toLowerCase();
+  for (const n in P) {
+    const matchesNum = String(n).includes(s);
+    const matchesOwner = (OWNERS[n] || '').toLowerCase().includes(s);
+    if (matchesNum || matchesOwner) {
+      if (lotDots[n]) lotDots[n].forEach(c => {
+        const wasHidden = c.style.display === 'none';
+        c._wasHidden = wasHidden;
+        c.classList.add('search-glow');
+        searchGlowEls.push(c);
+      });
+      if (lotLabels[n]) lotLabels[n].forEach(t => {
+        t.classList.add('search-glow');
+        searchGlowEls.push(t);
+      });
+    }
+  }
+}
+
+// Hook into lot search
+const origLotSearchHandler = document.getElementById('lot-search').oninput;
+document.getElementById('lot-search').addEventListener('input', e => {
+  applySearchGlow(e.target.value);
+});
+
+// ===== ANNOTATION SAVE / LOAD =====
+function serializeAnnotations() {
+  const data = [];
+  drawHistory.forEach(el => {
+    if (el._isEraserMask) return; // Skip eraser masks for now
+    if (el.tagName === 'path' && !el._isEraserMask) {
+      data.push({
+        type: 'path',
+        d: el.getAttribute('d'),
+        stroke: el.getAttribute('stroke'),
+        strokeWidth: el.getAttribute('stroke-width'),
+        opacity: el.getAttribute('opacity'),
+        strokeLinecap: el.getAttribute('stroke-linecap'),
+        strokeLinejoin: el.getAttribute('stroke-linejoin'),
+        fill: el.getAttribute('fill'),
+        transform: el.getAttribute('transform')
+      });
+    } else if (el.tagName === 'text') {
+      data.push({
+        type: 'text',
+        x: el.getAttribute('x'), y: el.getAttribute('y'),
+        fill: el.getAttribute('fill'),
+        fontSize: el.getAttribute('font-size'),
+        fontWeight: el.getAttribute('font-weight'),
+        fontFamily: el.getAttribute('font-family'),
+        text: el.textContent,
+        transform: el.getAttribute('transform')
+      });
+    } else if (el.tagName === 'g') {
+      // Dot marker group (circle + text)
+      const circle = el.querySelector('circle');
+      const text = el.querySelector('text');
+      if (circle && text) {
+        data.push({
+          type: 'dot',
+          cx: circle.getAttribute('cx'), cy: circle.getAttribute('cy'),
+          r: circle.getAttribute('r'),
+          fill: circle.getAttribute('fill'),
+          label: text.textContent,
+          fontSize: text.getAttribute('font-size'),
+          transform: el.getAttribute('transform')
+        });
+      }
+    }
+  });
+  return data;
+}
+
+function loadAnnotations(data) {
+  // Clear current
+  drawHistory.forEach(el => el.remove());
+  drawHistory = [];
+  dotCounter = 0;
+  usedDotNumbers.clear();
+  eraseMask.querySelectorAll('path').forEach(p => p.remove());
+
+  data.forEach(item => {
+    if (item.type === 'path') {
+      const p = document.createElementNS('http://www.w3.org/2000/svg','path');
+      p.setAttribute('d', item.d || '');
+      p.setAttribute('fill', item.fill || 'none');
+      p.setAttribute('stroke', item.stroke || '#ff4444');
+      p.setAttribute('stroke-width', item.strokeWidth || '4');
+      if (item.opacity) p.setAttribute('opacity', item.opacity);
+      if (item.strokeLinecap) p.setAttribute('stroke-linecap', item.strokeLinecap);
+      if (item.strokeLinejoin) p.setAttribute('stroke-linejoin', item.strokeLinejoin);
+      if (item.transform) p.setAttribute('transform', item.transform);
+      drawStrokes.appendChild(p);
+      drawHistory.push(p);
+    } else if (item.type === 'text') {
+      const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+      t.setAttribute('x', item.x); t.setAttribute('y', item.y);
+      t.setAttribute('fill', item.fill || '#ff4444');
+      t.setAttribute('font-size', item.fontSize || '32');
+      t.setAttribute('font-weight', item.fontWeight || '700');
+      t.setAttribute('font-family', item.fontFamily || 'Segoe UI, system-ui, sans-serif');
+      if (item.transform) t.setAttribute('transform', item.transform);
+      t.textContent = item.text;
+      drawSvg.appendChild(t);
+      drawHistory.push(t);
+    } else if (item.type === 'dot') {
+      // Parse the number from the label (e.g. "P3" -> 3) and track it
+      const labelMatch = (item.label || '').match(/^P(\d+)$/);
+      const pNum = labelMatch ? parseInt(labelMatch[1]) : getNextDotNumber();
+      if (labelMatch) { usedDotNumbers.add(pNum); dotCounter = Math.max(dotCounter, pNum); }
+      const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+      g._dotLabel = item.label || ('P' + pNum);
+      const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+      c.setAttribute('cx', item.cx); c.setAttribute('cy', item.cy);
+      c.setAttribute('r', item.r || '12');
+      c.setAttribute('fill', item.fill || '#00d4ff');
+      c.setAttribute('stroke','#fff'); c.setAttribute('stroke-width', 2);
+      c.setAttribute('opacity','0.9');
+      g.appendChild(c);
+      const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+      t.setAttribute('x', item.cx);
+      t.setAttribute('y', parseFloat(item.cy) - parseFloat(item.r || 12) - 10);
+      t.setAttribute('fill', '#00d4ff');
+      t.setAttribute('font-size', item.fontSize || '28');
+      t.setAttribute('font-weight','800');
+      t.setAttribute('text-anchor','middle');
+      t.setAttribute('font-family','Segoe UI, system-ui, sans-serif');
+      t.setAttribute('paint-order','stroke');
+      t.setAttribute('stroke','rgba(0,0,0,0.8)');
+      t.setAttribute('stroke-width','4px');
+      t.textContent = item.label || ('P' + pNum);
+      g.appendChild(t);
+      if (item.transform) g.setAttribute('transform', item.transform);
+      drawSvg.appendChild(g);
+      drawHistory.push(g);
+    }
+  });
+  updateAnnoCount();
+}
+
+document.getElementById('save-anno-btn').onclick = () => {
+  const data = serializeAnnotations();
+  if (data.length === 0) { toast('No annotations to save'); return; }
+  localStorage.setItem('tl-annotations', JSON.stringify(data));
+  document.getElementById('save-anno-btn').classList.add('has-save');
+  toast('Saved ' + data.length + ' annotation' + (data.length !== 1 ? 's' : ''));
+};
+
+document.getElementById('load-anno-btn').onclick = () => {
+  const raw = localStorage.getItem('tl-annotations');
+  if (!raw) { toast('No saved annotations found'); return; }
+  try {
+    const data = JSON.parse(raw);
+    loadAnnotations(data);
+    toast('Loaded ' + data.length + ' annotation' + (data.length !== 1 ? 's' : ''));
+  } catch(e) { toast('Failed to load — data corrupted'); }
+};
+
+document.getElementById('clear-save-btn').onclick = () => {
+  localStorage.removeItem('tl-annotations');
+  document.getElementById('save-anno-btn').classList.remove('has-save');
+  toast('Saved annotations deleted');
+};
+
+// Show indicator if saved data exists
+if (localStorage.getItem('tl-annotations')) {
+  document.getElementById('save-anno-btn').classList.add('has-save');
+}
+
+// ===== SMOOTH ZOOM (animated transitions for button zoom) =====
+function smoothZoom(targetScale, centerX, centerY) {
+  const ns = Math.max(0.08, Math.min(12, targetScale));
+  px = centerX - (centerX - px) * (ns / scale);
+  py = centerY - (centerY - py) * (ns / scale);
+  scale = ns;
+  mw.classList.add('animating');
+  upd();
+  setTimeout(() => mw.classList.remove('animating'), 260);
+}
+
+// Override zoom button clicks with smooth version
+document.getElementById('zi').onclick = () => {
+  const cw = mc.clientWidth / 2, ch = mc.clientHeight / 2;
+  smoothZoom(scale * 1.4, cw, ch);
+};
+document.getElementById('zo').onclick = () => {
+  const cw = mc.clientWidth / 2, ch = mc.clientHeight / 2;
+  smoothZoom(scale / 1.4, cw, ch);
+};
+
+// ===== KEYBOARD: add theme toggle key =====
+const origKeydown = null; // We'll hook in below
 
 // ===== INIT =====
 buildLotList();
