@@ -244,91 +244,154 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
   .panel{width:200px;min-width:200px}
 }
 @media(max-width:760px){
-  #app{flex-direction:column;position:relative;overflow:hidden}
 
-  /* === MOBILE TAB BAR (absolute overlay at top) === */
+  /* =============================================
+     MOBILE LAYOUT — COMPLETE REWRITE
+     Structure (top to bottom):
+       1. Title bar (compact, always visible)
+       2. Tab bar (Lots / Road Points)
+       3. Panel (slides open when tab active)
+       4. Map (fills rest of screen)
+       5. Toolbar (left edge, vertical)
+       6. Zoom controls (bottom-right)
+       7. Minimap (bottom-right, above zoom)
+       8. Coord bar (bottom-center, tiny)
+     ============================================= */
+
+  /* --- APP CONTAINER --- */
+  #app{
+    flex-direction:column;
+    position:relative;
+    overflow:hidden;
+  }
+
+  /* --- 1. TITLE BAR (compact, part of left panel but always visible via structure) --- */
+  #title-bar{
+    padding:6px 12px 4px;
+    background:#0d1117;
+    border-bottom:none;
+  }
+  #title-bar h1{font-size:11px;letter-spacing:0.5px;margin-bottom:0}
+  #title-bar .subtitle{font-size:7px;line-height:1.2}
+  #title-bar .org{font-size:8px;margin-top:1px;gap:3px}
+  #title-bar .org::before{width:5px;height:5px}
+
+  /* --- 2. MOBILE TAB BAR --- */
   #mobile-tabs{
-    display:flex;position:absolute;top:0;left:0;right:0;z-index:16;
-    background:#0d1117;border-bottom:1px solid #30363d;height:34px;
+    display:flex;
+    position:absolute;
+    top:0;left:0;right:0;
+    z-index:16;
+    background:#0d1117;
+    border-bottom:1px solid #30363d;
+    height:32px;
   }
   #mobile-tabs .mtab{
-    flex:1;padding:7px 6px;text-align:center;font-size:10px;font-weight:700;
-    letter-spacing:0.3px;color:#8b949e;cursor:pointer;border:none;background:transparent;
-    border-bottom:2px solid transparent;transition:all .15s;
+    flex:1;padding:6px 8px;text-align:center;
+    font-size:10px;font-weight:700;letter-spacing:0.3px;
+    color:#8b949e;cursor:pointer;
+    border:none;background:transparent;
+    border-bottom:2px solid transparent;
+    transition:all .15s;
   }
-  #mobile-tabs .mtab.active{color:#58a6ff;border-bottom-color:#58a6ff;background:#161b22}
-  #mobile-tabs .mtab:nth-child(2).active{color:#f97316;border-bottom-color:#f97316}
+  #mobile-tabs .mtab.active{
+    color:#58a6ff;border-bottom-color:#58a6ff;background:#161b22;
+  }
+  #mobile-tabs .mtab:nth-child(2).active{
+    color:#f97316;border-bottom-color:#f97316;
+  }
 
-  /* Panels: absolute overlays that slide down from below tabs */
+  /* --- 3. PANELS (absolute overlays below tab bar) --- */
   .panel{
     width:100%!important;min-width:100%!important;
     border-right:none!important;border-left:none!important;
+    position:absolute;left:0;right:0;
+    top:32px;
+    z-index:15;
+    max-height:0;
+    overflow:hidden;
+    transition:max-height .25s ease;
     border-bottom:1px solid #30363d;
-    position:absolute;left:0;right:0;z-index:15;
-    top:34px;
-    max-height:0;overflow:hidden;
-    transition:max-height .2s ease;
   }
-  .panel.mobile-active{max-height:38vh;overflow-y:auto}
-  .panel.mobile-active .item-list{max-height:calc(38vh - 90px);overflow-y:auto}
-  #right-panel{top:34px;bottom:auto;border-top:none}
+  .panel.mobile-active{
+    max-height:45vh;
+    overflow-y:auto;
+  }
+  .panel.mobile-active .item-list{
+    max-height:calc(45vh - 80px);
+    overflow-y:auto;
+  }
+  #right-panel{top:32px;bottom:auto;border-top:none}
+  .panel.collapsed{max-height:0;overflow:hidden}
 
-  /* Map fills entire screen (panels/tabs overlay on top) */
-  #map{flex:1;width:100%;position:relative}
-
-  /* Compact title bar on mobile */
-  #title-bar{padding:5px 10px;border-bottom:1px solid #30363d}
-  #title-bar h1{font-size:11px;margin-bottom:0}
-  #title-bar .subtitle{font-size:8px;line-height:1.2}
-  #title-bar .org{font-size:8px;margin-top:2px}
-
-  /* Compact panel headers on mobile */
-  .panel-hdr{padding:4px 10px;border-bottom:1px solid #30363d}
+  /* Panel headers: compact but VISIBLE */
+  .panel-hdr{
+    padding:5px 12px;
+    background:#0d1117;
+    border-bottom:1px solid #30363d;
+  }
   .panel-hdr h2{font-size:10px;margin-bottom:0}
+  .panel-hdr h2::after{font-size:8px}
   .panel-hdr .sub{display:none}
 
-  /* Hide non-essential elements on mobile */
+  /* Hide non-essential panel elements */
   .panel-stats{display:none!important}
   .filter-area{display:none!important}
 
-  /* Compact search on mobile */
-  .search-wrap{padding:3px 8px;border-bottom:1px solid #30363d}
-  .search-wrap input{padding:4px 7px;font-size:10px}
+  /* Compact search */
+  .search-wrap{padding:4px 10px;border-bottom:1px solid #30363d}
+  .search-wrap input{padding:5px 8px;font-size:10px}
 
-  /* Hide old collapsed styles */
-  .panel.collapsed{max-height:0;overflow:hidden}
+  /* --- 4. MAP (fills all remaining space) --- */
+  #map{
+    flex:1;
+    width:100%;
+    position:relative;
+  }
 
-  /* Compact toolbar along left side */
+  /* --- 5. TOOLBAR (left edge, vertical, slim) --- */
   #toolbar{
-    top:50%;right:auto;left:3px;transform:translateY(-50%);
-    flex-direction:column;max-width:30px!important;
-    padding:2px 1px;gap:0px;border-radius:5px;
+    top:50%;right:auto;left:4px;
+    transform:translateY(-50%);
+    flex-direction:column;
+    max-width:32px!important;
+    padding:3px 2px;gap:1px;
+    border-radius:6px;
     align-items:center;
   }
-  .tb{width:24px;min-height:24px;font-size:10px;padding:1px 0}
+  .tb{width:26px;min-height:26px;font-size:11px;padding:2px 0}
+  .tb svg{width:14px;height:14px}
   .tb-tip{display:none}
-  .tb-sep{width:80%;height:1px;margin:0}
+  .tb-sep{width:80%;height:1px;margin:1px 0}
   .tb-label{display:none}
   #stroke-size{display:none}
 
-  /* Right controls: only +, -, pin on mobile */
-  #ctrls{top:auto;bottom:34px;right:6px}
-  .cb{width:26px;height:26px;font-size:12px}
+  /* --- 6. ZOOM CONTROLS (bottom-right, only +/-/pin) --- */
+  #ctrls{
+    top:auto;bottom:40px;right:8px;
+  }
+  .cb{width:30px;height:30px;font-size:14px}
   #z100,#grid-btn,#rotate-btn,#quick-ss-btn{display:none!important}
   #zc{display:none!important}
 
-  /* Hide legend on mobile */
-  #legend-panel{display:none!important}
+  /* --- 7. MINIMAP (small, bottom-right, above zoom) --- */
+  #minimap{
+    width:50px;height:68px;
+    top:auto;bottom:120px;
+    left:auto;right:8px;
+    border-radius:5px;
+  }
+  #minimap.collapsed{width:28px;height:28px;border-radius:5px}
 
-  /* Minimap: tiny, bottom-right, starts minimized via JS */
-  #minimap{width:44px;height:60px;top:auto;bottom:80px;left:auto;right:6px;border-radius:4px}
-
-  /* Coord bar: small on mobile */
-  #coord-display{bottom:4px;font-size:8px;padding:1px 4px;gap:4px}
-  .coord-input{width:28px;font-size:8px}
+  /* --- 8. COORD BAR (bottom center, minimal) --- */
+  #coord-display{bottom:6px;font-size:8px;padding:2px 6px;gap:4px}
+  .coord-input{width:32px;font-size:8px}
   #share-view-btn{display:none}
 
-  #measure-info{top:auto;bottom:10px;left:50%;font-size:10px}
+  /* --- MISC MOBILE OVERRIDES --- */
+  #legend-panel{display:none!important}
+  #measure-info{top:auto;bottom:12px;left:50%;font-size:10px}
+  #anno-count{bottom:6px;right:auto;left:6px;font-size:9px}
 }
 /* Hide mobile tabs on desktop */
 #mobile-tabs{display:none}
