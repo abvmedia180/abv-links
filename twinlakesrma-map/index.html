@@ -244,11 +244,11 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
   .panel{width:200px;min-width:200px}
 }
 @media(max-width:760px){
-  #app{flex-direction:column;position:relative}
+  #app{flex-direction:column;position:relative;overflow:hidden}
 
-  /* === MOBILE TABBED PANEL === */
+  /* === MOBILE TAB BAR (absolute overlay at top) === */
   #mobile-tabs{
-    display:flex;position:fixed;top:0;left:0;right:0;z-index:16;
+    display:flex;position:absolute;top:0;left:0;right:0;z-index:16;
     background:#0d1117;border-bottom:1px solid #30363d;height:34px;
   }
   #mobile-tabs .mtab{
@@ -259,21 +259,22 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
   #mobile-tabs .mtab.active{color:#58a6ff;border-bottom-color:#58a6ff;background:#161b22}
   #mobile-tabs .mtab:nth-child(2).active{color:#f97316;border-bottom-color:#f97316}
 
-  /* Panels become overlaid drawers below the tabs */
+  /* Panels: absolute overlays that slide down from below tabs */
   .panel{
-    width:100%;min-width:100%;border-right:none!important;border-left:none!important;
+    width:100%!important;min-width:100%!important;
+    border-right:none!important;border-left:none!important;
     border-bottom:1px solid #30363d;
-    position:fixed;left:0;right:0;z-index:15;
+    position:absolute;left:0;right:0;z-index:15;
     top:34px;
     max-height:0;overflow:hidden;
     transition:max-height .2s ease;
   }
-  .panel.mobile-active{max-height:25vh;overflow-y:auto}
-  .panel.mobile-active .item-list{max-height:calc(25vh - 40px);overflow-y:auto}
+  .panel.mobile-active{max-height:28vh;overflow-y:auto}
+  .panel.mobile-active .item-list{max-height:calc(28vh - 40px);overflow-y:auto}
   #right-panel{top:34px;bottom:auto;border-top:none}
 
-  /* Map fills entire screen below tabs */
-  #map{position:fixed!important;top:34px;left:0;right:0;bottom:0}
+  /* Map fills entire screen (panels/tabs overlay on top) */
+  #map{flex:1;width:100%;position:relative}
 
   /* Hide elements not needed on mobile */
   .panel-hdr{display:none}
@@ -314,7 +315,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
   /* Minimap: small, bottom-right, starts minimized via JS */
   #minimap{width:60px;height:81px;top:auto;bottom:110px;left:auto;right:6px}
 
-  /* Coord bar: tiny on mobile */
+  /* Coord bar: small on mobile */
   #coord-display{bottom:4px;font-size:8px;padding:1px 4px;gap:4px}
   .coord-input{width:28px;font-size:8px}
   #share-view-btn{display:none}
