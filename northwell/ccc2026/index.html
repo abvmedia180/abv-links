@@ -779,7 +779,7 @@ var CATEGORIES = [
     { q: "Every CCC must have three designated positions: the Co-Chairs, the Scribe, and this person who keeps the meeting on schedule.", a: "Who is the Timekeeper?" },
     { q: "This person is a member of the council but is NOT the chair \u2014 they bring operational expertise and a global perspective to the CCC.", a: "Who is the Manager?" },
     { q: "CCC meetings should be scheduled at this frequency, on a consistent day and time, ideally for one hour.", a: "What is monthly?" },
-    { q: "The recommended CCC agenda starts with a Check-In Question and ends with a review of these, including task, owner, and due date.", a: "What are Action Items?" },
+    { q: "This is the meeting you are required to attend on the last Friday of every month and present at once a year.", a: "What is the Central CCC?" },
     { q: "On the CCC Traffic Light report, a council earns a GREEN rating when more than this percentage of meetings are held with a consistent interdisciplinary team and implemented PIPs.", a: "What is 80%?" }
   ]},
   { name: "Communication & Empathy", clues: [
@@ -797,9 +797,9 @@ var CATEGORIES = [
     { q: "Magnet isn't just about a designation. According to the presentation, it's about consciously creating a culture focused on four areas: Healthy & Safe Work Environments, Professional Development, Excellent Patient Outcomes, and this.", a: "What is Patient & Employee Satisfaction?" }
   ]},
   { name: "Northwell Knowledge", clues: [
-    { q: "LIJ Medical Center's mailing address is in this village in Nassau County, just 15 miles east of Manhattan.", a: "What is New Hyde Park?" },
-    { q: "Before rebranding on January 1, 2016, Northwell Health was known by this name.", a: "What is the North Shore\u2013Long Island Jewish Health System (North Shore-LIJ)?" },
-    { q: "Northwell's current President and CEO started his career as an emergency medicine physician at Glen Cove Hospital over 25 years ago. Name him.", a: "Who is Dr. John D'Angelo?" },
+    { q: "LIJ Medical Center has this many beds, making it one of the largest hospitals in the Northwell system.", a: "What is 583?" },
+    { q: "LIJ is not classified as a community hospital. It holds this designation, meaning it provides highly specialized services and serves as a referral center for complex cases.", a: "What is a tertiary care hospital?" },
+    { q: "Starting as a bedside nurse right here at LIJ, this current LIJMC executive rose through the ranks of leadership across Northwell, from Assistant Nurse Manager to Nurse Manager to Director, before returning to lead at LIJ. Name this homegrown leader.", a: "Who is Tiffany Powell, CNO?" },
     { q: "In 2025, Northwell completed a major merger with this health system, expanding into Connecticut and the Hudson Valley.", a: "What is Nuvance Health?" },
     { q: "Northwell's mission statement says: \"To improve the health and quality of life for those we serve by providing world-class service and ___ care.\"", a: "What is compassionate?" }
   ]}
@@ -1727,7 +1727,7 @@ function buildBoard() {
     var h = document.createElement('div');
     h.className = 'category-header';
     h.setAttribute('data-category', CATEGORIES[ci].name);
-    h.innerHTML = '<h2></h2>';
+    h.innerHTML = categoryTypewriterDone ? '<h2>' + CATEGORIES[ci].name + '</h2>' : '<h2></h2>';
     h.style.animationDelay = (idx * 0.03) + 's';
     board.appendChild(h);
     idx++;
