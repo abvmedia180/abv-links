@@ -7,21 +7,21 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d1117;color:#c9d1d9;overflow:hidden;height:100vh;height:100dvh}
-#app{display:flex;height:100vh;height:100dvh}
+#app{display:flex;height:100vh;height:100dvh;position:relative}
 
 /* === PANELS (shared) === */
 .panel{
   width:260px;min-width:260px;background:#161b22;
   display:flex;flex-direction:column;z-index:10;
 }
-.panel-l{border-right:1px solid #30363d}
+.panel-l{border-right:1px solid #30363d;padding-top:68px}
 .panel-r{border-left:1px solid #30363d}
 .panel-hdr{padding:10px 12px;background:#0d1117;border-bottom:1px solid #30363d;cursor:pointer;user-select:none}
 .panel-hdr h2{font-size:12px;font-weight:700;letter-spacing:0.3px;margin-bottom:1px;display:flex;align-items:center;justify-content:space-between}
 .panel-hdr h2::after{content:'▾';font-size:10px;color:#8b949e}
 .panel-hdr .sub{font-size:9px;color:#8b949e;line-height:1.3}
 
-#title-bar{padding:10px 12px;background:#0d1117;border-bottom:1px solid #30363d}
+#title-bar{padding:10px 12px;background:#0d1117;border-bottom:1px solid #30363d;position:absolute;top:0;left:0;width:260px;z-index:11}
 #title-bar h1{font-size:13px;font-weight:700;color:#58a6ff;letter-spacing:0.3px;margin-bottom:1px}
 #title-bar .subtitle{font-size:9px;color:#8b949e;line-height:1.3}
 #title-bar .org{font-size:10px;color:#7ee787;font-weight:600;margin-top:4px;display:flex;align-items:center;gap:4px}
@@ -242,6 +242,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
 /* === RESPONSIVE === */
 @media(max-width:1000px){
   .panel{width:200px;min-width:200px}
+  #title-bar{width:200px}
 }
 @media(max-width:760px){
 
@@ -263,13 +264,14 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
     flex-direction:column;
     position:relative;
     overflow:hidden;
-    padding-top:118px;
+    padding-top:74px;
   }
 
   /* --- 1. TITLE BAR (pulled OUT of panel flow, fixed at very top) --- */
   #title-bar{
     position:fixed!important;
     top:0;left:0;right:0;
+    width:auto!important;
     z-index:20;
     padding:5px 12px 3px;
     background:#0d1117;
@@ -280,59 +282,64 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
   #title-bar .org{font-size:8px;margin-top:1px;gap:3px}
   #title-bar .org::before{width:5px;height:5px}
 
-  /* --- 2. MOBILE TAB BAR (below title bar) --- */
+  /* --- 2. MOBILE TAB BAR (horizontal tabs below title bar) --- */
   #mobile-tabs{
-    display:flex;
-    flex-direction:column;
+    display:flex!important;
+    flex-direction:row;
     position:fixed;
     top:38px;left:0;right:0;
     z-index:19;
     background:#0d1117;
+    border-bottom:2px solid #30363d;
   }
   #mobile-tabs .mtab{
-    width:100%;padding:6px 12px;text-align:left;
-    font-size:12px;font-weight:700;letter-spacing:0.3px;
-    color:#8b949e;cursor:pointer;
+    flex:1;padding:9px 8px 7px;text-align:center;
+    font-size:13px;font-weight:700;letter-spacing:0.3px;
+    color:#484f58;cursor:pointer;
     border:none;background:#0d1117;
-    border-bottom:1px solid #30363d;
+    border-bottom:2px solid transparent;
+    margin-bottom:-2px;
     transition:all .15s;
-    display:flex;align-items:center;justify-content:space-between;
+    display:flex;align-items:center;justify-content:center;
+    gap:6px;
+    -webkit-tap-highlight-color:transparent;
   }
-  #mobile-tabs .mtab::after{content:'▸';font-size:10px;color:#8b949e;transition:transform .15s}
-  #mobile-tabs .mtab.active::after{content:'▾'}
+  #mobile-tabs .mtab::after{display:none}
   #mobile-tabs .mtab.active{
-    color:#58a6ff;background:#0d1117;
+    color:#58a6ff;
+    border-bottom-color:#58a6ff;
   }
-  #mobile-tabs .mtab:nth-child(1){color:#58a6ff}
-  #mobile-tabs .mtab:nth-child(2){color:#f97316}
-  #mobile-tabs .mtab:nth-child(2).active{
-    color:#f97316;
-  }
-  .mtab-content{display:flex;flex-direction:column;align-items:flex-start}
-  .mtab-title{font-size:12px;font-weight:700}
-  .mtab-sub{font-size:9px;color:#8b949e;font-weight:400;line-height:1.3}
+  #mobile-tabs .mtab:nth-child(1){color:#3d6d9e}
+  #mobile-tabs .mtab:nth-child(1).active{color:#58a6ff;border-bottom-color:#58a6ff}
+  #mobile-tabs .mtab:nth-child(2){color:#8b6530}
+  #mobile-tabs .mtab:nth-child(2).active{color:#f97316;border-bottom-color:#f97316}
+  .mtab-content{display:flex;align-items:center}
+  .mtab-title{font-size:13px;font-weight:700}
+  .mtab-sub{display:none}
 
   /* --- 3. PANELS (fixed overlays below title bar + tab bar) --- */
   .panel{
     width:100%!important;min-width:100%!important;
     border-right:none!important;border-left:none!important;
     position:fixed;left:0;right:0;
-    top:118px;
+    top:74px;
     z-index:15;
     max-height:0;
     overflow:hidden;
     transition:max-height .25s ease;
     border-bottom:1px solid #30363d;
+    padding-top:0!important;
   }
   .panel.mobile-active{
-    max-height:45vh;
+    max-height:28vh;
     overflow-y:auto;
+    box-shadow:0 4px 16px rgba(0,0,0,0.4);
   }
   .panel.mobile-active .item-list{
-    max-height:calc(45vh - 80px);
+    max-height:calc(28vh - 40px);
     overflow-y:auto;
   }
-  #right-panel{top:118px;bottom:auto;border-top:none}
+  #right-panel{top:74px;bottom:auto;border-top:none}
   .panel.collapsed{max-height:0;overflow:hidden}
 
   /* Panel headers: hidden on mobile since tab bar shows them */
@@ -355,10 +362,10 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
     position:relative;
   }
 
-  /* --- 5. TOOLBAR (left edge, vertical, slim) --- */
+  /* --- 5. TOOLBAR (bottom-left, vertical, slim) --- */
   #toolbar{
-    top:50%;right:auto;left:4px;
-    transform:translateY(-50%);
+    top:auto;bottom:40px;right:auto;left:4px;
+    transform:none;
     flex-direction:column;
     max-width:32px!important;
     padding:3px 2px;gap:1px;
@@ -371,6 +378,14 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
   .tb-sep{width:80%;height:1px;margin:1px 0}
   .tb-label{display:none}
   #stroke-size{display:none}
+  /* Hide tools not needed on mobile */
+  .tb[data-tool="text"],
+  .tb[data-tool="move"],
+  .tb[data-tool="measure"],
+  .tb[data-tool="screenshot"]{display:none!important}
+  #draw-color{display:none!important}
+  #draw-color+.tb-tip{display:none!important}
+  .tb:has(#draw-color){display:none!important}
 
   /* --- 6. ZOOM CONTROLS (bottom-right, only +/-/pin) --- */
   #ctrls{
@@ -380,25 +395,8 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
   #z100,#grid-btn,#rotate-btn,#quick-ss-btn{display:none!important}
   #zc{display:none!important}
 
-  /* --- 7. MINIMAP (small, bottom-LEFT, away from zoom controls) --- */
-  #minimap{
-    width:50px;height:68px;
-    top:auto;bottom:36px;
-    left:8px;right:auto;
-    border-radius:5px;
-  }
-  #minimap.collapsed{width:auto;height:auto;border-radius:8px;padding:6px 10px;min-width:0;background:#161b22;border:1px solid #30363d}
-  #minimap.collapsed #minimap-toggle{
-    position:static;transform:none;font-size:0;
-    width:auto;height:auto;background:transparent;
-    display:flex;flex-direction:column;align-items:center;gap:2px;
-  }
-  #minimap.collapsed #minimap-toggle::before{
-    content:'';display:block;width:20px;height:20px;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2358a6ff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20'/%3E%3Cpath d='M2 12h20'/%3E%3C/svg%3E");
-    background-size:contain;background-repeat:no-repeat;
-  }
-  #minimap.collapsed #minimap-toggle::after{content:'Map';font-size:8px;color:#8b949e;font-weight:600;letter-spacing:0.3px}
+  /* --- 7. MINIMAP — hidden on mobile --- */
+  #minimap{display:none!important}
 
   /* --- 8. COORD BAR (bottom center, ultra-compact) --- */
   #coord-display{bottom:4px;font-size:0;padding:2px 5px;gap:2px;left:50%;transform:translateX(-50%)}
@@ -408,7 +406,6 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
   #share-view-btn{display:none}
 
   /* --- MISC MOBILE OVERRIDES --- */
-  #legend-panel{display:none!important}
   #measure-info{top:auto;bottom:12px;left:50%;font-size:10px}
   #anno-count{
     bottom:auto;top:4px;right:8px;left:auto;
@@ -483,25 +480,8 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
 }
 #measure-info.show{display:block}
 
-/* === LEGEND PANEL === */
-#legend-panel{
-  position:absolute;bottom:8px;left:8px;z-index:8;
-  background:#161b22;border:1px solid #30363d;border-radius:8px;
-  width:200px;overflow:hidden;display:none;
-  box-shadow:0 4px 16px rgba(0,0,0,0.4);transition:all .2s;
-}
-#legend-panel.show{display:block}
-#legend-panel.minimized .legend-body{display:none}
-#legend-panel.minimized{width:auto}
-#legend-panel::-webkit-scrollbar{width:4px}
-#legend-panel::-webkit-scrollbar-thumb{background:#30363d;border-radius:3px}
-.legend-hdr{padding:6px 10px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;user-select:none}
-.legend-hdr h3{font-size:11px;font-weight:700;color:#58a6ff}
-.legend-hdr button{width:20px;height:20px;border:none;background:transparent;color:#8b949e;cursor:pointer;font-size:13px;border-radius:4px;line-height:1}
-.legend-hdr button:hover{background:#21262d;color:#58a6ff}
-.legend-body{padding:4px 10px 8px}
-.legend-item{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:11px;color:#c9d1d9}
-.legend-swatch{width:14px;height:14px;border-radius:3px;flex-shrink:0}
+/* Legend + legend button hidden */
+#legend-panel,#legend-btn{display:none!important}
 
 
 /* === MINIMAP === */
@@ -633,19 +613,21 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
 
 <div id="app">
 
+<!-- TITLE BAR (outside panels so mobile overflow:hidden doesn't clip it) -->
+<div id="title-bar">
+  <h1>THE RANCHES AT TWIN LAKES</h1>
+  <div class="subtitle">Final Plat &bull; Lamar County, Texas &bull; 59 Lots &bull; ~591 Acres</div>
+  <div class="org">Twin Lakes RMA</div>
+</div>
+
 <!-- MOBILE TAB BAR -->
 <div id="mobile-tabs">
-  <button class="mtab active" data-panel="left-panel"><span class="mtab-content"><span class="mtab-title">Lots</span><span class="mtab-sub">Click a lot to highlight on map</span></span></button>
+  <button class="mtab" data-panel="left-panel"><span class="mtab-content"><span class="mtab-title">Lots</span><span class="mtab-sub">Click a lot to highlight on map</span></span></button>
   <button class="mtab" data-panel="right-panel"><span class="mtab-content"><span class="mtab-title">Road Points</span><span class="mtab-sub">Click a point to highlight on map</span></span></button>
 </div>
 
 <!-- LEFT PANEL: LOTS -->
 <div class="panel panel-l" id="left-panel">
-  <div id="title-bar">
-    <h1>THE RANCHES AT TWIN LAKES</h1>
-    <div class="subtitle">Final Plat &bull; Lamar County, Texas &bull; 59 Lots &bull; ~591 Acres</div>
-    <div class="org">Twin Lakes RMA</div>
-  </div>
   <div class="panel-hdr" id="lot-hdr"><h2 style="color:#58a6ff">Lots</h2><div class="sub">Click a lot to highlight on map</div></div>
   <div class="search-wrap"><input type="text" id="lot-search" placeholder="Search lot # or owner..." autocomplete="off"></div>
   <div class="item-list" id="lot-list"></div>
@@ -667,7 +649,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
     <button class="tb" data-tool="pen" title="Pen (P)"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg><span class="tb-tip">Pen</span></button>
     <button class="tb" data-tool="hl" title="Highlighter (H)"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg><span class="tb-tip">Highlight</span></button>
     <button class="tb" data-tool="text" title="Text (T)">T<span class="tb-tip">Text</span></button>
-    <button class="tb" data-tool="dot" title="Mark Point (D)">●<span class="tb-tip">Mark</span></button>
+    <button class="tb" data-tool="dot" title="Mark Point (D)"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12"/><path d="M18 6L6 18"/><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"/></svg><span class="tb-tip">Mark</span></button>
     <div class="tb-sep"></div>
     <div class="tb" title="Drawing Color">
       <span class="color-preview" id="color-prev" style="background:#ff4444"></span>
@@ -712,15 +694,6 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d111
   <div id="measure-info"></div>
   <div id="coord-display"><span>X: <input class="coord-input" id="coord-x" value="—" title="X % — edit to navigate"></span><span class="sep">|</span><span>Y: <input class="coord-input" id="coord-y" value="—" title="Y % — edit to navigate"></span><span class="sep">|</span><span>Zoom: <input class="coord-input" id="coord-z" value="—" title="Zoom % — edit to set zoom"></span><span class="sep">|</span><button id="share-view-btn" title="Copy shareable link">🔗</button></div>
   <div id="minimap"><button id="minimap-toggle">◳</button><canvas id="minimap-canvas"></canvas><div class="viewport-rect" id="minimap-vp"></div></div>
-  <div id="legend-panel" class="show">
-    <div class="legend-hdr"><h3>Legend</h3><button id="legend-minimize" title="Minimize legend">▾</button></div>
-    <div class="legend-body">
-      <div class="legend-item"><span class="legend-swatch" style="background:#ef4444"></span>A — Lakeside Lane</div>
-      <div class="legend-item"><span class="legend-swatch" style="background:#f97316"></span>B — Creekside Court</div>
-      <div class="legend-item"><span class="legend-swatch" style="background:#eab308"></span>C — Twin Lakes Trail</div>
-      <div class="legend-item"><span class="legend-swatch" style="background:#22c55e"></span>D — Westlake Court</div>
-    </div>
-  </div>
 </div>
 
 <!-- RIGHT PANEL: ROAD POINTS -->
@@ -743,7 +716,7 @@ function closeModal() {
   var o = document.getElementById('modal-overlay');
   if (!o) return;
   o.classList.add('hidden');
-  setTimeout(function(){ o.style.display = 'none'; }, 300);
+  setTimeout(function(){ o.style.display = 'none'; fit(); }, 300);
 }
 (function(){
   var btn = document.getElementById('modal-continue');
@@ -934,10 +907,25 @@ function setupMobile() {
   if (window.innerWidth > 760) return;
   const lp = document.getElementById('left-panel');
   const rp = document.getElementById('right-panel');
-  lp.classList.remove('mobile-active');
+  const tabs = document.querySelectorAll('#mobile-tabs .mtab');
+  // Start with Lots tab active so users see content immediately
   rp.classList.remove('mobile-active');
-  mobileActivePanel = null;
+  lp.classList.add('mobile-active');
+  tabs.forEach(t => t.classList.remove('active'));
+  tabs[0].classList.add('active');
+  mobileActivePanel = 'left-panel';
 }
+// Scroll position memory for mobile tabs
+const panelScrollPos = { 'left-panel': 0, 'right-panel': 0 };
+function savePanelScroll(panelId) {
+  const list = document.getElementById(panelId === 'left-panel' ? 'lot-list' : 'pt-list');
+  if (list) panelScrollPos[panelId] = list.scrollTop;
+}
+function restorePanelScroll(panelId) {
+  const list = document.getElementById(panelId === 'left-panel' ? 'lot-list' : 'pt-list');
+  if (list) setTimeout(() => { list.scrollTop = panelScrollPos[panelId] || 0; }, 50);
+}
+
 // Tab click handler
 document.querySelectorAll('#mobile-tabs .mtab').forEach(tab => {
   tab.addEventListener('click', () => {
@@ -948,13 +936,17 @@ document.querySelectorAll('#mobile-tabs .mtab').forEach(tab => {
     const tabs = document.querySelectorAll('#mobile-tabs .mtab');
 
     if (mobileActivePanel === panelId) {
-      // Tapping active tab collapses it
+      // Tapping active tab collapses it — save scroll first
+      savePanelScroll(panelId);
       lp.classList.remove('mobile-active');
       rp.classList.remove('mobile-active');
       tabs.forEach(t => t.classList.remove('active'));
       mobileActivePanel = null;
       return;
     }
+
+    // Save scroll of outgoing panel
+    if (mobileActivePanel) savePanelScroll(mobileActivePanel);
 
     // Switch to tapped tab
     lp.classList.remove('mobile-active');
@@ -963,6 +955,7 @@ document.querySelectorAll('#mobile-tabs .mtab').forEach(tab => {
     tab.classList.add('active');
     document.getElementById(panelId).classList.add('mobile-active');
     mobileActivePanel = panelId;
+    restorePanelScroll(panelId);
   });
 });
 
@@ -1259,13 +1252,16 @@ const mc = document.getElementById('map'), mw = document.getElementById('wrap');
 let scale=1, px=0, py=0, drag=false, sx, sy;
 
 function upd() { mw.style.transform = `translate(${px}px,${py}px) scale(${scale})`; }
+let _fitAttempts = 0;
 function fit() {
   const cw=mc.clientWidth, ch=mc.clientHeight;
-  scale = Math.min(cw/IW, ch/IH)*0.96;
+  if (cw < 10 || ch < 10) { if (++_fitAttempts < 30) setTimeout(fit, 50); return; }
+  _fitAttempts = 0;
+  scale = Math.max(0.01, Math.min(cw/IW, ch/IH)*0.96);
   px = (cw-IW*scale)/2; py = (ch-IH*scale)/2; upd();
 }
 const img = document.getElementById('img');
-img.onload = fit; if (img.complete) fit();
+img.onload = function(){ requestAnimationFrame(fit); }; if (img.complete) requestAnimationFrame(fit);
 // On resize, only re-fit if nothing is selected (avoids losing your place)
 window.addEventListener('resize', () => { if (!curLot && !curPoint) fit(); });
 
@@ -1841,25 +1837,6 @@ function applyShareHash() {
   }
 }
 
-// ===== LEGEND PANEL =====
-const legendPanel = document.getElementById('legend-panel');
-const legendMinBtn = document.getElementById('legend-minimize');
-// Legend toggle button shows/hides the full panel
-document.getElementById('legend-btn').onclick = () => {
-  legendPanel.classList.toggle('show');
-};
-// Minimize toggle — collapse body but keep header visible
-legendMinBtn.onclick = (e) => {
-  e.stopPropagation();
-  legendPanel.classList.toggle('minimized');
-  legendMinBtn.textContent = legendPanel.classList.contains('minimized') ? '▸' : '▾';
-};
-// Also clicking the header toggles minimize
-document.querySelector('.legend-hdr').onclick = () => {
-  legendPanel.classList.toggle('minimized');
-  legendMinBtn.textContent = legendPanel.classList.contains('minimized') ? '▸' : '▾';
-};
-
 // ===== WHEEL ZOOM =====
 mc.addEventListener('wheel', e => {
   e.preventDefault();
@@ -1971,8 +1948,8 @@ mc.addEventListener('touchmove', e => {
   // Cancel pending dot/text if user drags (it's a pan, not a tap)
   if (pendingDotTouch || pendingTextTouch) {
     const t0 = e.touches[0];
-    if (pendingDotTouch && (Math.abs(t0.clientX - pendingDotTouch.cx) > 8 || Math.abs(t0.clientY - pendingDotTouch.cy) > 8)) pendingDotTouch = null;
-    if (pendingTextTouch && (Math.abs(t0.clientX - pendingTextTouch.cx) > 8 || Math.abs(t0.clientY - pendingTextTouch.cy) > 8)) pendingTextTouch = null;
+    if (pendingDotTouch && (Math.abs(t0.clientX - pendingDotTouch.cx) > 14 || Math.abs(t0.clientY - pendingDotTouch.cy) > 14)) pendingDotTouch = null;
+    if (pendingTextTouch && (Math.abs(t0.clientX - pendingTextTouch.cx) > 14 || Math.abs(t0.clientY - pendingTextTouch.cy) > 14)) pendingTextTouch = null;
   }
   if (e.touches.length === 1) {
     if (drag) { px=e.touches[0].clientX-sx; py=e.touches[0].clientY-sy; upd(); }
@@ -2631,6 +2608,8 @@ updateRPVisibility();
 // Apply shared view from URL hash (after image loads)
 img.addEventListener('load', applyShareHash);
 if (img.complete) setTimeout(applyShareHash, 100);
+// Safety net: re-fit after everything is fully loaded (fixes mobile timing issues)
+window.addEventListener('load', () => setTimeout(fit, 200));
 </script>
 </body>
 </html>
