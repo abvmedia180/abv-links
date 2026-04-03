@@ -1,0 +1,2606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secure Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+<style>
+:root {
+  --primary: #0059A5;
+  --accent: #009CDA;
+  --orange: #E87722;
+  --light-blue: #6ACDEC;
+  --navy-dark: #0a2240;
+  --navy-light: #103764;
+  --green: #34d399;
+  --purple: #a78bfa;
+  --bg: #f4f6f9;
+  --card-bg: #ffffff;
+  --text: #1a1a2e;
+  --text-secondary: #5a6270;
+  --border: #e2e8f0;
+  --shadow: 0 2px 8px rgba(0,0,0,0.08);
+  --shadow-hover: 0 4px 16px rgba(0,0,0,0.12);
+  --radius: 10px;
+  --transition: 0.3s ease;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* NAV BAR */
+.navbar {
+  background: linear-gradient(135deg, var(--navy-dark), var(--navy-light));
+  padding: 0 24px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.navbar-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(52,211,153,0.5); }
+  50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(52,211,153,0); }
+}
+
+.nav-tabs {
+  display: flex;
+  gap: 4px;
+}
+
+.nav-tab {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.7);
+  padding: 8px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.nav-tab:hover { background: rgba(255,255,255,0.15); color: #fff; }
+.nav-tab.active {
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+  border-color: rgba(255,255,255,0.3);
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.location-select {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #fff;
+  padding: 7px 14px;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  outline: none;
+}
+
+.location-select option { color: #333; background: #fff; }
+
+/* MAIN CONTENT */
+.main-content {
+  padding: 24px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* CARDS */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  transition: box-shadow var(--transition), transform var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.card:hover { box-shadow: var(--shadow-hover); transform: translateY(-1px); }
+
+.card-accent-blue::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--primary); }
+.card-accent-orange::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--orange); }
+.card-accent-cyan::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent); }
+.card-accent-green::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--green); }
+.card-accent-purple::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--purple); }
+
+.card-title {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.card-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.card-subtitle {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* GRID LAYOUTS */
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 24px 0 12px;
+  color: var(--text);
+}
+
+.section-title:first-child { margin-top: 0; }
+
+/* SCHEDULE GRID */
+.schedule-container { overflow-x: auto; }
+
+.schedule-grid {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.schedule-grid th {
+  background: var(--navy-dark);
+  color: #fff;
+  padding: 8px 4px;
+  font-weight: 500;
+  font-size: 11px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  white-space: nowrap;
+}
+
+.schedule-grid td {
+  border: 1px solid var(--border);
+  padding: 2px;
+  min-width: 55px;
+  height: 40px;
+  position: relative;
+  vertical-align: top;
+}
+
+.schedule-grid .day-label {
+  background: #f8fafc;
+  font-weight: 600;
+  padding: 8px 12px;
+  min-width: 60px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.shift-block {
+  border-radius: 4px;
+  padding: 2px 4px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 1px 0;
+  line-height: 1.4;
+  animation: slideIn 0.4s ease;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Volume background tiers */
+.tier-low { background-color: rgba(52, 211, 153, 0.08); }
+.tier-med { background-color: rgba(232, 119, 34, 0.08); }
+.tier-high { background-color: rgba(220, 38, 38, 0.08); }
+
+/* Coverage bar */
+.coverage-bar {
+  display: flex;
+  height: 24px;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.coverage-segment {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 600;
+  color: #fff;
+  min-width: 20px;
+}
+
+/* Employee panel */
+.employee-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 8px;
+  transition: all var(--transition);
+}
+
+.employee-card:hover { box-shadow: var(--shadow); }
+
+.employee-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.employee-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.employee-name-input {
+  border: 1px solid transparent;
+  background: transparent;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  padding: 2px 6px;
+  border-radius: 4px;
+  width: 120px;
+  transition: all var(--transition);
+}
+
+.employee-name-input:hover { border-color: var(--border); }
+.employee-name-input:focus { border-color: var(--accent); outline: none; background: #f8fafc; }
+
+.type-badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+  text-transform: uppercase;
+}
+
+.type-badge.ft { background: #dbeafe; color: var(--primary); }
+.type-badge.pt { background: #fef3c7; color: #92400e; }
+
+.utilization-bar-container {
+  background: #f1f5f9;
+  border-radius: 4px;
+  height: 6px;
+  overflow: hidden;
+  margin-top: 6px;
+}
+
+.utilization-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.employee-hours {
+  font-size: 12px;
+  color: var(--text-secondary);
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+
+/* Week toggle */
+.week-toggle {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.week-btn {
+  padding: 8px 20px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all var(--transition);
+}
+
+.week-btn.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+/* BUILDER TAB */
+.builder-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.builder-sidebar {
+  position: sticky;
+  top: 84px;
+  max-height: calc(100vh - 108px);
+  overflow-y: auto;
+}
+
+.builder-employee-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 8px;
+  cursor: grab;
+  transition: all var(--transition);
+}
+
+.builder-employee-card:hover { box-shadow: var(--shadow); }
+
+.builder-employee-card.over-hours {
+  border-color: #ef4444;
+  animation: pulse-red 1s ease infinite;
+}
+
+@keyframes pulse-red {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.3); }
+  50% { box-shadow: 0 0 0 4px rgba(239,68,68,0); }
+}
+
+.shift-template-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.shift-template-btn {
+  font-size: 10px;
+  padding: 3px 8px;
+  border: 1px solid var(--border);
+  background: #f8fafc;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all var(--transition);
+}
+
+.shift-template-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+.builder-grid-container { overflow-x: auto; }
+
+.builder-grid {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+
+.builder-grid th {
+  background: var(--navy-dark);
+  color: #fff;
+  padding: 6px 2px;
+  font-weight: 500;
+  font-size: 10px;
+  min-width: 44px;
+  text-align: center;
+}
+
+.builder-grid td {
+  border: 1px solid var(--border);
+  min-width: 44px;
+  height: 44px;
+  position: relative;
+  vertical-align: top;
+  padding: 1px;
+}
+
+.builder-grid td.uncovered {
+  animation: pulse-border-red 1.5s ease infinite;
+}
+
+@keyframes pulse-border-red {
+  0%, 100% { box-shadow: inset 0 0 0 2px rgba(239,68,68,0.4); }
+  50% { box-shadow: inset 0 0 0 2px rgba(239,68,68,0.8); }
+}
+
+.builder-grid td.overstaffed {
+  box-shadow: inset 0 0 0 2px rgba(234,179,8,0.5);
+}
+
+.builder-shift-block {
+  border-radius: 3px;
+  padding: 1px 3px;
+  font-size: 9px;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+  margin: 1px 0;
+  cursor: pointer;
+  position: relative;
+}
+
+.builder-shift-block .remove-shift {
+  display: none;
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  width: 14px;
+  height: 14px;
+  background: #ef4444;
+  border-radius: 50%;
+  font-size: 8px;
+  line-height: 14px;
+  text-align: center;
+  cursor: pointer;
+  z-index: 5;
+}
+
+.builder-shift-block:hover .remove-shift { display: block; }
+
+/* Density bar */
+.density-bar {
+  display: flex;
+  height: 20px;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.density-segment {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+}
+
+/* BUILDER BUTTONS */
+.builder-actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn:hover { box-shadow: var(--shadow); }
+.btn-primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+.btn-primary:hover { background: #004a8c; }
+.btn-danger { background: #ef4444; color: #fff; border-color: #ef4444; }
+.btn-danger:hover { background: #dc2626; }
+.btn-success { background: var(--green); color: #fff; border-color: var(--green); }
+
+/* INSIGHTS TAB */
+.recommendation-list {
+  list-style: none;
+  padding: 0;
+}
+
+.recommendation-item {
+  padding: 12px 16px;
+  border-left: 3px solid var(--primary);
+  background: #f8fafc;
+  margin-bottom: 8px;
+  border-radius: 0 6px 6px 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.recommendation-item.warning { border-left-color: var(--orange); }
+.recommendation-item.success { border-left-color: var(--green); }
+
+.slider-group {
+  margin-bottom: 16px;
+}
+
+.slider-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.slider-input {
+  width: 100%;
+  accent-color: var(--primary);
+}
+
+.whatif-results {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.whatif-card {
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+}
+
+.whatif-value {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.whatif-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* Chart containers */
+.chart-container { width: 100%; height: 350px; }
+.chart-container-sm { width: 100%; height: 280px; }
+.chart-container-lg { width: 100%; height: 420px; }
+
+/* TOOLTIP */
+.custom-tooltip {
+  position: fixed;
+  background: var(--navy-dark);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  pointer-events: none;
+  z-index: 9999;
+  max-width: 250px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  display: none;
+  line-height: 1.5;
+}
+
+/* HOURLY RATE INPUT */
+.rate-input-container {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.rate-input {
+  width: 60px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-family: inherit;
+  font-size: 12px;
+  text-align: right;
+}
+
+/* MOBILE HAMBURGER */
+.mobile-menu-btn {
+  display: none;
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 1100;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: var(--navy-dark);
+  border: none;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+.mobile-menu-btn svg { stroke: white; width: 22px; height: 22px; }
+.mobile-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 999;
+}
+.mobile-overlay.active { display: block; }
+
+.mobile-dropdown {
+  display: none;
+  position: fixed;
+  top: 60px;
+  left: 0;
+  right: 0;
+  background: linear-gradient(135deg, var(--navy-dark), var(--navy-light));
+  padding: 12px 16px;
+  z-index: 1050;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  flex-direction: column;
+  gap: 6px;
+}
+.mobile-dropdown.open { display: flex; }
+.mobile-dropdown .nav-tab {
+  width: 100%;
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 15px;
+}
+.mobile-dropdown .location-select {
+  width: 100%;
+  margin-top: 4px;
+  padding: 10px 14px;
+  font-size: 14px;
+}
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 768px) {
+  .mobile-menu-btn { display: flex; }
+  .nav-tabs { display: none; }
+  .navbar-right { display: none; }
+  .navbar { padding: 0 14px; height: 54px; }
+  .navbar-title { font-size: 15px; }
+
+  .main-content { padding: 14px; }
+
+  .grid-4 { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .grid-3 { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .grid-2 { grid-template-columns: 1fr; gap: 10px; }
+
+  /* Tab 1: collapse 3-col to single stack */
+  #tab-schedule > div { grid-template-columns: 1fr !important; }
+
+  /* Builder: stack sidebar above grid */
+  .builder-layout { grid-template-columns: 1fr; }
+  .builder-sidebar { position: static; max-height: none; }
+
+  /* Chart sizing */
+  .chart-container { height: 280px; }
+  .chart-container-sm { height: 220px; }
+  .chart-container-lg { height: 320px; }
+
+  /* Cards */
+  .card { padding: 14px; }
+  .card-value { font-size: 24px; }
+  .card-title { font-size: 11px; }
+
+  /* Schedule table scroll */
+  .schedule-container, .builder-grid-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  /* What-If results */
+  .whatif-results { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .whatif-value { font-size: 18px; }
+
+  /* Buttons */
+  .builder-actions { gap: 6px; }
+  .btn { padding: 7px 12px; font-size: 12px; }
+  .week-btn { padding: 7px 14px; font-size: 12px; }
+
+  /* Employee cards */
+  .employee-card { padding: 10px; }
+  .employee-name-input { width: 100px; font-size: 13px; }
+
+  /* Footer */
+  .site-footer { flex-direction: column; gap: 8px; text-align: center; }
+}
+
+@media (max-width: 480px) {
+  .grid-4 { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: 1fr; }
+  .whatif-results { grid-template-columns: 1fr; }
+}
+
+/* PRINT */
+@media print {
+  .navbar, .nav-tabs, .location-select, .builder-actions, .week-toggle, .mobile-menu-btn, .mobile-dropdown, .site-footer { display: none !important; }
+  .tab-panel { display: block !important; break-inside: avoid; }
+  .main-content { padding: 12px; }
+  .card { box-shadow: none; border: 1px solid #ccc; }
+  body { background: #fff; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #c1c9d4; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #a0aab4; }
+
+/* Validation badges */
+.validation-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-weight: 600;
+  margin-right: 6px;
+}
+
+.badge-ok { background: #dcfce7; color: #166534; }
+.badge-warn { background: #fef3c7; color: #92400e; }
+.badge-error { background: #fee2e2; color: #991b1b; }
+
+/* Gap tooltip */
+.gap-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1e293b;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  white-space: nowrap;
+  display: none;
+  z-index: 100;
+}
+
+.builder-grid td.uncovered:hover .gap-tooltip { display: block; }
+</style>
+</head>
+<body>
+
+<!-- Mobile Menu -->
+<button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+  <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+<div class="mobile-overlay" id="mobileOverlay" onclick="toggleMobileMenu()"></div>
+<div class="mobile-dropdown" id="mobileDropdown">
+  <button class="nav-tab" onclick="switchTab('schedule'); toggleMobileMenu();">Optimized Schedule</button>
+  <button class="nav-tab" onclick="switchTab('volume'); toggleMobileMenu();">Volume Analysis</button>
+  <button class="nav-tab" onclick="switchTab('builder'); toggleMobileMenu();">Schedule Builder</button>
+  <button class="nav-tab" onclick="switchTab('insights'); toggleMobileMenu();">Insights</button>
+  <select class="location-select" onchange="changeLocation(this.value); toggleMobileMenu();" id="mobileLocationSelect"></select>
+</div>
+
+<!-- NAV BAR -->
+<nav class="navbar">
+  <div class="navbar-left">
+    <div class="navbar-title">
+      <div class="status-dot"></div>
+      LIJ Staffing Optimizer
+    </div>
+    <div class="nav-tabs">
+      <button class="nav-tab active" data-tab="schedule" onclick="switchTab('schedule')">Optimized Schedule</button>
+      <button class="nav-tab" data-tab="volume" onclick="switchTab('volume')">Volume Analysis</button>
+      <button class="nav-tab" data-tab="builder" onclick="switchTab('builder')">Schedule Builder</button>
+      <button class="nav-tab" data-tab="insights" onclick="switchTab('insights')">Insights</button>
+    </div>
+  </div>
+  <div class="navbar-right">
+    <select class="location-select" id="locationSelect" onchange="changeLocation(this.value)"></select>
+    <button class="nav-tab" onclick="showHelp()" title="Help & Guide" style="padding: 6px 12px; font-size: 16px;">?</button>
+  </div>
+</nav>
+
+<!-- TOOLTIP -->
+<div class="custom-tooltip" id="customTooltip"></div>
+
+<!-- MAIN CONTENT -->
+<div class="main-content">
+
+  <!-- TAB 1: OPTIMIZED SCHEDULE -->
+  <div class="tab-panel active" id="tab-schedule">
+    <div style="display: grid; grid-template-columns: 260px 1fr 260px; gap: 16px; align-items: start;">
+      <!-- LEFT: GAUGE -->
+      <div>
+        <div class="card card-accent-blue" style="text-align: center;">
+          <div class="card-title">Staffing Health Score</div>
+          <div id="gaugeChart" class="chart-container-sm" style="height: 220px;"></div>
+        </div>
+      </div>
+
+      <!-- CENTER: KPIs + SCHEDULE -->
+      <div>
+        <div class="grid-4" style="margin-bottom: 16px;">
+          <div class="card card-accent-blue">
+            <div class="card-title">Total Coverage Hours</div>
+            <div class="card-value" id="kpi-coverage">--</div>
+            <div class="card-subtitle">per week</div>
+          </div>
+          <div class="card card-accent-orange">
+            <div class="card-title">Peak Coverage</div>
+            <div class="card-value" id="kpi-peak">--</div>
+            <div class="card-subtitle">of peak hours staffed</div>
+          </div>
+          <div class="card card-accent-cyan">
+            <div class="card-title">Staff Utilization</div>
+            <div class="card-value" id="kpi-utilization">--</div>
+            <div class="card-subtitle">of available hours used</div>
+          </div>
+          <div class="card card-accent-green">
+            <div class="card-title">Weekly Cost</div>
+            <div class="card-value" id="kpi-cost">--</div>
+            <div class="card-subtitle">
+              <div class="rate-input-container">
+                <span>@ $</span>
+                <input type="number" class="rate-input" id="hourlyRate" value="25" min="10" max="100" step="0.5" onchange="recalcKPIs()">
+                <span>/hr</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-title">Bi-Weekly Schedule</div>
+        <div class="week-toggle">
+          <button class="week-btn active" onclick="toggleWeek('a', this)">Week A</button>
+          <button class="week-btn" onclick="toggleWeek('b', this)">Week B</button>
+        </div>
+
+        <div class="card" style="padding: 12px;">
+          <div class="card-title">Coverage Density (staff per hour)</div>
+          <div id="coverageBar"></div>
+          <div class="schedule-container" id="scheduleContainer"></div>
+        </div>
+      </div>
+
+      <!-- RIGHT: EMPLOYEE PANEL -->
+      <div>
+        <div class="section-title">Team</div>
+        <div id="employeePanel"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: VOLUME ANALYSIS -->
+  <div class="tab-panel" id="tab-volume">
+    <div class="grid-2" style="margin-bottom: 16px;">
+      <div class="card card-accent-orange">
+        <div class="card-title">Visitor Heatmap (Avg per Hour)</div>
+        <div id="heatmapChart" class="chart-container-lg"></div>
+      </div>
+      <div class="card card-accent-blue">
+        <div class="card-title">Volume vs Recommended Staffing</div>
+        <div id="volumeStaffChart" class="chart-container-lg"></div>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="card card-accent-cyan">
+        <div class="card-title">Weekday vs Weekend Volume</div>
+        <div id="weekdayWeekendChart" class="chart-container"></div>
+      </div>
+      <div class="card card-accent-green">
+        <div class="card-title">Staffing Tier Breakdown</div>
+        <div id="tierBreakdownChart" class="chart-container"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: SCHEDULE BUILDER -->
+  <div class="tab-panel" id="tab-builder">
+    <div class="builder-actions">
+      <button class="btn btn-primary" onclick="autoFillSchedule()">Auto-Fill</button>
+      <button class="btn btn-danger" onclick="clearBuilderSchedule()">Clear All</button>
+      <button class="btn" onclick="saveBuilderSchedule()">Save</button>
+      <button class="btn" onclick="loadBuilderSchedule()">Load</button>
+      <button class="btn btn-success" onclick="exportCSV()">Export CSV</button>
+      <div style="flex: 1;"></div>
+      <div id="builderValidation"></div>
+    </div>
+
+    <div class="card" style="padding: 8px; margin-bottom: 12px;">
+      <div class="card-title">Coverage Density</div>
+      <div id="builderDensityBar"></div>
+    </div>
+
+    <div class="builder-layout">
+      <div class="builder-sidebar" id="builderSidebar"></div>
+      <div class="card" style="padding: 8px;">
+        <div class="builder-grid-container">
+          <table class="builder-grid" id="builderGrid"></table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: INSIGHTS -->
+  <div class="tab-panel" id="tab-insights">
+    <div class="grid-4" style="margin-bottom: 16px;">
+      <div class="card card-accent-blue">
+        <div class="card-title">FTE Utilization</div>
+        <div class="card-value" id="insight-fte">--</div>
+        <div class="card-subtitle">of 5.4 FTE capacity</div>
+      </div>
+      <div class="card card-accent-orange">
+        <div class="card-title">Coverage Efficiency</div>
+        <div class="card-value" id="insight-efficiency">--</div>
+        <div class="card-subtitle">hours covered / needed</div>
+      </div>
+      <div class="card card-accent-cyan">
+        <div class="card-title">Gap Hours</div>
+        <div class="card-value" id="insight-gaps">--</div>
+        <div class="card-subtitle">uncovered staff-hours/wk</div>
+      </div>
+      <div class="card card-accent-green">
+        <div class="card-title">Cost per Visitor</div>
+        <div class="card-value" id="insight-cpv">--</div>
+        <div class="card-subtitle">avg weekly</div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-bottom: 16px;">
+      <div class="card card-accent-blue">
+        <div class="section-title" style="margin-top: 0;">Recommendations</div>
+        <ul class="recommendation-list" id="recommendationList"></ul>
+      </div>
+      <div class="card card-accent-orange">
+        <div class="section-title" style="margin-top: 0;">What-If Simulator</div>
+        <div class="slider-group">
+          <div class="slider-label"><span>Add FTEs</span><span id="whatif-fte-val">0</span></div>
+          <input type="range" class="slider-input" id="whatif-fte" min="0" max="3" step="0.2" value="0" oninput="updateWhatIf()">
+        </div>
+        <div class="slider-group">
+          <div class="slider-label"><span>Volume Change</span><span id="whatif-vol-val">0%</span></div>
+          <input type="range" class="slider-input" id="whatif-vol" min="-20" max="30" step="5" value="0" oninput="updateWhatIf()">
+        </div>
+        <div class="slider-group">
+          <div class="slider-label"><span>Extend Hours To</span><span id="whatif-hrs-val">2 AM</span></div>
+          <input type="range" class="slider-input" id="whatif-hrs" min="1" max="4" step="1" value="2" oninput="updateWhatIf()">
+        </div>
+        <div class="whatif-results" id="whatifResults"></div>
+      </div>
+    </div>
+
+    <div class="card card-accent-cyan">
+      <div class="card-title">Volume vs Staffing Alignment</div>
+      <div id="insightOverlayChart" class="chart-container-lg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<div class="site-footer" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; color: #6b7280; font-size: 12px; border-top: 1px solid #e2e8f0;">
+  <span>Internal use only. Data updated <span id="dataDate">--</span>.</span>
+  <button onclick="window.print()" style="padding: 5px 12px; border-radius: 6px; border: 1px solid #e2e8f0; background: white; color: #6b7280; font-size: 12px; cursor: pointer; font-family: inherit;">Print</button>
+</div>
+
+<!-- Help Modal -->
+<div id="helpModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:9999; align-items:center; justify-content:center; font-family:'IBM Plex Sans',sans-serif;">
+  <div style="background:white; border-radius:12px; max-width:640px; width:90%; max-height:80vh; overflow-y:auto; padding:32px; position:relative; box-shadow:0 25px 50px rgba(0,0,0,0.3);">
+    <button onclick="closeHelp()" style="position:absolute; top:12px; right:16px; background:none; border:none; font-size:24px; cursor:pointer; color:#6b7280; line-height:1;">&times;</button>
+    <h2 style="color:#0a2240; font-size:20px; margin-bottom:20px;">How to Use the Staffing Optimizer</h2>
+
+    <div style="margin-bottom:20px;">
+      <h3 style="color:#0059A5; font-size:15px; margin-bottom:8px;">Getting Started</h3>
+      <p style="font-size:13px; color:#374151; line-height:1.6;">Use the <strong>location dropdown</strong> (top right) to switch between entry points (Katz Lobby, Emergency Dept, etc.). The <strong>hourly rate</strong> field on the Dashboard tab affects all cost calculations. Everything updates automatically when you change settings.</p>
+    </div>
+
+    <div style="margin-bottom:20px;">
+      <h3 style="color:#0059A5; font-size:15px; margin-bottom:8px;">1. Optimized Schedule</h3>
+      <p style="font-size:13px; color:#374151; line-height:1.6;">A pre-built schedule based on actual visitor volume data. Toggle <strong>Week A / Week B</strong> to see the alternating weekend rotation. The color coding in the grid shows volume levels: <span style="color:#22c55e; font-weight:600;">green</span> = low volume (1 staff needed), <span style="color:#f59e0b; font-weight:600;">yellow</span> = medium (1-2 staff), <span style="color:#ef4444; font-weight:600;">red</span> = high (2-3 staff). The <strong>Health Score</strong> gauge shows how well the current schedule covers demand. Hover any cell for details.</p>
+    </div>
+
+    <div style="margin-bottom:20px;">
+      <h3 style="color:#0059A5; font-size:15px; margin-bottom:8px;">2. Volume Analysis</h3>
+      <p style="font-size:13px; color:#374151; line-height:1.6;">Visual breakdown of when visitors arrive. The <strong>heatmap</strong> shows average visitors per hour for each day of the week. The <strong>Volume vs Staffing</strong> chart overlays recommended staff levels on top of visitor counts. Use this to understand peak times and where coverage matters most.</p>
+    </div>
+
+    <div style="margin-bottom:20px;">
+      <h3 style="color:#0059A5; font-size:15px; margin-bottom:8px;">3. Schedule Builder</h3>
+      <p style="font-size:13px; color:#374151; line-height:1.6;"><strong>Drag employees</strong> from the left panel onto the schedule grid, or click the shift buttons (Morning/Afternoon/Evening) under each employee. <strong>Auto-Fill</strong> loads the optimized schedule as a starting point. Red-highlighted cells indicate understaffed hours. <strong>Save</strong> stores your schedule locally. <strong>Export CSV</strong> downloads it as a spreadsheet. Validation badges at the top flag gaps, overtime, and weekend coverage issues.</p>
+    </div>
+
+    <div style="margin-bottom:20px;">
+      <h3 style="color:#0059A5; font-size:15px; margin-bottom:8px;">4. Insights & What-If</h3>
+      <p style="font-size:13px; color:#374151; line-height:1.6;">Key metrics: FTE utilization, coverage efficiency, gap hours, and cost per visitor. The <strong>Recommendations</strong> panel highlights staffing issues and opportunities. Use the <strong>What-If Simulator</strong> sliders to model scenarios: what happens if you add FTEs, visitor volume changes, or you extend coverage hours? Results update in real time.</p>
+    </div>
+
+    <div style="padding:12px 16px; background:#f0f2f5; border-radius:8px; font-size:12px; color:#6b7280; line-height:1.6;">
+      <strong>Tip:</strong> Employee names can be edited directly on the Optimized Schedule tab by clicking on them. Names are saved in your browser. The Print button (bottom of page) generates a clean printout of all visible tabs.
+    </div>
+  </div>
+</div>
+
+<script>
+// ========== MOBILE ==========
+const isMobile = () => window.innerWidth <= 768;
+
+function showHelp() {
+  const m = document.getElementById('helpModal');
+  m.style.display = 'flex';
+  m.onclick = function(e) { if (e.target === m) closeHelp(); };
+}
+function closeHelp() {
+  document.getElementById('helpModal').style.display = 'none';
+}
+
+function toggleMobileMenu() {
+  const dropdown = document.getElementById('mobileDropdown');
+  const overlay = document.getElementById('mobileOverlay');
+  dropdown.classList.toggle('open');
+  overlay.classList.toggle('active');
+}
+
+// ========== GLOBALS ==========
+let DATA = null;
+let currentLocation = 'Emergency Dept';
+let currentWeek = 'a';
+let employeeNames = {};
+let builderSchedule = {}; // {dayIdx: [{empId, shiftName, startHour, endHour}]}
+let charts = {};
+
+const DAY_LABELS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const DAY_LABELS_SUN_FIRST = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const HOUR_LABELS_20 = [];
+for (let h = 6; h < 24; h++) HOUR_LABELS_20.push(formatHour(h));
+HOUR_LABELS_20.push(formatHour(0));
+HOUR_LABELS_20.push(formatHour(1));
+
+function formatHour(h) {
+  h = ((h % 24) + 24) % 24;
+  if (h === 0) return '12A';
+  if (h < 12) return h + 'A';
+  if (h === 12) return '12P';
+  return (h - 12) + 'P';
+}
+
+function formatHourFull(h) {
+  h = ((h % 24) + 24) % 24;
+  if (h === 0) return '12:00 AM';
+  if (h < 12) return h + ':00 AM';
+  if (h === 12) return '12:00 PM';
+  return (h - 12) + ':00 PM';
+}
+
+function getOperatingHours() { return Array.from({length: 20}, (_, i) => (6 + i) % 24); }
+
+function hourToGridCol(h) {
+  // Map hour 6..25 (2AM next day) to grid column 0..19
+  if (h >= 6) return h - 6;
+  return h + 18; // 0->18, 1->19
+}
+
+function gridColToHour(col) { return (col + 6) % 24; }
+
+// ========== DATA LOADING ==========
+async function loadData() {
+  if (window.__DECRYPTED_DATA) return window.__DECRYPTED_DATA;
+  throw new Error('Data not decrypted');
+}
+
+// ========== INIT ==========
+async function init() {
+  DATA = await loadData();
+
+  // Populate location dropdowns (desktop + mobile)
+  ['locationSelect', 'mobileLocationSelect'].forEach(selId => {
+    const sel = document.getElementById(selId);
+    if (!sel) return;
+    DATA.entry_points.forEach(ep => {
+      const opt = document.createElement('option');
+      opt.value = ep;
+      opt.textContent = ep;
+      if (ep === currentLocation) opt.selected = true;
+      sel.appendChild(opt);
+    });
+  });
+
+  // Set data date in footer
+  if (DATA.generated) {
+    const d = new Date(DATA.generated);
+    const dd = document.getElementById('dataDate');
+    if (dd) dd.textContent = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  // Load saved employee names
+  const saved = localStorage.getItem('staffopt_employee_names');
+  if (saved) {
+    try { employeeNames = JSON.parse(saved); } catch(e) {}
+  }
+
+  renderAll();
+}
+
+function changeLocation(loc) {
+  currentLocation = loc;
+  renderAll();
+}
+
+function renderAll() {
+  renderScheduleTab();
+  renderVolumeTab();
+  renderBuilderTab();
+  renderInsightsTab();
+}
+
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + tabId).classList.add('active');
+  document.querySelector(`.nav-tab[data-tab="${tabId}"]`).classList.add('active');
+
+  // Resize charts
+  setTimeout(() => {
+    Object.values(charts).forEach(c => { if (c && c.resize) c.resize(); });
+  }, 100);
+}
+
+function getLocData() { return DATA.locations[currentLocation]; }
+function getEmployees() { return DATA.default_config.employees; }
+
+function getEmpName(id) {
+  return employeeNames[id] || id;
+}
+
+function saveEmpName(id, name) {
+  employeeNames[id] = name;
+  localStorage.setItem('staffopt_employee_names', JSON.stringify(employeeNames));
+}
+
+// ========== ANIMATED COUNTUP ==========
+function animateValue(el, end, prefix, suffix, decimals) {
+  prefix = prefix || '';
+  suffix = suffix || '';
+  decimals = decimals || 0;
+  let start = 0;
+  const duration = 800;
+  const startTime = performance.now();
+
+  function update(currentTime) {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = start + (end - start) * eased;
+    el.textContent = prefix + current.toFixed(decimals) + suffix;
+    if (progress < 1) requestAnimationFrame(update);
+  }
+  requestAnimationFrame(update);
+}
+
+// ========== TAB 1: OPTIMIZED SCHEDULE ==========
+function renderScheduleTab() {
+  renderGauge();
+  recalcKPIs();
+  renderScheduleGrid();
+  renderEmployeePanel();
+}
+
+function renderGauge() {
+  const loc = getLocData();
+  const score = calcHealthScore(loc);
+
+  if (charts.gauge) charts.gauge.dispose();
+  charts.gauge = echarts.init(document.getElementById('gaugeChart'));
+  charts.gauge.setOption({
+    series: [{
+      type: 'gauge',
+      startAngle: 220,
+      endAngle: -40,
+      min: 0,
+      max: 100,
+      splitNumber: 10,
+      axisLine: {
+        lineStyle: {
+          width: 18,
+          color: [
+            [0.4, '#ef4444'],
+            [0.7, '#f59e0b'],
+            [1, '#22c55e']
+          ]
+        }
+      },
+      pointer: {
+        itemStyle: { color: 'inherit' },
+        width: 5,
+        length: '60%'
+      },
+      axisTick: { show: false },
+      splitLine: { show: false },
+      axisLabel: { show: false },
+      detail: {
+        valueAnimation: true,
+        formatter: '{value}',
+        fontSize: 36,
+        fontWeight: 700,
+        fontFamily: 'IBM Plex Sans',
+        offsetCenter: [0, '40%'],
+        color: 'inherit'
+      },
+      data: [{ value: score }]
+    }]
+  });
+}
+
+function calcHealthScore(loc) {
+  const schedules = loc.schedules;
+  const staffNeeded = loc.staff_needed;
+  let totalNeeded = 0;
+  let totalCovered = 0;
+  let totalOver = 0;
+
+  ['week_a', 'week_b'].forEach(wk => {
+    schedules[wk].forEach(day => {
+      const dow = day.dow;
+      const hourCoverage = new Array(24).fill(0);
+      day.shifts.forEach(s => {
+        const startH = parseTimeToHour(s.start);
+        const endH = parseTimeToHour(s.end);
+        const empCount = s.employees.length;
+        iterateHours(startH, endH, h => { hourCoverage[h] += empCount; });
+      });
+
+      for (let h = 0; h < 24; h++) {
+        const needed = staffNeeded[dow][h];
+        if (needed > 0) {
+          totalNeeded += needed;
+          totalCovered += Math.min(hourCoverage[h], needed);
+          if (hourCoverage[h] > needed) totalOver += hourCoverage[h] - needed;
+        }
+      }
+    });
+  });
+
+  const coverageRatio = totalNeeded > 0 ? totalCovered / totalNeeded : 0;
+  const overPenalty = totalNeeded > 0 ? Math.min(totalOver / totalNeeded * 0.3, 0.15) : 0;
+  return Math.round(Math.max(0, Math.min(100, (coverageRatio - overPenalty) * 100)));
+}
+
+function parseTimeToHour(timeStr) {
+  // "6:00 AM" -> 6, "1:30 PM" -> 13.5, "2:00 AM" -> 2
+  const match = timeStr.match(/(\d+):(\d+)\s*(AM|PM)/i);
+  if (!match) return 0;
+  let h = parseInt(match[1]);
+  const m = parseInt(match[2]);
+  const ampm = match[3].toUpperCase();
+  if (ampm === 'PM' && h !== 12) h += 12;
+  if (ampm === 'AM' && h === 12) h = 0;
+  return h + m / 60;
+}
+
+function iterateHours(start, end, fn) {
+  // Handle wrap around midnight
+  start = Math.floor(start);
+  end = Math.ceil(end);
+  if (end <= start) end += 24;
+  for (let h = start; h < end; h++) {
+    fn(((h % 24) + 24) % 24);
+  }
+}
+
+function recalcKPIs() {
+  const loc = getLocData();
+  const emps = getEmployees();
+  const rate = parseFloat(document.getElementById('hourlyRate').value) || 25;
+  const schedules = loc.schedules;
+  const wk = currentWeek === 'a' ? 'week_a' : 'week_b';
+  const hoursData = currentWeek === 'a' ? schedules.hours_a : schedules.hours_b;
+
+  // Total coverage hours this week
+  let totalCoverageHours = 0;
+  Object.values(hoursData).forEach(h => totalCoverageHours += h);
+
+  // Peak coverage %
+  const staffNeeded = loc.staff_needed;
+  let peakNeeded = 0, peakCovered = 0;
+  schedules[wk].forEach(day => {
+    const dow = day.dow;
+    const hourCoverage = new Array(24).fill(0);
+    day.shifts.forEach(s => {
+      const startH = parseTimeToHour(s.start);
+      const endH = parseTimeToHour(s.end);
+      const empCount = s.employees.length;
+      iterateHours(startH, endH, h => { hourCoverage[h] += empCount; });
+    });
+    for (let h = 0; h < 24; h++) {
+      if (staffNeeded[dow][h] >= 2) {
+        peakNeeded++;
+        if (hourCoverage[h] >= staffNeeded[dow][h]) peakCovered++;
+      }
+    }
+  });
+  const peakPct = peakNeeded > 0 ? Math.round(peakCovered / peakNeeded * 100) : 0;
+
+  // Utilization
+  const totalAvailable = emps.reduce((s, e) => s + e.weekly_hours, 0);
+  const utilPct = totalAvailable > 0 ? Math.round(totalCoverageHours / totalAvailable * 100) : 0;
+
+  // Cost
+  const cost = totalCoverageHours * rate;
+
+  animateValue(document.getElementById('kpi-coverage'), totalCoverageHours, '', 'h', 1);
+  animateValue(document.getElementById('kpi-peak'), peakPct, '', '%', 0);
+  animateValue(document.getElementById('kpi-utilization'), utilPct, '', '%', 0);
+  animateValue(document.getElementById('kpi-cost'), cost, '$', '', 0);
+}
+
+function toggleWeek(week, btn) {
+  currentWeek = week;
+  document.querySelectorAll('.week-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderScheduleGrid();
+  recalcKPIs();
+  renderEmployeePanel();
+}
+
+function renderScheduleGrid() {
+  const loc = getLocData();
+  const schedules = loc.schedules;
+  const wk = currentWeek === 'a' ? 'week_a' : 'week_b';
+  const weekData = schedules[wk];
+  const staffNeeded = loc.staff_needed;
+  const tiers = loc.tiers;
+  const emps = getEmployees();
+  const empMap = {};
+  emps.forEach(e => empMap[e.id] = e);
+
+  const opHours = getOperatingHours();
+
+  // Reorder: Sun first
+  const reordered = [];
+  const sunData = weekData.find(d => d.dow === 6);
+  if (sunData) reordered.push(sunData);
+  for (let i = 0; i < 6; i++) {
+    const d = weekData.find(dd => dd.dow === i);
+    if (d) reordered.push(d);
+  }
+
+  // Coverage bar
+  let coverageHTML = '<div class="coverage-bar">';
+  // Average coverage across week for each operating hour
+  opHours.forEach(h => {
+    let totalStaff = 0;
+    reordered.forEach(day => {
+      const hourCoverage = calcDayCoverage(day);
+      totalStaff += hourCoverage[h];
+    });
+    const avg = totalStaff / reordered.length;
+    const col = avg < 1 ? '#ef4444' : avg < 2 ? '#f59e0b' : '#22c55e';
+    coverageHTML += `<div class="coverage-segment" style="flex:1; background:${col};">${avg.toFixed(1)}</div>`;
+  });
+  coverageHTML += '</div>';
+  document.getElementById('coverageBar').innerHTML = coverageHTML;
+
+  // Schedule table
+  let html = '<table class="schedule-grid"><thead><tr><th></th>';
+  opHours.forEach(h => { html += `<th>${formatHour(h)}</th>`; });
+  html += '</tr></thead><tbody>';
+
+  reordered.forEach(day => {
+    const dow = day.dow;
+    const dayLabel = day.dow_label;
+    const hourCoverage = calcDayCoverage(day);
+    const hourEmps = calcDayEmployees(day);
+
+    html += `<tr><td class="day-label">${dayLabel}</td>`;
+    opHours.forEach(h => {
+      const tier = tiers[dow][h];
+      const needed = staffNeeded[dow][h];
+      const actual = hourCoverage[h];
+      const assigned = hourEmps[h] || [];
+
+      let cellClass = 'tier-' + tier;
+      let blocks = '';
+      assigned.forEach(empId => {
+        const emp = empMap[empId];
+        if (emp) {
+          blocks += `<div class="shift-block" style="background:${emp.color};">${getEmpName(empId)}</div>`;
+        }
+      });
+
+      const tooltipData = `data-tip-hour="${h}" data-tip-dow="${dow}" data-tip-actual="${actual}" data-tip-needed="${needed}" data-tip-tier="${tier}"`;
+      html += `<td class="${cellClass}" ${tooltipData} onmouseenter="showGridTooltip(event, this)" onmouseleave="hideTooltip()">${blocks}</td>`;
+    });
+    html += '</tr>';
+  });
+
+  html += '</tbody></table>';
+  document.getElementById('scheduleContainer').innerHTML = html;
+}
+
+function calcDayCoverage(dayData) {
+  const coverage = new Array(24).fill(0);
+  dayData.shifts.forEach(s => {
+    const startH = parseTimeToHour(s.start);
+    const endH = parseTimeToHour(s.end);
+    const count = s.employees.length;
+    iterateHours(startH, endH, h => { coverage[h] += count; });
+  });
+  return coverage;
+}
+
+function calcDayEmployees(dayData) {
+  const emps = {};
+  for (let h = 0; h < 24; h++) emps[h] = [];
+  dayData.shifts.forEach(s => {
+    const startH = parseTimeToHour(s.start);
+    const endH = parseTimeToHour(s.end);
+    iterateHours(startH, endH, h => {
+      s.employees.forEach(eid => {
+        if (!emps[h].includes(eid)) emps[h].push(eid);
+      });
+    });
+  });
+  return emps;
+}
+
+function showGridTooltip(event, el) {
+  const tip = document.getElementById('customTooltip');
+  const h = parseInt(el.dataset.tipHour);
+  const dow = parseInt(el.dataset.tipDow);
+  const actual = parseInt(el.dataset.tipActual);
+  const needed = parseInt(el.dataset.tipNeeded);
+  const tier = el.dataset.tipTier;
+  const loc = getLocData();
+  const volume = loc.heatmap[dow][h];
+
+  tip.innerHTML = `
+    <strong>${DAY_LABELS[dow]} ${formatHourFull(h)}</strong><br>
+    Volume: ${volume.toFixed(1)} visitors/hr<br>
+    Tier: ${tier.toUpperCase()}<br>
+    Staff needed: ${needed} | Assigned: ${actual}<br>
+    ${actual < needed ? '<span style="color:#fca5a5;">UNDERSTAFFED</span>' : actual > needed ? '<span style="color:#fde68a;">OVERSTAFFED</span>' : '<span style="color:#86efac;">OPTIMAL</span>'}
+  `;
+  tip.style.display = 'block';
+  tip.style.left = (event.clientX + 12) + 'px';
+  tip.style.top = (event.clientY - 10) + 'px';
+}
+
+function hideTooltip() {
+  document.getElementById('customTooltip').style.display = 'none';
+}
+
+function renderEmployeePanel() {
+  const emps = getEmployees();
+  const loc = getLocData();
+  const schedules = loc.schedules;
+  const wk = currentWeek === 'a' ? 'hours_a' : 'hours_b';
+  const hours = schedules[wk];
+
+  let html = '';
+  emps.forEach(emp => {
+    const scheduled = hours[emp.id] || 0;
+    const util = emp.weekly_hours > 0 ? Math.round(scheduled / emp.weekly_hours * 100) : 0;
+    const utilColor = util > 100 ? '#ef4444' : util > 85 ? '#22c55e' : util > 50 ? '#f59e0b' : '#94a3b8';
+
+    html += `
+      <div class="employee-card">
+        <div class="employee-header">
+          <div class="employee-color" style="background:${emp.color};"></div>
+          <input class="employee-name-input" value="${getEmpName(emp.id)}" onchange="saveEmpName('${emp.id}', this.value); renderScheduleGrid();">
+          <span class="type-badge ${emp.type === 'full-time' ? 'ft' : 'pt'}">${emp.type === 'full-time' ? 'FT' : 'PT'}</span>
+        </div>
+        <div class="employee-hours">
+          <span>${scheduled}h / ${emp.weekly_hours}h</span>
+          <span>${util}%</span>
+        </div>
+        <div class="utilization-bar-container">
+          <div class="utilization-bar-fill" style="width:${Math.min(util, 100)}%; background:${utilColor};"></div>
+        </div>
+      </div>
+    `;
+  });
+  document.getElementById('employeePanel').innerHTML = html;
+}
+
+// ========== TAB 2: VOLUME ANALYSIS ==========
+function renderVolumeTab() {
+  renderHeatmap();
+  renderVolumeStaffChart();
+  renderWeekdayWeekendChart();
+  renderTierBreakdown();
+}
+
+function renderHeatmap() {
+  const loc = getLocData();
+  const heatmap = loc.heatmap;
+
+  // ECharts heatmap: x=hour, y=day (Sun at top)
+  const data = [];
+  let maxVal = 0;
+  // Reorder: Sun(6) at index 0, Mon(0) at index 1, ...
+  const dayOrder = [6, 0, 1, 2, 3, 4, 5];
+  dayOrder.forEach((dow, yIdx) => {
+    for (let h = 0; h < 24; h++) {
+      const val = heatmap[dow][h];
+      data.push([h, yIdx, val]);
+      if (val > maxVal) maxVal = val;
+    }
+  });
+
+  if (charts.heatmap) charts.heatmap.dispose();
+  charts.heatmap = echarts.init(document.getElementById('heatmapChart'));
+  const mob = isMobile();
+  charts.heatmap.setOption({
+    tooltip: {
+      formatter: p => `${DAY_LABELS_SUN_FIRST[p.data[1]]} ${formatHourFull(p.data[0])}<br>Avg: <strong>${p.data[2].toFixed(1)}</strong> visitors`
+    },
+    grid: { left: mob ? 40 : 60, right: mob ? 10 : 40, top: 20, bottom: mob ? 50 : 40 },
+    xAxis: {
+      type: 'category',
+      data: Array.from({length: 24}, (_, i) => formatHour(i)),
+      splitArea: { show: true },
+      axisLabel: { fontSize: mob ? 8 : 10, rotate: mob ? 45 : 0 }
+    },
+    yAxis: {
+      type: 'category',
+      data: DAY_LABELS_SUN_FIRST,
+      splitArea: { show: true },
+      axisLabel: { fontSize: mob ? 9 : 11, fontWeight: 500 }
+    },
+    visualMap: {
+      min: 0,
+      max: Math.ceil(maxVal),
+      calculable: true,
+      orient: 'horizontal',
+      left: 'center',
+      bottom: 0,
+      inRange: {
+        color: ['#dcfce7', '#86efac', '#fde68a', '#fdba74', '#f87171', '#dc2626']
+      },
+      textStyle: { fontSize: mob ? 8 : 10 }
+    },
+    series: [{
+      type: 'heatmap',
+      data: data,
+      label: {
+        show: !mob,
+        formatter: p => p.data[2].toFixed(1),
+        fontSize: 9,
+        color: '#333'
+      },
+      emphasis: { itemStyle: { shadowBlur: 10, shadowColor: 'rgba(0,0,0,0.3)' } }
+    }]
+  });
+}
+
+function renderVolumeStaffChart() {
+  const loc = getLocData();
+  const hourlyAvg = loc.hourly_avg;
+  const staffNeeded = loc.staff_needed;
+
+  // Average staff needed across all days
+  const avgStaff = [];
+  for (let h = 0; h < 24; h++) {
+    let sum = 0;
+    for (let d = 0; d < 7; d++) sum += staffNeeded[d][h];
+    avgStaff.push(parseFloat((sum / 7).toFixed(1)));
+  }
+
+  if (charts.volumeStaff) charts.volumeStaff.dispose();
+  charts.volumeStaff = echarts.init(document.getElementById('volumeStaffChart'));
+  const mobVS = isMobile();
+  charts.volumeStaff.setOption({
+    tooltip: { trigger: 'axis' },
+    legend: { data: ['Avg Visitors', 'Recommended Staff'], bottom: 0, textStyle: { fontSize: mobVS ? 9 : 11 } },
+    grid: { left: mobVS ? 35 : 50, right: mobVS ? 35 : 50, top: 20, bottom: mobVS ? 55 : 50 },
+    xAxis: {
+      type: 'category',
+      data: Array.from({length: 24}, (_, i) => formatHour(i)),
+      axisLabel: { fontSize: mobVS ? 8 : 10, rotate: mobVS ? 45 : 0 }
+    },
+    yAxis: [
+      { type: 'value', name: 'Visitors', nameTextStyle: { fontSize: mobVS ? 9 : 11 }, axisLabel: { fontSize: mobVS ? 8 : 10 } },
+      { type: 'value', name: 'Staff', nameTextStyle: { fontSize: mobVS ? 9 : 11 }, max: 4, axisLabel: { fontSize: mobVS ? 8 : 10 } }
+    ],
+    series: [
+      {
+        name: 'Avg Visitors',
+        type: 'bar',
+        data: hourlyAvg,
+        itemStyle: { color: 'rgba(232,119,34,0.7)', borderRadius: [3,3,0,0] },
+        barWidth: '60%'
+      },
+      {
+        name: 'Recommended Staff',
+        type: 'line',
+        yAxisIndex: 1,
+        data: avgStaff,
+        lineStyle: { color: '#0059A5', width: 3 },
+        itemStyle: { color: '#0059A5' },
+        symbol: 'circle',
+        symbolSize: 6,
+        smooth: true
+      }
+    ]
+  });
+}
+
+function renderWeekdayWeekendChart() {
+  const loc = getLocData();
+  const heatmap = loc.heatmap;
+
+  // Average weekday (Mon-Fri, indices 0-4) vs weekend (Sat-Sun, indices 5-6)
+  const weekdayAvg = [], weekendAvg = [];
+  for (let h = 0; h < 24; h++) {
+    let wdSum = 0, weSum = 0;
+    for (let d = 0; d < 5; d++) wdSum += heatmap[d][h];
+    for (let d = 5; d < 7; d++) weSum += heatmap[d][h];
+    weekdayAvg.push(parseFloat((wdSum / 5).toFixed(1)));
+    weekendAvg.push(parseFloat((weSum / 2).toFixed(1)));
+  }
+
+  if (charts.weekdayWeekend) charts.weekdayWeekend.dispose();
+  charts.weekdayWeekend = echarts.init(document.getElementById('weekdayWeekendChart'));
+  const mobWW = isMobile();
+  charts.weekdayWeekend.setOption({
+    tooltip: { trigger: 'axis' },
+    legend: { data: ['Weekday Avg', 'Weekend Avg'], bottom: 0, textStyle: { fontSize: mobWW ? 9 : 11 } },
+    grid: { left: mobWW ? 35 : 50, right: 20, top: 20, bottom: mobWW ? 55 : 50 },
+    xAxis: {
+      type: 'category',
+      data: Array.from({length: 24}, (_, i) => formatHour(i)),
+      axisLabel: { fontSize: mobWW ? 8 : 10, rotate: mobWW ? 45 : 0 }
+    },
+    yAxis: { type: 'value', axisLabel: { fontSize: mobWW ? 8 : 10 } },
+    series: [
+      {
+        name: 'Weekday Avg',
+        type: 'bar',
+        data: weekdayAvg,
+        itemStyle: { color: 'rgba(0,89,165,0.7)', borderRadius: [3,3,0,0] },
+        barGap: '10%'
+      },
+      {
+        name: 'Weekend Avg',
+        type: 'bar',
+        data: weekendAvg,
+        itemStyle: { color: 'rgba(0,156,218,0.7)', borderRadius: [3,3,0,0] }
+      }
+    ]
+  });
+}
+
+function renderTierBreakdown() {
+  const loc = getLocData();
+  const tiers = loc.tiers;
+
+  // Operating hours only (6AM-2AM = hours 6-23 + 0-1)
+  const opHours = new Set(getOperatingHours());
+  let lowCount = 0, medCount = 0, highCount = 0;
+  for (let d = 0; d < 7; d++) {
+    for (let h = 0; h < 24; h++) {
+      if (!opHours.has(h)) continue;
+      if (tiers[d][h] === 'low') lowCount++;
+      else if (tiers[d][h] === 'med') medCount++;
+      else highCount++;
+    }
+  }
+
+  if (charts.tierBreakdown) charts.tierBreakdown.dispose();
+  charts.tierBreakdown = echarts.init(document.getElementById('tierBreakdownChart'));
+  charts.tierBreakdown.setOption({
+    tooltip: { trigger: 'item', formatter: '{b}: {c} hours ({d}%)' },
+    legend: { bottom: 0, textStyle: { fontSize: 11 } },
+    series: [{
+      type: 'pie',
+      radius: ['40%', '70%'],
+      avoidLabelOverlap: true,
+      itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
+      label: { show: true, formatter: '{b}\n{c}h', fontSize: 12 },
+      data: [
+        { value: lowCount, name: 'Low Volume', itemStyle: { color: '#22c55e' } },
+        { value: medCount, name: 'Med Volume', itemStyle: { color: '#f59e0b' } },
+        { value: highCount, name: 'High Volume', itemStyle: { color: '#ef4444' } }
+      ]
+    }]
+  });
+}
+
+// ========== TAB 3: SCHEDULE BUILDER ==========
+function renderBuilderTab() {
+  const emps = getEmployees();
+  const loc = getLocData();
+  const shiftDefs = loc.schedules.shift_definitions;
+
+  // Initialize builder schedule if empty
+  if (!builderSchedule || Object.keys(builderSchedule).length === 0) {
+    initBuilderFromOptimized();
+  }
+
+  renderBuilderSidebar();
+  renderBuilderGrid();
+  renderBuilderDensity();
+  validateBuilder();
+}
+
+function initBuilderFromOptimized() {
+  builderSchedule = {};
+  const loc = getLocData();
+  const wkData = loc.schedules.week_a;
+  const shiftDefs = loc.schedules.shift_definitions;
+
+  wkData.forEach(day => {
+    const dow = day.dow;
+    builderSchedule[dow] = [];
+    day.shifts.forEach(s => {
+      const def = shiftDefs.find(d => d.name === s.shift);
+      s.employees.forEach(empId => {
+        builderSchedule[dow].push({
+          empId,
+          shiftName: s.shift,
+          startHour: def ? def.start_hour : 6,
+          endHour: def ? def.end_hour : 13.5
+        });
+      });
+    });
+  });
+}
+
+function renderBuilderSidebar() {
+  const emps = getEmployees();
+  const loc = getLocData();
+  const shiftDefs = loc.schedules.shift_definitions;
+  const empHours = calcBuilderEmpHours();
+
+  let html = '<div class="section-title" style="margin-top: 0;">Employees</div>';
+  emps.forEach(emp => {
+    const scheduled = empHours[emp.id] || 0;
+    const remaining = emp.weekly_hours - scheduled;
+    const overHours = remaining < 0;
+
+    html += `
+      <div class="builder-employee-card ${overHours ? 'over-hours' : ''}" draggable="true" data-emp-id="${emp.id}"
+           ondragstart="builderDragStart(event, '${emp.id}')">
+        <div class="employee-header">
+          <div class="employee-color" style="background:${emp.color};"></div>
+          <strong style="font-size:13px;">${getEmpName(emp.id)}</strong>
+          <span class="type-badge ${emp.type === 'full-time' ? 'ft' : 'pt'}">${emp.type === 'full-time' ? 'FT' : 'PT'}</span>
+        </div>
+        <div class="employee-hours">
+          <span>${scheduled.toFixed(1)}h / ${emp.weekly_hours}h</span>
+          <span style="color: ${overHours ? '#ef4444' : remaining < 7.5 ? '#f59e0b' : '#22c55e'};">${remaining.toFixed(1)}h left</span>
+        </div>
+        <div class="shift-template-btns">
+          ${shiftDefs.map(sd => `<button class="shift-template-btn" onclick="addShiftFromTemplate('${emp.id}', '${sd.name}', ${sd.start_hour}, ${sd.end_hour})">${sd.name}</button>`).join('')}
+          <button class="shift-template-btn" onclick="addCustomShift('${emp.id}')">Custom</button>
+        </div>
+      </div>
+    `;
+  });
+  document.getElementById('builderSidebar').innerHTML = html;
+}
+
+function calcBuilderEmpHours() {
+  const hours = {};
+  Object.values(builderSchedule).forEach(dayShifts => {
+    dayShifts.forEach(s => {
+      let dur = s.endHour - s.startHour;
+      if (dur <= 0) dur += 24;
+      hours[s.empId] = (hours[s.empId] || 0) + dur;
+    });
+  });
+  return hours;
+}
+
+let currentBuilderDay = null;
+let currentDragEmpId = null;
+let currentDragShift = null;
+
+function builderDragStart(event, empId) {
+  currentDragEmpId = empId;
+  event.dataTransfer.setData('text/plain', empId);
+}
+
+function renderBuilderGrid() {
+  const loc = getLocData();
+  const tiers = loc.tiers;
+  const staffNeeded = loc.staff_needed;
+  const emps = getEmployees();
+  const empMap = {};
+  emps.forEach(e => empMap[e.id] = e);
+
+  const opHours = getOperatingHours();
+
+  // Rows: Sun first
+  const dayOrder = [6, 0, 1, 2, 3, 4, 5]; // Sun, Mon, ..., Sat
+
+  let html = '<thead><tr><th>Day</th>';
+  opHours.forEach(h => { html += `<th>${formatHour(h)}</th>`; });
+  html += '</tr></thead><tbody>';
+
+  dayOrder.forEach(dow => {
+    const dayLabel = DAY_LABELS[dow];
+    const dayShifts = builderSchedule[dow] || [];
+
+    // Build coverage map
+    const hourCoverage = new Array(24).fill(0);
+    const hourEmps = {};
+    for (let h = 0; h < 24; h++) hourEmps[h] = [];
+
+    dayShifts.forEach(s => {
+      iterateHours(s.startHour, s.endHour, h => {
+        hourCoverage[h]++;
+        if (!hourEmps[h].includes(s.empId)) hourEmps[h].push(s.empId);
+      });
+    });
+
+    html += `<tr><td class="day-label">${dayLabel}</td>`;
+    opHours.forEach(h => {
+      const tier = tiers[dow][h];
+      const needed = staffNeeded[dow][h];
+      const actual = hourCoverage[h];
+      const assigned = hourEmps[h];
+
+      let cellClass = 'tier-' + tier;
+      if (actual < needed && needed > 0) cellClass += ' uncovered';
+      if (actual > 3) cellClass += ' overstaffed';
+
+      let blocks = '';
+      // Show shift blocks for employees whose shifts include this hour
+      // Only show the block at the shift start hour
+      dayShifts.forEach((s, sIdx) => {
+        const shiftStartCol = hourToGridCol(Math.floor(s.startHour));
+        const thisCol = hourToGridCol(h);
+        if (shiftStartCol === thisCol) {
+          const emp = empMap[s.empId];
+          if (emp) {
+            blocks += `<div class="builder-shift-block" style="background:${emp.color};" title="${getEmpName(s.empId)}: ${s.shiftName}">
+              ${getEmpName(s.empId).substring(0, 4)}
+              <div class="remove-shift" onclick="removeBuilderShift(${dow}, ${sIdx})">x</div>
+            </div>`;
+          }
+        }
+      });
+
+      // Gap tooltip suggestion
+      let gapTip = '';
+      if (actual < needed && needed > 0) {
+        const suggestion = suggestEmployee(dow, h);
+        if (suggestion) gapTip = `<div class="gap-tooltip">Suggest: ${getEmpName(suggestion)}</div>`;
+      }
+
+      html += `<td class="${cellClass}"
+        ondrop="builderDrop(event, ${dow}, ${h})"
+        ondragover="event.preventDefault()"
+        data-tip-hour="${h}" data-tip-dow="${dow}" data-tip-actual="${actual}" data-tip-needed="${needed}" data-tip-tier="${tier}"
+        onmouseenter="showGridTooltip(event, this)" onmouseleave="hideTooltip()">
+        ${blocks}${gapTip}
+      </td>`;
+    });
+    html += '</tr>';
+  });
+
+  html += '</tbody>';
+  document.getElementById('builderGrid').innerHTML = html;
+}
+
+function suggestEmployee(dow, hour) {
+  const emps = getEmployees();
+  const empHours = calcBuilderEmpHours();
+
+  // Find employee with most remaining hours who isn't already working this hour
+  const dayShifts = builderSchedule[dow] || [];
+  const workingNow = new Set();
+  dayShifts.forEach(s => {
+    iterateHours(s.startHour, s.endHour, h => {
+      if (h === hour) workingNow.add(s.empId);
+    });
+  });
+
+  let best = null, bestRemaining = -999;
+  emps.forEach(emp => {
+    if (workingNow.has(emp.id)) return;
+    const scheduled = empHours[emp.id] || 0;
+    const remaining = emp.weekly_hours - scheduled;
+    if (remaining > bestRemaining) {
+      bestRemaining = remaining;
+      best = emp.id;
+    }
+  });
+  return best;
+}
+
+function builderDrop(event, dow, hour) {
+  event.preventDefault();
+  const empId = event.dataTransfer.getData('text/plain');
+  if (!empId) return;
+
+  const loc = getLocData();
+  const shiftDefs = loc.schedules.shift_definitions;
+  // Default to morning if dropped in 6-13, afternoon if 13-21, evening otherwise
+  let shift;
+  if (hour >= 6 && hour < 14) shift = shiftDefs[0];
+  else if (hour >= 14 && hour < 19) shift = shiftDefs[1];
+  else shift = shiftDefs[2];
+
+  if (!builderSchedule[dow]) builderSchedule[dow] = [];
+  builderSchedule[dow].push({
+    empId,
+    shiftName: shift.name,
+    startHour: shift.start_hour,
+    endHour: shift.end_hour
+  });
+
+  renderBuilderGrid();
+  renderBuilderSidebar();
+  renderBuilderDensity();
+  validateBuilder();
+}
+
+function addShiftFromTemplate(empId, shiftName, startHour, endHour) {
+  // Prompt for day
+  const dayStr = prompt('Which day? (Sun, Mon, Tue, Wed, Thu, Fri, Sat)');
+  if (!dayStr) return;
+  const dayMap = { sun: 6, mon: 0, tue: 1, wed: 2, thu: 3, fri: 4, sat: 5 };
+  const dow = dayMap[dayStr.toLowerCase().substring(0, 3)];
+  if (dow === undefined) { alert('Invalid day'); return; }
+
+  if (!builderSchedule[dow]) builderSchedule[dow] = [];
+  builderSchedule[dow].push({ empId, shiftName, startHour, endHour });
+
+  renderBuilderGrid();
+  renderBuilderSidebar();
+  renderBuilderDensity();
+  validateBuilder();
+}
+
+function addCustomShift(empId) {
+  const dayStr = prompt('Day? (Sun, Mon, Tue, Wed, Thu, Fri, Sat)');
+  if (!dayStr) return;
+  const dayMap = { sun: 6, mon: 0, tue: 1, wed: 2, thu: 3, fri: 4, sat: 5 };
+  const dow = dayMap[dayStr.toLowerCase().substring(0, 3)];
+  if (dow === undefined) { alert('Invalid day'); return; }
+
+  const startStr = prompt('Start hour? (e.g. 6 for 6AM, 14 for 2PM)');
+  const endStr = prompt('End hour? (e.g. 13.5 for 1:30PM, 21 for 9PM)');
+  const start = parseFloat(startStr);
+  const end = parseFloat(endStr);
+  if (isNaN(start) || isNaN(end)) { alert('Invalid hours'); return; }
+
+  if (!builderSchedule[dow]) builderSchedule[dow] = [];
+  builderSchedule[dow].push({ empId, shiftName: 'Custom', startHour: start, endHour: end });
+
+  renderBuilderGrid();
+  renderBuilderSidebar();
+  renderBuilderDensity();
+  validateBuilder();
+}
+
+function removeBuilderShift(dow, shiftIdx) {
+  if (builderSchedule[dow]) {
+    builderSchedule[dow].splice(shiftIdx, 1);
+  }
+  renderBuilderGrid();
+  renderBuilderSidebar();
+  renderBuilderDensity();
+  validateBuilder();
+}
+
+function renderBuilderDensity() {
+  const loc = getLocData();
+  const staffNeeded = loc.staff_needed;
+  const opHours = getOperatingHours();
+
+  let html = '<div class="density-bar">';
+  opHours.forEach(h => {
+    // Average across all days
+    let totalStaff = 0, totalNeeded = 0;
+    for (let d = 0; d < 7; d++) {
+      const dayShifts = builderSchedule[d] || [];
+      let coverage = 0;
+      dayShifts.forEach(s => {
+        iterateHours(s.startHour, s.endHour, hh => { if (hh === h) coverage++; });
+      });
+      totalStaff += coverage;
+      totalNeeded += staffNeeded[d][h];
+    }
+    const avg = totalStaff / 7;
+    const avgNeeded = totalNeeded / 7;
+    const col = avg < avgNeeded * 0.5 ? '#ef4444' : avg < avgNeeded ? '#f59e0b' : '#22c55e';
+    html += `<div class="density-segment" style="background:${col};">${avg.toFixed(1)}</div>`;
+  });
+  html += '</div>';
+  document.getElementById('builderDensityBar').innerHTML = html;
+}
+
+function validateBuilder() {
+  const loc = getLocData();
+  const staffNeeded = loc.staff_needed;
+  const emps = getEmployees();
+  const empHours = calcBuilderEmpHours();
+
+  let gapHours = 0;
+  let overHoursEmps = [];
+  let weekendCovered = true;
+  let consecutiveIssues = [];
+
+  // Gap check
+  for (let d = 0; d < 7; d++) {
+    const dayShifts = builderSchedule[d] || [];
+    const coverage = new Array(24).fill(0);
+    dayShifts.forEach(s => {
+      iterateHours(s.startHour, s.endHour, h => coverage[h]++);
+    });
+    const opHours = getOperatingHours();
+    opHours.forEach(h => {
+      const needed = staffNeeded[d][h];
+      if (coverage[h] < needed) gapHours += (needed - coverage[h]);
+    });
+  }
+
+  // Over hours check
+  emps.forEach(emp => {
+    const scheduled = empHours[emp.id] || 0;
+    if (scheduled > emp.weekly_hours) overHoursEmps.push(getEmpName(emp.id));
+  });
+
+  // Weekend check
+  [5, 6].forEach(d => {
+    const dayShifts = builderSchedule[d] || [];
+    if (dayShifts.length === 0) weekendCovered = false;
+  });
+
+  // Consecutive days check
+  emps.forEach(emp => {
+    let consecutive = 0;
+    let maxConsecutive = 0;
+    for (let d = 0; d < 7; d++) {
+      const dayShifts = builderSchedule[d] || [];
+      const working = dayShifts.some(s => s.empId === emp.id);
+      if (working) { consecutive++; maxConsecutive = Math.max(maxConsecutive, consecutive); }
+      else consecutive = 0;
+    }
+    if (maxConsecutive > 5) consecutiveIssues.push(getEmpName(emp.id));
+  });
+
+  let html = '';
+  if (gapHours === 0) html += '<span class="validation-badge badge-ok">No Gaps</span>';
+  else html += `<span class="validation-badge badge-error">${gapHours} Gap Hours</span>`;
+
+  if (weekendCovered) html += '<span class="validation-badge badge-ok">Weekend OK</span>';
+  else html += '<span class="validation-badge badge-warn">Weekend Gap</span>';
+
+  if (overHoursEmps.length > 0) html += `<span class="validation-badge badge-error">Over Hours: ${overHoursEmps.join(', ')}</span>`;
+
+  if (consecutiveIssues.length > 0) html += `<span class="validation-badge badge-warn">6+ Days: ${consecutiveIssues.join(', ')}</span>`;
+
+  document.getElementById('builderValidation').innerHTML = html;
+}
+
+function autoFillSchedule() {
+  // Use the optimized schedule from data
+  initBuilderFromOptimized();
+  renderBuilderGrid();
+  renderBuilderSidebar();
+  renderBuilderDensity();
+  validateBuilder();
+}
+
+function clearBuilderSchedule() {
+  if (!confirm('Clear all shifts?')) return;
+  builderSchedule = {};
+  for (let d = 0; d < 7; d++) builderSchedule[d] = [];
+  renderBuilderGrid();
+  renderBuilderSidebar();
+  renderBuilderDensity();
+  validateBuilder();
+}
+
+function saveBuilderSchedule() {
+  const name = prompt('Schedule name:', 'My Schedule');
+  if (!name) return;
+  const saved = JSON.parse(localStorage.getItem('staffopt_schedules') || '{}');
+  saved[name] = { location: currentLocation, schedule: JSON.parse(JSON.stringify(builderSchedule)), timestamp: Date.now() };
+  localStorage.setItem('staffopt_schedules', JSON.stringify(saved));
+  alert('Schedule "' + name + '" saved.');
+}
+
+function loadBuilderSchedule() {
+  const saved = JSON.parse(localStorage.getItem('staffopt_schedules') || '{}');
+  const names = Object.keys(saved);
+  if (names.length === 0) { alert('No saved schedules found.'); return; }
+
+  const name = prompt('Which schedule?\n' + names.join('\n'));
+  if (!name || !saved[name]) return;
+
+  builderSchedule = saved[name].schedule;
+  renderBuilderGrid();
+  renderBuilderSidebar();
+  renderBuilderDensity();
+  validateBuilder();
+}
+
+function exportCSV() {
+  const emps = getEmployees();
+  const opHours = getOperatingHours();
+  const dayOrder = [6, 0, 1, 2, 3, 4, 5];
+
+  let csv = 'Day,Employee,Shift,Start,End,Hours\n';
+  dayOrder.forEach(dow => {
+    const dayShifts = builderSchedule[dow] || [];
+    dayShifts.forEach(s => {
+      let dur = s.endHour - s.startHour;
+      if (dur <= 0) dur += 24;
+      csv += `${DAY_LABELS[dow]},${getEmpName(s.empId)},${s.shiftName},${s.startHour},${s.endHour},${dur}\n`;
+    });
+  });
+
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `schedule-${currentLocation.replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ========== TAB 4: INSIGHTS ==========
+function renderInsightsTab() {
+  renderInsightKPIs();
+  renderRecommendations();
+  updateWhatIf();
+  renderInsightOverlayChart();
+}
+
+function renderInsightKPIs() {
+  const loc = getLocData();
+  const emps = getEmployees();
+  const schedules = loc.schedules;
+  const staffNeeded = loc.staff_needed;
+  const rate = parseFloat(document.getElementById('hourlyRate').value) || 25;
+
+  // FTE utilization
+  const totalFTE = emps.reduce((s, e) => s + e.fte, 0);
+  const totalAvailableHours = emps.reduce((s, e) => s + e.weekly_hours, 0);
+  const hoursA = schedules.hours_a;
+  const scheduledA = Object.values(hoursA).reduce((s, h) => s + h, 0);
+  const fteUtil = Math.round(scheduledA / totalAvailableHours * 100);
+
+  // Coverage efficiency
+  let neededHours = 0, coveredHours = 0;
+  schedules.week_a.forEach(day => {
+    const coverage = calcDayCoverage(day);
+    const opHours = getOperatingHours();
+    opHours.forEach(h => {
+      const needed = staffNeeded[day.dow][h];
+      if (needed > 0) {
+        neededHours += needed;
+        coveredHours += Math.min(coverage[h], needed);
+      }
+    });
+  });
+  const efficiency = neededHours > 0 ? Math.round(coveredHours / neededHours * 100) : 0;
+
+  // Gap hours
+  const gapHours = neededHours - coveredHours;
+
+  // Cost per visitor
+  const weeklyCost = scheduledA * rate;
+  const weeklyVisitors = loc.daily_avg * 7;
+  const cpv = weeklyVisitors > 0 ? (weeklyCost / weeklyVisitors).toFixed(2) : 0;
+
+  animateValue(document.getElementById('insight-fte'), fteUtil, '', '%', 0);
+  animateValue(document.getElementById('insight-efficiency'), efficiency, '', '%', 0);
+  animateValue(document.getElementById('insight-gaps'), gapHours, '', 'h', 0);
+  animateValue(document.getElementById('insight-cpv'), parseFloat(cpv), '$', '', 2);
+}
+
+function renderRecommendations() {
+  const loc = getLocData();
+  const emps = getEmployees();
+  const staffNeeded = loc.staff_needed;
+  const hourlyAvg = loc.hourly_avg;
+  const heatmap = loc.heatmap;
+  const tiers = loc.tiers;
+
+  const recs = [];
+
+  // 1. Optimal shift start/end
+  let firstBusyHour = 23, lastBusyHour = 0;
+  for (let h = 0; h < 24; h++) {
+    if (hourlyAvg[h] >= 5) {
+      firstBusyHour = Math.min(firstBusyHour, h);
+      lastBusyHour = Math.max(lastBusyHour, h);
+    }
+  }
+  recs.push({
+    text: `Peak visitor hours run from ${formatHourFull(firstBusyHour)} to ${formatHourFull(lastBusyHour)}. Morning shifts at 6 AM provide essential pre-peak ramp-up coverage.`,
+    type: 'info'
+  });
+
+  // 2. FTE sufficiency
+  const totalAvailable = emps.reduce((s, e) => s + e.weekly_hours, 0);
+  const totalNeeded = loc.total_staff_hours_weekly;
+  if (totalAvailable < totalNeeded) {
+    recs.push({
+      text: `Current FTE capacity (${totalAvailable}h) is ${(totalNeeded - totalAvailable).toFixed(0)}h short of the ${totalNeeded}h recommended weekly coverage. Consider adding ${((totalNeeded - totalAvailable) / 37.5).toFixed(1)} FTE.`,
+      type: 'warning'
+    });
+  } else {
+    recs.push({
+      text: `FTE capacity (${totalAvailable}h) meets the ${totalNeeded}h weekly requirement with ${(totalAvailable - totalNeeded).toFixed(0)}h buffer.`,
+      type: 'success'
+    });
+  }
+
+  // 3. Peak hour adequacy
+  let peakGaps = 0;
+  const schedule = loc.schedules.week_a;
+  schedule.forEach(day => {
+    const coverage = calcDayCoverage(day);
+    for (let h = 0; h < 24; h++) {
+      if (staffNeeded[day.dow][h] >= 2 && coverage[h] < staffNeeded[day.dow][h]) peakGaps++;
+    }
+  });
+  if (peakGaps > 0) {
+    recs.push({ text: `${peakGaps} peak-hour time slots have insufficient staffing. Focus afternoon shift overlap during 1-9 PM.`, type: 'warning' });
+  } else {
+    recs.push({ text: 'All peak hours have adequate staffing in the optimized schedule.', type: 'success' });
+  }
+
+  // 4. Weekend vs weekday balance
+  const wdAvg = loc.weekday_avg;
+  const weAvg = loc.weekend_avg;
+  const wkendRatio = weAvg / wdAvg;
+  if (wkendRatio > 0.8) {
+    recs.push({ text: `Weekend volume (${weAvg.toFixed(0)}/day) is ${Math.round(wkendRatio * 100)}% of weekday volume (${wdAvg.toFixed(0)}/day). Weekend staffing should be proportionally robust.`, type: 'warning' });
+  } else {
+    recs.push({ text: `Weekend volume (${weAvg.toFixed(0)}/day) is ${Math.round(wkendRatio * 100)}% of weekday levels, allowing reduced weekend staffing.`, type: 'success' });
+  }
+
+  // 5. Overnight
+  let overnightAvg = 0;
+  [0, 1, 2, 3, 4, 5].forEach(h => overnightAvg += hourlyAvg[h]);
+  overnightAvg /= 6;
+  if (overnightAvg < 3) {
+    recs.push({ text: `Overnight volume (2AM-6AM) averages ${overnightAvg.toFixed(1)} visitors/hour, supporting the current no-coverage approach for this window.`, type: 'success' });
+  } else {
+    recs.push({ text: `Overnight volume (2AM-6AM) averages ${overnightAvg.toFixed(1)} visitors/hour. Consider extending evening shift coverage.`, type: 'warning' });
+  }
+
+  // Render
+  const list = document.getElementById('recommendationList');
+  list.innerHTML = recs.map(r => {
+    const cls = r.type === 'warning' ? 'warning' : r.type === 'success' ? 'success' : '';
+    return `<li class="recommendation-item ${cls}">${r.text}</li>`;
+  }).join('');
+}
+
+function updateWhatIf() {
+  const addFTE = parseFloat(document.getElementById('whatif-fte').value);
+  const volChange = parseInt(document.getElementById('whatif-vol').value);
+  const extendHrs = parseInt(document.getElementById('whatif-hrs').value);
+
+  document.getElementById('whatif-fte-val').textContent = addFTE.toFixed(1);
+  document.getElementById('whatif-vol-val').textContent = (volChange >= 0 ? '+' : '') + volChange + '%';
+  document.getElementById('whatif-hrs-val').textContent = extendHrs + ' AM';
+
+  const loc = getLocData();
+  const emps = getEmployees();
+  const rate = parseFloat(document.getElementById('hourlyRate').value) || 25;
+
+  // Current capacity
+  const currentHours = emps.reduce((s, e) => s + e.weekly_hours, 0);
+  const addedHours = addFTE * 37.5;
+  const totalHours = currentHours + addedHours;
+
+  // Volume-adjusted needed hours
+  const volMultiplier = 1 + volChange / 100;
+  const baseNeeded = loc.total_staff_hours_weekly;
+  // Extending hours adds more needed hours
+  const currentEndHour = 2; // 2 AM
+  const extraHoursPerDay = Math.max(0, extendHrs - currentEndHour);
+  const extraWeekly = extraHoursPerDay * 7; // 1 person for extra hours
+  const adjustedNeeded = baseNeeded * volMultiplier + extraWeekly;
+
+  const coveragePct = adjustedNeeded > 0 ? Math.min(100, Math.round(totalHours / adjustedNeeded * 100)) : 100;
+  const weeklyCost = totalHours * rate;
+  const gapHours = Math.max(0, Math.round(adjustedNeeded - totalHours));
+
+  document.getElementById('whatifResults').innerHTML = `
+    <div class="whatif-card">
+      <div class="whatif-value" style="color: ${coveragePct >= 90 ? '#22c55e' : coveragePct >= 70 ? '#f59e0b' : '#ef4444'};">${coveragePct}%</div>
+      <div class="whatif-label">Coverage</div>
+    </div>
+    <div class="whatif-card">
+      <div class="whatif-value">$${weeklyCost.toLocaleString()}</div>
+      <div class="whatif-label">Weekly Cost</div>
+    </div>
+    <div class="whatif-card">
+      <div class="whatif-value" style="color: ${gapHours === 0 ? '#22c55e' : '#ef4444'};">${gapHours}h</div>
+      <div class="whatif-label">Gap Hours</div>
+    </div>
+  `;
+}
+
+function renderInsightOverlayChart() {
+  const loc = getLocData();
+  const hourlyAvg = loc.hourly_avg;
+  const staffNeeded = loc.staff_needed;
+  const schedule = loc.schedules.week_a;
+
+  // Average staff needed per hour
+  const avgNeeded = [];
+  const avgActual = [];
+  for (let h = 0; h < 24; h++) {
+    let sumNeeded = 0, sumActual = 0;
+    for (let d = 0; d < 7; d++) sumNeeded += staffNeeded[d][h];
+    avgNeeded.push(parseFloat((sumNeeded / 7).toFixed(1)));
+
+    // Actual from schedule (Week A)
+    let actualSum = 0;
+    schedule.forEach(day => {
+      const coverage = calcDayCoverage(day);
+      actualSum += coverage[h];
+    });
+    avgActual.push(parseFloat((actualSum / schedule.length).toFixed(1)));
+  }
+
+  if (charts.insightOverlay) charts.insightOverlay.dispose();
+  charts.insightOverlay = echarts.init(document.getElementById('insightOverlayChart'));
+  const mobIO = isMobile();
+  charts.insightOverlay.setOption({
+    tooltip: { trigger: 'axis' },
+    legend: { data: ['Avg Visitors', 'Staff Needed', 'Staff Assigned'], bottom: 0, textStyle: { fontSize: mobIO ? 9 : 11 } },
+    grid: { left: mobIO ? 35 : 50, right: mobIO ? 35 : 50, top: 20, bottom: mobIO ? 55 : 50 },
+    xAxis: {
+      type: 'category',
+      data: Array.from({length: 24}, (_, i) => formatHour(i)),
+      axisLabel: { fontSize: mobIO ? 8 : 10, rotate: mobIO ? 45 : 0 }
+    },
+    yAxis: [
+      { type: 'value', name: 'Visitors', nameTextStyle: { fontSize: mobIO ? 9 : 11 }, axisLabel: { fontSize: mobIO ? 8 : 10 } },
+      { type: 'value', name: 'Staff', nameTextStyle: { fontSize: mobIO ? 9 : 11 }, max: 4, axisLabel: { fontSize: mobIO ? 8 : 10 } }
+    ],
+    series: [
+      {
+        name: 'Avg Visitors',
+        type: 'bar',
+        data: hourlyAvg,
+        itemStyle: { color: 'rgba(232,119,34,0.4)', borderRadius: [3,3,0,0] },
+        barWidth: '50%'
+      },
+      {
+        name: 'Staff Needed',
+        type: 'line',
+        yAxisIndex: 1,
+        data: avgNeeded,
+        lineStyle: { color: '#0059A5', width: 2, type: 'dashed' },
+        itemStyle: { color: '#0059A5' },
+        symbol: 'none',
+        smooth: true
+      },
+      {
+        name: 'Staff Assigned',
+        type: 'line',
+        yAxisIndex: 1,
+        data: avgActual,
+        lineStyle: { color: '#22c55e', width: 3 },
+        itemStyle: { color: '#22c55e' },
+        symbol: 'circle',
+        symbolSize: 6,
+        smooth: true,
+        areaStyle: { color: 'rgba(34,197,94,0.1)' }
+      }
+    ]
+  });
+}
+
+// ========== WINDOW RESIZE ==========
+window.addEventListener('resize', () => {
+  Object.values(charts).forEach(c => { if (c && c.resize) c.resize(); });
+});
+
+// ========== START ==========
+// init() called after password unlock
+</script>
+
+<!-- Password Gate -->
+<div id="passwordGate" style="
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(135deg, #0a2240 0%, #0059A5 100%);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 99999; font-family: 'IBM Plex Sans', sans-serif;
+">
+  <div style="
+    background: white; border-radius: 16px; padding: 48px 40px; width: 380px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.3); text-align: center;
+  ">
+    <div style="margin-bottom: 24px;">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#0059A5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+      </svg>
+    </div>
+    <h2 style="color: #0a2240; font-size: 20px; font-weight: 600; margin-bottom: 8px;">Secure Dashboard</h2>
+    <p style="color: #6b7280; font-size: 13px; margin-bottom: 24px;">Enter password to access</p>
+    <form id="passwordForm" onsubmit="return handlePassword(event)">
+      <input type="password" id="passwordInput" placeholder="Password" autocomplete="off" style="
+        width: 100%; padding: 12px 16px; border: 2px solid #e5e7eb; border-radius: 8px;
+        font-size: 15px; font-family: inherit; outline: none; transition: border-color 0.2s;
+        box-sizing: border-box;
+      " onfocus="this.style.borderColor='#0059A5'" onblur="this.style.borderColor='#e5e7eb'">
+      <div id="passwordError" style="color: #dc2626; font-size: 12px; margin-top: 8px; min-height: 18px;"></div>
+      <button type="submit" id="unlockBtn" style="
+        width: 100%; padding: 12px; background: #0059A5; color: white; border: none;
+        border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer;
+        font-family: inherit; margin-top: 8px; transition: background 0.2s;
+      " onmouseover="this.style.background='#004a8a'" onmouseout="this.style.background='#0059A5'">Unlock</button>
+    </form>
+  </div>
+</div>
+
+<script>
+const ENCRYPTED_DATA = "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";
+
+let failedAttempts = 0;
+let lockoutUntil = 0;
+
+async function decryptData(password) {
+  const raw = Uint8Array.from(atob(ENCRYPTED_DATA), c => c.charCodeAt(0));
+  const salt = raw.slice(0, 16);
+  const iv = raw.slice(16, 28);
+  const ciphertext = raw.slice(28);
+
+  const keyMaterial = await crypto.subtle.importKey(
+    "raw", new TextEncoder().encode(password), "PBKDF2", false, ["deriveKey"]
+  );
+  const key = await crypto.subtle.deriveKey(
+    { name: "PBKDF2", salt: salt, iterations: 100000, hash: "SHA-256" },
+    keyMaterial,
+    { name: "AES-GCM", length: 256 },
+    false,
+    ["decrypt"]
+  );
+
+  const decrypted = await crypto.subtle.decrypt(
+    { name: "AES-GCM", iv: iv }, key, ciphertext
+  );
+  return new TextDecoder().decode(decrypted);
+}
+
+function startLockoutTimer() {
+  const errEl = document.getElementById('passwordError');
+  const btn = document.getElementById('unlockBtn');
+  const input = document.getElementById('passwordInput');
+  btn.disabled = true;
+  input.disabled = true;
+
+  const tick = () => {
+    const remaining = Math.ceil((lockoutUntil - Date.now()) / 1000);
+    if (remaining <= 0) {
+      errEl.textContent = 'You may try again';
+      btn.disabled = false;
+      input.disabled = false;
+      btn.textContent = 'Unlock';
+      input.focus();
+    } else {
+      errEl.textContent = 'Too many attempts. Wait ' + remaining + 's';
+      btn.textContent = 'Locked';
+      setTimeout(tick, 1000);
+    }
+  };
+  tick();
+}
+
+async function handlePassword(e) {
+  e.preventDefault();
+  const pw = document.getElementById('passwordInput').value;
+  const errEl = document.getElementById('passwordError');
+  const btn = document.getElementById('unlockBtn');
+
+  if (Date.now() < lockoutUntil) return false;
+  if (!pw) { errEl.textContent = 'Please enter a password'; return false; }
+
+  btn.textContent = 'Unlocking...';
+  btn.disabled = true;
+  errEl.textContent = '';
+
+  try {
+    const jsonStr = await decryptData(pw);
+    window.__DECRYPTED_DATA = JSON.parse(jsonStr);
+
+    // Fade out password gate
+    const gate = document.getElementById('passwordGate');
+    gate.style.transition = 'opacity 0.4s ease';
+    gate.style.opacity = '0';
+    setTimeout(() => gate.remove(), 400);
+
+    // Restore real title and start dashboard
+    document.title = 'LIJ Staffing Optimizer';
+    init();
+  } catch(err) {
+    failedAttempts++;
+    document.getElementById('passwordInput').value = '';
+
+    if (failedAttempts >= 5) {
+      // Lockout: 30s after 5, 60s after 10, 120s after 15, etc.
+      const lockSeconds = 30 * Math.ceil(failedAttempts / 5);
+      lockoutUntil = Date.now() + lockSeconds * 1000;
+      startLockoutTimer();
+    } else {
+      errEl.textContent = 'Incorrect password (' + (5 - failedAttempts) + ' attempts remaining)';
+      btn.textContent = 'Unlock';
+      btn.disabled = false;
+      document.getElementById('passwordInput').focus();
+    }
+  }
+  return false;
+}
+
+// Session timeout: auto-reload (re-lock) after 30 min of inactivity
+let inactivityTimer;
+function resetInactivity() {
+  clearTimeout(inactivityTimer);
+  inactivityTimer = setTimeout(() => {
+    if (!document.getElementById('passwordGate')) {
+      window.location.reload();
+    }
+  }, 30 * 60 * 1000);
+}
+['mousemove','keydown','click','scroll','touchstart'].forEach(evt =>
+  document.addEventListener(evt, resetInactivity, { passive: true })
+);
+
+// Focus password input on load
+document.getElementById('passwordInput').focus();
+</script>
+
+</body>
+</html>
