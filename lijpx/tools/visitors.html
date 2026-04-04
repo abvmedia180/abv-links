@@ -2029,6 +2029,36 @@ if (window.parent !== window) {
   window.parent.postMessage({type: "tool-ready"}, "*");
 }
 
+
+// Auto-unlock via postMessage from parent hub
+window.addEventListener("message", async function(e) {
+  if (e.data && e.data.type === "unlock" && e.data.password) {
+    var gate = document.getElementById("passwordGate");
+    if (gate) {
+      try {
+        var jsonStr = await decryptData(e.data.password);
+        window.__DECRYPTED_DATA = JSON.parse(jsonStr);
+        gate.style.display = "none";
+        gate.remove();
+        document.title = document.title.replace("Secure Dashboard", "Dashboard");
+        if (typeof init === "function") init();
+      } catch(err) {
+        // Wrong password for this tool - show gate normally
+      }
+    }
+  }
+});
+// Tell parent we are ready - retry a few times in case parent listener isn't set up yet
+function notifyParent() {
+  if (window.parent !== window) {
+    window.parent.postMessage({type: "tool-ready"}, "*");
+  }
+}
+notifyParent();
+setTimeout(notifyParent, 200);
+setTimeout(notifyParent, 500);
+setTimeout(notifyParent, 1000);
+
 </script>
 
 </body>
