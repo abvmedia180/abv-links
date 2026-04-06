@@ -888,7 +888,6 @@ body {
     <div class="nav-item" data-page="wmm" onclick="navigateTo('wmm')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
       What Matters Most
-      <svg class="nav-lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-left:auto; opacity:0.4;"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
     </div>
   </div>
 
@@ -986,7 +985,6 @@ body {
         </div>
         <h3>What Matters Most</h3>
         <p>Campaign page for the What Matters Most initiative.</p>
-        <div class="tool-status"><span style="padding:2px 8px; border-radius:4px; background:rgba(0,89,165,0.08); font-size:0.65rem; color:var(--primary); font-style:normal;">EXTRA PASSWORD</span></div>
       </div>
     </div>
   </div>
@@ -1131,7 +1129,7 @@ const TOOL_CONFIG = {
   'backinmyday':  { title: 'Back in My Day Board',  file: 'tools/backinmyday.html',  extraPw: 'px' },
   'quiet':        { title: 'Quiet at Night',         file: 'tools/quiet.html',        extraPw: 'px' },
   'cccjeopardy':  { title: 'CCC Jeopardy 2026',    file: 'tools/cccjeopardy.html',  extraPw: false },
-  'wmm':          { title: 'What Matters Most',     file: 'tools/wmm.html',          extraPw: 'ops' },
+  'wmm':          { title: 'What Matters Most',     file: 'tools/wmm.html',          extraPw: false },
 };
 
 let sitePassword = null; // stored in memory only after unlock
