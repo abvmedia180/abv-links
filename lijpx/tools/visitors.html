@@ -2008,6 +2008,7 @@ document.getElementById('passwordInput').focus();
 
 // Auto-unlock via postMessage from parent hub
 window.addEventListener("message", async function(e) {
+  if (e.origin !== window.location.origin) return;
   if (e.data && e.data.type === "unlock" && e.data.password) {
     var gate = document.getElementById("passwordGate");
     if (gate) {
@@ -2021,7 +2022,7 @@ window.addEventListener("message", async function(e) {
     }
   }
 });
-function notifyParent() { if (window.parent !== window) window.parent.postMessage({type:"tool-ready"}, "*"); }
+function notifyParent() { if (window.parent !== window) window.parent.postMessage({type:"tool-ready"}, window.location.origin); }
 notifyParent(); setTimeout(notifyParent, 200); setTimeout(notifyParent, 500); setTimeout(notifyParent, 1000);
 
 </script>
