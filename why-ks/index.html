@@ -301,7 +301,8 @@
             background: radial-gradient(circle, rgba(196,123,63,0.06) 0%, transparent 70%);
         }
 
-        .cover-logo svg { width: 68px; height: 68px; margin-bottom: 3rem; }
+        .cover-logo { display: flex; justify-content: center; margin-bottom: 3rem; }
+        .cover-logo svg { width: 68px; height: 68px; }
 
         .cover-title {
             font-family: var(--font-display);
@@ -311,6 +312,7 @@
             letter-spacing: -0.04em;
             color: var(--white);
             margin-bottom: 2.5rem;
+            text-align: center;
         }
         .cover-title em { font-style: italic; color: var(--green-glow); font-weight: 400; }
 
@@ -321,6 +323,8 @@
             font-style: italic;
             color: rgba(255,255,255,0.65);
             max-width: 560px;
+            margin: 0 auto;
+            text-align: center;
         }
 
         .cover-meta {
@@ -1204,11 +1208,11 @@
                     </marker>
                 </defs>
 
-                <!-- Family Donors -->
+                <!-- Private Donors -->
                 <g>
                     <rect x="30" y="70" width="200" height="80" rx="12" fill="#FFFFFF" stroke="#E5E2DC" stroke-width="1.5"/>
-                    <text x="130" y="100" text-anchor="middle" font-family="DM Sans" font-size="11" font-weight="700" fill="#1A1A1A" letter-spacing="2">FAMILY DONORS</text>
-                    <text x="130" y="120" text-anchor="middle" font-family="DM Sans" font-size="11" fill="#5A5A5A">Abe · Amanda · Abee · Kevin</text>
+                    <text x="130" y="100" text-anchor="middle" font-family="DM Sans" font-size="11" font-weight="700" fill="#1A1A1A" letter-spacing="2">DONORS</text>
+                    <text x="130" y="120" text-anchor="middle" font-family="DM Sans" font-size="11" fill="#5A5A5A">Board, family, and friends</text>
                     <text x="130" y="138" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#9A9A9A" letter-spacing="1">PRIVATE · ASSETS · TITHE</text>
                 </g>
 
@@ -1249,7 +1253,7 @@
                     <rect x="960" y="350" width="210" height="80" rx="12" fill="#EDF3EF" stroke="#B8D4C0"/>
                     <text x="1065" y="380" text-anchor="middle" font-family="DM Sans" font-size="11" font-weight="700" fill="#2D5A3D" letter-spacing="2">PROGRAMS</text>
                     <text x="1065" y="400" text-anchor="middle" font-family="DM Sans" font-size="11" fill="#2D5A3D">Surgery · food · shelter · care</text>
-                    <text x="1065" y="418" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#2D5A3D" letter-spacing="1">ETHIOPIA · NY · FL · TX</text>
+                    <text x="1065" y="418" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#2D5A3D" letter-spacing="1">ETHIOPIA · KENYA · NY · FL · TX</text>
                 </g>
 
                 <!-- Flows in -->
@@ -1296,7 +1300,7 @@
                 </div>
                 <div>
                     <div class="spec-label on-dark">Directors</div>
-                    <div class="spec-value on-dark">Four · family-led</div>
+                    <div class="spec-value on-dark">Four · closely aligned</div>
                 </div>
                 <div>
                     <div class="spec-label on-dark">Obligation</div>
