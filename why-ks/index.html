@@ -1,0 +1,1802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow, noarchive">
+    <meta name="googlebot" content="noindex, nofollow, noarchive">
+    <title>Why Kind Steward</title>
+    <link rel="icon" href="data:,">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --green: #2D5A3D;
+            --green-deep: #1F4130;
+            --green-pale: #EDF3EF;
+            --green-glow: #B8D4C0;
+            --green-mist: #D5E4DA;
+            --text: #2A2A2A;
+            --text-soft: #6A6A6A;
+            --text-faint: #9A9A9A;
+            --white: #FFFFFF;
+            --bg: #FAFAFA;
+            --bg-warm: #F5F2ED;
+            --line: #E5E5E5;
+            --line-soft: #EFEFEF;
+            --amber: #C47B3F;
+            --font-display: 'Playfair Display', Georgia, serif;
+            --font-body: 'DM Sans', -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', Menlo, monospace;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--white);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* ====================================================
+           PASSWORD GATE
+           ==================================================== */
+        .gate {
+            position: fixed;
+            inset: 0;
+            background: var(--green);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 2rem;
+            text-align: center;
+            animation: fadeIn 0.6s ease;
+        }
+        .gate.hidden { opacity: 0; pointer-events: none; transition: opacity 0.5s ease; }
+
+        .gate-logo { margin-bottom: 2rem; }
+        .gate-logo svg { width: 56px; height: 56px; }
+
+        .gate-title {
+            font-family: var(--font-display);
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            font-weight: 500;
+            color: var(--white);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.01em;
+        }
+        .gate-title em { font-style: italic; font-weight: 400; color: var(--green-glow); }
+
+        .gate-subtitle {
+            font-family: var(--font-body);
+            font-size: 0.82rem;
+            font-weight: 300;
+            color: rgba(255,255,255,0.55);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 3rem;
+        }
+
+        .gate-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .gate-input {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(255,255,255,0.25);
+            padding: 0.75rem 0.25rem;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            color: var(--white);
+            text-align: center;
+            letter-spacing: 0.05em;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        .gate-input::placeholder { color: rgba(255,255,255,0.3); letter-spacing: 0.1em; }
+        .gate-input:focus { border-bottom-color: var(--green-glow); }
+
+        .gate-button {
+            background: var(--white);
+            color: var(--green);
+            border: none;
+            padding: 0.85rem 2rem;
+            font-family: var(--font-body);
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            border-radius: 100px;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            transition: background 0.2s ease, transform 0.15s ease;
+        }
+        .gate-button:hover { background: var(--green-glow); transform: translateY(-1px); }
+        .gate-button:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+        .gate-error {
+            color: #F4B8A0;
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+            min-height: 1em;
+            letter-spacing: 0.03em;
+        }
+
+        .gate-hint {
+            position: absolute;
+            bottom: 2rem;
+            font-family: var(--font-body);
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.3);
+            letter-spacing: 0.05em;
+        }
+
+        /* ====================================================
+           PROGRESS BAR
+           ==================================================== */
+        .progress {
+            position: fixed;
+            top: 0; left: 0;
+            height: 2px;
+            background: var(--green);
+            z-index: 100;
+            transition: width 0.1s ease;
+        }
+
+        /* ====================================================
+           TOP NAV
+           ==================================================== */
+        .topnav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 50;
+            transition: background 0.3s ease, backdrop-filter 0.3s ease, border-color 0.3s ease;
+            border-bottom: 1px solid transparent;
+        }
+        .topnav.scrolled {
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom-color: var(--line-soft);
+        }
+        .topnav-brand {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text);
+            text-decoration: none;
+            letter-spacing: -0.01em;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .topnav.scrolled .topnav-brand { opacity: 1; }
+        .topnav-brand em { font-style: italic; color: var(--green); font-weight: 500; }
+        .topnav-meta {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: var(--text-faint);
+            letter-spacing: 0.05em;
+        }
+
+        /* ====================================================
+           HERO
+           ==================================================== */
+        .hero {
+            min-height: 100vh;
+            background: var(--green);
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 6rem 2rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -30%; right: -20%;
+            width: 800px; height: 800px;
+            background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 65%);
+            pointer-events: none;
+        }
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -40%; left: -15%;
+            width: 700px; height: 700px;
+            background: radial-gradient(circle, rgba(184,212,192,0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-inner {
+            max-width: 980px;
+            margin: 0 auto;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-eyebrow {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.55);
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeUp 0.9s ease 0.1s forwards;
+        }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(2.8rem, 7vw, 5.6rem);
+            font-weight: 700;
+            line-height: 1.02;
+            letter-spacing: -0.025em;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeUp 0.9s ease 0.3s forwards;
+        }
+        .hero-title em {
+            font-style: italic;
+            font-weight: 400;
+            color: var(--green-glow);
+        }
+
+        .hero-sub {
+            font-family: var(--font-body);
+            font-size: clamp(1.05rem, 2vw, 1.2rem);
+            font-weight: 300;
+            color: rgba(255,255,255,0.75);
+            max-width: 620px;
+            line-height: 1.65;
+            opacity: 0;
+            animation: fadeUp 0.9s ease 0.5s forwards;
+        }
+
+        .hero-meta {
+            margin-top: 3.5rem;
+            display: flex;
+            gap: 3rem;
+            flex-wrap: wrap;
+            opacity: 0;
+            animation: fadeUp 0.9s ease 0.7s forwards;
+        }
+        .hero-meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+        .hero-meta-label {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.4);
+        }
+        .hero-meta-value {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--white);
+            font-style: italic;
+        }
+
+        .hero-scroll {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            animation: fadeUp 1.2s ease 1s forwards;
+        }
+        .hero-scroll svg {
+            width: 20px; height: 20px;
+            color: rgba(255,255,255,0.35);
+            animation: bob 2.5s ease-in-out infinite;
+        }
+
+        /* ====================================================
+           SHARED SECTION
+           ==================================================== */
+        section {
+            padding: 7rem 2rem;
+            position: relative;
+        }
+        @media (max-width: 768px) { section { padding: 5rem 1.5rem; } }
+
+        .wrap { max-width: 980px; margin: 0 auto; }
+        .wrap-narrow { max-width: 720px; margin: 0 auto; }
+        .wrap-wide { max-width: 1200px; margin: 0 auto; }
+
+        .section-label {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: var(--green);
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(14px);
+        }
+        .section-label.visible { animation: fadeUp 0.8s ease forwards; }
+
+        .section-label.on-green { color: rgba(255,255,255,0.5); }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 4.5vw, 3.2rem);
+            font-weight: 500;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            color: var(--text);
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(14px);
+        }
+        .section-title.visible { animation: fadeUp 0.9s ease 0.05s forwards; }
+        .section-title em { font-style: italic; font-weight: 400; color: var(--green); }
+        .section-title.on-green { color: var(--white); }
+        .section-title.on-green em { color: var(--green-glow); }
+
+        .section-lede {
+            font-family: var(--font-body);
+            font-size: clamp(1.05rem, 1.6vw, 1.2rem);
+            font-weight: 400;
+            line-height: 1.75;
+            color: var(--text-soft);
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateY(14px);
+        }
+        .section-lede.visible { animation: fadeUp 0.9s ease 0.1s forwards; }
+        .section-lede.on-green { color: rgba(255,255,255,0.72); }
+
+        .prose {
+            font-family: var(--font-body);
+            font-size: 1rem;
+            line-height: 1.85;
+            color: var(--text-soft);
+            opacity: 0;
+            transform: translateY(14px);
+        }
+        .prose.visible { animation: fadeUp 0.9s ease 0.15s forwards; }
+        .prose p + p { margin-top: 1.25rem; }
+        .prose strong { color: var(--text); font-weight: 600; }
+        .prose em { color: var(--green); font-style: italic; }
+
+        .prose.on-green { color: rgba(255,255,255,0.75); }
+        .prose.on-green strong { color: var(--white); }
+        .prose.on-green em { color: var(--green-glow); }
+
+        .bg-white { background: var(--white); }
+        .bg-off { background: var(--bg); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+        .bg-warm { background: var(--bg-warm); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+        .bg-green { background: var(--green); color: var(--white); }
+        .bg-green-deep { background: var(--green-deep); color: var(--white); }
+
+        .rule {
+            width: 36px; height: 1px;
+            background: var(--line);
+            margin: 0 auto 2.5rem;
+        }
+        .rule.on-green { background: rgba(255,255,255,0.2); }
+
+        /* ====================================================
+           PULLQUOTE
+           ==================================================== */
+        .pull {
+            font-family: var(--font-display);
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 500;
+            font-style: italic;
+            line-height: 1.4;
+            color: var(--text);
+            border-left: 2px solid var(--green);
+            padding-left: 1.75rem;
+            margin: 2.5rem 0;
+            opacity: 0;
+            transform: translateY(14px);
+        }
+        .pull.visible { animation: fadeUp 0.9s ease forwards; }
+        .pull.on-green { color: var(--white); border-left-color: var(--green-glow); }
+
+        .pull-cite {
+            display: block;
+            font-family: var(--font-body);
+            font-size: 0.8rem;
+            font-style: normal;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-faint);
+            margin-top: 1rem;
+        }
+        .pull-cite.on-green { color: rgba(255,255,255,0.5); }
+
+        /* ====================================================
+           THE PROBLEM — STATS ROW
+           ==================================================== */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0;
+            margin-top: 3rem;
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+        }
+        @media (max-width: 768px) { .stats-row { grid-template-columns: 1fr; } }
+
+        .stat {
+            padding: 2rem 1.5rem;
+            text-align: left;
+            border-right: 1px solid var(--line);
+            opacity: 0;
+            transform: translateY(14px);
+        }
+        @media (max-width: 768px) {
+            .stat { border-right: none; border-bottom: 1px solid var(--line); }
+            .stat:last-child { border-bottom: none; }
+        }
+        .stat:last-child { border-right: none; }
+        .stat.visible { animation: fadeUp 0.8s ease forwards; }
+        .stat:nth-child(2).visible { animation-delay: 0.1s; }
+        .stat:nth-child(3).visible { animation-delay: 0.2s; }
+
+        .stat-num {
+            font-family: var(--font-display);
+            font-size: clamp(2.2rem, 4vw, 3rem);
+            font-weight: 600;
+            color: var(--green);
+            line-height: 1;
+            margin-bottom: 0.6rem;
+            letter-spacing: -0.02em;
+        }
+        .stat-label {
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            color: var(--text-soft);
+            line-height: 1.55;
+        }
+
+        /* ====================================================
+           ENTITY DIAGRAM
+           ==================================================== */
+        .diagram-wrap {
+            margin: 3.5rem 0 2rem;
+            padding: 3rem 2rem;
+            background: var(--white);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            opacity: 0;
+            transform: translateY(14px);
+        }
+        .diagram-wrap.visible { animation: fadeUp 0.9s ease forwards; }
+        .diagram-caption {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-faint);
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        /* ====================================================
+           TWO-ENTITY COMPARE
+           ==================================================== */
+        .compare {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 3.5rem;
+        }
+        @media (max-width: 768px) { .compare { grid-template-columns: 1fr; } }
+
+        .entity-card {
+            background: var(--white);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 2.25rem 2rem;
+            opacity: 0;
+            transform: translateY(20px);
+            position: relative;
+            overflow: hidden;
+        }
+        .entity-card.visible { animation: fadeUp 0.9s ease forwards; }
+        .entity-card:nth-child(2).visible { animation-delay: 0.12s; }
+
+        .entity-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: var(--green);
+        }
+        .entity-card.is-charity::before { background: var(--amber); }
+
+        .entity-kind {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--green);
+            margin-bottom: 1rem;
+        }
+        .entity-card.is-charity .entity-kind { color: var(--amber); }
+
+        .entity-name {
+            font-family: var(--font-display);
+            font-size: 1.55rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.4rem;
+            letter-spacing: -0.01em;
+        }
+        .entity-tagline {
+            font-family: var(--font-body);
+            font-size: 0.88rem;
+            font-style: italic;
+            color: var(--text-soft);
+            margin-bottom: 1.5rem;
+        }
+
+        .entity-facts { border-top: 1px solid var(--line); }
+        .entity-fact {
+            display: grid;
+            grid-template-columns: 140px 1fr;
+            gap: 1rem;
+            padding: 0.85rem 0;
+            border-bottom: 1px solid var(--line-soft);
+            font-size: 0.86rem;
+        }
+        .entity-fact-label {
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-faint);
+            align-self: center;
+        }
+        .entity-fact-value { color: var(--text); line-height: 1.55; }
+        .entity-fact-value code {
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: var(--text);
+            background: var(--green-pale);
+            padding: 0.1rem 0.4rem;
+            border-radius: 3px;
+        }
+
+        /* ====================================================
+           100% PASS-THROUGH SHOWCASE
+           ==================================================== */
+        .hundred {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3.5rem;
+            align-items: center;
+            margin-top: 2.5rem;
+        }
+        @media (max-width: 768px) { .hundred { grid-template-columns: 1fr; gap: 2rem; } }
+
+        .hundred-visual {
+            display: flex;
+            justify-content: center;
+            opacity: 0;
+            transform: translateY(14px);
+        }
+        .hundred-visual.visible { animation: fadeUp 1s ease forwards; }
+
+        .hundred-circle {
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: radial-gradient(circle, rgba(184,212,192,0.12) 0%, transparent 70%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .hundred-circle::before {
+            content: '';
+            position: absolute;
+            inset: 18px;
+            border: 1px solid rgba(184,212,192,0.18);
+            border-radius: 50%;
+        }
+        .hundred-num {
+            font-family: var(--font-display);
+            font-size: 5.5rem;
+            font-weight: 600;
+            color: var(--white);
+            line-height: 0.9;
+            letter-spacing: -0.03em;
+        }
+        .hundred-pct {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 400;
+            font-style: italic;
+            color: var(--green-glow);
+            line-height: 1;
+        }
+        .hundred-label {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.45);
+            margin-top: 0.75rem;
+        }
+
+        .hundred-copy { opacity: 0; transform: translateY(14px); }
+        .hundred-copy.visible { animation: fadeUp 1s ease 0.1s forwards; }
+
+        /* ====================================================
+           IMPACT BARS
+           ==================================================== */
+        .impact-list {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin-top: 3.5rem;
+        }
+
+        .impact-item {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 2rem;
+            align-items: center;
+            padding: 1.75rem 0;
+            border-bottom: 1px solid var(--line);
+            opacity: 0;
+            transform: translateY(14px);
+        }
+        .impact-item:last-child { border-bottom: none; }
+        .impact-item.visible { animation: fadeUp 0.8s ease forwards; }
+        .impact-item:nth-child(2).visible { animation-delay: 0.08s; }
+        .impact-item:nth-child(3).visible { animation-delay: 0.16s; }
+        .impact-item:nth-child(4).visible { animation-delay: 0.24s; }
+        .impact-item:nth-child(5).visible { animation-delay: 0.32s; }
+
+        .impact-l { display: flex; flex-direction: column; gap: 0.4rem; }
+        .impact-headline {
+            font-family: var(--font-display);
+            font-size: clamp(1.3rem, 2.2vw, 1.6rem);
+            font-weight: 500;
+            color: var(--text);
+            letter-spacing: -0.01em;
+        }
+        .impact-headline em { font-style: italic; color: var(--green); }
+        .impact-sub {
+            font-family: var(--font-body);
+            font-size: 0.88rem;
+            color: var(--text-soft);
+            line-height: 1.55;
+        }
+        .impact-price {
+            font-family: var(--font-display);
+            font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+            font-weight: 600;
+            color: var(--green);
+            text-align: right;
+            letter-spacing: -0.02em;
+        }
+        .impact-item.is-anchor .impact-price { color: var(--text-faint); font-weight: 400; font-style: italic; }
+        .impact-item.is-anchor .impact-headline { color: var(--text-faint); font-weight: 400; }
+
+        /* ====================================================
+           DIFFERENTIATION GRID — 6 PILLARS
+           ==================================================== */
+        .pillars {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 3.5rem;
+        }
+        @media (max-width: 900px) { .pillars { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 600px) { .pillars { grid-template-columns: 1fr; } }
+
+        .pillar {
+            background: var(--white);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 2rem 1.75rem;
+            opacity: 0;
+            transform: translateY(16px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+        .pillar:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 32px rgba(45,90,61,0.06);
+            border-color: var(--green-mist);
+        }
+        .pillar.visible { animation: fadeUp 0.8s ease forwards; }
+        .pillar:nth-child(2).visible { animation-delay: 0.06s; }
+        .pillar:nth-child(3).visible { animation-delay: 0.12s; }
+        .pillar:nth-child(4).visible { animation-delay: 0.18s; }
+        .pillar:nth-child(5).visible { animation-delay: 0.24s; }
+        .pillar:nth-child(6).visible { animation-delay: 0.3s; }
+
+        .pillar-num {
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            letter-spacing: 0.15em;
+            color: var(--green);
+            margin-bottom: 1rem;
+        }
+        .pillar-title {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.7rem;
+            line-height: 1.3;
+            letter-spacing: -0.01em;
+        }
+        .pillar-desc {
+            font-family: var(--font-body);
+            font-size: 0.88rem;
+            color: var(--text-soft);
+            line-height: 1.65;
+        }
+
+        /* ====================================================
+           TIMELINE (vertical editorial)
+           ==================================================== */
+        .timeline {
+            margin-top: 3rem;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 4px; top: 10px; bottom: 10px;
+            width: 1px;
+            background: var(--line);
+        }
+
+        .tl-item {
+            position: relative;
+            padding-bottom: 2.25rem;
+            padding-left: 1.75rem;
+            opacity: 0;
+            transform: translateY(12px);
+        }
+        .tl-item.visible { animation: fadeUp 0.7s ease forwards; }
+        .tl-item:nth-child(n+2).visible { animation-delay: 0.08s; }
+        .tl-item:nth-child(n+3).visible { animation-delay: 0.16s; }
+        .tl-item:nth-child(n+4).visible { animation-delay: 0.24s; }
+        .tl-item:nth-child(n+5).visible { animation-delay: 0.32s; }
+        .tl-item:nth-child(n+6).visible { animation-delay: 0.4s; }
+        .tl-item:nth-child(n+7).visible { animation-delay: 0.48s; }
+
+        .tl-item::before {
+            content: '';
+            position: absolute;
+            left: -1.5rem;
+            top: 8px;
+            width: 9px; height: 9px;
+            background: var(--white);
+            border: 2px solid var(--green);
+            border-radius: 50%;
+        }
+        .tl-item.future::before { background: var(--white); border-color: var(--line); }
+        .tl-item.now::before { background: var(--green); border-color: var(--green); box-shadow: 0 0 0 4px rgba(45,90,61,0.15); }
+
+        .tl-date {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--green);
+            margin-bottom: 0.4rem;
+        }
+        .tl-item.future .tl-date { color: var(--text-faint); }
+        .tl-item.now .tl-date { color: var(--amber); }
+
+        .tl-title {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 0.35rem;
+            letter-spacing: -0.01em;
+        }
+        .tl-item.future .tl-title { color: var(--text-soft); }
+
+        .tl-desc {
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            color: var(--text-soft);
+            line-height: 1.6;
+        }
+
+        /* ====================================================
+           PEOPLE ROW
+           ==================================================== */
+        .people {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1.25rem;
+            margin-top: 3rem;
+        }
+        @media (max-width: 900px) { .people { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 500px) { .people { grid-template-columns: 1fr; } }
+
+        .person {
+            background: var(--white);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 1.5rem 1.25rem;
+            text-align: left;
+            opacity: 0;
+            transform: translateY(14px);
+        }
+        .person.visible { animation: fadeUp 0.7s ease forwards; }
+        .person:nth-child(2).visible { animation-delay: 0.07s; }
+        .person:nth-child(3).visible { animation-delay: 0.14s; }
+        .person:nth-child(4).visible { animation-delay: 0.21s; }
+        .person:nth-child(5).visible { animation-delay: 0.28s; }
+
+        .person-init {
+            width: 40px; height: 40px;
+            background: var(--green-pale);
+            color: var(--green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+        .person-name {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.15rem;
+            line-height: 1.3;
+        }
+        .person-role {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--green);
+            margin-bottom: 0.75rem;
+        }
+        .person-note {
+            font-family: var(--font-body);
+            font-size: 0.78rem;
+            color: var(--text-soft);
+            line-height: 1.55;
+        }
+
+        .people-footer {
+            text-align: center;
+            margin-top: 2.5rem;
+            font-family: var(--font-display);
+            font-style: italic;
+            font-size: 0.95rem;
+            color: var(--text-soft);
+        }
+
+        /* ====================================================
+           PRECEDENT CARD (CHARITY: WATER)
+           ==================================================== */
+        .precedent {
+            background: var(--bg-warm);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 2.5rem;
+            margin-top: 3rem;
+            opacity: 0;
+            transform: translateY(14px);
+        }
+        .precedent.visible { animation: fadeUp 0.9s ease forwards; }
+
+        .precedent-eyebrow {
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--amber);
+            margin-bottom: 0.75rem;
+        }
+        .precedent-title {
+            font-family: var(--font-display);
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+        .precedent-body {
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            color: var(--text-soft);
+            line-height: 1.75;
+        }
+
+        /* ====================================================
+           CTA
+           ==================================================== */
+        .cta {
+            padding: 8rem 2rem;
+            background: var(--green);
+            color: var(--white);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 900px; height: 900px;
+            background: radial-gradient(circle, rgba(184,212,192,0.08) 0%, transparent 60%);
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+
+        .cta-inner { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; }
+
+        .cta-title {
+            font-family: var(--font-display);
+            font-size: clamp(2.2rem, 5vw, 3.6rem);
+            font-weight: 500;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            transform: translateY(14px);
+        }
+        .cta-title em { font-style: italic; color: var(--green-glow); font-weight: 400; }
+        .cta-title.visible { animation: fadeUp 0.9s ease forwards; }
+
+        .cta-body {
+            font-family: var(--font-body);
+            font-size: 1.05rem;
+            color: rgba(255,255,255,0.72);
+            line-height: 1.75;
+            margin-bottom: 2.75rem;
+            opacity: 0;
+            transform: translateY(14px);
+        }
+        .cta-body.visible { animation: fadeUp 0.9s ease 0.1s forwards; }
+
+        .cta-email {
+            display: inline-block;
+            font-family: var(--font-display);
+            font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+            font-weight: 500;
+            color: var(--white);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(184,212,192,0.4);
+            padding-bottom: 0.4rem;
+            transition: color 0.3s ease, border-color 0.3s ease;
+            opacity: 0;
+            transform: translateY(14px);
+            letter-spacing: -0.01em;
+        }
+        .cta-email.visible { animation: fadeUp 0.9s ease 0.2s forwards; }
+        .cta-email:hover { color: var(--green-glow); border-color: var(--green-glow); }
+
+        .cta-foot {
+            margin-top: 3.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.35);
+            opacity: 0;
+        }
+        .cta-foot.visible { animation: fadeUp 1s ease 0.35s forwards; }
+
+        /* ====================================================
+           FOOTER
+           ==================================================== */
+        .footer {
+            background: var(--green-deep);
+            color: rgba(255,255,255,0.6);
+            padding: 3rem 2rem 3.5rem;
+            text-align: center;
+        }
+        .footer-brand {
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: var(--white);
+            margin-bottom: 0.4rem;
+        }
+        .footer-status {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.35);
+            margin-bottom: 1.25rem;
+        }
+        .footer-copy {
+            font-family: var(--font-body);
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.3);
+            margin-top: 1.5rem;
+            line-height: 1.6;
+        }
+
+        /* ====================================================
+           ANIMATIONS
+           ==================================================== */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(14px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes bob {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(8px); }
+        }
+
+        /* ====================================================
+           UTILITY
+           ==================================================== */
+        .noselect { user-select: none; -webkit-user-select: none; }
+
+    </style>
+</head>
+<body>
+
+    <!-- ============================================
+         PASSWORD GATE
+         ============================================ -->
+    <div class="gate" id="gate">
+        <div class="gate-logo">
+            <svg viewBox="0 0 68 68" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="34" cy="34" r="32" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+                <path d="M34 17 C34 17, 23 23, 23 31 C23 38, 28 42, 34 47 C40 42, 45 38, 45 31 C45 23, 34 17, 34 17Z" stroke="rgba(255,255,255,0.6)" stroke-width="1.5" fill="none"/>
+                <path d="M34 25 L34 40" stroke="rgba(184,212,192,0.5)" stroke-width="1"/>
+                <path d="M29 32.5 L39 32.5" stroke="rgba(184,212,192,0.5)" stroke-width="1"/>
+            </svg>
+        </div>
+        <h1 class="gate-title">Why <em>Kind Steward</em></h1>
+        <p class="gate-subtitle">A private pitchbook</p>
+        <form class="gate-form" id="gateForm">
+            <input type="password" class="gate-input" id="gateInput" placeholder="Password" autocomplete="off" spellcheck="false" autofocus>
+            <button type="submit" class="gate-button" id="gateBtn">Unlock</button>
+            <div class="gate-error" id="gateError"></div>
+        </form>
+        <p class="gate-hint">If you were shared this link, you have the password.</p>
+    </div>
+
+    <!-- ============================================
+         PROGRESS BAR
+         ============================================ -->
+    <div class="progress" id="progress" style="width: 0%"></div>
+
+    <!-- ============================================
+         TOP NAV
+         ============================================ -->
+    <nav class="topnav" id="topnav">
+        <a href="#top" class="topnav-brand">Kind <em>Steward</em></a>
+        <span class="topnav-meta">private · v1 · apr 2026</span>
+    </nav>
+
+    <!-- ============================================
+         HERO
+         ============================================ -->
+    <section class="hero" id="top">
+        <div class="hero-inner">
+            <p class="hero-eyebrow">A Private Pitchbook — For Board, Donors, and Partners</p>
+            <h1 class="hero-title">Why we built<br>Kind Steward<br><em>the way we did.</em></h1>
+            <p class="hero-sub">
+                A two-entity charitable structure built on business-operator discipline, zero compensation, and 100% pass-through of public donations to the people we serve. This is the full story — origin, model, plan, and commitments.
+            </p>
+            <div class="hero-meta">
+                <div class="hero-meta-item">
+                    <span class="hero-meta-label">Foundation</span>
+                    <span class="hero-meta-value">Jul 2025</span>
+                </div>
+                <div class="hero-meta-item">
+                    <span class="hero-meta-label">Charity</span>
+                    <span class="hero-meta-value">Apr 2026</span>
+                </div>
+                <div class="hero-meta-item">
+                    <span class="hero-meta-label">First Trip</span>
+                    <span class="hero-meta-value">Oct 2026</span>
+                </div>
+                <div class="hero-meta-item">
+                    <span class="hero-meta-label">Focus</span>
+                    <span class="hero-meta-value">Ethiopia · US</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-scroll">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- ============================================
+         THE PROBLEM
+         ============================================ -->
+    <section class="bg-white">
+        <div class="wrap">
+            <p class="section-label">The Problem</p>
+            <h2 class="section-title">Charitable giving has a <em>trust problem.</em></h2>
+            <p class="section-lede">
+                Every year, hundreds of billions of dollars move from donors to charitable organizations. A meaningful share of it does not reach the people it was meant to serve. For donors who pay attention, this is not a secret. It is the reason the sector has a credibility crisis.
+            </p>
+            <div class="stats-row">
+                <div class="stat">
+                    <p class="stat-num">70%</p>
+                    <p class="stat-label">of Americans report low trust in how charitable organizations use the money they raise.</p>
+                </div>
+                <div class="stat">
+                    <p class="stat-num">~25%</p>
+                    <p class="stat-label">average administrative overhead at US nonprofits, before program costs are accounted for.</p>
+                </div>
+                <div class="stat">
+                    <p class="stat-num">$&nbsp;?</p>
+                    <p class="stat-label">the amount of a donor's dollar that actually reaches the beneficiary. Most donors have no way to find out.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         THE ORIGIN
+         ============================================ -->
+    <section class="bg-off">
+        <div class="wrap-narrow">
+            <p class="section-label">The Origin</p>
+            <h2 class="section-title">Seven years of watching. <em>Fifteen days to act.</em></h2>
+            <div class="prose">
+                <p>Kind Steward was not a plan. It was a reaction.</p>
+                <p>For years, Abe Varughese watched close family members — committed, faithful, tithing Christians — write substantial checks to charitable organizations, and he watched, too often, those dollars disappear into waste, overhead, politics, and "mission trips" that looked more like vacations than mission work. The running question became sharper every year: <strong>what are they actually doing with the money?</strong></p>
+                <p>The thesis that eventually became Kind Steward emerged from that observation. A single year of a family's tithe check, handed to a trusted-but-unaccountable intermediary, doesn't move the needle. But three or four years of the same giving, pooled and deployed directly — food on a street in New York, a corrective surgery for a child in Ethiopia, a winter coat in Texas — can change lives measurably. The gap between those two outcomes is not charity. It is discipline.</p>
+                <p>In <strong>mid-2025</strong>, a local institutional-trust failure in a nonprofit Abe's family had supported crystallized what had been a seven-year concern. The exact incident is not the point. The point is that the people running that organization were not held to account, and the money that should have gone to the mission went elsewhere. Abe's family had written checks for more than one person's car. The beneficiaries of those checks were not the people the organization claimed to serve.</p>
+                <p>That was the end of the watching.</p>
+                <p class="pull" style="animation: none; opacity: 1; transform: none; margin: 2rem 0 0;">
+                    <em>"If you don't like the way something is done, go out and do it yourself."</em>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         RELUCTANT FOUNDER
+         ============================================ -->
+    <section class="bg-white">
+        <div class="wrap-narrow">
+            <p class="section-label">The Reluctant Founder</p>
+            <h2 class="section-title">Nobody <em>wanted</em> to start a charity.</h2>
+            <div class="prose">
+                <p>This is important context: Kind Steward is not a vanity project, a resume line, or an empire-building exercise. Nobody on the board set out to build a nonprofit. They all have careers, companies, families, and ten other things going at full speed.</p>
+                <p>Kind Steward exists because, after enough years of looking, the founder could not find a charitable organization he trusted enough to hand his family's money to. The gap was real. If nothing else filled it, the only remaining option was to build one that would.</p>
+                <p>The plain, cold version:</p>
+                <p class="pull" style="animation: none; opacity: 1; transform: none;">
+                    <em>"There's nobody I trust to give money to where I can be confident it will go to the right resources and actually impact people. There is so much corruption, so many people taking money. That's it. That's the whole reason."</em>
+                </p>
+                <p>From decision to filing took <strong>fifteen days</strong>. The Kind Steward Foundation was incorporated in Wyoming on <strong>July 29, 2025.</strong></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         THE MODEL — TWO ENTITIES
+         ============================================ -->
+    <section class="bg-off">
+        <div class="wrap">
+            <p class="section-label">The Model</p>
+            <h2 class="section-title">One mission. <em>Two entities.</em></h2>
+            <p class="section-lede">
+                The confusing part first: there are two Kind Steward entities, not one. The Foundation and the Charity. They share a board, a mission, and a registered office — but they play different roles in the model, because private and public charitable money follow different rules. Here's how they fit together.
+            </p>
+
+            <!-- ENTITY DIAGRAM -->
+            <div class="diagram-wrap">
+                <svg viewBox="0 0 720 340" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: auto; max-height: 340px;">
+                    <defs>
+                        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#2D5A3D"/>
+                        </marker>
+                        <marker id="arrow-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#C47B3F"/>
+                        </marker>
+                        <marker id="arrow-soft" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#6A6A6A"/>
+                        </marker>
+                    </defs>
+
+                    <!-- DONORS LEFT -->
+                    <g>
+                        <rect x="30" y="40" width="140" height="56" rx="10" fill="#FFFFFF" stroke="#E5E5E5"/>
+                        <text x="100" y="63" text-anchor="middle" font-family="DM Sans" font-size="11" font-weight="600" fill="#2A2A2A" letter-spacing="1.5">FAMILY DONORS</text>
+                        <text x="100" y="80" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#6A6A6A">Abe · Amanda · Abee · Kevin</text>
+                    </g>
+                    <g>
+                        <rect x="30" y="244" width="140" height="56" rx="10" fill="#FFFFFF" stroke="#E5E5E5"/>
+                        <text x="100" y="267" text-anchor="middle" font-family="DM Sans" font-size="11" font-weight="600" fill="#2A2A2A" letter-spacing="1.5">PUBLIC DONORS</text>
+                        <text x="100" y="284" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#6A6A6A">Anyone · Google Ads inbound</text>
+                    </g>
+
+                    <!-- FOUNDATION CENTER TOP -->
+                    <g>
+                        <rect x="260" y="28" width="200" height="80" rx="12" fill="#2D5A3D" stroke="#2D5A3D"/>
+                        <text x="360" y="56" text-anchor="middle" font-family="Playfair Display" font-size="15" font-weight="600" fill="#FFFFFF">Kind Steward Foundation</text>
+                        <text x="360" y="74" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#B8D4C0">Private Foundation · §509(a)</text>
+                        <text x="360" y="92" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="rgba(255,255,255,0.55)" letter-spacing="1">HOLDS ASSETS · COVERS OVERHEAD</text>
+                    </g>
+
+                    <!-- CHARITY CENTER BOTTOM -->
+                    <g>
+                        <rect x="260" y="232" width="200" height="80" rx="12" fill="#FFFFFF" stroke="#C47B3F" stroke-width="2"/>
+                        <text x="360" y="260" text-anchor="middle" font-family="Playfair Display" font-size="15" font-weight="600" fill="#2A2A2A">Kind Steward</text>
+                        <text x="360" y="278" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#C47B3F">Public Charity · §509(a)(1)</text>
+                        <text x="360" y="296" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#6A6A6A" letter-spacing="1">RUNS PROGRAMS · RECEIVES DONATIONS</text>
+                    </g>
+
+                    <!-- PROGRAMS RIGHT -->
+                    <g>
+                        <rect x="550" y="40" width="140" height="56" rx="10" fill="#EDF3EF" stroke="#B8D4C0"/>
+                        <text x="620" y="63" text-anchor="middle" font-family="DM Sans" font-size="11" font-weight="600" fill="#2D5A3D" letter-spacing="1.5">GRANTMAKING</text>
+                        <text x="620" y="80" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#2D5A3D">≥5% annual · to other 501(c)(3)s</text>
+                    </g>
+                    <g>
+                        <rect x="550" y="244" width="140" height="56" rx="10" fill="#EDF3EF" stroke="#B8D4C0"/>
+                        <text x="620" y="267" text-anchor="middle" font-family="DM Sans" font-size="11" font-weight="600" fill="#2D5A3D" letter-spacing="1.5">PROGRAMS</text>
+                        <text x="620" y="284" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#2D5A3D">Ethiopia · NY · FL · TX</text>
+                    </g>
+
+                    <!-- ARROWS: Donors -> Entities -->
+                    <line x1="170" y1="68" x2="252" y2="68" stroke="#2D5A3D" stroke-width="1.5" marker-end="url(#arrow)"/>
+                    <line x1="170" y1="272" x2="252" y2="272" stroke="#C47B3F" stroke-width="1.5" marker-end="url(#arrow-amber)"/>
+
+                    <!-- ARROWS: Entities -> Output -->
+                    <line x1="460" y1="68" x2="542" y2="68" stroke="#2D5A3D" stroke-width="1.5" marker-end="url(#arrow)"/>
+                    <line x1="460" y1="272" x2="542" y2="272" stroke="#C47B3F" stroke-width="1.5" marker-end="url(#arrow-amber)"/>
+
+                    <!-- ARROW: Foundation -> Charity (optional grant) -->
+                    <path d="M 360 108 C 360 150, 300 150, 300 232" fill="none" stroke="#6A6A6A" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arrow-soft)"/>
+                    <text x="245" y="174" font-family="JetBrains Mono" font-size="9" fill="#6A6A6A" letter-spacing="0.5">optional grant</text>
+
+                    <!-- ARROW: Foundation funds Charity's overhead -->
+                    <path d="M 360 108 C 360 150, 420 150, 420 232" fill="none" stroke="#2D5A3D" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
+                    <text x="432" y="174" font-family="JetBrains Mono" font-size="9" fill="#2D5A3D" letter-spacing="0.5">covers overhead</text>
+                </svg>
+                <p class="diagram-caption">Two entities · One mission · Separate accounts by design</p>
+            </div>
+
+            <!-- SIDE BY SIDE -->
+            <div class="compare">
+                <div class="entity-card">
+                    <p class="entity-kind">The Foundation</p>
+                    <p class="entity-name">Kind Steward Foundation</p>
+                    <p class="entity-tagline">The private capital engine.</p>
+                    <div class="entity-facts">
+                        <div class="entity-fact"><span class="entity-fact-label">Tax Status</span><span class="entity-fact-value">501(c)(3) private foundation · §509(a)</span></div>
+                        <div class="entity-fact"><span class="entity-fact-label">Formed</span><span class="entity-fact-value">July 29, 2025 · Wyoming</span></div>
+                        <div class="entity-fact"><span class="entity-fact-label">EIN</span><span class="entity-fact-value"><code>39-3457243</code></span></div>
+                        <div class="entity-fact"><span class="entity-fact-label">Directors</span><span class="entity-fact-value">Four · family-led</span></div>
+                        <div class="entity-fact"><span class="entity-fact-label">Funded By</span><span class="entity-fact-value">The founding family</span></div>
+                        <div class="entity-fact"><span class="entity-fact-label">Obligation</span><span class="entity-fact-value">≥5% annual charitable distribution</span></div>
+                        <div class="entity-fact"><span class="entity-fact-label">Role</span><span class="entity-fact-value">Holds assets. Covers overhead. Grants to Charity and other 501(c)(3)s.</span></div>
+                    </div>
+                </div>
+                <div class="entity-card is-charity">
+                    <p class="entity-kind">The Charity</p>
+                    <p class="entity-name">Kind Steward</p>
+                    <p class="entity-tagline">The public operating engine.</p>
+                    <div class="entity-facts">
+                        <div class="entity-fact"><span class="entity-fact-label">Tax Status</span><span class="entity-fact-value">501(c)(3) public charity · §509(a)(1) / §170(b)(1)(A)(vi)</span></div>
+                        <div class="entity-fact"><span class="entity-fact-label">Formed</span><span class="entity-fact-value">April 16, 2026 · Wyoming</span></div>
+                        <div class="entity-fact"><span class="entity-fact-label">EIN</span><span class="entity-fact-value"><code>42-2121249</code></span></div>
+                        <div class="entity-fact"><span class="entity-fact-label">Directors</span><span class="entity-fact-value">Five · includes one independent</span></div>
+                        <div class="entity-fact"><span class="entity-fact-label">Funded By</span><span class="entity-fact-value">The general public</span></div>
+                        <div class="entity-fact"><span class="entity-fact-label">Obligation</span><span class="entity-fact-value">Public support test · ≥1/3 from public sources</span></div>
+                        <div class="entity-fact"><span class="entity-fact-label">Role</span><span class="entity-fact-value">Runs programs. Receives donations. Delivers aid.</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         WHY TWO
+         ============================================ -->
+    <section class="bg-white">
+        <div class="wrap-narrow">
+            <p class="section-label">Why Two</p>
+            <h2 class="section-title">Each structure unlocks something <em>the other can't.</em></h2>
+            <div class="prose">
+                <p><strong>A private foundation</strong> can be founder-controlled, family-governed, and funded from within. It can be stood up in fifteen days with a small, aligned group, and without a public fundraising plan. It can hold and deploy family assets, take appreciated securities, and operate on a five-year horizon without needing to persuade the public of anything. The Gates, Bezos, Buffett, and Rockefeller organizations all use this structure for a reason: it was purpose-built for this use case.</p>
+                <p><strong>A public charity</strong> is the only vehicle that can cleanly accept donations from the public, run a "donate" button without legal gray zones, qualify for the <em>$120,000/year Google Ad Grant</em>, and unlock the nonprofit discount ecosystem from Microsoft, Google, QuickBooks, and the rest of the tech stack. It also offers higher donor-deductibility caps (60% of AGI for cash gifts, versus 30% for private foundation gifts). In exchange, it accepts public-support obligations, higher IRS scrutiny, and the annual discipline of publishing its numbers.</p>
+                <p><strong>Every serious philanthropic operation has this split.</strong> It is not a hack, a loophole, or a workaround. It is standard practice for founders and families who take charitable work seriously. Kind Steward does what they do, for the same reason: each structure lets the other focus on what it does best.</p>
+            </div>
+            <div class="pull" style="margin-top: 3rem;">
+                <strong style="display: block; margin-bottom: 1rem; font-family: var(--font-body); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.2em; color: var(--green); text-transform: uppercase; font-style: normal;">The practical answer</strong>
+                Large gifts, appreciated assets, or founder-level contributions → <em>the Foundation</em>. Small-to-mid cash donations, monthly support, or peer-driven giving → <em>the Charity</em>. If you don't know which, give to the Charity. Your dollar lands the same place.
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         100% PASS-THROUGH
+         ============================================ -->
+    <section class="bg-green">
+        <div class="wrap">
+            <p class="section-label on-green">The Commitment</p>
+            <h2 class="section-title on-green">Every public dollar reaches a <em>person.</em></h2>
+            <div class="hundred">
+                <div class="hundred-visual">
+                    <div class="hundred-circle">
+                        <p class="hundred-num">100<span class="hundred-pct">%</span></p>
+                        <p class="hundred-label">To Program</p>
+                    </div>
+                </div>
+                <div class="hundred-copy">
+                    <p class="prose on-green visible" style="animation: none; opacity: 1; transform: none;">
+                        <strong>The Foundation absorbs all overhead — formation, registered agent, accounting, banking, legal, compliance, software, infrastructure.</strong> The Charity operates as a pure pass-through on program dollars. Every donation made by a member of the public is dedicated to programs: the surgery, the brace, the meal, the jacket, the well. Transaction fees are absorbed or opted-in by the donor, not deducted from the program dollar.
+                    </p>
+                    <p class="prose on-green visible" style="animation: none; opacity: 1; transform: none; margin-top: 1.5rem;">
+                        This is not a fundraising slogan. It is the structural purpose of having a separately-funded Foundation in the first place. When the two vehicles are wired this way, <em>donor dollars and operational dollars come from different places by design.</em> Most charities cannot credibly make this promise. Kind Steward's architecture was built to.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         PRECEDENT
+         ============================================ -->
+    <section class="bg-white">
+        <div class="wrap-narrow">
+            <p class="section-label">The Precedent</p>
+            <h2 class="section-title">This isn't a <em>new idea.</em></h2>
+            <div class="prose">
+                <p>The 100% pass-through architecture is not something Kind Steward invented. It was pioneered by <strong>charity: water</strong>, founded in 2006 by Scott Harrison after a similar observation about how donor money gets absorbed by the organizations it passes through.</p>
+                <p>charity: water runs on two separate accounts: one for public donations, 100% of which fund clean water projects, and a second "operating" account funded by a closed circle of entrepreneurs and families who understand that running a charity has real costs — and who prefer to pay those costs themselves, so that every public dollar can go directly to the work.</p>
+                <p>It works. charity: water has raised hundreds of millions of dollars on this model, and <em>the structure is now taught as a case study at Harvard Business School and the Stanford Graduate School of Business.</em></p>
+            </div>
+
+            <div class="precedent">
+                <p class="precedent-eyebrow">charity: water · 2006</p>
+                <p class="precedent-title">Two separate accounts. One rule. Every public dollar goes to the water project.</p>
+                <p class="precedent-body">Kind Steward applies the same architecture, tuned for a two-entity legal structure — a private foundation covering overhead, a public charity delivering the programs. Different vehicles, same discipline: <strong>donor money and operational money do not mix.</strong></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         OPERATING MODEL — INVESTMENT FUND
+         ============================================ -->
+    <section class="bg-off">
+        <div class="wrap-narrow">
+            <p class="section-label">Operating Model</p>
+            <h2 class="section-title">Run it like an <em>investment fund for impact.</em></h2>
+            <div class="prose">
+                <p>Charities are usually run on mission statements and best intentions. Budgets get built around the organization rather than around the people the organization serves. The gap is where the bloat lives.</p>
+                <p class="pull" style="animation: none; opacity: 1; transform: none; margin: 1.5rem 0;">
+                    <em>"My goal is to run this like an investment fund. I want to see what is the maximum impact we can have per dollar. I hate that charities have so much bloat. I just don't want to see money wasted."</em>
+                    <span class="pull-cite">— Founder</span>
+                </p>
+                <p>Kind Steward's operating discipline is to refuse the bloat and measure every decision against a single question: <strong>what is the maximum human impact this dollar can produce?</strong></p>
+                <p>Two delivery channels follow from that discipline:</p>
+                <p><strong>Direct to the source.</strong> Get the dollar to the person in need with the shortest possible chain of intermediaries. Homeless people on the streets of New York, Dallas, and Florida. Families who need food, shelter, clothing, medical care.</p>
+                <p><strong>Partner with trusted operators already on the ground.</strong> People who are doing the work, know the community, and have the relationships — but who are operating at personal scale out of their own pocket. Kind Steward's role is to supply the capital and the accountability framework so their work can scale.</p>
+                <p>Both channels share the same discipline: <em>documentation for every dollar.</em> At Kind Steward, documentation is not paperwork. It is the product.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         WHAT MAKES US DIFFERENT — 6 PILLARS
+         ============================================ -->
+    <section class="bg-white">
+        <div class="wrap-wide">
+            <p class="section-label">What Makes Us Different</p>
+            <h2 class="section-title">Six structural commitments, <em>not six slogans.</em></h2>
+            <p class="section-lede">
+                Most of what separates Kind Steward from the nonprofits that lost our trust is built into the governing documents, not written in the mission statement. These are the six commitments that are load-bearing, and why each one matters.
+            </p>
+
+            <div class="pillars">
+                <div class="pillar">
+                    <p class="pillar-num">01</p>
+                    <h3 class="pillar-title">Business operators, not career nonprofit staff.</h3>
+                    <p class="pillar-desc">The team's training is in running businesses, not running organizations. Operating discipline, common sense, and outcomes orientation applied to a sector that often lacks all three.</p>
+                </div>
+                <div class="pillar">
+                    <p class="pillar-num">02</p>
+                    <h3 class="pillar-title">100% pass-through on public donations.</h3>
+                    <p class="pillar-desc">All overhead, compliance, legal, accounting, and operating costs are absorbed by the Foundation. Every dollar a public donor gives goes to program. Structural, not aspirational.</p>
+                </div>
+                <div class="pillar">
+                    <p class="pillar-num">03</p>
+                    <h3 class="pillar-title">Documentation is the product.</h3>
+                    <p class="pillar-desc">Every program traces dollar-to-beneficiary. Every trip produces photographic and video evidence. Every dollar is on the books, auditable. This is not an add-on; it's the deliverable.</p>
+                </div>
+                <div class="pillar">
+                    <p class="pillar-num">04</p>
+                    <h3 class="pillar-title">Show the work. Don't beg for the money.</h3>
+                    <p class="pillar-desc">No guilt campaigns, no sob-story emails, no donor pressure. Do the work, document it, put it in front of the public via the Google Ad Grant, and let people decide. The work is the ask.</p>
+                </div>
+                <div class="pillar">
+                    <p class="pillar-num">05</p>
+                    <h3 class="pillar-title">Zero extraction, by design.</h3>
+                    <p class="pillar-desc">No director, no officer, no founder takes a salary. Reimbursement for documented expenses only. Written into both entities' bylaws. When nobody is getting paid, nobody can turn the organization into a vehicle for personal enrichment.</p>
+                </div>
+                <div class="pillar">
+                    <p class="pillar-num">06</p>
+                    <h3 class="pillar-title">An annual letter — signed, numeric, honest.</h3>
+                    <p class="pillar-desc">A Buffett-style founder's letter, every year. How many surgeries funded, meals sponsored, jackets distributed, dollars deployed, dollars documented. The entire organization compressed into ten minutes of honest math.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         IMPACT PER DOLLAR
+         ============================================ -->
+    <section class="bg-off">
+        <div class="wrap">
+            <p class="section-label">Impact Per Dollar</p>
+            <h2 class="section-title">What one donation actually <em>does.</em></h2>
+            <p class="section-lede">
+                Unit economics for the opening programs are, frankly, extraordinary. The scale of what a single modest donation can accomplish in the geographies Kind Steward is entering is the reason the model works. Pre-trip estimates below; final numbers verified during the October 2026 trip.
+            </p>
+
+            <div class="impact-list">
+                <div class="impact-item">
+                    <div class="impact-l">
+                        <p class="impact-headline">A <em>corrective surgery</em> for one child.</p>
+                        <p class="impact-sub">Pediatric congenital-condition surgery in East Africa through trusted on-the-ground operators.</p>
+                    </div>
+                    <p class="impact-price">$70–300</p>
+                </div>
+                <div class="impact-item">
+                    <div class="impact-l">
+                        <p class="impact-headline">A <em>brace</em> that changes mobility.</p>
+                        <p class="impact-sub">Orthopedic brace for a child with a congenital condition, fitted through local medical partners.</p>
+                    </div>
+                    <p class="impact-price">~$50</p>
+                </div>
+                <div class="impact-item">
+                    <div class="impact-l">
+                        <p class="impact-headline">A <em>winter coat</em> on a New York street.</p>
+                        <p class="impact-sub">Direct distribution through a verified volunteer operation near Penn Station.</p>
+                    </div>
+                    <p class="impact-price">~$40</p>
+                </div>
+                <div class="impact-item">
+                    <div class="impact-l">
+                        <p class="impact-headline">A <em>hot meal</em>, delivered directly.</p>
+                        <p class="impact-sub">Sponsored through the same trusted street-level volunteer network. Food line to person, no overhead skim.</p>
+                    </div>
+                    <p class="impact-price">~$8</p>
+                </div>
+                <div class="impact-item is-anchor">
+                    <div class="impact-l">
+                        <p class="impact-headline">For reference: a restaurant dinner in Manhattan.</p>
+                        <p class="impact-sub">A single dinner for two, the anchor most donors can feel in their wallet.</p>
+                    </div>
+                    <p class="impact-price">~$200</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         THE PLAN — PHASES
+         ============================================ -->
+    <section class="bg-white">
+        <div class="wrap-narrow">
+            <p class="section-label">The Plan</p>
+            <h2 class="section-title">Start narrow. Prove it. <em>Earn the next move.</em></h2>
+            <div class="prose">
+                <p>Kind Steward is built around <em>disciplined emergence</em>, not a rigid five-year plan. We're not going to pretend we know what the right Year 3 program is on Day 1. We're going to execute the first program with business-operator discipline, document the impact, and let the work attract the next donors and the next opportunities.</p>
+            </div>
+
+            <div class="timeline" style="margin-top: 3.5rem;">
+                <div class="tl-item">
+                    <p class="tl-date">Phase 1 · October 2026</p>
+                    <p class="tl-title">Ethiopia + Kenya pilot — pediatric corrective surgery</p>
+                    <p class="tl-desc">Abe and Kevin travel with the on-the-ground partners who have been personally funding these surgeries out of their own pockets for years. We're not starting from scratch. We are formalizing, verifying, and scaling a program that already works under trusted operators. The trip's purpose is verification — every step of the dollar-to-beneficiary chain.</p>
+                </div>
+                <div class="tl-item">
+                    <p class="tl-date">Phase 2 · In Parallel</p>
+                    <p class="tl-title">Domestic direct aid — NY, FL, TX</p>
+                    <p class="tl-desc">Sponsor direct-feeding operations for the homeless (including a verified weekly volunteer run near Penn Station). Winter essentials. Direct medical. All through proven local operators who have already done the work.</p>
+                </div>
+                <div class="tl-item future">
+                    <p class="tl-date">Phase 3 · Emergence</p>
+                    <p class="tl-title">Wells. Housing. Orphanages. Schools.</p>
+                    <p class="tl-desc">Each new program is earned by proving the previous phase worked. The specific roadmap is deliberately open. The October trip opens doors. The doors dictate the next move.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         GOVERNANCE
+         ============================================ -->
+    <section class="bg-off">
+        <div class="wrap">
+            <p class="section-label">Governance</p>
+            <h2 class="section-title">Small, fast, trusted, <em>unpaid.</em></h2>
+            <p class="section-lede">
+                The pattern that consistently separates organizations that execute from organizations that stall is simple: <em>who's in the room.</em> Kind Steward's governance was designed around that observation, and every clause in the bylaws reflects it.
+            </p>
+
+            <div class="stats-row">
+                <div class="stat">
+                    <p class="stat-num">0</p>
+                    <p class="stat-label">compensation taken by any director or officer. Written into both entities' bylaws. Reimbursement for documented expenses only.</p>
+                </div>
+                <div class="stat">
+                    <p class="stat-num">$10K</p>
+                    <p class="stat-label">threshold above which disbursements require dual written approval from the President and Treasurer. Institutional check on every large outflow.</p>
+                </div>
+                <div class="stat">
+                    <p class="stat-num">3/4</p>
+                    <p class="stat-label">supermajority required to amend the bylaws or remove a director, with the President's affirmative vote required for amendments.</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 3.5rem;">
+                <p class="prose visible" style="animation: none; opacity: 1; transform: none;">
+                    The governance design is explicit about three non-negotiables: <strong>speed</strong> (decisions don't get parked in committee), <strong>trust</strong> (the board is a working team, not a collection of stakeholders), and <strong>zero extraction</strong> (nobody is getting paid, so nobody is incentivized to game the organization). It's the inverse of what made the origin-story institutions fail.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         THE PEOPLE
+         ============================================ -->
+    <section class="bg-white">
+        <div class="wrap-wide">
+            <p class="section-label">The People</p>
+            <h2 class="section-title">Five directors. <em>Unpaid. Here because they believe in the work.</em></h2>
+
+            <div class="people">
+                <div class="person">
+                    <div class="person-init">AV</div>
+                    <p class="person-name">Abie Varughese</p>
+                    <p class="person-role">President &amp; Chairman</p>
+                    <p class="person-note">Founder. Operator. Strategic lead on programs, Foundation oversight, and public communications.</p>
+                </div>
+                <div class="person">
+                    <div class="person-init">KA</div>
+                    <p class="person-name">Kevin Alexander</p>
+                    <p class="person-role">Vice President</p>
+                    <p class="person-note">Mission advancement, partnerships, on-the-ground execution. Co-leads the October 2026 Africa trip.</p>
+                </div>
+                <div class="person">
+                    <div class="person-init">AJ</div>
+                    <p class="person-name">Dr. Amanda Joseph</p>
+                    <p class="person-role">Secretary</p>
+                    <p class="person-note">Governance oversight. Corporate records, compliance, board process.</p>
+                </div>
+                <div class="person">
+                    <div class="person-init">AJ</div>
+                    <p class="person-name">Abee Joseph</p>
+                    <p class="person-role">Treasurer</p>
+                    <p class="person-note">Financial controls. Banking, accounting, investment oversight, and Form 990 preparation.</p>
+                </div>
+                <div class="person">
+                    <div class="person-init">KD</div>
+                    <p class="person-name">Katherine Daniel</p>
+                    <p class="person-role">Director of Communications</p>
+                    <p class="person-note">Charity board only. Public communications, social media, donor-facing materials. Independent of the founding family.</p>
+                </div>
+            </div>
+
+            <p class="people-footer">All unpaid. All here because they believe in the work.</p>
+        </div>
+    </section>
+
+    <!-- ============================================
+         THE ANNUAL LETTER
+         ============================================ -->
+    <section class="bg-green-deep">
+        <div class="wrap-narrow">
+            <p class="section-label on-green">The Annual Letter</p>
+            <h2 class="section-title on-green">The numbers, <em>on the record, every year.</em></h2>
+            <p class="prose on-green visible" style="animation: none; opacity: 1; transform: none;">
+                Kind Steward will publish an annual letter to its donors and the public. Not glossy. Not vague. Not a stock-photo "impact report." A <strong>founder's letter in the tradition of Warren Buffett's shareholder letters</strong> — signed, specific, numeric, and honest.
+            </p>
+
+            <div class="pull on-green" style="animation: none; opacity: 1; transform: none; margin-top: 2.5rem;">
+                <em>"This year we funded 300 corrective surgeries. We sponsored 2,000 meals. We distributed 500 jackets. Here is where every dollar went, and here is who received it."</em>
+                <span class="pull-cite on-green">— The format of what we'll report</span>
+            </div>
+
+            <p class="prose on-green visible" style="animation: none; opacity: 1; transform: none; margin-top: 2.5rem;">
+                The format is the promise. Specific outcomes. Specific numbers. Specific dollars. A direct tie from donor inputs to beneficiary outcomes. The entire organization's year of work compressed into a document a donor can read in ten minutes and come away knowing exactly what their contribution did.
+            </p>
+
+            <p class="prose on-green visible" style="animation: none; opacity: 1; transform: none; margin-top: 1.25rem;">
+                The institutions Kind Steward was built in response to <em>couldn't</em> write a letter like this. The numbers wouldn't survive public scrutiny. We write one by design, every year. The first letter publishes after the October 2026 trip.
+            </p>
+        </div>
+    </section>
+
+    <!-- ============================================
+         TIMELINE / MILESTONES
+         ============================================ -->
+    <section class="bg-white">
+        <div class="wrap-narrow">
+            <p class="section-label">Milestones</p>
+            <h2 class="section-title">Where we are. <em>Where we're going.</em></h2>
+
+            <div class="timeline" style="margin-top: 3rem;">
+                <div class="tl-item">
+                    <p class="tl-date">Jul 29, 2025</p>
+                    <p class="tl-title">Kind Steward Foundation incorporated</p>
+                    <p class="tl-desc">Wyoming public benefit nonprofit corporation. Fifteen days from decision to filing.</p>
+                </div>
+                <div class="tl-item">
+                    <p class="tl-date">Oct 29, 2025</p>
+                    <p class="tl-title">Foundation bylaws adopted</p>
+                    <p class="tl-desc">Organizational board meeting. Initial officers appointed. Governance framework in place.</p>
+                </div>
+                <div class="tl-item">
+                    <p class="tl-date">Nov 1, 2025</p>
+                    <p class="tl-title">Foundation Form 1023 filed</p>
+                    <p class="tl-desc">Application for recognition of 501(c)(3) tax-exempt status. $600 user fee. Long form. Awaiting determination.</p>
+                </div>
+                <div class="tl-item">
+                    <p class="tl-date">Apr 16, 2026</p>
+                    <p class="tl-title">Kind Steward (Charity) incorporated</p>
+                    <p class="tl-desc">Wyoming public benefit nonprofit corporation. Intended §509(a)(1) public charity.</p>
+                </div>
+                <div class="tl-item now">
+                    <p class="tl-date">Apr 2026 · Now</p>
+                    <p class="tl-title">Charity bylaws drafted. Board onboarding.</p>
+                    <p class="tl-desc">Governance framework drafted, purpose-built for public charity IRS scrutiny. Conflicts of interest policy, whistleblower provision, document retention, dual-approval rule, zero-compensation rule — all structural.</p>
+                </div>
+                <div class="tl-item future">
+                    <p class="tl-date">Summer 2026</p>
+                    <p class="tl-title">Charity Form 1023 filed</p>
+                    <p class="tl-desc">Long form. Paired with the public charity activity descriptions from this narrative.</p>
+                </div>
+                <div class="tl-item future">
+                    <p class="tl-date">October 2026</p>
+                    <p class="tl-title">Ethiopia + Kenya verification trip</p>
+                    <p class="tl-desc">First real field deployment. Pediatric corrective surgery pilot program begins.</p>
+                </div>
+                <div class="tl-item future">
+                    <p class="tl-date">Q1 2027</p>
+                    <p class="tl-title">First annual letter published</p>
+                    <p class="tl-desc">The first full year of Kind Steward's work, on the record, with specific numbers.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         CTA
+         ============================================ -->
+    <section class="cta">
+        <div class="cta-inner">
+            <h2 class="cta-title">If you have <em>questions,</em><br>reach out directly.</h2>
+            <p class="cta-body">
+                This is the moment in most pitch decks where a donation button appears. There isn't one yet. The Charity's Form 1023 is still being prepared, the programs are in pre-launch, and we don't ask for money before we've done the work. When the first annual letter publishes after the October 2026 trip, we'll let the work do the talking.
+            </p>
+            <a href="mailto:info@KindSteward.org" class="cta-email">info@KindSteward.org</a>
+            <p class="cta-foot">Private pitchbook · v1 · April 2026</p>
+        </div>
+    </section>
+
+    <!-- ============================================
+         FOOTER
+         ============================================ -->
+    <footer class="footer">
+        <p class="footer-brand">Kind Steward</p>
+        <p class="footer-status">Foundation · 501(c)(3) private foundation · pending determination · Charity · 501(c)(3) public charity · pending filing</p>
+        <p class="footer-copy">&copy; 2026 Kind Steward Foundation · Kind Steward. All rights reserved.<br>Registered in the State of Wyoming. Day-to-day operations led by Abe Varughese, President.</p>
+    </footer>
+
+    <!-- ============================================
+         SCRIPTS
+         ============================================ -->
+    <script>
+        // Password gate: simple hash check for "cybertruck"
+        // Not meant for hard security — private-link content gating only.
+        const EXPECTED = '6d7cd394799273e8d78192e700baf0329cd9e16df91044e3f1a36fdeed80af31'; // sha256('cybertruck')
+
+        async function sha256(msg) {
+            const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
+            return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        const gate = document.getElementById('gate');
+        const form = document.getElementById('gateForm');
+        const input = document.getElementById('gateInput');
+        const btn = document.getElementById('gateBtn');
+        const err = document.getElementById('gateError');
+
+        function unlock() {
+            gate.classList.add('hidden');
+            setTimeout(() => { gate.style.display = 'none'; }, 600);
+            sessionStorage.setItem('ks_unlocked', '1');
+        }
+
+        if (sessionStorage.getItem('ks_unlocked') === '1') {
+            gate.style.display = 'none';
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            err.textContent = '';
+            btn.disabled = true;
+            const hash = await sha256(input.value.trim().toLowerCase());
+            if (hash === EXPECTED) {
+                unlock();
+            } else {
+                err.textContent = 'Incorrect password.';
+                input.value = '';
+                input.focus();
+            }
+            btn.disabled = false;
+        });
+
+        // Scroll progress + topnav state
+        const progress = document.getElementById('progress');
+        const topnav = document.getElementById('topnav');
+        function onScroll() {
+            const h = document.documentElement;
+            const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+            progress.style.width = pct + '%';
+            if (h.scrollTop > 100) topnav.classList.add('scrolled');
+            else topnav.classList.remove('scrolled');
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+
+        // Fade-up on scroll
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    io.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+        const sel = '.section-label, .section-title, .section-lede, .prose, .pull, .stat, .diagram-wrap, .entity-card, .hundred-visual, .hundred-copy, .pillar, .impact-item, .tl-item, .person, .precedent, .cta-title, .cta-body, .cta-email, .cta-foot';
+        document.querySelectorAll(sel).forEach(el => io.observe(el));
+    </script>
+</body>
+</html>
