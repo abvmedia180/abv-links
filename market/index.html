@@ -90,7 +90,32 @@ function kpiCard(k){return `<div class="card kpi"><div class="lab">${k.label}</d
 
 const views={
   regime(){
-    return `<div class="grid g3">${D.regime.kpis.map(kpiCard).join('')}</div>`;
+    setTimeout(()=>{
+      const g=echarts.init($('#gauge'));
+      g.setOption({series:[{type:'gauge',startAngle:210,endAngle:-30,min:0,max:100,
+        progress:{show:true,width:13,roundCap:true,itemStyle:{color:'#f59e0b'}},
+        axisLine:{lineStyle:{width:13,color:[[0.33,'#10b981'],[0.66,'#f59e0b'],[1,'#ef4444']]}},
+        pointer:{width:5,length:'62%',itemStyle:{color:'#e6edf6'}},axisTick:{show:false},splitLine:{show:false},axisLabel:{show:false},
+        anchor:{show:true,size:13,itemStyle:{color:'#e6edf6'}},
+        detail:{valueAnimation:true,fontSize:22,fontWeight:700,color:'#e6edf6',offsetCenter:[0,'42%'],
+          formatter:v=>v<33?'RISK-ON':v<66?'CAUTIOUS':'DEFENSIVE'},
+        data:[{value:D.regime.gauge}],title:{show:false}}]});
+      const s=echarts.init($('#spyc'));const h=D.spy_history||[];
+      s.setOption({tooltip:{trigger:'axis'},legend:{textStyle:{color:'#8aa0bd'},data:['SPY','200-day'],top:0,right:0},
+        grid:{left:48,right:14,top:28,bottom:22},
+        xAxis:{type:'category',data:h.map(x=>x.d),boundaryGap:false,axisLabel:{color:'#8aa0bd',interval:Math.floor(h.length/6)}},
+        yAxis:{type:'value',scale:true,axisLabel:{color:'#8aa0bd'},splitLine:{lineStyle:{color:'#18253c'}}},
+        series:[
+          {name:'SPY',type:'line',smooth:true,symbol:'none',data:h.map(x=>x.c),lineStyle:{color:'#3b82f6',width:2.5},
+           areaStyle:{color:new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:'rgba(59,130,246,.38)'},{offset:1,color:'rgba(59,130,246,0)'}])}},
+          {name:'200-day',type:'line',smooth:true,symbol:'none',data:h.map(x=>x.m),lineStyle:{color:'#f59e0b',width:1.5,type:'dashed'}}
+        ]});
+    },20);
+    return `<div class="grid g2" style="margin-bottom:14px">
+      <div class="card"><h3>Regime Risk Dial</h3><div id="gauge" style="height:230px"></div></div>
+      <div class="card"><h3>SPY vs 200-day (2yr) — buy-zone = SPY well under the dashed line</h3><div id="spyc" style="height:230px"></div></div>
+    </div>
+    <div class="grid g3">${D.regime.kpis.map(kpiCard).join('')}</div>`;
   },
   deploy(){
     setTimeout(()=>{const c=echarts.init($('#buckets'));c.setOption({tooltip:{trigger:'item'},
@@ -109,8 +134,8 @@ const views={
       c.setOption({tooltip:{trigger:'axis'},legend:{textStyle:{color:'#8aa0bd'},data:['Depth %','+60d return %']},
         grid:{left:50,right:20,top:40,bottom:30},xAxis:{type:'category',data:r.map(x=>x.date),axisLabel:{color:'#8aa0bd'}},
         yAxis:{type:'value',axisLabel:{color:'#8aa0bd'},splitLine:{lineStyle:{color:'#18253c'}}},
-        series:[{name:'Depth %',type:'bar',data:r.map(x=>x.depth),itemStyle:{color:'#ef4444'}},
-                {name:'+60d return %',type:'bar',data:r.map(x=>x.fwd60),itemStyle:{color:'#10b981'}}]});},10);
+        series:[{name:'Depth %',type:'bar',data:r.map(x=>x.depth),itemStyle:{color:'#ef4444',borderRadius:[0,0,4,4]}},
+                {name:'+60d return %',type:'bar',data:r.map(x=>x.fwd60),itemStyle:{color:'#10b981',borderRadius:[4,4,0,0]}}]});},10);
     return `<div class="card"><h3>Major SPY dips — depth vs. the bounce that followed</h3>
       <div id="dipc" class="tall"></div><p style="color:var(--mut);font-size:13px;margin-top:10px">${D.dip_signature.note}</p></div>
       <div class="card" style="margin-top:14px"><h3>The signature</h3><table><tr><th>Trough</th><th>Depth</th><th>RSI</th><th>vs 200DMA</th><th>+60d</th><th>+120d</th></tr>
@@ -128,7 +153,7 @@ const views={
       c.setOption({tooltip:{trigger:'axis'},grid:{left:60,right:30,top:10,bottom:30},
         xAxis:{type:'value',axisLabel:{color:'#8aa0bd',formatter:'{value}%'},splitLine:{lineStyle:{color:'#18253c'}}},
         yAxis:{type:'category',data:p.map(x=>x.ticker),axisLabel:{color:'#e6edf6'}},
-        series:[{type:'bar',data:p.map(x=>({value:x.pnl,itemStyle:{color:x.pnl>=0?'#10b981':'#ef4444'}}))}]});},10);
+        series:[{type:'bar',data:p.map(x=>({value:x.pnl,itemStyle:{color:x.pnl>=0?'#10b981':'#ef4444',borderRadius:[0,3,3,0]}}))}]});},10);
     return `<div class="grid g2"><div class="card"><h3>Holdings P&L %</h3><div id="pnl" class="tall"></div></div>
       <div class="card"><h3>What to do</h3><table><tr><th>Ticker</th><th>P&L</th><th>Action</th></tr>
       ${D.portfolio.map(x=>`<tr><td><b>${x.ticker}</b></td><td class="${x.pnl>=0?'green':'red'}">${x.pnl>0?'+':''}${x.pnl}%</td><td style="color:var(--mut)">${x.tag}</td></tr>`).join('')}</table></div></div>`;
