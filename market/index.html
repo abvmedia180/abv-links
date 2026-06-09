@@ -235,7 +235,7 @@ function trendChart(id,t){const last=t.x.length-1,step=Math.max(1,Math.ceil(t.x.
     areaStyle:t.series.length===1?{color:'rgba(255,152,0,.07)'}:undefined,
     endLabel:{show:true,color:s.color,fontWeight:700,fontSize:11,fontFamily:'monospace',formatter:p=>p.value+(t.unit==='%'?'%':'')}}));
   if(t.ref!=null&&series[0])series[0].markLine={silent:true,symbol:'none',lineStyle:{color:'#00e676',type:'dashed'},data:[{yAxis:t.ref}],label:{formatter:'Fed '+t.ref+'% target',color:'#00e676',position:'insideStartTop',fontFamily:'monospace'}};
-  C(id).setOption({tooltip:Object.assign({trigger:'axis'},TT),legend:{textStyle:{color:TXT,fontFamily:'monospace'},top:0,left:0},grid:{left:48,right:58,top:t.series.length>1?28:14,bottom:24},
+  C(id).setOption({tooltip:Object.assign({trigger:'axis'},TT),legend:{show:t.series.length>1,textStyle:{color:TXT,fontFamily:'monospace'},top:0,left:0},grid:{left:48,right:58,top:t.series.length>1?28:14,bottom:24},
     xAxis:{type:'category',data:t.x,boundaryGap:false,axisLabel:{color:TXT,fontFamily:'monospace',interval:function(i){return i===last||i%step===0;}}},
     yAxis:Object.assign({type:'value',scale:true,axisLabel:{color:TXT,fontFamily:'monospace',formatter:'{value}'+(t.unit==='%'?'%':'')}},{splitLine:{lineStyle:{color:GRID}}}),series});}
 
