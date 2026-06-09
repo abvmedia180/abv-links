@@ -47,8 +47,21 @@
   .log-item{padding:13px 16px;background:var(--panel2);border:1px solid var(--line);border-radius:9px;margin-bottom:9px}
   .log-item .d{color:var(--blue);font-size:12px;font-weight:600;margin-bottom:4px}.log-item .n{font-size:13px;color:var(--txt);line-height:1.5}
   .err{padding:40px;text-align:center;color:var(--mut)}
+  .gate{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:100}
+  .gate .box{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:34px 30px;width:320px;text-align:center}
+  .gate h1{font-size:20px;margin-bottom:4px}.gate .s{color:var(--mut);font-size:11px;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:22px}
+  .gate input{width:100%;padding:12px 14px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;color:var(--txt);font-size:15px;text-align:center;margin-bottom:12px}
+  .gate input:focus{outline:none;border-color:var(--blue)}
+  .gate button{width:100%;padding:12px;background:var(--blue);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer}
+  .gate .msg{color:var(--red);font-size:12px;height:16px;margin-top:10px}
 </style></head>
 <body>
+<div class="gate" id="gate"><div class="box">
+  <h1>ABV Capital</h1><div class="s">Trading Desk Hub</div>
+  <input type="password" id="pw" placeholder="Password" autofocus>
+  <button id="go">Unlock</button>
+  <div class="msg" id="msg"></div>
+</div></div>
 <div class="side">
   <div class="brand"><h1>ABV Capital</h1><div class="sub">Trading Desk Hub</div></div>
   <nav class="nav" id="nav">
@@ -143,10 +156,23 @@ function show(s){
 }
 $('#nav').addEventListener('click',e=>{const a=e.target.closest('a');if(a)show(a.dataset.s);});
 
-fetch('./data.json').then(r=>r.json()).then(d=>{
+function render(d){
   D=d;$('#upd').textContent=d.updated;
   $('#verdict').innerHTML=`<div class="v">${d.regime.verdict}</div><div class="p">${d.regime.posture}</div>`;
-  show('regime');
-}).catch(()=>{$('#content').innerHTML=`<div class="err">Couldn't load data.json.<br>Run a local server in this folder:<br><code>python3 -m http.server 8787</code><br>then open <code>http://localhost:8787</code></div>`;});
+  $('#gate').style.display='none';show('regime');
+}
+const b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+async function unlock(){
+  const pw=$('#pw').value;if(!pw)return;$('#msg').textContent='';
+  try{
+    const e=await(await fetch('./enc.json',{cache:'no-store'})).json();
+    const bk=await crypto.subtle.importKey('raw',new TextEncoder().encode(pw),'PBKDF2',false,['deriveKey']);
+    const key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:b64(e.salt),iterations:100000,hash:'SHA-256'},bk,{name:'AES-GCM',length:256},false,['decrypt']);
+    const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64(e.iv)},key,b64(e.ct));
+    render(JSON.parse(new TextDecoder().decode(pt)));
+  }catch(err){$('#msg').textContent='Wrong password';$('#pw').value='';}
+}
+$('#go').addEventListener('click',unlock);
+$('#pw').addEventListener('keydown',e=>{if(e.key==='Enter')unlock();});
 </script>
 </body></html>
