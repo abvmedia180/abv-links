@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>ABV Capital Hub</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+  :root{--bg:#0b1220;--panel:#111c30;--panel2:#152238;--line:#22304a;--txt:#e6edf6;--mut:#8aa0bd;
+        --blue:#3b82f6;--green:#10b981;--amber:#f59e0b;--red:#ef4444;--slate:#94a3b8;}
+  *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+  body{background:var(--bg);color:var(--txt);display:flex;min-height:100vh}
+  /* sidebar */
+  .side{width:230px;background:#0f172a;border-right:1px solid var(--line);padding:22px 0;position:fixed;height:100vh;overflow-y:auto}
+  .brand{padding:0 22px 18px;border-bottom:1px solid var(--line);margin-bottom:14px}
+  .brand h1{font-size:19px;letter-spacing:.5px}.brand .sub{color:var(--mut);font-size:11px;margin-top:3px;text-transform:uppercase;letter-spacing:1.5px}
+  .nav a{display:flex;align-items:center;gap:11px;padding:11px 22px;color:var(--mut);text-decoration:none;font-size:14px;font-weight:500;border-left:3px solid transparent;cursor:pointer}
+  .nav a:hover{color:var(--txt);background:#13203a}
+  .nav a.active{color:var(--txt);background:#13203a;border-left-color:var(--blue)}
+  .nav .ico{width:18px;text-align:center}
+  /* main */
+  .main{margin-left:230px;flex:1;padding:28px 34px;max-width:1280px}
+  .top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+  .top h2{font-size:24px}.updated{color:var(--mut);font-size:12px}
+  .verdict{background:linear-gradient(90deg,#15233c,#111c30);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:14px 0 22px}
+  .verdict .v{font-size:18px;font-weight:700}.verdict .p{color:var(--mut);font-size:13px;margin-top:5px;line-height:1.5}
+  section{display:none}section.show{display:block;animation:fade .3s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .grid{display:grid;gap:14px}.g3{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:repeat(2,1fr)}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px}
+  .card h3{font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;font-weight:600}
+  .kpi .val{font-size:30px;font-weight:700;margin:2px 0}.kpi .note{color:var(--mut);font-size:12px}
+  .kpi .lab{font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.8px}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px}
+  .green{color:var(--green)}.amber{color:var(--amber)}.red{color:var(--red)}.blue{color:var(--blue)}
+  .bg-green{background:var(--green)}.bg-amber{background:var(--amber)}.bg-red{background:var(--red)}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{text-align:left;color:var(--mut);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.6px;padding:9px 10px;border-bottom:1px solid var(--line)}
+  td{padding:10px;border-bottom:1px solid #18253c}tr:hover td{background:#13203a}
+  .badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600}
+  .b1{background:rgba(16,185,129,.15);color:var(--green)}.bwait{background:rgba(245,158,11,.15);color:var(--amber)}
+  .bout{background:rgba(239,68,68,.15);color:var(--red)}.bnurt{background:rgba(59,130,246,.15);color:var(--blue)}
+  .chart{height:300px}.tall{height:340px}
+  .ladder{display:flex;flex-direction:column;gap:9px}
+  .rung{display:flex;justify-content:space-between;align-items:center;padding:12px 15px;background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--slate);border-radius:8px}
+  .rung.armed{border-left-color:var(--green)}.rung .t{font-weight:600;font-size:13px}.rung .d{color:var(--mut);font-size:12px}
+  .log-item{padding:13px 16px;background:var(--panel2);border:1px solid var(--line);border-radius:9px;margin-bottom:9px}
+  .log-item .d{color:var(--blue);font-size:12px;font-weight:600;margin-bottom:4px}.log-item .n{font-size:13px;color:var(--txt);line-height:1.5}
+  .err{padding:40px;text-align:center;color:var(--mut)}
+</style></head>
+<body>
+<div class="side">
+  <div class="brand"><h1>ABV Capital</h1><div class="sub">Trading Desk Hub</div></div>
+  <nav class="nav" id="nav">
+    <a data-s="regime" class="active"><span class="ico">🌡️</span> Regime</a>
+    <a data-s="deploy"><span class="ico">💰</span> Deployment</a>
+    <a data-s="dips"><span class="ico">📈</span> Dip Signature</a>
+    <a data-s="watch"><span class="ico">🎯</span> Watchlist</a>
+    <a data-s="port"><span class="ico">📊</span> Portfolio</a>
+    <a data-s="edges"><span class="ico">🛰️</span> Edges</a>
+    <a data-s="log"><span class="ico">📓</span> Weekly Log</a>
+  </nav>
+</div>
+<div class="main">
+  <div class="top"><h2 id="title">Market Regime</h2><div class="updated">Updated <span id="upd">—</span></div></div>
+  <div class="verdict" id="verdict"></div>
+  <div id="content"></div>
+</div>
+<script>
+const $=(s,e=document)=>e.querySelector(s);
+const stColor={green:'var(--green)',amber:'var(--amber)',red:'var(--red)'};
+let D={};
+
+function kpiCard(k){return `<div class="card kpi"><div class="lab">${k.label}</div>
+  <div class="val" style="color:${stColor[k.state]||'var(--txt)'}">${k.value}</div>
+  <div class="note"><span class="dot bg-${k.state}"></span>${k.note}</div></div>`;}
+
+const views={
+  regime(){
+    return `<div class="grid g3">${D.regime.kpis.map(kpiCard).join('')}</div>`;
+  },
+  deploy(){
+    setTimeout(()=>{const c=echarts.init($('#buckets'));c.setOption({tooltip:{trigger:'item'},
+      series:[{type:'pie',radius:['52%','78%'],itemStyle:{borderColor:'#0b1220',borderWidth:3},
+      label:{color:'#e6edf6',fontSize:12},data:D.deployment.buckets.map(b=>({value:b.pct,name:b.name,itemStyle:{color:b.color}}))}]});},10);
+    return `<div class="grid g2">
+      <div class="card"><h3>$100k Allocation</h3><div id="buckets" class="chart"></div></div>
+      <div class="card"><h3>Crash Ladder — deploy the reserve on the dip</h3><div class="ladder">
+        ${D.deployment.ladder.map(r=>`<div class="rung ${r.armed?'armed':''}"><div><div class="t">${r.trigger}</div>
+        <div class="d">deploy ${r.deploy}</div></div><div class="${r.armed?'green':'amber'}">${r.armed?'ARMED':'waiting'}</div></div>`).join('')}
+        <div class="d" style="color:var(--mut);font-size:12px;margin-top:6px">SPY is ${D.deployment.spy_drawdown}% off its high — no rung armed.</div>
+      </div></div></div>`;
+  },
+  dips(){
+    setTimeout(()=>{const c=echarts.init($('#dipc'));const r=D.dip_signature.rows;
+      c.setOption({tooltip:{trigger:'axis'},legend:{textStyle:{color:'#8aa0bd'},data:['Depth %','+60d return %']},
+        grid:{left:50,right:20,top:40,bottom:30},xAxis:{type:'category',data:r.map(x=>x.date),axisLabel:{color:'#8aa0bd'}},
+        yAxis:{type:'value',axisLabel:{color:'#8aa0bd'},splitLine:{lineStyle:{color:'#18253c'}}},
+        series:[{name:'Depth %',type:'bar',data:r.map(x=>x.depth),itemStyle:{color:'#ef4444'}},
+                {name:'+60d return %',type:'bar',data:r.map(x=>x.fwd60),itemStyle:{color:'#10b981'}}]});},10);
+    return `<div class="card"><h3>Major SPY dips — depth vs. the bounce that followed</h3>
+      <div id="dipc" class="tall"></div><p style="color:var(--mut);font-size:13px;margin-top:10px">${D.dip_signature.note}</p></div>
+      <div class="card" style="margin-top:14px"><h3>The signature</h3><table><tr><th>Trough</th><th>Depth</th><th>RSI</th><th>vs 200DMA</th><th>+60d</th><th>+120d</th></tr>
+      ${D.dip_signature.rows.map(x=>`<tr><td>${x.date}</td><td class="red">${x.depth}%</td><td>${x.rsi}</td><td>${x.vs200}%</td><td class="green">${x.fwd60==null?'—':'+'+x.fwd60+'%'}</td><td class="green">${x.fwd120==null?'—':'+'+x.fwd120+'%'}</td></tr>`).join('')}</table></div>`;
+  },
+  watch(){
+    const bc={'1':'b1','wait':'bwait','out':'bout'};const bl={'1':'Tier 1','wait':'Wait','out':'Knife'};
+    return `<div class="card"><h3>Watchlist — uptrend dips (knife filter + AI gate applied)</h3><table>
+      <tr><th>Ticker</th><th>RSI</th><th>Off high</th><th>ATR%</th><th>Analyst / source</th><th>Status</th><th>Note</th></tr>
+      ${D.watchlist.map(w=>`<tr><td><b>${w.ticker}</b></td><td>${w.rsi??'—'}</td><td>${w.offhi}%</td><td>${w.atr??'—'}</td>
+      <td>${w.analyst}</td><td><span class="badge ${bc[w.tier]}">${bl[w.tier]}</span></td><td style="color:var(--mut)">${w.note}</td></tr>`).join('')}</table></div>`;
+  },
+  port(){
+    setTimeout(()=>{const c=echarts.init($('#pnl'));const p=[...D.portfolio].sort((a,b)=>a.pnl-b.pnl);
+      c.setOption({tooltip:{trigger:'axis'},grid:{left:60,right:30,top:10,bottom:30},
+        xAxis:{type:'value',axisLabel:{color:'#8aa0bd',formatter:'{value}%'},splitLine:{lineStyle:{color:'#18253c'}}},
+        yAxis:{type:'category',data:p.map(x=>x.ticker),axisLabel:{color:'#e6edf6'}},
+        series:[{type:'bar',data:p.map(x=>({value:x.pnl,itemStyle:{color:x.pnl>=0?'#10b981':'#ef4444'}}))}]});},10);
+    return `<div class="grid g2"><div class="card"><h3>Holdings P&L %</h3><div id="pnl" class="tall"></div></div>
+      <div class="card"><h3>What to do</h3><table><tr><th>Ticker</th><th>P&L</th><th>Action</th></tr>
+      ${D.portfolio.map(x=>`<tr><td><b>${x.ticker}</b></td><td class="${x.pnl>=0?'green':'red'}">${x.pnl>0?'+':''}${x.pnl}%</td><td style="color:var(--mut)">${x.tag}</td></tr>`).join('')}</table></div></div>`;
+  },
+  edges(){
+    return `<div class="card"><h3>Convergence (insider buying + improving analyst trend)</h3>
+      ${D.edges.convergence.length?D.edges.convergence.map(c=>`<div class="rung"><div class="t">${c}</div></div>`).join('')
+      :'<p style="color:var(--mut);font-size:13px">None today. Nightly engine populates this once probed.</p>'}
+      <p style="color:var(--mut);font-size:13px;margin-top:14px"><b>Watching (weekend web scan):</b> ${D.edges.watching}</p>
+      <p style="color:var(--mut);font-size:12px;margin-top:6px">${D.edges.note}</p></div>`;
+  },
+  log(){
+    return `<div class="card"><h3>Weekly Log — track every read & did-it-work</h3>
+      ${D.weekly_log.map(l=>`<div class="log-item"><div class="d">${l.date}</div><div class="n">${l.note}</div></div>`).join('')}</div>`;
+  }
+};
+const titles={regime:'Market Regime',deploy:'$100k Deployment',dips:'Dip Signature',watch:'Watchlist',port:'Portfolio',edges:'Edges',log:'Weekly Log'};
+
+function show(s){
+  document.querySelectorAll('.nav a').forEach(a=>a.classList.toggle('active',a.dataset.s===s));
+  $('#title').textContent=titles[s];
+  document.querySelectorAll('section').forEach(x=>x.remove());
+  const sec=document.createElement('section');sec.className='show';sec.innerHTML=views[s]();
+  $('#content').appendChild(sec);
+}
+$('#nav').addEventListener('click',e=>{const a=e.target.closest('a');if(a)show(a.dataset.s);});
+
+fetch('./data.json').then(r=>r.json()).then(d=>{
+  D=d;$('#upd').textContent=d.updated;
+  $('#verdict').innerHTML=`<div class="v">${d.regime.verdict}</div><div class="p">${d.regime.posture}</div>`;
+  show('regime');
+}).catch(()=>{$('#content').innerHTML=`<div class="err">Couldn't load data.json.<br>Run a local server in this folder:<br><code>python3 -m http.server 8787</code><br>then open <code>http://localhost:8787</code></div>`;});
+</script>
+</body></html>

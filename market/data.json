@@ -1,0 +1,69 @@
+{
+  "updated": "2026-06-08",
+  "regime": {
+    "verdict": "NEUTRAL / CAUTIOUS",
+    "posture": "Expensive + late-cycle, but NO ignition. Stay invested, keep dry powder. Trim/de-concentrate, don't run to cash.",
+    "kpis": [
+      {"label": "SPY vs 200-day", "value": "+8.4%", "state": "amber", "note": "uptrend intact, extended"},
+      {"label": "SPY RSI(14)", "value": "50.8", "state": "green", "note": "neutral — no dip"},
+      {"label": "VIX", "value": "18.9", "state": "amber", "note": "complacent-ish, calm"},
+      {"label": "BofA Bear Signposts", "value": "70%", "state": "amber", "note": "warning zone (80% = trigger)"},
+      {"label": "Credit spreads", "value": "calm", "state": "green", "note": "no ignition — the key tell"},
+      {"label": "Breadth", "value": "thin", "state": "amber", "note": "mega-cap narrow leadership"}
+    ]
+  },
+  "deployment": {
+    "posture": "Scheduled DCA tranche only — index neutral, not oversold. Keep the crash reserve loaded.",
+    "buckets": [
+      {"name": "Core (S&P index, DCA)", "pct": 60, "color": "#3b82f6"},
+      {"name": "Compounders", "pct": 20, "color": "#10b981"},
+      {"name": "Swing sleeve", "pct": 10, "color": "#f59e0b"},
+      {"name": "Crash reserve (T-bills)", "pct": 10, "color": "#94a3b8"}
+    ],
+    "ladder": [
+      {"trigger": "SPY −10 to −15% (RSI<35)", "deploy": "25% of reserve", "armed": false},
+      {"trigger": "SPY −20 to −25%", "deploy": "40% of reserve", "armed": false},
+      {"trigger": "SPY −30%+", "deploy": "remaining 35%", "armed": false}
+    ],
+    "spy_drawdown": -2.8
+  },
+  "dip_signature": {
+    "note": "Major SPY lows since 2020: avg RSI ~28, ~13% below 200-day → avg +17.4% over next 60 days. Deeper panic = bigger bounce.",
+    "rows": [
+      {"date": "Oct 2022", "depth": -24.5, "rsi": 35, "vs200": -13.7, "fwd60": 9.3, "fwd120": 15.3},
+      {"date": "Aug 2024", "depth": -8.4, "rsi": 31, "vs200": 4.0, "fwd60": 12.8, "fwd120": 17.6},
+      {"date": "Apr 2025", "depth": -18.7, "rsi": 21, "vs200": -13.0, "fwd60": 25.4, "fwd120": 34.9},
+      {"date": "Mar 2026", "depth": -8.9, "rsi": 28, "vs200": -4.0, "fwd60": 12.6, "fwd120": null}
+    ]
+  },
+  "watchlist": [
+    {"ticker": "PANW", "rsi": 61, "offhi": -11, "atr": 4.7, "analyst": "Strong Buy +37%", "tier": "1", "note": "reclaimed 50DMA, FQ3 beat"},
+    {"ticker": "CRWD", "rsi": 56, "offhi": -16, "atr": 4.7, "analyst": "Strong Buy +28%", "tier": "1", "note": "deeper dip, bouncing"},
+    {"ticker": "NBIS", "rsi": 53, "offhi": -18, "atr": 9.0, "analyst": "StockTwits/Reddit", "tier": "1", "note": "AI-infra, highest juice"},
+    {"ticker": "ANET", "rsi": 50, "offhi": -12, "atr": 4.4, "analyst": "technical", "tier": "1", "note": "steady dip-resume"},
+    {"ticker": "MU", "rsi": 61, "offhi": -12, "atr": 6.5, "analyst": "Buy (two-sided)", "tier": "1", "note": "memory/HBM, verify price"},
+    {"ticker": "MRVL", "rsi": 69, "offhi": 0, "atr": 8.5, "analyst": "extended", "tier": "wait", "note": "parabolic +70% — wait for pullback"},
+    {"ticker": "TTAN", "rsi": null, "offhi": -39, "atr": null, "analyst": "Strong Buy", "tier": "out", "note": "KNIFE — below falling 200DMA"}
+  ],
+  "portfolio": [
+    {"ticker": "GBTC", "pnl": 53, "tag": "winner"},
+    {"ticker": "BTC", "pnl": 53, "tag": "winner"},
+    {"ticker": "BABA", "pnl": -31, "tag": "conviction (AI/value)"},
+    {"ticker": "IBIT", "pnl": -37, "tag": "BTC — hold/DCA"},
+    {"ticker": "AFRM", "pnl": -49, "tag": "decide"},
+    {"ticker": "NKE", "pnl": -50, "tag": "knife — don't add"},
+    {"ticker": "LULU", "pnl": -55, "tag": "knife — don't add"},
+    {"ticker": "JD", "pnl": -56, "tag": "decide/trim"},
+    {"ticker": "FIGS", "pnl": -68, "tag": "lean cut"},
+    {"ticker": "PSFE", "pnl": -93, "tag": "cut"},
+    {"ticker": "CHGG", "pnl": -96, "tag": "cut (AI-dead)"}
+  ],
+  "edges": {
+    "note": "Convergence (insider buying + improving analyst trend) runs nightly via abv_edges.py once probed.",
+    "convergence": [],
+    "watching": "13F (Buffett→GOOGL, Ackman→MSFT), congress (Pelosi→NVDA/GOOGL/AMZN) — weekend web scan"
+  },
+  "weekly_log": [
+    {"date": "2026-06-08", "note": "System built. Regime NEUTRAL/CAUTIOUS. Tier-1: PANW/CRWD/NBIS/ANET/MU. Portfolio cleanup flagged (cut CHGG/PSFE/FIGS). $100k deployment plan set: DCA core + crash ladder. 6 Playbook rules locked."}
+  ]
+}
