@@ -63,6 +63,7 @@
   <div class="brand"><h1>ABV</h1><div class="sub">Trading Desk Hub</div></div>
   <nav class="nav" id="nav">
     <a data-s="regime" class="active"><span class="ico">🌡️</span> Regime</a>
+    <a data-s="trends"><span class="ico">📉</span> Macro Trends</a>
     <a data-s="deploy"><span class="ico">💰</span> Deployment</a>
     <a data-s="dips"><span class="ico">📈</span> Dip Signature</a>
     <a data-s="watch"><span class="ico">🎯</span> Watchlist</a>
@@ -96,7 +97,23 @@ function gauge(id,val,max,zones,fmt){C(id).setOption({series:[{type:'gauge',star
   anchor:{show:true,size:12,itemStyle:{color:'#e6edf6'}},detail:{valueAnimation:true,fontSize:20,fontWeight:700,color:'#e6edf6',offsetCenter:[0,'42%'],formatter:fmt},
   data:[{value:val}],title:{show:false}}]});}
 
+function trendChart(id,t){const series=t.series.map(s=>({name:s.name,type:'line',smooth:true,symbol:'none',data:s.data,lineStyle:{color:s.color,width:2},itemStyle:{color:s.color},
+  areaStyle:t.series.length===1?{color:'rgba(59,130,246,.12)'}:undefined}));
+  if(t.ref!=null&&series[0])series[0].markLine={silent:true,symbol:'none',lineStyle:{color:'#10b981',type:'dashed'},data:[{yAxis:t.ref}],label:{formatter:'Fed '+t.ref+'% target',color:'#10b981',position:'insideEndTop'}};
+  C(id).setOption({tooltip:{trigger:'axis'},legend:{textStyle:{color:'#8aa0bd'},top:0,right:0},grid:{left:48,right:18,top:t.series.length>1?28:14,bottom:24},
+    xAxis:{type:'category',data:t.x,boundaryGap:false,axisLabel:{color:'#8aa0bd',interval:Math.floor(t.x.length/6)}},
+    yAxis:Object.assign({type:'value',scale:true,axisLabel:{color:'#8aa0bd',formatter:'{value}'+(t.unit==='%'?'%':'')}},{splitLine:{lineStyle:{color:'#18253c'}}}),series});}
+
 const views={
+  trends(){
+    const t=D.trends||{};
+    setTimeout(()=>{['inflation','rates','spread','vix','unemp'].forEach((k,i)=>{if(t[k])trendChart('tr'+i,t[k]);});},20);
+    return '<div class="grid g2"><div class="card"><h3>Inflation — CPI & Core PCE (YoY) vs. Fed 2% target</h3><div id="tr0" class="tall"></div></div>'+
+      '<div class="card"><h3>Rates — Fed Funds, 10Y, 2Y Treasury</h3><div id="tr1" class="tall"></div></div></div>'+
+      '<div class="grid g2"><div class="card"><h3>Credit Spreads (HY OAS, bps) — the stress gauge pros watch</h3><div id="tr2" class="tall"></div></div>'+
+      '<div class="card"><h3>VIX — fear over time</h3><div id="tr3" class="tall"></div></div></div>'+
+      '<div class="card"><h3>Unemployment Rate</h3><div id="tr4" style="height:280px"></div></div>';
+  },
   regime(){
     setTimeout(()=>{
       gauge('gauge',D.regime.gauge,100,[[0.33,'#10b981'],[0.66,'#f59e0b'],[1,'#ef4444']],v=>v<33?'RISK-ON':v<66?'CAUTIOUS':'DEFENSIVE');
@@ -121,7 +138,7 @@ const views={
         yAxis:{type:'category',data:sec.map(x=>x.s),axisLabel:{color:'#e6edf6'}},
         series:[{type:'bar',data:sec.map(x=>({value:x.v,itemStyle:{color:x.v>=0?'#10b981':'#ef4444',borderRadius:[0,3,3,0]}}))}]});
     },20);
-    return '<div class="card" style="margin-bottom:14px"><h3>Markets — last session</h3><div class="strip">'+(D.markets||[]).map(mtile).join('')+'</div></div>'+
+    return '<div class="card" style="margin-bottom:14px"><h3>Markets — Jun 8 close</h3><div class="strip">'+(D.markets||[]).map(mtile).join('')+'</div></div>'+
       '<div class="grid g3"><div class="card"><h3>Regime Risk Dial</h3><div id="gauge" style="height:185px"></div></div>'+
       '<div class="card"><h3>Volatility (VIX)</h3><div id="vixg" style="height:185px"></div></div>'+
       '<div class="card"><h3>Bear-Market Risk</h3><div id="bearg" style="height:185px"></div></div></div>'+
@@ -130,7 +147,7 @@ const views={
       '<div class="grid g3">'+D.regime.kpis.map(kpiCard).join('')+'</div>'+
       '<div class="card" style="margin-bottom:14px"><h3>Rates & Credit (FRED)</h3><div class="strip">'+(D.rates||[]).map(stile).join('')+'</div></div>'+
       '<div class="card" style="margin-bottom:14px"><h3>The Economy (BLS / BEA / Census via FRED)</h3><div class="strip">'+(D.economy||[]).map(stile).join('')+'</div></div>'+
-      '<div class="card"><h3>Sector performance — last session</h3><div id="secc" style="height:260px"></div></div>';
+      '<div class="card"><h3>Sector performance — Jun 8 close</h3><div id="secc" style="height:260px"></div></div>';
   },
   deploy(){
     setTimeout(()=>{C('buckets').setOption({tooltip:{trigger:'item'},series:[{type:'pie',radius:['52%','78%'],itemStyle:{borderColor:'#0b1220',borderWidth:3},label:{color:'#e6edf6',fontSize:12},
@@ -160,7 +177,7 @@ const views={
     const bc={'1':'b1','wait':'bwait','out':'bout'},bl={'1':'Tier 1','wait':'Wait','out':'Knife'},tc={'1':'#10b981','wait':'#f59e0b','out':'#ef4444'};
     setTimeout(()=>{const w=D.watchlist.filter(x=>x.rsi!=null);
       C('watchc').setOption({tooltip:{formatter:p=>p.data[3]+'<br/>RSI '+p.data[0]+' · off-high '+p.data[1]+'% · ATR '+p.data[2]+'%'},grid:{left:50,right:24,top:18,bottom:40},
-        xAxis:Object.assign({name:'RSI',nameLocation:'middle',nameGap:24,nameTextStyle:{color:'#8aa0bd'},type:'value',min:30,max:80},AX),yAxis:Object.assign({name:'% off high',nameTextStyle:{color:'#8aa0bd'},type:'value'},AX),
+        xAxis:Object.assign({name:'RSI',nameLocation:'middle',nameGap:24,nameTextStyle:{color:'#8aa0bd'},type:'value',min:30,max:80},AX),yAxis:Object.assign({name:'% off high',nameLocation:'middle',nameGap:38,nameRotate:90,nameTextStyle:{color:'#8aa0bd'},type:'value'},AX),
         series:[{type:'scatter',symbolSize:d=>Math.max(13,(d[2]||4)*4),data:w.map(x=>[x.rsi,x.offhi,x.atr,x.ticker,x.tier]),itemStyle:{color:p=>tc[p.data[4]]},label:{show:true,formatter:p=>p.data[3],position:'top',color:'#e6edf6',fontSize:11}}]});
     },20);
     return '<div class="card"><h3>Setup map — RSI vs. pullback depth (bubble size = volatility)</h3><div id="watchc" class="tall"></div></div>'+
@@ -184,8 +201,8 @@ const views={
     '<p style="color:var(--mut);font-size:13px;margin-top:14px"><b>Watching (weekend web scan):</b> '+D.edges.watching+'</p><p style="color:var(--mut);font-size:12px;margin-top:6px">'+D.edges.note+'</p></div>';},
   log(){return '<div class="card"><h3>Weekly Log — every read & did-it-work</h3>'+D.weekly_log.map(l=>'<div class="log-item"><div class="d">'+fmtFY(l.date)+'</div><div class="n">'+l.note+'</div></div>').join('')+'</div>';}
 };
-const titles={regime:'Market Regime',deploy:'$100k Deployment',dips:'Dip Signature',watch:'Watchlist',port:'Portfolio',edges:'Edges',log:'Weekly Log'};
-function show(s){document.querySelectorAll('.nav a').forEach(a=>a.classList.toggle('active',a.dataset.s===s));$('#title').textContent=titles[s];
+const titles={regime:'Market Regime',trends:'Macro Trends',deploy:'$100k Deployment',dips:'Dip Signature',watch:'Watchlist',port:'Portfolio',edges:'Edges',log:'Weekly Log'};
+function show(s){document.querySelectorAll('.nav a').forEach(a=>a.classList.toggle('active',a.dataset.s===s));$('#title').textContent=titles[s];$('#verdict').style.display=s==='regime'?'block':'none';
   document.querySelectorAll('section').forEach(x=>x.remove());const sec=document.createElement('section');sec.className='show';sec.innerHTML=views[s]();$('#content').appendChild(sec);}
 $('#nav').addEventListener('click',e=>{const a=e.target.closest('a');if(a)show(a.dataset.s);});
 function render(d){D=d;$('#upd').textContent=d.updated;$('#verdict').innerHTML='<div class="v">'+d.regime.verdict+'</div><div class="p">'+d.regime.posture+'</div>';$('#gate').style.display='none';show('regime');}
