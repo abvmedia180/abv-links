@@ -94,7 +94,7 @@ function stile(t){return '<div class="tile"><div class="k">'+t.k+'</div><div cla
 function gauge(id,val,max,zones,fmt){C(id).setOption({series:[{type:'gauge',startAngle:210,endAngle:-30,min:0,max:max,
   progress:{show:true,width:11,roundCap:true,itemStyle:{color:'#f59e0b'}},axisLine:{lineStyle:{width:11,color:zones}},
   pointer:{width:5,length:'60%',itemStyle:{color:'#e6edf6'}},axisTick:{show:false},splitLine:{show:false},axisLabel:{show:false},
-  anchor:{show:true,size:12,itemStyle:{color:'#e6edf6'}},detail:{valueAnimation:true,fontSize:20,fontWeight:700,color:'#e6edf6',offsetCenter:[0,'42%'],formatter:fmt},
+  anchor:{show:true,size:12,itemStyle:{color:'#e6edf6'}},detail:{valueAnimation:true,fontSize:13,fontWeight:700,color:'#e6edf6',offsetCenter:[0,'80%'],formatter:fmt},
   data:[{value:val}],title:{show:false}}]});}
 
 function trendChart(id,t){const series=t.series.map(s=>({name:s.name,type:'line',smooth:true,symbol:'none',data:s.data,lineStyle:{color:s.color,width:2},itemStyle:{color:s.color},
