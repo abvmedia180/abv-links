@@ -1,0 +1,22 @@
+name: Sync josephpsych from jp-website-v2
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */6 * * *'
+permissions:
+  contents: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Pull latest jp-website-v2
+        run: |
+          git clone --depth 1 https://github.com/abvmedia180/jp-website-v2.git /tmp/src
+          rsync -a --delete --exclude '.git' /tmp/src/ josephpsych/
+      - name: Commit if changed
+        run: |
+          git config user.name "jp-sync-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add josephpsych
+          git diff --cached --quiet || (git commit -m "Sync josephpsych from jp-website-v2" && git push)
