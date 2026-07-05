@@ -217,3 +217,14 @@ footer{background:var(--cream);padding:64px 0 32px;border-top:1px solid rgba(15,
     transform: translateY(20px) !important;
   }
 }
+
+/* Light navbar over dark page-hero (interior pages); reverts on scroll */
+nav.nav-dark:not(.scrolled) .nav-links a{color:rgba(255,255,255,.75)}
+nav.nav-dark:not(.scrolled) .nav-links a:hover,nav.nav-dark:not(.scrolled) .nav-links a.active{color:#fff}
+nav.nav-dark:not(.scrolled) .nav-logo{color:var(--cream)}
+nav.nav-dark:not(.scrolled) .nav-logo-icon{background:var(--cream);color:var(--green-deep)}
+nav.nav-dark:not(.scrolled) .nav-text-btn{border-color:rgba(255,255,255,.45);color:#fff!important}
+nav.nav-dark:not(.scrolled) .nav-text-btn:hover{background:var(--cream);color:var(--green-deep)!important;border-color:var(--cream)}
+nav.nav-dark:not(.scrolled) .nav-cta{background:var(--cream);color:var(--green-deep)!important}
+nav.nav-dark:not(.scrolled) .nav-cta:hover{background:#fff}
+nav.nav-dark:not(.scrolled) .nav-hamburger span{background:var(--cream)}
