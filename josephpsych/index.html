@@ -57,7 +57,7 @@
 .specialties{background:var(--green-deep);padding:100px 0;position:relative;overflow:hidden}
 .specialties::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 20% 50%,rgba(45,122,80,.3) 0%,transparent 60%);pointer-events:none}
 .specialties .section-label{color:var(--terracotta-light)}.specialties .section-heading{color:var(--white)}.specialties .section-subtitle{color:rgba(255,255,255,.65)}
-.specialty-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:56px;position:relative;z-index:2}
+.specialty-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;margin-top:56px;position:relative;z-index:2}
 .specialty-card{background:rgba(255,255,255,.07);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius-lg);padding:36px 30px;transition:all .4s}
 .specialty-card:hover{background:rgba(255,255,255,.12);transform:translateY(-4px);border-color:rgba(255,255,255,.2)}
 .specialty-card.featured{background:rgba(255,255,255,.12);border-color:var(--terracotta);position:relative}
@@ -230,15 +230,11 @@
         <p>Sometimes it's not sadness — it's numbness, exhaustion, or just going through the motions. We meet you wherever you are.</p>
         <ul><li>Persistent low mood</li><li>Loss of motivation</li><li>Burnout & emotional fatigue</li><li>Difficulty finding joy</li><li>Medication & ongoing support</li></ul>
       </div>
-      <div class="specialty-card animate-on-scroll delay-4" style="grid-column:1/-1">
-        <div style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap">
-          <div class="specialty-icon">🩺</div>
-          <div style="flex:1;min-width:260px">
-            <h3>Also here: Weight Management</h3>
-            <p>Weight and mental health are deeply connected, and many psychiatric medications affect weight. We offer medication-assisted weight management with FDA-approved GLP-1 medications, integrated into your regular care or available on its own. Family members of current patients are welcome.</p>
-            <a href="weight-management.html" class="btn-secondary" style="margin-top:12px;padding:12px 24px;font-size:14px">Explore Weight Management →</a>
-          </div>
-        </div>
+      <div class="specialty-card animate-on-scroll delay-4">
+        <div class="specialty-icon">🩺</div><h3>Weight Management</h3>
+        <p>Weight and mental health are deeply connected, and many psychiatric medications affect weight. We manage both together, in the same visit, with the same provider.</p>
+        <ul><li>Medication-associated weight gain</li><li>FDA-approved GLP-1 medications only</li><li>Full medical evaluation & lab work</li><li>Integrated with your psychiatric care</li><li>Family members of patients welcome</li></ul>
+        <a href="weight-management.html" class="btn-ghost" style="margin-top:16px;padding:12px 24px;font-size:14px">Learn more →</a>
       </div>
     </div>
   </div>
