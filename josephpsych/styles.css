@@ -228,3 +228,9 @@ nav.nav-dark:not(.scrolled) .nav-text-btn:hover{background:var(--cream);color:va
 nav.nav-dark:not(.scrolled) .nav-cta{background:var(--cream);color:var(--green-deep)!important}
 nav.nav-dark:not(.scrolled) .nav-cta:hover{background:#fff}
 nav.nav-dark:not(.scrolled) .nav-hamburger span{background:var(--cream)}
+
+/* Patient Portal utility pill */
+.nav-portal{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;background:var(--green-lightest);color:var(--green-deep)!important;border-radius:var(--radius-pill);font-size:13.5px;font-weight:600;transition:all .3s;text-decoration:none}
+.nav-portal:hover{background:var(--green-light)}
+nav.nav-dark:not(.scrolled) .nav-portal{background:rgba(255,255,255,.14);color:#fff!important}
+nav.nav-dark:not(.scrolled) .nav-portal:hover{background:rgba(255,255,255,.24)}
