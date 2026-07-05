@@ -97,7 +97,7 @@ nav.scrolled{background:rgba(250,248,244,.95);backdrop-filter:blur(20px);-webkit
 .info-box-item .marker{color:var(--green-soft);font-weight:700;flex-shrink:0}
 .info-box-item strong{color:var(--green-deep)}
 .quote-box{background:var(--terracotta-bg);border-left:3px solid var(--terracotta);padding:24px 28px;border-radius:0 var(--radius-md) var(--radius-md) 0;margin:32px 0}
-.quote-box p{font-family:'Instrument Serif',serif;font-size:20px;font-style:italic;color:var(--green-deep);line-height:1.5}
+.quote-box p{font-family:'DM Sans',sans-serif;font-size:15.5px;font-style:normal;color:var(--green-deep);line-height:1.75}
 .quote-box cite{display:block;margin-top:12px;font-style:normal;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--terracotta);font-weight:500}
 .insurance-badges{display:flex;gap:12px;flex-wrap:wrap}
 .insurance-badge{padding:8px 16px;background:var(--green-light);border-radius:var(--radius-pill);font-size:13px;font-weight:500;color:var(--green-deep)}
