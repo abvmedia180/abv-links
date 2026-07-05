@@ -40,7 +40,7 @@
 .hero-card-check{display:flex;align-items:center;gap:12px;font-size:15px;color:var(--text-secondary)}
 .hero-card-check-icon{width:24px;height:24px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;color:var(--green-deep);font-size:13px;flex-shrink:0}
 .hero-float-1{position:absolute;top:-20px;right:-20px;background:var(--white);border-radius:var(--radius-md);padding:14px 20px;box-shadow:var(--shadow-md);display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500;color:var(--green-deep);animation:float 4s ease infinite}
-.hero-float-2{position:absolute;bottom:40px;left:-30px;background:var(--white);border-radius:var(--radius-md);padding:14px 20px;box-shadow:var(--shadow-md);font-size:14px;color:var(--text-secondary);animation:float 4s ease 1s infinite}
+.hero-float-2{position:absolute;bottom:-24px;left:-16px;background:var(--white);border-radius:var(--radius-md);padding:14px 20px;box-shadow:var(--shadow-md);display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500;color:var(--green-deep);animation:float 4s ease 1s infinite}
 .hero-float-2 .rating{color:var(--gold);font-size:13px;letter-spacing:1px}
 .hero-float-2 .label{font-weight:600;color:var(--green-deep);margin-top:4px}
 .trust-bar{padding:32px 0;background:var(--white);border-top:1px solid rgba(15,56,35,.06);border-bottom:1px solid rgba(15,56,35,.06)}
@@ -76,7 +76,7 @@
 .step-content h3{font-family:'Instrument Serif',serif;font-size:26px;color:var(--green-deep);margin-bottom:6px;font-weight:400}
 .step-content .step-subtitle{font-size:14px;color:var(--terracotta);font-weight:500;margin-bottom:12px}
 .step-content p{font-size:16px;line-height:1.7;color:var(--text-secondary);max-width:500px}
-.doctor-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:80px;align-items:center;margin-top:56px}
+.doctor-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:80px;align-items:start;margin-top:56px}
 .doctor-image{width:100%;background:linear-gradient(135deg,var(--terracotta),var(--terracotta-light));border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
 .doctor-image-placeholder{color:white;text-align:center;font-family:'Instrument Serif',serif;font-size:28px;padding:40px;line-height:1.3}
 .doctor-image-placeholder span{display:block;font-family:'DM Sans',sans-serif;font-size:14px;margin-top:8px;opacity:.8}
@@ -108,8 +108,7 @@
 @media(max-width:768px){
   .relate-grid{grid-template-columns:1fr}.specialty-cards{grid-template-columns:1fr}
   .testimonial-grid{grid-template-columns:1fr}.stats-grid{grid-template-columns:repeat(2,1fr)}
-  .hero-float-1,.hero-float-2{display:none}
-  .hero-actions{flex-direction:column;align-items:stretch}.hero-actions a{text-align:center;justify-content:center}
+  .hero-float-1,  .hero-actions{flex-direction:column;align-items:stretch}.hero-actions a{text-align:center;justify-content:center}
 }
 </style>
 </head>
@@ -173,6 +172,8 @@
             <div class="hero-card-check"><div class="hero-card-check-icon">✓</div> Free 10-minute consult call to start</div>
           </div>
         </div>
+        <div class="hero-float-1"><span class="icon">🎥</span> Video visits from anywhere in NY</div>
+        <div class="hero-float-2"><span class="icon">🩺</span> Psychiatrist-backed care team</div>
       </div>
     </div>
   </div>
