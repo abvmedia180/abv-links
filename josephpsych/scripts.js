@@ -34,6 +34,7 @@ function toggleFaq(btn) {
 
 // Mobile menu
 function toggleMobile() {
+  document.getElementById('navbar').classList.toggle('menu-open');
   document.getElementById('mobileMenu').classList.toggle('open');
 }
 

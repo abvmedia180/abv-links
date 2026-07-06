@@ -244,3 +244,5 @@ nav.nav-dark:not(.scrolled) .nav-portal:hover{background:rgba(255,255,255,.24)}
   .nav-cta,.nav-text-btn{padding:9px 16px;font-size:13px}
   .nav-portal{padding:8px 12px;font-size:12.5px}
 }
+
+nav.menu-open .nav-hamburger{visibility:hidden}
