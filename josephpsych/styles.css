@@ -66,6 +66,7 @@ nav.scrolled{background:rgba(250,248,244,.95);backdrop-filter:blur(20px);-webkit
 .nav-logo-icon{width:36px;height:36px;background:var(--green-deep);border-radius:6px;display:flex;align-items:center;justify-content:center;color:white;font-family:'Instrument Serif',serif;font-size:18px;font-weight:400;letter-spacing:-.5px}
 .nav-logo-text{font-family:'Instrument Serif',serif;font-size:20px;letter-spacing:-.3px}
 .nav-links{display:flex;align-items:center;gap:26px}
+.nav-links a,.nav-cta,.nav-text-btn,.nav-portal,.nav-logo-text{white-space:nowrap}
 .nav-links a{text-decoration:none;color:var(--text-secondary);font-size:14px;font-weight:500;letter-spacing:.2px;transition:color .3s}
 .nav-links a:hover,.nav-links a.active{color:var(--green-deep)}
 .nav-cta{display:inline-flex;align-items:center;gap:8px;padding:10px 24px;background:var(--green-deep);color:white!important;border-radius:var(--radius-pill);font-size:14px;font-weight:500;transition:all .3s;text-decoration:none}
@@ -183,9 +184,11 @@ footer{background:var(--cream);padding:64px 0 32px;border-top:1px solid rgba(15,
   .legal-grid{grid-template-columns:1fr}.legal-nav{position:static;margin-bottom:32px}
   .contact-grid{grid-template-columns:1fr 1fr}
 }
+@media(max-width:1024px){
+  .nav-links{display:none}.nav-hamburger{display:flex}
+}
 @media(max-width:768px){
   section{padding:72px 0}
-  .nav-links{display:none}.nav-hamburger{display:flex}
   .contact-grid{grid-template-columns:1fr}.team-grid{grid-template-columns:1fr}
   .cta-buttons{flex-direction:column;align-items:stretch}
   .cta-buttons a{text-align:center;justify-content:center}
@@ -234,3 +237,10 @@ nav.nav-dark:not(.scrolled) .nav-hamburger span{background:var(--cream)}
 .nav-portal:hover{background:var(--green-light)}
 nav.nav-dark:not(.scrolled) .nav-portal{background:rgba(255,255,255,.14);color:#fff!important}
 nav.nav-dark:not(.scrolled) .nav-portal:hover{background:rgba(255,255,255,.24)}
+
+@media(max-width:1280px){
+  .nav-links{gap:14px}
+  .nav-links a{font-size:13px}
+  .nav-cta,.nav-text-btn{padding:9px 16px;font-size:13px}
+  .nav-portal{padding:8px 12px;font-size:12.5px}
+}
