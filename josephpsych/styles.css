@@ -186,11 +186,12 @@ footer{background:var(--cream);padding:64px 0 32px;border-top:1px solid rgba(15,
 }
 @media(min-width:769px) and (max-width:1024px){
   .nav-logo-text{display:none}
-  .nav-links{gap:10px}
+  .nav-logo{margin-right:14px}
+  .nav-links{gap:12px}
   .nav-links a{font-size:12.5px}
-  .nav-cta{padding:8px 12px;font-size:12.5px;gap:5px}
-  .nav-text-btn{padding:8px 10px;font-size:12.5px;gap:4px}
-  .nav-portal{padding:7px 10px;font-size:12px;gap:4px}
+  .nav-cta{padding:8px 11px;font-size:12.5px;gap:4px}
+  .nav-text-btn{padding:7px 9px;font-size:12.5px;gap:3px}
+  .nav-portal{padding:6px 8px;font-size:12px;gap:3px}
 }
 @media(max-width:768px){
   section{padding:72px 0}
