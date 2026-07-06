@@ -39,8 +39,8 @@
 .hero-card-checklist{display:flex;flex-direction:column;gap:14px}
 .hero-card-check{display:flex;align-items:center;gap:12px;font-size:15px;color:var(--text-secondary)}
 .hero-card-check-icon{width:24px;height:24px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;color:var(--green-deep);font-size:13px;flex-shrink:0}
-.hero-float-1{position:absolute;top:-26px;right:28px;background:var(--white);border-radius:var(--radius-md);padding:14px 20px;box-shadow:var(--shadow-md);display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500;color:var(--green-deep);animation:float 4s ease infinite}
-.hero-float-2{position:absolute;bottom:-26px;left:28px;background:var(--white);border-radius:var(--radius-md);padding:14px 20px;box-shadow:var(--shadow-md);display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500;color:var(--green-deep);animation:float 4s ease 1s infinite}
+.hero-badges{display:flex;gap:12px;margin-top:18px;justify-content:center;flex-wrap:wrap}
+.hero-badge{background:var(--white);border-radius:var(--radius-pill);padding:12px 18px;box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:500;color:var(--green-deep)}
 .hero-float-2 .rating{color:var(--gold);font-size:13px;letter-spacing:1px}
 .hero-float-2 .label{font-weight:600;color:var(--green-deep);margin-top:4px}
 .trust-bar{padding:32px 0;background:var(--white);border-top:1px solid rgba(15,56,35,.06);border-bottom:1px solid rgba(15,56,35,.06)}
@@ -172,8 +172,10 @@
             <div class="hero-card-check"><div class="hero-card-check-icon">✓</div> Free 10-minute consult call to start</div>
           </div>
         </div>
-        <div class="hero-float-1"><span class="icon">🎥</span> Video visits from anywhere in NY</div>
-        <div class="hero-float-2"><span class="icon">🩺</span> Psychiatrist-backed care team</div>
+        <div class="hero-badges">
+          <div class="hero-badge">🎥 Video visits from anywhere in NY</div>
+          <div class="hero-badge">🩺 Psychiatrist-backed care team</div>
+        </div>
       </div>
     </div>
   </div>
