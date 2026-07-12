@@ -195,10 +195,10 @@ h2{
   padding:14px;transform:rotate(-.8deg);
 }
 .photo-frame{
-  aspect-ratio:4/5;border:1.5px dashed var(--line);border-radius:3px;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
+  aspect-ratio:4/5;border-radius:3px;overflow:hidden;
   background:var(--paper);
 }
+.photo-frame img{width:100%;height:100%;object-fit:cover;object-position:58% 18%;display:block}
 .photo-penny{
   width:72px;height:72px;border-radius:50%;background:var(--copper);color:var(--paper);
   display:flex;align-items:center;justify-content:center;
@@ -425,14 +425,14 @@ footer{padding:48px 0 64px;border-top:2px solid var(--ink)}
     <div class="about-grid" style="margin-top:36px">
       <div class="photo-card">
         <div class="photo-frame">
-          <div class="photo-penny">1¢</div>
-          <p class="photo-note">PHOTO OF ABE<br>COMING SOON</p>
+          <img src="abe.jpg" alt="Abe Varughese speaking at the NYU Stern podium">
         </div>
+        <p class="photo-note" style="margin-top:10px">ABE VARUGHESE · NYU STERN</p>
       </div>
       <div class="about-copy">
-        <p>I'm Abe. I live in Nassau County, same as you, and this started the way most good things do: <b>I did it for myself first.</b> I filed my own grievance and watched it work. The filing wasn't the hard part. The hard part was understanding the system: what everything meant, how to do it, how the county calculates the numbers, and how an assessment compares to what a home is actually worth.</p>
+        <p>I'm Abe Varughese. I live in Nassau County, same as you, and this started the way most good things do: <b>I did it for myself first.</b> I filed my own grievance and watched it work. The filing wasn't the hard part. The hard part was understanding the system: what everything meant, how to do it, how the county calculates the numbers, and how an assessment compares to what a home is actually worth.</p>
         <p>That part I was built for. I'm a <b>former real estate agent turned real estate investor</b> and a graduate of <b>NYU Stern</b>, and I've spent years reading Long Island property values. When you sign up, I pull your parcel, I file it, I read the county's offer, and I send you the math. Finding out costs nothing.</p>
-        <p class="about-sign">SIGNED, ABE · NASSAU COUNTY</p>
+        <p class="about-sign">SIGNED, ABE VARUGHESE · NASSAU COUNTY</p>
       </div>
     </div>
   </div>
