@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Penny Earned Tax | Nassau County Property Tax Grievances</title>
-<meta name="description" content="You're probably overpaying Nassau County. We challenge your assessment, you keep 70% of every dollar saved, and you pay $0 if nothing changes. Get on the January filing list.">
+<title>Honest Abe Tax | Nassau County Property Tax Grievances</title>
+<meta name="description" content="I'm Abe. I live in Nassau County and I grieve property assessments for 30% of first-year savings. You keep 70%, and you pay $0 if your taxes don't drop. Get on the January filing list.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=IBM+Plex+Mono:wght@400;600&family=Public+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -187,6 +187,32 @@ h2{
 .tl-item p{font-size:14.5px;color:var(--ink-soft)}
 .tl-foot{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--ink-soft);margin-top:16px}
 
+/* about abe */
+.about-grid{display:grid;grid-template-columns:280px 1fr;gap:44px;align-items:start}
+.photo-card{
+  background:#FBF7EA;border:1.5px solid var(--ink);border-radius:4px;
+  box-shadow:6px 6px 0 var(--paper-deep),6px 6px 0 1.5px var(--ink);
+  padding:14px;transform:rotate(-.8deg);
+}
+.photo-frame{
+  aspect-ratio:4/5;border:1.5px dashed var(--line);border-radius:3px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
+  background:var(--paper);
+}
+.photo-penny{
+  width:72px;height:72px;border-radius:50%;background:var(--copper);color:var(--paper);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Archivo Black',sans-serif;font-size:22px;
+}
+.photo-note{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--ink-soft);text-align:center}
+.about-copy p{margin-bottom:16px;font-size:17px;color:var(--ink-soft);max-width:60ch}
+.about-copy p b{color:var(--ink)}
+.about-sign{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.1em;color:var(--stamp);margin-top:4px}
+@media (max-width:900px){
+  .about-grid{grid-template-columns:1fr;gap:28px}
+  .photo-card{max-width:280px;transform:none}
+}
+
 /* pricing */
 .price-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:860px}
 .price-card{border:1.5px solid var(--ink);border-radius:var(--radius);padding:30px 28px;background:#FBF7EA}
@@ -280,7 +306,7 @@ footer{padding:48px 0 64px;border-top:2px solid var(--ink)}
   <div class="nav-inner">
     <a class="brand" href="#top">
       <span class="brand-mark">1¢</span>
-      <span class="brand-name">Penny Earned Tax</span>
+      <span class="brand-name">Honest Abe Tax</span>
     </a>
     <div class="nav-right">
       <span class="nav-note">2028/29 filing window opens Jan 2</span>
@@ -294,7 +320,7 @@ footer{padding:48px 0 64px;border-top:2px solid var(--ink)}
     <div>
       <p class="eyebrow">Nassau County property tax grievance</p>
       <h1>You're probably overpaying Nassau County. Fixing it takes one signature.</h1>
-      <p class="hero-sub">The county over-assesses thousands of homes every year, and the big firms charge up to <b>half your savings</b> to fix it. We challenge your assessment for <b>30%</b>: you keep 70% of every dollar saved, and if your taxes don't drop, <b>you pay $0</b>.</p>
+      <p class="hero-sub">The county over-assesses thousands of homes every year, and the big firms charge up to <b>half your savings</b> to fix it. I'm Abe. I challenge your assessment for <b>30%</b>: you keep 70% of every dollar saved, and if your taxes don't drop, <b>you pay $0</b>.</p>
       <div class="hero-cta">
         <a class="btn" href="#signup">Get on the January list</a>
         <span class="cta-micro">60 seconds · no payment info · no obligation</span>
@@ -325,7 +351,7 @@ footer{padding:48px 0 64px;border-top:2px solid var(--ink)}
           </div>
         </dl>
         <span class="stamp">Accepted · Jul 06 2026</span>
-        <p class="doc-caption">One of our own 2026 filings. One homeowner, one year. Every property is different; past results don't guarantee yours.</p>
+        <p class="doc-caption">This is my house. One filing, one year. Every property is different; past results don't guarantee yours.</p>
       </div>
     </div>
   </div>
@@ -335,7 +361,7 @@ footer{padding:48px 0 64px;border-top:2px solid var(--ink)}
   <div class="wrap strip-grid">
     <div class="strip-item">FILED FEB 18 → OFFER JUL 2 · <b>134 DAYS</b></div>
     <div class="strip-item">COST TO FILE A GRIEVANCE · <b>$0 UP FRONT</b></div>
-    <div class="strip-item">OUR FEE IF YOU DON'T SAVE · <b>$0</b></div>
+    <div class="strip-item">MY FEE IF YOU DON'T SAVE · <b>$0</b></div>
   </div>
 </div>
 
@@ -347,15 +373,15 @@ footer{padding:48px 0 64px;border-top:2px solid var(--ink)}
     <div class="cards">
       <div class="card">
         <h3><span class="q">Q:</span> Why is the fee 50%?</h3>
-        <p>Some of the biggest names on Long Island keep <b>up to half</b> of your first-year savings, for a filing that takes a trained person minutes. Nobody's fee needs to be 50%. <b>Ours is 30%</b>, with no add-ons.</p>
+        <p>Some of the biggest names on Long Island keep <b>up to half</b> of your first-year savings, for a filing that takes a trained person minutes. Nobody's fee needs to be 50%. <b>Mine is 30%</b>, with no add-ons.</p>
       </div>
       <div class="card">
         <h3><span class="q">Q:</span> Why does the mail look official?</h3>
-        <p>Deadline warnings, seals, urgent red type. Envelopes designed to look like they came from the county. It works, and we think it's beneath the work. <b>We'd rather tell you exactly what this is and let you decide.</b></p>
+        <p>Deadline warnings, seals, urgent red type. Envelopes designed to look like they came from the county. It works, and I think it's beneath the work. <b>I'd rather tell you exactly what this is and let you decide.</b></p>
       </div>
       <div class="card">
         <h3><span class="q">Q:</span> Why not mention I can file myself?</h3>
-        <p>You can, <b>for free</b>, on the county's own website, and we'll happily point you there. We exist for everyone who was never going to spend an evening on assessment ratios and comparable sales. That's most people, and that's fine.</p>
+        <p>You can, <b>for free</b>, on the county's own website, and I'll happily point you there. I'm here for everyone who was never going to spend an evening on assessment ratios and comparable sales. That's most people, and that's fine.</p>
       </div>
     </div>
   </div>
@@ -370,21 +396,21 @@ footer{padding:48px 0 64px;border-top:2px solid var(--ink)}
         <div class="step-no">STEP 01</div>
         <div>
           <h3>Sign up in about 60 seconds.</h3>
-          <p>Name, address, email. We pull your parcel details, prepare the paperwork, and send you one authorization form to e-sign. That's the whole job on your end.</p>
+          <p>Name, address, email. I pull your parcel details, prepare the paperwork, and send you one authorization form to e-sign. That's the whole job on your end.</p>
         </div>
       </div>
       <div class="step">
         <div class="step-no">STEP 02</div>
         <div>
-          <h3>We file the day the window opens.</h3>
-          <p>Nassau accepts grievances starting January 2. We file early, confirm the county's receipt the same day, and forward it to you so you know it's real.</p>
+          <h3>I file the day the window opens.</h3>
+          <p>Nassau accepts grievances starting January 2. I file early, confirm the county's receipt the same day, and forward it to you so you know it's real.</p>
         </div>
       </div>
       <div class="step">
         <div class="step-no">STEP 03</div>
         <div>
           <h3>The county answers by summer. You keep 70% of every dollar.</h3>
-          <p>If there's a settlement offer, we review it and walk you through it in plain English. If your assessment doesn't come down, you owe us nothing. Not a filing fee, not a service charge, nothing.</p>
+          <p>If there's a settlement offer, I read it and call you with the math in plain English. If your assessment doesn't come down, you owe me nothing. Not a filing fee, not a service charge, nothing.</p>
         </div>
       </div>
     </div>
@@ -394,8 +420,8 @@ footer{padding:48px 0 64px;border-top:2px solid var(--ink)}
 <section class="timeline">
   <div class="wrap">
     <p class="sec-eyebrow">Receipts, literally</p>
-    <h2>We don't just sell this. We filed it on our own house.</h2>
-    <p class="sec-sub">Here's the actual 2026 timeline behind the numbers at the top of this page.</p>
+    <h2>I don't just sell this. I filed it on my own house.</h2>
+    <p class="sec-sub">Here's the actual 2026 timeline behind my numbers at the top of this page.</p>
     <div class="tl-grid">
       <div class="tl-item">
         <p class="tl-date">Feb 18, 2026 · 9:26 PM</p>
@@ -419,6 +445,26 @@ footer{padding:48px 0 64px;border-top:2px solid var(--ink)}
 
 <section>
   <div class="wrap">
+    <p class="sec-eyebrow">Meet Abe</p>
+    <h2>There's no firm. There's a guy named Abe.</h2>
+    <div class="about-grid" style="margin-top:36px">
+      <div class="photo-card">
+        <div class="photo-frame">
+          <div class="photo-penny">1¢</div>
+          <p class="photo-note">PHOTO OF ABE<br>COMING SOON</p>
+        </div>
+      </div>
+      <div class="about-copy">
+        <p>I'm Abe. I live in Nassau County, same as you, and this started the way most good things do: <b>I did it for myself first.</b> In 2026 I grieved my own assessment and watched the county cut it by 19.79%. The filing took minutes. The hard part was knowing the system existed at all.</p>
+        <p>By day I work in healthcare here on Long Island. This is the side business my neighbors talked me into, and it stays small on purpose: when you sign up, there's no call center and no case number. <b>I pull your parcel, I file it, I read the county's offer, and I call you with the math.</b> If I can't save you money, I'll tell you that too. Finding out costs nothing.</p>
+        <p class="about-sign">SIGNED, ABE · NASSAU COUNTY</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
     <p class="sec-eyebrow">Pricing</p>
     <h2>Same filing. Very different bill.</h2>
     <p class="sec-sub">Everyone in this business works on contingency: no savings, no fee. The difference is what happens when you win.</p>
@@ -434,7 +480,7 @@ footer{padding:48px 0 64px;border-top:2px solid var(--ink)}
         </ul>
       </div>
       <div class="price-card us">
-        <p class="price-label">Penny Earned</p>
+        <p class="price-label">Honest Abe</p>
         <p class="price-num">30%</p>
         <p class="price-sub">of your first-year savings. Once, and only if you save</p>
         <ul>
@@ -467,11 +513,11 @@ footer{padding:48px 0 64px;border-top:2px solid var(--ink)}
       </details>
       <details>
         <summary>I already signed with one of the big firms. Can I switch?</summary>
-        <p>Not this year. The county only accepts one authorized representative per property per filing year, and duplicate authorizations can get a filing denied. But you're free every new season. Sign up and we'll file for you next window.</p>
+        <p>Not this year. The county only accepts one authorized representative per property per filing year, and duplicate authorizations can get a filing denied. But you're free every new season. Sign up and I'll file for you next window.</p>
       </details>
       <details>
         <summary>Do I need a lawyer for this?</summary>
-        <p>No. Residential assessment grievances don't require an attorney, not at the county review stage and not at the small-claims appeal stage after it. If a case ever genuinely needs a lawyer, we'll tell you that instead of pretending otherwise.</p>
+        <p>No. Residential assessment grievances don't require an attorney, not at the county review stage and not at the small-claims appeal stage after it. If a case ever genuinely needs a lawyer, I'll tell you that instead of pretending otherwise.</p>
       </details>
       <details>
         <summary>What does it cost, exactly?</summary>
@@ -485,7 +531,7 @@ footer{padding:48px 0 64px;border-top:2px solid var(--ink)}
   <div class="wrap">
     <p class="sec-eyebrow">The list is open</p>
     <h2>Get on the January filing list.</h2>
-    <p class="sec-sub">The next window opens January 2. We prepare filings in signup order. No payment info now, nothing ever owed unless your taxes come down.</p>
+    <p class="sec-sub">The next window opens January 2. I prepare filings in signup order. No payment info now, nothing ever owed unless your taxes come down.</p>
     <form id="lead-form" class="form-grid">
       <div class="field">
         <label for="f-name">Full name</label>
@@ -512,11 +558,11 @@ footer{padding:48px 0 64px;border-top:2px solid var(--ink)}
         </select>
       </div>
       <button class="btn btn-submit" type="submit">Put my house on the list</button>
-      <p class="form-micro">WE'LL EMAIL YOUR AUTHORIZATION FORM BEFORE THE WINDOW OPENS. NO SPAM, NO MAILERS, WE PROMISE.</p>
+      <p class="form-micro">I'LL EMAIL YOUR AUTHORIZATION FORM BEFORE THE WINDOW OPENS. NO SPAM, NO MAILERS. SIGNED, ABE.</p>
     </form>
     <div id="form-success" class="form-success">
       <h3>You're on the list.</h3>
-      <p>Watch your inbox. We'll send your authorization form and next steps before the January window opens. Total remaining effort on your end: one signature.</p>
+      <p>Watch your inbox. I'll send your authorization form and next steps before the January window opens. Total remaining effort on your end: one signature.</p>
     </div>
   </div>
 </section>
@@ -524,10 +570,10 @@ footer{padding:48px 0 64px;border-top:2px solid var(--ink)}
 <footer>
   <div class="wrap">
     <p class="foot-disclaimer">
-      The result shown on this page is a single actual 2027/28 Nassau County settlement obtained for one property. Every property is different; a reduction is never guaranteed, and past results do not guarantee future outcomes. Penny Earned Tax is an independent service and is not a law firm, does not provide legal or tax advice, and is not affiliated with, endorsed by, or acting on behalf of Nassau County, the Assessment Review Commission, or any government agency. Homeowners may file a grievance on their own, at no cost, at the county's website. Our fee is 30% of first-year tax savings, payable only upon a successful reduction; if there is no reduction, no fee of any kind is charged.
+      The result shown on this page is a single actual 2027/28 Nassau County settlement obtained for one property. Every property is different; a reduction is never guaranteed, and past results do not guarantee future outcomes. Honest Abe Tax is an independent service and is not a law firm, does not provide legal or tax advice, and is not affiliated with, endorsed by, or acting on behalf of Nassau County, the Assessment Review Commission, or any government agency. Homeowners may file a grievance on their own, at no cost, at the county's website. Our fee is 30% of first-year tax savings, payable only upon a successful reduction; if there is no reduction, no fee of any kind is charged.
     </p>
-    <p class="foot-brand">Penny Earned Tax</p>
-    <p class="foot-note">A penny saved is a penny earned. We deal in dollars. And why the penny? Look who's on it.</p>
+    <p class="foot-brand">Honest Abe Tax</p>
+    <p class="foot-note">A penny saved is a penny earned. I deal in dollars. And why the penny? Look who's on it.</p>
     <p class="foot-note">Nassau County, NY · <a href="https://www.nassaucountyny.gov/2207/How-to-Appeal-Your-Assessment" rel="noopener" target="_blank">Prefer to file yourself for free? Start here.</a></p>
   </div>
 </footer>
