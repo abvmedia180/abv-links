@@ -115,6 +115,34 @@ h2 .num{color:var(--ink-faint);font-weight:600;margin-right:8px}
 .hconn{width:2px;height:14px;margin-left:16px;background:var(--nurse-line)}
 .hier.doch .hconn{background:var(--doc-line)}
 
+/* ---------- NURSING FLOWCHART ---------- */
+.flowchart{margin-top:24px;display:flex;flex-direction:column;align-items:center}
+.fc-node{width:100%;max-width:460px;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--nurse);border-radius:12px;box-shadow:var(--shadow);padding:12px 15px;display:flex;align-items:center;gap:13px}
+.fc-node .rank{flex:0 0 auto;min-width:30px;height:30px;padding:0 7px;border-radius:8px;background:var(--nurse-bg);color:var(--nurse);font:700 11px/1 var(--body);display:flex;align-items:center;justify-content:center;text-align:center}
+.fc-node .body .t{font-weight:600;font-size:15px;line-height:1.25}
+.fc-node .body .d{font-size:12.5px;color:var(--ink-soft);margin-top:1px}
+.fc-arrow{width:2px;height:17px;background:var(--nurse-line);position:relative}
+.fc-arrow::after{content:"";position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid var(--nurse-line)}
+.fc-forklabel{font-size:11.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-faint);margin:4px 0 10px}
+.fc-fork{display:flex;align-items:stretch;gap:10px;width:100%;max-width:460px}
+.fc-leaf{flex:1;background:var(--nurse-bg);border:1.5px solid var(--nurse-line);border-radius:11px;padding:11px 12px;text-align:center}
+.fc-leaf .t{font-weight:700;font-size:14px;color:var(--nurse)}
+.fc-leaf .d{font-size:11.5px;color:var(--ink-soft);margin-top:2px}
+.fc-or{display:flex;align-items:center;font:700 12px/1 var(--body);color:var(--ink-faint);text-transform:uppercase}
+.fc-side{width:100%;max-width:460px;display:flex;justify-content:space-between;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:8px}
+
+/* ---------- SUPPORT FLOW ---------- */
+.supflow{display:flex;flex-direction:column;gap:8px;margin-top:22px;margin-bottom:6px}
+.supstage{flex:1;background:var(--card);border:1px solid var(--line);border-top:3px solid var(--support);border-radius:12px;padding:15px 16px;box-shadow:var(--shadow)}
+.supstage .when{font:700 11px/1 var(--body);letter-spacing:.07em;text-transform:uppercase;color:var(--support);margin-bottom:7px}
+.supstage .team{font-weight:700;font-size:15.5px}
+.supstage .role{font-size:13px;color:var(--ink-soft);margin-top:3px}
+.suparrow{align-self:center;color:var(--support-line);font-size:20px;line-height:1;transform:rotate(90deg)}
+@media(min-width:640px){
+  .supflow{flex-direction:row;align-items:stretch}
+  .suparrow{transform:none}
+}
+
 /* ---------- ESCALATION ---------- */
 .esc{counter-reset:step;display:grid;gap:10px;margin-top:22px}
 .estep{display:flex;gap:14px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
@@ -184,7 +212,7 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
       <div class="flowline"></div>
       <div class="node-row">
         <div class="node doc">Fellows &amp; Residents<small>doctors still in training</small></div>
-        <div class="node doc">NPs &amp; PAs<small>advanced providers</small></div>
+        <div class="node doc">NPs &amp; PAs<small>grouped as "ACPs"</small></div>
       </div>
 
       <div class="converge">meet at</div>
@@ -338,7 +366,7 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
   <div class="wrap">
     <div class="eyebrow">The in-between role</div>
     <h2>NPs and PAs — the "advanced providers"</h2>
-    <p class="lead">These are highly-trained clinicians who <strong>aren't doctors but do a lot of doctor-like work</strong>: examining patients, ordering tests, and writing prescriptions. Hospitals group them under an umbrella label. You'll hear <b>APP</b> (Advanced Practice Provider) most places; some systems, like the one on your whiteboard, use their own term, <b>ACP</b> (Advanced Clinical Provider). Same idea, local branding.</p>
+    <p class="lead">These are highly-trained clinicians who <strong>aren't doctors but do a lot of doctor-like work</strong>: examining patients, ordering tests, and writing prescriptions. Whether someone is an NP or a PA, they're grouped under one umbrella term you'll hear constantly: <b>ACP</b> — Advanced Clinical Provider. So "call the ACP" just means "get the NP or PA."</p>
 
     <div class="roles">
       <div class="role doc">
@@ -385,18 +413,26 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
     <h2><span class="num">👩‍⚕️</span>The Nursing Side</h2>
     <p class="lead">If doctors decide the plan, nurses <strong>carry it out and watch the patient 24/7.</strong> This is its own ladder with its own boss (the Chief Nursing Officer). Read it top-to-bottom — the person at the bottom is at the bedside; the person at the top runs nursing for the whole hospital.</p>
 
-    <div class="hier">
-      <div class="hlevel"><span class="hbadge">TOP</span><div class="hbox"><div class="t">Chief Nursing Officer (CNO)</div><div class="d">Runs all of nursing for the hospital. The nurse equivalent of the CMO.</div></div></div>
-      <div class="hconn"></div>
-      <div class="hlevel"><span class="hbadge">↓</span><div class="hbox"><div class="t">Director of Nursing</div><div class="d">Oversees several units or a whole service line. Reports to the CNO.</div></div></div>
-      <div class="hconn"></div>
-      <div class="hlevel"><span class="hbadge">↓</span><div class="hbox"><div class="t">Nurse Manager</div><div class="d">Runs one unit or floor — staffing, budget, quality, the buck stops here for that unit.</div></div></div>
-      <div class="hconn"></div>
-      <div class="hlevel"><span class="hbadge">↓</span><div class="hbox"><div class="t">Assistant Nurse Manager (ANM)</div><div class="d">The manager's right hand. Often the most reachable person when something needs fixing <i>now</i>.</div></div></div>
-      <div class="hconn"></div>
-      <div class="hlevel"><span class="hbadge">↓</span><div class="hbox"><div class="t">Charge Nurse</div><div class="d">An experienced RN running <i>today's shift</i> on the floor — assigning patients, solving hour-by-hour problems. A role, not a permanent rank.</div></div></div>
-      <div class="hconn"></div>
-      <div class="hlevel"><span class="hbadge">BASE</span><div class="hbox"><div class="t">Registered Nurse (RN)</div><div class="d">At the bedside. Gives meds, monitors, assesses, and is the constant human link between patient and doctor.</div></div></div>
+    <div class="fc-side"><span>▲ runs nursing hospital-wide</span><span>at the bedside ▼</span></div>
+    <div class="flowchart">
+      <div class="fc-node"><div class="rank">CNO</div><div class="body"><div class="t">Chief Nursing Officer</div><div class="d">Runs all of nursing for the hospital — the nurse equivalent of the CMO.</div></div></div>
+      <div class="fc-arrow"></div>
+      <div class="fc-node"><div class="rank">DIR</div><div class="body"><div class="t">Director of Nursing</div><div class="d">Oversees several units or a whole service line.</div></div></div>
+      <div class="fc-arrow"></div>
+      <div class="fc-node"><div class="rank">MGR</div><div class="body"><div class="t">Nurse Manager</div><div class="d">Runs one unit — staffing, budget, quality. The buck stops here for that floor.</div></div></div>
+      <div class="fc-arrow"></div>
+      <div class="fc-node"><div class="rank">ANM</div><div class="body"><div class="t">Assistant Nurse Manager</div><div class="d">The manager's right hand — often the fastest person to reach when something needs fixing now.</div></div></div>
+      <div class="fc-arrow"></div>
+      <div class="fc-node"><div class="rank">CHG</div><div class="body"><div class="t">Charge Nurse</div><div class="d">An experienced RN running <i>today's shift</i> — assigning patients, solving hour-by-hour problems. A shift role, not a permanent rank.</div></div></div>
+      <div class="fc-arrow"></div>
+      <div class="fc-node"><div class="rank">RN</div><div class="body"><div class="t">Registered Nurse</div><div class="d">At the bedside — assesses, gives meds, monitors, and is the constant human link between patient and doctor.</div></div></div>
+      <div class="fc-arrow"></div>
+      <div class="fc-forklabel">the RN is backed up by one of:</div>
+      <div class="fc-fork">
+        <div class="fc-leaf"><div class="t">LPN</div><div class="d">licensed · tasks &amp; meds</div></div>
+        <div class="fc-or">or</div>
+        <div class="fc-leaf"><div class="t">PCA</div><div class="d">unlicensed · comfort &amp; safety</div></div>
+      </div>
     </div>
 
     <div class="note myth" style="margin-top:24px">
@@ -407,30 +443,46 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
     <div class="roles" style="margin-top:16px">
       <div class="role nurse">
         <div class="role-head"><h3>Licensed Practical Nurse</h3><span class="abbr">LPN</span></div>
-        <p class="what">A <b>licensed</b> nurse with a focused scope. Does more than an aide but works under an RN or provider's direction.</p>
+        <p class="what">A <b>licensed</b> nurse (about a one-year program) who works <b>under the direction of an RN or a doctor.</b> Real license, real hands-on scope — but the higher-judgment calls aren't theirs.</p>
         <div class="cc">
           <div class="box can"><h4>Can do</h4><ul>
-            <li>Give many medications</li><li>Basic wound care, collect data, monitor patients</li>
+            <li>Give most medications, including into an existing IV line</li>
+            <li>Start and remove a regular ("peripheral") IV, and draw blood from it</li>
+            <li>Wound care, catheters, suctioning, dressing changes</li>
+            <li>Collect data, take vitals, monitor, and chart</li>
           </ul></div>
           <div class="box cant"><h4>Can't do</h4><ul>
-            <li>Do the full independent assessment or complex care an RN owns</li>
-            <li>Hang certain high-risk IV medications (rules vary)</li>
+            <li>The full nursing assessment, triage, or care plan — that's the RN's</li>
+            <li>Push a medication straight into a vein ("IV push")</li>
+            <li>Give blood or run a transfusion</li>
+            <li>Anything requiring independent clinical judgment</li>
           </ul></div>
         </div>
+        <div class="aka"><b>The nuance:</b> the IV limit isn't "no IVs" — an LPN can start and remove a peripheral IV and give most IV fluids and meds. What they can't do is the fast "IV push," blood products, or the assessment and care plan.</div>
       </div>
       <div class="role nurse">
         <div class="role-head"><h3>Patient Care Assistant</h3><span class="abbr">PCA · aide</span></div>
-        <p class="what"><b>Unlicensed</b> support staff — the hands that keep patients safe and comfortable. Essential, constant, and often the first to notice a problem.</p>
+        <p class="what"><b>Unlicensed</b> support staff (often a certified nursing assistant). Short training, works entirely under the RN — the hands and eyes at the bedside, and often the first to notice something's wrong.</p>
         <div class="cc">
           <div class="box can"><h4>Can do</h4><ul>
-            <li>Vital signs, bathing, mobility, feeding</li>
+            <li>Vital signs, blood-sugar finger sticks, weights, intake &amp; output</li>
+            <li>Bathing, feeding, toileting, turning, helping patients walk</li>
             <li>1-to-1 "sitting" with fall-risk or at-risk patients</li>
+            <li>Transport, stocking, keeping the room safe and clean</li>
           </ul></div>
           <div class="box cant"><h4>Can't do</h4><ul>
-            <li>Give medications</li><li>Remove IVs or do any licensed clinical task</li>
+            <li>Give <i>any</i> medication — none, ever</li>
+            <li>Remove IVs or manage any IV line</li>
+            <li>Assessments or clinical judgment — they report what they see to the RN</li>
           </ul></div>
         </div>
+        <div class="aka"><b>One variation:</b> some hospitals train this role (calling it a "PCT," Patient Care Technician) to also draw blood and run EKGs. That extra scope depends on the facility — but the "no medications" line never moves.</div>
       </div>
+    </div>
+
+    <div class="note">
+      <div class="ic">1</div>
+      <div><b>One or the other — not both:</b> on a given unit the RN is backed up by <i>either</i> an LPN <i>or</i> a PCA, not both at the same time. Which one depends on the floor and how much licensed support its patients need.</div>
     </div>
   </div>
 </section>
@@ -440,7 +492,15 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
   <div class="wrap">
     <div class="eyebrow s">Part 3</div>
     <h2><span class="num">🧩</span>The Support Teams</h2>
-    <p class="lead">Not doctors, not nurses — but nothing moves without them. These teams handle <strong>logistics, money, and what happens after the hospital.</strong></p>
+    <p class="lead">Not doctors, not nurses — but nothing moves without them. These teams handle <strong>logistics, money, and what happens after the hospital.</strong> The easiest way to keep them straight is <em>when</em> each one shows up during a stay:</p>
+
+    <div class="supflow">
+      <div class="supstage"><div class="when">On arrival</div><div class="team">Bed Management</div><div class="role">Finds and assigns the bed; runs the flow of patients in, across, and out.</div></div>
+      <div class="suparrow">➜</div>
+      <div class="supstage"><div class="when">Throughout the stay</div><div class="team">Case Management</div><div class="role">Plans the exit from day one — insurance, equipment, and where the patient goes next.</div></div>
+      <div class="suparrow">➜</div>
+      <div class="supstage"><div class="when">When it gets complicated</div><div class="team">Social Work</div><div class="role">Steps in for counseling, safety, and hard personal or financial situations.</div></div>
+    </div>
 
     <div class="roles">
       <div class="role sup">
@@ -470,6 +530,7 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
             <li>Handle insurance authorizations day-to-day (that's Case Management)</li>
           </ul></div>
         </div>
+        <div class="aka"><b>Good to know:</b> nearly every patient gets a case manager, but only some get a social worker — they're pulled in when the situation is genuinely complex.</div>
       </div>
       <div class="role sup">
         <div class="role-head"><h3>Bed Management</h3></div>
@@ -541,7 +602,7 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
       <div class="grow"><span class="term">Resident</span><span class="def">A doctor in training, fresh out of med school, working under an attending.</span></div>
       <div class="grow"><span class="term">Fellow</span><span class="def">A doctor who finished residency and is training in a subspecialty.</span></div>
       <div class="grow"><span class="term">CMO</span><span class="def">Chief Medical Officer — the top doctor in the building.</span></div>
-      <div class="grow"><span class="term">APP / ACP</span><span class="def">Advanced Practice / Clinical Provider — the umbrella term for NPs and PAs.</span></div>
+      <div class="grow"><span class="term">ACP</span><span class="def">Advanced Clinical Provider — the umbrella term for NPs and PAs.</span></div>
       <div class="grow"><span class="term">NP</span><span class="def">Nurse Practitioner — a nurse with advanced training; diagnoses and prescribes within a population.</span></div>
       <div class="grow"><span class="term">PA</span><span class="def">Physician Assistant/Associate — generalist-trained provider who can switch specialties.</span></div>
       <div class="grow"><span class="term">CNO</span><span class="def">Chief Nursing Officer — the top of the nursing ladder.</span></div>
