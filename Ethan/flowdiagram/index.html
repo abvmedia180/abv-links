@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How a Hospital Is Organized — A Plain-English Map</title>
+<meta name="description" content="Who's who on a hospital care team, what each role can and can't do, and how the pieces fit together. Written for someone with no clinical background.">
+<meta name="robots" content="noindex,nofollow">
+<meta property="og:title" content="How a Hospital Is Organized — A Plain-English Map">
+<meta property="og:description" content="Who's who on a hospital care team, what each role can and can't do, and how it all fits together.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1a2430; --ink-soft:#55627a; --ink-faint:#8a95a8;
+  --bg:#f5f7fb; --card:#ffffff; --line:#e4e9f2; --line-soft:#eef2f8;
+  --doc:#3251c4; --doc-bg:#eef1fd; --doc-line:#c8d3f7;
+  --nurse:#0d8a7d; --nurse-bg:#e6f5f2; --nurse-line:#b7e2da;
+  --support:#b5710a; --support-bg:#fbf1de; --support-line:#f0dcae;
+  --patient:#c0392b; --patient-bg:#fdecea;
+  --can:#1a7f37; --can-bg:#e8f5ec; --cant:#c1362b; --cant-bg:#fceceb;
+  --shadow:0 1px 2px rgba(20,30,50,.04),0 6px 20px rgba(20,30,50,.06);
+  --shadow-lg:0 2px 6px rgba(20,30,50,.06),0 18px 44px rgba(20,30,50,.10);
+  --r:16px; --r-sm:11px;
+  --disp:'Space Grotesk',system-ui,sans-serif;
+  --body:'Inter',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:var(--body);background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.wrap{max-width:820px;margin:0 auto;padding:0 20px}
+
+/* ---------- HERO ---------- */
+.hero{background:linear-gradient(160deg,#101a2e 0%,#1c2b4d 55%,#26406e 100%);color:#fff;padding:62px 0 74px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;inset:0;background:
+  radial-gradient(520px 300px at 82% -8%,rgba(120,160,255,.22),transparent 60%),
+  radial-gradient(420px 320px at 6% 108%,rgba(20,180,160,.18),transparent 60%);pointer-events:none}
+.hero .wrap{position:relative;z-index:1}
+.kicker{display:inline-flex;align-items:center;gap:8px;font:600 12px/1 var(--body);letter-spacing:.14em;text-transform:uppercase;color:#a9c1ff;background:rgba(120,150,255,.12);border:1px solid rgba(120,150,255,.25);padding:8px 13px;border-radius:100px;margin-bottom:22px}
+.hero h1{font-family:var(--disp);font-weight:700;font-size:clamp(28px,7vw,44px);line-height:1.08;letter-spacing:-.02em;margin-bottom:16px}
+.hero p{font-size:clamp(15px,3.6vw,18px);color:#cdd8ee;max-width:60ch}
+.hero .meta{margin-top:26px;display:flex;flex-wrap:wrap;gap:10px}
+.hero .meta span{font-size:12.5px;color:#b9c6e4;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);padding:6px 11px;border-radius:8px}
+
+/* ---------- SECTION ---------- */
+section{padding:44px 0}
+.eyebrow{font:600 12px/1 var(--body);letter-spacing:.13em;text-transform:uppercase;color:var(--doc);margin-bottom:12px}
+.eyebrow.n{color:var(--nurse)} .eyebrow.s{color:var(--support)}
+h2{font-family:var(--disp);font-weight:700;font-size:clamp(22px,5.2vw,30px);line-height:1.15;letter-spacing:-.015em;margin-bottom:14px}
+h2 .num{color:var(--ink-faint);font-weight:600;margin-right:8px}
+.lead{font-size:16.5px;color:var(--ink-soft);max-width:64ch;margin-bottom:8px}
+.lead strong{color:var(--ink);font-weight:600}
+
+/* ---------- BIG PICTURE DIAGRAM ---------- */
+.mapcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow-lg);padding:26px 20px;margin-top:26px}
+.chain-label{display:flex;align-items:center;gap:9px;font:600 12.5px/1 var(--body);letter-spacing:.06em;text-transform:uppercase;margin-bottom:14px}
+.chain-label.doc{color:var(--doc)} .chain-label.nurse{color:var(--nurse)}
+.dot{width:9px;height:9px;border-radius:50%}
+.dot.doc{background:var(--doc)} .dot.nurse{background:var(--nurse)} .dot.sup{background:var(--support)}
+.node-row{display:flex;flex-wrap:wrap;gap:9px;justify-content:center}
+.node{border-radius:11px;padding:9px 13px;font-size:13.5px;font-weight:600;text-align:center;border:1.5px solid;line-height:1.25}
+.node.doc{background:var(--doc-bg);border-color:var(--doc-line);color:var(--doc)}
+.node.nurse{background:var(--nurse-bg);border-color:var(--nurse-line);color:var(--nurse)}
+.node.sup{background:var(--support-bg);border-color:var(--support-line);color:var(--support)}
+.node small{display:block;font-weight:500;font-size:11px;color:var(--ink-faint);margin-top:2px}
+.flowline{width:2px;height:20px;background:var(--line);margin:6px auto}
+.patient-node{background:var(--patient-bg);border:1.5px solid #f0b7b0;color:var(--patient);border-radius:12px;padding:13px 20px;text-align:center;font-weight:700;font-size:15px;max-width:280px;margin:0 auto}
+.patient-node small{display:block;font-weight:500;font-size:11.5px;color:#9a5149;margin-top:3px}
+.converge{display:flex;align-items:center;justify-content:center;gap:5px;color:var(--ink-faint);font-size:11.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;margin:16px 0}
+.converge::before,.converge::after{content:"";height:1px;flex:1;max-width:70px;background:var(--line)}
+.side-tags{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-top:6px}
+
+/* ---------- KEY RULE CALLOUT ---------- */
+.rule{background:linear-gradient(145deg,#12233f,#1d3459);color:#fff;border-radius:var(--r);padding:26px 24px;margin-top:26px;box-shadow:var(--shadow-lg)}
+.rule .tag{font:700 11px/1 var(--body);letter-spacing:.14em;text-transform:uppercase;color:#8fb0ff;margin-bottom:12px}
+.rule p{font-size:16px;color:#dbe4f6}
+.rule strong{color:#fff}
+
+/* ---------- ROLE CARDS ---------- */
+.roles{display:grid;gap:18px;margin-top:24px}
+.role{background:var(--card);border:1px solid var(--line);border-left-width:4px;border-radius:var(--r-sm);box-shadow:var(--shadow);padding:22px;position:relative}
+.role.doc{border-left-color:var(--doc)} .role.nurse{border-left-color:var(--nurse)} .role.sup{border-left-color:var(--support)}
+.role-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:5px}
+.role-head h3{font-family:var(--disp);font-weight:700;font-size:19px;letter-spacing:-.01em}
+.role-head .abbr{font-size:12px;font-weight:600;color:var(--ink-faint);background:var(--line-soft);padding:3px 8px;border-radius:6px}
+.role .what{font-size:15px;color:var(--ink-soft);margin-bottom:16px}
+.role .what b{color:var(--ink);font-weight:600}
+.cc{display:grid;gap:12px}
+@media(min-width:560px){.cc{grid-template-columns:1fr 1fr}}
+.cc .box{border-radius:10px;padding:12px 14px}
+.cc .box.can{background:var(--can-bg)} .cc .box.cant{background:var(--cant-bg)}
+.cc .box h4{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.cc .box.can h4{color:var(--can)} .cc .box.cant h4{color:var(--cant)}
+.cc ul{list-style:none;display:grid;gap:6px}
+.cc li{font-size:13.5px;color:var(--ink);padding-left:18px;position:relative;line-height:1.45}
+.cc .box.can li::before{content:"✓";position:absolute;left:0;color:var(--can);font-weight:700}
+.cc .box.cant li::before{content:"✕";position:absolute;left:0;color:var(--cant);font-weight:700}
+.role .aka{margin-top:14px;font-size:13px;color:var(--ink-faint);border-top:1px dashed var(--line);padding-top:12px}
+.role .aka b{color:var(--ink-soft)}
+
+/* ---------- MYTH / NOTE CALLOUT ---------- */
+.note{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-top:18px;font-size:14px;color:var(--ink-soft);display:flex;gap:13px}
+.note .ic{flex:0 0 auto;width:30px;height:30px;border-radius:8px;background:var(--support-bg);color:var(--support);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px}
+.note b{color:var(--ink)}
+.note.myth .ic{background:var(--doc-bg);color:var(--doc)}
+
+/* ---------- VERTICAL HIERARCHY ---------- */
+.hier{margin-top:22px;display:grid;gap:0}
+.hlevel{display:flex;align-items:center;gap:14px;padding:2px 0}
+.hbadge{flex:0 0 auto;width:34px;text-align:center;font:700 12px/1 var(--body);color:var(--ink-faint)}
+.hbox{flex:1;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 15px;box-shadow:var(--shadow)}
+.hbox .t{font-weight:600;font-size:15px}
+.hbox .d{font-size:13px;color:var(--ink-soft);margin-top:2px}
+.hconn{width:2px;height:14px;margin-left:16px;background:var(--nurse-line)}
+.hier.doch .hconn{background:var(--doc-line)}
+
+/* ---------- ESCALATION ---------- */
+.esc{counter-reset:step;display:grid;gap:10px;margin-top:22px}
+.estep{display:flex;gap:14px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.estep::before{counter-increment:step;content:counter(step);flex:0 0 auto;width:28px;height:28px;border-radius:8px;background:var(--doc);color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center}
+.estep .t{font-weight:600;font-size:14.5px}
+.estep .d{font-size:13px;color:var(--ink-soft);margin-top:1px}
+
+/* ---------- JOURNEY ---------- */
+.journey{margin-top:22px;display:grid;gap:0}
+.jstep{display:flex;gap:16px}
+.jrail{flex:0 0 auto;display:flex;flex-direction:column;align-items:center}
+.jdot{width:14px;height:14px;border-radius:50%;background:var(--doc);margin-top:6px;box-shadow:0 0 0 4px var(--doc-bg)}
+.jline{width:2px;flex:1;background:var(--line);margin:4px 0}
+.jstep:last-child .jline{display:none}
+.jbody{padding-bottom:22px}
+.jbody .t{font-weight:600;font-size:15.5px}
+.jbody .d{font-size:14px;color:var(--ink-soft);margin-top:3px}
+
+/* ---------- GLOSSARY ---------- */
+.gloss{margin-top:22px;display:grid;gap:2px;background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)}
+.grow{display:grid;grid-template-columns:auto 1fr;gap:14px;padding:13px 18px;border-bottom:1px solid var(--line-soft);align-items:baseline}
+.grow:last-child{border-bottom:none}
+.grow .term{font-weight:700;font-size:13.5px;color:var(--ink);white-space:nowrap}
+.grow .def{font-size:13.5px;color:var(--ink-soft)}
+@media(max-width:480px){.grow{grid-template-columns:1fr;gap:2px}}
+
+/* ---------- FOOTER ---------- */
+footer{background:#101a2e;color:#aab8d4;padding:34px 0 40px;text-align:center;font-size:13px}
+footer b{color:#dbe4f6;font-weight:600}
+footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margin-left:auto;margin-right:auto;line-height:1.5}
+
+.divide{height:1px;background:var(--line);margin:2px 0}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="kicker">Orientation · Plain English</span>
+    <h1>How a Hospital Is Actually Organized</h1>
+    <p>Who's on the care team, what each person is allowed to do (and not do), and how the whole machine fits together around one thing: the patient. No clinical background needed.</p>
+    <div class="meta">
+      <span>🩺 The doctor side</span>
+      <span>👩‍⚕️ The nursing side</span>
+      <span>🧩 The support teams</span>
+      <span>🔁 How they connect</span>
+    </div>
+  </div>
+</header>
+
+<!-- BIG PICTURE -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Start here</div>
+    <h2>The whole thing in one picture</h2>
+    <p class="lead">A hospital runs on <strong>two separate chains of command</strong> that only meet at the patient's bedside. One chain is the doctors. The other is the nurses. Around them sit a few support teams that handle money, logistics, and life-after-discharge. Once you see these three groups, everything else clicks.</p>
+
+    <div class="mapcard">
+      <div class="chain-label doc"><span class="dot doc"></span>The Doctor Chain — decides the medical plan</div>
+      <div class="node-row">
+        <div class="node doc">Chief Medical Officer<small>top doctor in the building</small></div>
+      </div>
+      <div class="flowline"></div>
+      <div class="node-row">
+        <div class="node doc">Attending<small>the physician in charge of your case</small></div>
+      </div>
+      <div class="flowline"></div>
+      <div class="node-row">
+        <div class="node doc">Fellows &amp; Residents<small>doctors still in training</small></div>
+        <div class="node doc">NPs &amp; PAs<small>advanced providers</small></div>
+      </div>
+
+      <div class="converge">meet at</div>
+      <div class="patient-node">THE PATIENT<small>the only place the two chains touch</small></div>
+      <div class="converge">supported by</div>
+
+      <div class="chain-label nurse" style="margin-top:6px"><span class="dot nurse"></span>The Nursing Chain — delivers the hands-on care</div>
+      <div class="node-row">
+        <div class="node nurse">Bedside RN</div>
+        <div class="node nurse">Charge Nurse</div>
+        <div class="node nurse">Nurse Manager</div>
+        <div class="node nurse">Director</div>
+        <div class="node nurse">Chief Nursing Officer</div>
+      </div>
+
+      <div class="divide" style="margin:20px 0 16px"></div>
+      <div class="chain-label s" style="color:var(--support)"><span class="dot sup"></span>Support Teams — everything around the care</div>
+      <div class="side-tags">
+        <div class="node sup">Case Management</div>
+        <div class="node sup">Social Work</div>
+        <div class="node sup">Bed Management</div>
+      </div>
+    </div>
+
+    <div class="rule">
+      <div class="tag">★ The one rule that explains everything</div>
+      <p><strong>Doctors and nurses do not report to each other.</strong> A nurse manager cannot overrule a doctor's medical order, and a doctor cannot fire or discipline a nurse. They are two independent ladders that answer to two different bosses (the Chief Medical Officer and the Chief Nursing Officer) and only come together to care for the same patient. When people say a hospital is "siloed," this is what they mean — and it's by design, so that clinical accountability stays clear.</p>
+    </div>
+  </div>
+</section>
+
+<!-- DOCTOR SIDE -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Part 1</div>
+    <h2><span class="num">🩺</span>The Doctor Side</h2>
+    <p class="lead">Doctors own the <strong>medical decisions</strong> — the diagnosis, the plan, the orders, the discharge. Legally, one physician's license is on the line for each patient. Here's that chain, from the person at the bedside up to the top.</p>
+
+    <div class="roles">
+
+      <div class="role doc">
+        <div class="role-head"><h3>The Attending</h3><span class="abbr">"the quarterback"</span></div>
+        <p class="what">The <b>fully-licensed physician who owns your case.</b> Every other doctor and provider on your case is either helping the attending or reporting to them. If you remember one role, remember this one — the attending is the single point of accountability for the medical plan.</p>
+        <div class="cc">
+          <div class="box can"><h4>Can do</h4><ul>
+            <li>Make the final call on diagnosis, treatment, and discharge</li>
+            <li>Write and change any order (medications, tests, procedures)</li>
+            <li>Bring in specialists ("consults") for extra opinions</li>
+            <li>Overrule a trainee or an NP/PA working under them</li>
+          </ul></div>
+          <div class="box cant"><h4>Can't do</h4><ul>
+            <li>Direct nursing staff's assignments or discipline them</li>
+            <li>Be everywhere — relies on the team to be their eyes and ears</li>
+            <li>Override another attending's decisions on a different specialty</li>
+          </ul></div>
+        </div>
+      </div>
+
+      <div class="role doc">
+        <div class="role-head"><h3>The Hospitalist</h3><span class="abbr">a type of attending</span></div>
+        <p class="what">A doctor who <b>only works inside the hospital</b> (they have no outside clinic). For most patients admitted for a medical problem, the hospitalist <b>is</b> the attending. Think of them as the hospital's in-house general physician who quarterbacks the day-to-day and coordinates the specialists.</p>
+        <div class="cc">
+          <div class="box can"><h4>Can do</h4><ul>
+            <li>Serve as the attending of record for medical admissions</li>
+            <li>Coordinate all the specialists involved in one patient</li>
+            <li>Manage the whole hospital stay start to finish</li>
+          </ul></div>
+          <div class="box cant"><h4>Can't do</h4><ul>
+            <li>Perform surgery or specialty procedures themselves</li>
+            <li>Follow you after discharge — they hand off to your outpatient doctor</li>
+          </ul></div>
+        </div>
+        <div class="aka"><b>Why it matters:</b> that generic "Attending" box in the big picture is, most of the time, a hospitalist.</div>
+      </div>
+
+      <div class="role doc">
+        <div class="role-head"><h3>Specialists / Consultants</h3></div>
+        <p class="what">Doctors trained deeply in <b>one area</b> — heart (cardiology), bones (orthopedics), blood vessels (vascular), ear-nose-throat (ENT), surgery, plastics, hormones (endocrinology), and so on. Usually they <b>advise</b> the attending. But sometimes — especially for surgery — the specialist becomes the attending and runs the whole case.</p>
+        <div class="cc">
+          <div class="box can"><h4>Can do</h4><ul>
+            <li>Give expert recommendations in their area</li>
+            <li>Perform specialized procedures and surgeries</li>
+            <li>Become the lead attending when the reason for admission is their specialty</li>
+          </ul></div>
+          <div class="box cant"><h4>Can't do</h4><ul>
+            <li>Manage the whole patient outside their lane (they defer to the attending)</li>
+            <li>Get involved unless they're formally consulted</li>
+          </ul></div>
+        </div>
+        <div class="aka"><b>Rule of thumb:</b> if you're admitted <i>because</i> of surgery, the surgeon is often the attending. If surgery is just one piece of a bigger medical picture, the hospitalist stays in charge and the surgeon consults.</div>
+      </div>
+
+      <div class="role doc">
+        <div class="role-head"><h3>Doctors in Training</h3><span class="abbr">"house staff"</span></div>
+        <p class="what">Real doctors (they have their MD or DO) who are <b>still completing their training</b> inside the hospital, always under an attending's supervision. Two tiers: <b>Residents</b> come straight out of medical school; <b>Fellows</b> have finished residency and are training in a subspecialty.</p>
+        <div class="cc">
+          <div class="box can"><h4>Can do</h4><ul>
+            <li>Examine patients, write orders, and prescribe</li>
+            <li>Do a lot of the hands-on, hour-to-hour doctoring</li>
+            <li>Perform procedures they've been signed off on</li>
+          </ul></div>
+          <div class="box cant"><h4>Can't do</h4><ul>
+            <li>Take final responsibility — the attending co-signs and owns the plan</li>
+            <li>Practice independently until training is finished and they're board-certified</li>
+          </ul></div>
+        </div>
+        <div class="aka"><b>Timeline:</b> Med school → <b>Residency</b> (3 years for internal medicine or pediatrics; 5+ for surgical fields) → optional <b>Fellowship</b> (2–3 more years to subspecialize, e.g. a cardiologist is an internal-medicine doctor who did a heart fellowship).</div>
+      </div>
+
+      <div class="role doc">
+        <div class="role-head"><h3>Chief Medical Officer</h3><span class="abbr">CMO</span></div>
+        <p class="what">The <b>top doctor in the building</b> — the boss of the medical staff, usually with an associate/deputy underneath. They set standards and handle the big escalations, but they stay out of routine day-to-day cases and defer to the attending's judgment.</p>
+        <div class="cc">
+          <div class="box can"><h4>Can do</h4><ul>
+            <li>Set medical policy and quality standards for the whole hospital</li>
+            <li>Step in on serious safety issues or disputes</li>
+          </ul></div>
+          <div class="box cant"><h4>Can't do</h4><ul>
+            <li>Micromanage individual cases (that's the attending's job)</li>
+            <li>Be your first call — that would skip the whole chain below them</li>
+          </ul></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="note myth">
+      <div class="ic">≠</div>
+      <div><b>Worth un-learning:</b> "Doctor in training" doesn't mean student. Residents and fellows already graduated med school and treat patients every day — they just work under a supervising attending until their training is done. The medical <i>student</i> is a separate, earlier stage that isn't even on this chart.</div>
+    </div>
+  </div>
+</section>
+
+<!-- THE MATCH -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="eyebrow">Bonus context</div>
+    <h2>How a new doctor gets placed: "The Match"</h2>
+    <p class="lead">You noticed this and you had it basically right. When medical students finish school, they don't just apply and get hired. They go through a national algorithm called <strong>The Match</strong>.</p>
+    <div class="esc" style="counter-reset:step">
+      <div class="estep"><div><div class="t">Applicants rank the programs they want</div><div class="d">A student lists hospitals in order of preference — dream program #1, backup #7, and so on.</div></div></div>
+      <div class="estep"><div><div class="t">Hospitals rank the applicants they want</div><div class="d">At the same time, each program ranks its favorite candidates. Neither side sees the other's list.</div></div></div>
+      <div class="estep"><div><div class="t">A computer matches the two lists</div><div class="d">A famous, fairness-tested algorithm (it won a Nobel Prize in economics) pairs everyone at once. You might land your #1 — or your #5.</div></div></div>
+      <div class="estep"><div><div class="t">The stakes are brutal</div><div class="d">Match once a year on the same day nationwide. Not matching means no training spot at all — after four years of school and six figures of debt. The most competitive fields (like orthopedics) are the hardest to match into.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ACP / APP -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="eyebrow">The in-between role</div>
+    <h2>NPs and PAs — the "advanced providers"</h2>
+    <p class="lead">These are highly-trained clinicians who <strong>aren't doctors but do a lot of doctor-like work</strong>: examining patients, ordering tests, and writing prescriptions. Hospitals group them under an umbrella label. You'll hear <b>APP</b> (Advanced Practice Provider) most places; some systems, like the one on your whiteboard, use their own term, <b>ACP</b> (Advanced Clinical Provider). Same idea, local branding.</p>
+
+    <div class="roles">
+      <div class="role doc">
+        <div class="role-head"><h3>Nurse Practitioner</h3><span class="abbr">NP</span></div>
+        <p class="what">Started as a <b>registered nurse</b>, then earned a graduate degree to practice at an advanced level. An NP is trained around a <b>patient population</b> — e.g. family, adults, kids, or psychiatry.</p>
+        <div class="cc">
+          <div class="box can"><h4>Can do</h4><ul>
+            <li>Diagnose, treat, and prescribe (including controlled meds)</li>
+            <li>Manage patients fairly independently in their population</li>
+          </ul></div>
+          <div class="box cant"><h4>Can't do</h4><ul>
+            <li>Freely jump to a different population (e.g. adult → pediatrics) without more schooling and a new certification</li>
+          </ul></div>
+        </div>
+      </div>
+
+      <div class="role doc">
+        <div class="role-head"><h3>Physician Assistant / Associate</h3><span class="abbr">PA</span></div>
+        <p class="what">Trained in a <b>condensed, general version of medical school</b> — the "mini med school" idea. Because that training is generalist, a PA can <b>move between specialties</b> over a career (surgery this year, dermatology the next) picking it up on the job.</p>
+        <div class="cc">
+          <div class="box can"><h4>Can do</h4><ul>
+            <li>Diagnose, treat, and prescribe (including controlled meds)</li>
+            <li>Switch specialties without going back to school</li>
+            <li>First-assist in surgery, run clinics, manage inpatients</li>
+          </ul></div>
+          <div class="box cant"><h4>Can't do</h4><ul>
+            <li>Practice with zero physician involvement (rules vary by state)</li>
+          </ul></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note">
+      <div class="ic">↺</div>
+      <div><b>The correction on your board:</b> you had the gist, with one nuance. An NP isn't locked out of ever switching specialties — it's that they're certified for a <i>population</i> (adults, kids, psych…), so a big switch needs new training. The PA's flexibility is the real headline: general training in, easy specialty-hopping out. And both, not just doctors, can write prescriptions.</div>
+    </div>
+  </div>
+</section>
+
+<!-- NURSING SIDE -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow n">Part 2</div>
+    <h2><span class="num">👩‍⚕️</span>The Nursing Side</h2>
+    <p class="lead">If doctors decide the plan, nurses <strong>carry it out and watch the patient 24/7.</strong> This is its own ladder with its own boss (the Chief Nursing Officer). Read it top-to-bottom — the person at the bottom is at the bedside; the person at the top runs nursing for the whole hospital.</p>
+
+    <div class="hier">
+      <div class="hlevel"><span class="hbadge">TOP</span><div class="hbox"><div class="t">Chief Nursing Officer (CNO)</div><div class="d">Runs all of nursing for the hospital. The nurse equivalent of the CMO.</div></div></div>
+      <div class="hconn"></div>
+      <div class="hlevel"><span class="hbadge">↓</span><div class="hbox"><div class="t">Director of Nursing</div><div class="d">Oversees several units or a whole service line. Reports to the CNO.</div></div></div>
+      <div class="hconn"></div>
+      <div class="hlevel"><span class="hbadge">↓</span><div class="hbox"><div class="t">Nurse Manager</div><div class="d">Runs one unit or floor — staffing, budget, quality, the buck stops here for that unit.</div></div></div>
+      <div class="hconn"></div>
+      <div class="hlevel"><span class="hbadge">↓</span><div class="hbox"><div class="t">Assistant Nurse Manager (ANM)</div><div class="d">The manager's right hand. Often the most reachable person when something needs fixing <i>now</i>.</div></div></div>
+      <div class="hconn"></div>
+      <div class="hlevel"><span class="hbadge">↓</span><div class="hbox"><div class="t">Charge Nurse</div><div class="d">An experienced RN running <i>today's shift</i> on the floor — assigning patients, solving hour-by-hour problems. A role, not a permanent rank.</div></div></div>
+      <div class="hconn"></div>
+      <div class="hlevel"><span class="hbadge">BASE</span><div class="hbox"><div class="t">Registered Nurse (RN)</div><div class="d">At the bedside. Gives meds, monitors, assesses, and is the constant human link between patient and doctor.</div></div></div>
+    </div>
+
+    <div class="note myth" style="margin-top:24px">
+      <div class="ic">≠</div>
+      <div><b>The correction on your board:</b> you had LPN and PCA drawn as the bottom rungs <i>below</i> the RN. That's the common misread. They're not lower rungs of the nurse ladder — they're <b>different jobs with different scopes</b> that support the RN. Here's the honest version:</div>
+    </div>
+
+    <div class="roles" style="margin-top:16px">
+      <div class="role nurse">
+        <div class="role-head"><h3>Licensed Practical Nurse</h3><span class="abbr">LPN</span></div>
+        <p class="what">A <b>licensed</b> nurse with a focused scope. Does more than an aide but works under an RN or provider's direction.</p>
+        <div class="cc">
+          <div class="box can"><h4>Can do</h4><ul>
+            <li>Give many medications</li><li>Basic wound care, collect data, monitor patients</li>
+          </ul></div>
+          <div class="box cant"><h4>Can't do</h4><ul>
+            <li>Do the full independent assessment or complex care an RN owns</li>
+            <li>Hang certain high-risk IV medications (rules vary)</li>
+          </ul></div>
+        </div>
+      </div>
+      <div class="role nurse">
+        <div class="role-head"><h3>Patient Care Assistant</h3><span class="abbr">PCA · aide</span></div>
+        <p class="what"><b>Unlicensed</b> support staff — the hands that keep patients safe and comfortable. Essential, constant, and often the first to notice a problem.</p>
+        <div class="cc">
+          <div class="box can"><h4>Can do</h4><ul>
+            <li>Vital signs, bathing, mobility, feeding</li>
+            <li>1-to-1 "sitting" with fall-risk or at-risk patients</li>
+          </ul></div>
+          <div class="box cant"><h4>Can't do</h4><ul>
+            <li>Give medications</li><li>Remove IVs or do any licensed clinical task</li>
+          </ul></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SUPPORT -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow s">Part 3</div>
+    <h2><span class="num">🧩</span>The Support Teams</h2>
+    <p class="lead">Not doctors, not nurses — but nothing moves without them. These teams handle <strong>logistics, money, and what happens after the hospital.</strong></p>
+
+    <div class="roles">
+      <div class="role sup">
+        <div class="role-head"><h3>Case Management</h3></div>
+        <p class="what">The <b>discharge logistics and insurance</b> engine. Often nurses by background. They plan the exit from day one: where does the patient go next, who pays, and what equipment do they need.</p>
+        <div class="cc">
+          <div class="box can"><h4>Handles</h4><ul>
+            <li>Insurance approvals and "is this covered?"</li>
+            <li>Booking rehab, nursing-home, or home-health placement</li>
+            <li>Home equipment (oxygen, walker, hospital bed)</li>
+          </ul></div>
+          <div class="box cant"><h4>Doesn't</h4><ul>
+            <li>Make medical decisions</li><li>Provide counseling or crisis support (that's Social Work)</li>
+          </ul></div>
+        </div>
+      </div>
+      <div class="role sup">
+        <div class="role-head"><h3>Social Work</h3></div>
+        <p class="what">The <b>human/psychosocial</b> side. They step in when a patient's situation is complicated — emotionally, financially, or for safety — and connect people to resources.</p>
+        <div class="cc">
+          <div class="box can"><h4>Handles</h4><ul>
+            <li>Counseling and crisis support</li>
+            <li>Complex or unsafe home situations, abuse/neglect concerns</li>
+            <li>Resources for homelessness, substance use, financial hardship</li>
+          </ul></div>
+          <div class="box cant"><h4>Doesn't</h4><ul>
+            <li>Handle insurance authorizations day-to-day (that's Case Management)</li>
+          </ul></div>
+        </div>
+      </div>
+      <div class="role sup">
+        <div class="role-head"><h3>Bed Management</h3></div>
+        <p class="what">The hospital's <b>air-traffic control</b> for beds. Small team, huge operational power: they decide who goes where and when a bed opens up.</p>
+        <div class="cc">
+          <div class="box can"><h4>Handles</h4><ul>
+            <li>Assigning and tracking every bed in the building</li>
+            <li>Admissions from the ER and transfers between units</li>
+          </ul></div>
+          <div class="box cant"><h4>Doesn't</h4><ul>
+            <li>Make clinical calls — but they control the flow everyone depends on</li>
+          </ul></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note">
+      <div class="ic">↺</div>
+      <div><b>The correction on your board:</b> you split it as "Social Work = rehab, Case Management = home." In practice it's the other way around and fuzzier: <b>Case Management</b> owns the logistics and insurance for <i>all</i> destinations (rehab and home), while <b>Social Work</b> owns the complicated human situations. Both work on getting the patient safely out the door — just from different angles.</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW THEY CONNECT: ESCALATION -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Part 4 · how it connects</div>
+    <h2>If something's wrong, who do you go to?</h2>
+    <p class="lead">This is the most useful thing to internalize. You almost never jump straight to the top. You <strong>climb the ladder one rung at a time</strong> — it's faster, it keeps the right people informed, and skipping steps makes you look like you don't understand the system.</p>
+    <div class="esc">
+      <div class="estep"><div><div class="t">Start at the bedside</div><div class="d">The RN, the NP/PA, or the resident. 90% of things get solved right here.</div></div></div>
+      <div class="estep"><div><div class="t">Then the Nurse Manager (or their assistant)</div><div class="d">For anything the bedside can't fix. Even when it's outside their lane, keeping them aware is smart.</div></div></div>
+      <div class="estep"><div><div class="t">Then the Attending</div><div class="d">For a genuine change in the medical plan. Never your <i>first</i> move — loop in the team first.</div></div></div>
+      <div class="estep"><div><div class="t">Then the department director / hospitalist lead</div><div class="d">The right stop before you ever bother the C-suite.</div></div></div>
+      <div class="estep"><div><div class="t">Only then, the CMO</div><div class="d">Approachable, but use sparingly. Going here without looping in the attending first reflects badly on you, not them.</div></div></div>
+    </div>
+    <div class="note">
+      <div class="ic">★</div>
+      <div><b>The relationships worth building:</b> Bed Management, Nurse Managers, and especially the Assistant Nurse Managers. They're often the most reachable and the most able to make something happen the same day.</div>
+    </div>
+  </div>
+</section>
+
+<!-- JOURNEY -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="eyebrow">Put it together</div>
+    <h2>One patient, start to finish</h2>
+    <p class="lead">Watch all the roles show up in order for a made-up patient — call her Ms. Rivera, admitted overnight from the ER with pneumonia.</p>
+    <div class="journey">
+      <div class="jstep"><div class="jrail"><div class="jdot"></div><div class="jline"></div></div><div class="jbody"><div class="t">ER → a bed</div><div class="d"><b>Bed Management</b> finds her an open bed on a medical floor and assigns it.</div></div></div>
+      <div class="jstep"><div class="jrail"><div class="jdot"></div><div class="jline"></div></div><div class="jbody"><div class="t">A team forms</div><div class="d">A <b>hospitalist</b> becomes her attending. A <b>resident</b> and an <b>NP or PA</b> handle the hour-to-hour. An <b>RN</b> is assigned to her at the bedside.</div></div></div>
+      <div class="jstep"><div class="jrail"><div class="jdot"></div><div class="jline"></div></div><div class="jbody"><div class="t">Daily care</div><div class="d">The <b>RN</b> gives meds and monitors; a <b>PCA</b> takes vitals and helps her walk; the doctors round each morning and adjust the plan.</div></div></div>
+      <div class="jstep"><div class="jrail"><div class="jdot"></div><div class="jline"></div></div><div class="jbody"><div class="t">A complication</div><div class="d">Her heart rhythm looks off. The <b>hospitalist consults cardiology</b> — a <b>specialist</b> advises, but the hospitalist stays in charge.</div></div></div>
+      <div class="jstep"><div class="jrail"><div class="jdot"></div><div class="jline"></div></div><div class="jbody"><div class="t">Planning the exit</div><div class="d">From early on, <b>Case Management</b> lines up home oxygen and checks insurance. She lives alone and is anxious, so <b>Social Work</b> arranges support at home.</div></div></div>
+      <div class="jstep"><div class="jrail"><div class="jdot"></div></div><div class="jbody"><div class="t">Discharge</div><div class="d">The <b>attending</b> signs off, the <b>RN</b> gives instructions, and she goes home with a follow-up booked. The hospital team hands her back to her outpatient doctor.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- GLOSSARY -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="eyebrow">Cheat sheet</div>
+    <h2>Every abbreviation, one line each</h2>
+    <div class="gloss">
+      <div class="grow"><span class="term">Attending</span><span class="def">The fully-licensed doctor in charge of a patient's case. The buck stops here.</span></div>
+      <div class="grow"><span class="term">Hospitalist</span><span class="def">A doctor who only works in the hospital; usually the attending for medical admissions.</span></div>
+      <div class="grow"><span class="term">Resident</span><span class="def">A doctor in training, fresh out of med school, working under an attending.</span></div>
+      <div class="grow"><span class="term">Fellow</span><span class="def">A doctor who finished residency and is training in a subspecialty.</span></div>
+      <div class="grow"><span class="term">CMO</span><span class="def">Chief Medical Officer — the top doctor in the building.</span></div>
+      <div class="grow"><span class="term">APP / ACP</span><span class="def">Advanced Practice / Clinical Provider — the umbrella term for NPs and PAs.</span></div>
+      <div class="grow"><span class="term">NP</span><span class="def">Nurse Practitioner — a nurse with advanced training; diagnoses and prescribes within a population.</span></div>
+      <div class="grow"><span class="term">PA</span><span class="def">Physician Assistant/Associate — generalist-trained provider who can switch specialties.</span></div>
+      <div class="grow"><span class="term">CNO</span><span class="def">Chief Nursing Officer — the top of the nursing ladder.</span></div>
+      <div class="grow"><span class="term">RN</span><span class="def">Registered Nurse — the bedside nurse who delivers and monitors care.</span></div>
+      <div class="grow"><span class="term">ANM</span><span class="def">Assistant Nurse Manager — the nurse manager's deputy; often the fastest person to reach.</span></div>
+      <div class="grow"><span class="term">Charge Nurse</span><span class="def">The RN running a given shift on a floor. A role, not a rank.</span></div>
+      <div class="grow"><span class="term">LPN</span><span class="def">Licensed Practical Nurse — licensed, focused scope; works under an RN.</span></div>
+      <div class="grow"><span class="term">PCA</span><span class="def">Patient Care Assistant — unlicensed aide; vitals, comfort, safety, no meds.</span></div>
+      <div class="grow"><span class="term">Case Management</span><span class="def">Discharge logistics, insurance, equipment, post-hospital placement.</span></div>
+      <div class="grow"><span class="term">Social Work</span><span class="def">Psychosocial support — counseling, safety, resources for complex situations.</span></div>
+      <div class="grow"><span class="term">Bed Management</span><span class="def">Air-traffic control for hospital beds and patient flow.</span></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <b>A plain-English map of how a hospital is organized.</b><br>
+    Built to make sense in five minutes, no clinical background required.
+    <div class="disc">General educational overview only — exact titles, scopes, and reporting lines vary by hospital and by state, and this is not clinical or legal guidance.</div>
+  </div>
+</footer>
+
+</body>
+</html>
