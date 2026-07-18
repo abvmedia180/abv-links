@@ -71,6 +71,29 @@ h2 .num{color:var(--ink-faint);font-weight:600;margin-right:8px}
 .converge::before,.converge::after{content:"";height:1px;flex:1;max-width:70px;background:var(--line)}
 .side-tags{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-top:6px}
 
+/* ---------- WIDE UNIFIED ORG CHART ---------- */
+.orgscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+.orgchart{min-width:640px}
+.org-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;align-items:start}
+.org-col{display:flex;flex-direction:column}
+.org-head{border-radius:11px;padding:11px 10px;text-align:center;font-weight:700;font-size:14px;color:#fff;margin-bottom:13px;line-height:1.2}
+.org-head small{display:block;font-weight:500;font-size:11px;opacity:.92;margin-top:2px}
+.org-head.doc{background:var(--doc)} .org-head.nurse{background:var(--nurse)} .org-head.sup{background:var(--support)}
+.org-item{background:var(--card);border:1px solid var(--line);border-top:3px solid var(--line);border-radius:10px;padding:9px 10px;text-align:center;font-weight:600;font-size:13px;box-shadow:var(--shadow);line-height:1.25}
+.org-item small{display:block;font-weight:500;font-size:10.5px;color:var(--ink-faint);margin-top:1px}
+.org-col.doc .org-item{border-top-color:var(--doc)}
+.org-col.nurse .org-item{border-top-color:var(--nurse)}
+.org-col.sup .org-item{border-top-color:var(--support)}
+.org-conn{width:2px;height:12px;margin:0 auto;background:var(--line)}
+.org-stubs{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-top:0}
+.org-stub{width:2px;height:16px;margin:0 auto;background:var(--line)}
+.org-converge{text-align:center;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-faint);margin:7px 0}
+.org-patient{background:var(--patient-bg);border:1.5px solid #f0b7b0;border-radius:12px;padding:13px;text-align:center;color:var(--patient);font-weight:700;font-size:15.5px}
+.org-patient small{display:block;font-weight:500;font-size:11.5px;color:#9a5149;margin-top:3px}
+.scrollhint{display:none;font-size:11.5px;color:var(--ink-faint);text-align:center;margin-top:11px}
+.scrollhint::before{content:"⟵ ";}.scrollhint::after{content:" ⟶";}
+@media(max-width:680px){.scrollhint{display:block}}
+
 /* ---------- KEY RULE CALLOUT ---------- */
 .rule{background:linear-gradient(145deg,#12233f,#1d3459);color:#fff;border-radius:var(--r);padding:26px 24px;margin-top:26px;box-shadow:var(--shadow-lg)}
 .rule .tag{font:700 11px/1 var(--body);letter-spacing:.14em;text-transform:uppercase;color:#8fb0ff;margin-bottom:12px}
@@ -201,40 +224,51 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
     <p class="lead">A hospital runs on <strong>two separate chains of command</strong> that only meet at the patient's bedside. One chain is the doctors. The other is the nurses. Around them sit a few support teams that handle money, logistics, and life-after-discharge. Once you see these three groups, everything else clicks.</p>
 
     <div class="mapcard">
-      <div class="chain-label doc"><span class="dot doc"></span>The Doctor Chain — decides the medical plan</div>
-      <div class="node-row">
-        <div class="node doc">Chief Medical Officer<small>top doctor in the building</small></div>
-      </div>
-      <div class="flowline"></div>
-      <div class="node-row">
-        <div class="node doc">Attending<small>the physician in charge of your case</small></div>
-      </div>
-      <div class="flowline"></div>
-      <div class="node-row">
-        <div class="node doc">Fellows &amp; Residents<small>doctors still in training</small></div>
-        <div class="node doc">NPs &amp; PAs<small>grouped as "ACPs"</small></div>
-      </div>
+      <div class="orgscroll">
+        <div class="orgchart">
+          <div class="org-cols">
 
-      <div class="converge">meet at</div>
-      <div class="patient-node">THE PATIENT<small>the only place the two chains touch</small></div>
-      <div class="converge">supported by</div>
+            <div class="org-col doc">
+              <div class="org-head doc">🩺 Doctors<small>decide the medical plan</small></div>
+              <div class="org-item doc">CMO<small>top doctor in the building</small></div>
+              <div class="org-conn"></div>
+              <div class="org-item doc">Attending<small>owns your case</small></div>
+              <div class="org-conn"></div>
+              <div class="org-item doc">Residents &amp; Fellows<small>doctors in training</small></div>
+              <div class="org-conn"></div>
+              <div class="org-item doc">NPs &amp; PAs<small>grouped as "ACPs"</small></div>
+            </div>
 
-      <div class="chain-label nurse" style="margin-top:6px"><span class="dot nurse"></span>The Nursing Chain — delivers the hands-on care</div>
-      <div class="node-row">
-        <div class="node nurse">Bedside RN</div>
-        <div class="node nurse">Charge Nurse</div>
-        <div class="node nurse">Nurse Manager</div>
-        <div class="node nurse">Director</div>
-        <div class="node nurse">Chief Nursing Officer</div>
-      </div>
+            <div class="org-col nurse">
+              <div class="org-head nurse">👩‍⚕️ Nurses<small>deliver the care 24/7</small></div>
+              <div class="org-item nurse">CNO<small>top nurse in the building</small></div>
+              <div class="org-conn"></div>
+              <div class="org-item nurse">Director → Nurse Manager<small>run the units</small></div>
+              <div class="org-conn"></div>
+              <div class="org-item nurse">Charge Nurse<small>runs today's shift</small></div>
+              <div class="org-conn"></div>
+              <div class="org-item nurse">Bedside RN<small>at the patient</small></div>
+              <div class="org-conn"></div>
+              <div class="org-item nurse">LPN <i>or</i> PCA<small>one supports the RN</small></div>
+            </div>
 
-      <div class="divide" style="margin:20px 0 16px"></div>
-      <div class="chain-label s" style="color:var(--support)"><span class="dot sup"></span>Support Teams — everything around the care</div>
-      <div class="side-tags">
-        <div class="node sup">Case Management</div>
-        <div class="node sup">Social Work</div>
-        <div class="node sup">Bed Management</div>
+            <div class="org-col sup">
+              <div class="org-head sup">🧩 Support<small>logistics &amp; the exit</small></div>
+              <div class="org-item sup">Bed Management<small>finds the bed</small></div>
+              <div class="org-conn"></div>
+              <div class="org-item sup">Case Management<small>insurance &amp; discharge</small></div>
+              <div class="org-conn"></div>
+              <div class="org-item sup">Social Work<small>complex &amp; human needs</small></div>
+            </div>
+
+          </div>
+
+          <div class="org-stubs"><div class="org-stub"></div><div class="org-stub"></div><div class="org-stub"></div></div>
+          <div class="org-converge">all three come together at</div>
+          <div class="org-patient">THE PATIENT<small>the one place every chain meets</small></div>
+        </div>
       </div>
+      <div class="scrollhint">swipe to see all three columns</div>
     </div>
 
     <div class="rule">
@@ -323,7 +357,7 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
       </div>
 
       <div class="role doc">
-        <div class="role-head"><h3>Chief Medical Officer</h3><span class="abbr">CMO</span></div>
+        <div class="role-head"><h3>CMO</h3><span class="abbr">Chief Medical Officer</span></div>
         <p class="what">The <b>top doctor in the building</b> — the boss of the medical staff, usually with an associate/deputy underneath. They set standards and handle the big escalations, but they stay out of routine day-to-day cases and defer to the attending's judgment.</p>
         <div class="cc">
           <div class="box can"><h4>Can do</h4><ul>
@@ -415,7 +449,7 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
 
     <div class="fc-side"><span>▲ runs nursing hospital-wide</span><span>at the bedside ▼</span></div>
     <div class="flowchart">
-      <div class="fc-node"><div class="rank">CNO</div><div class="body"><div class="t">Chief Nursing Officer</div><div class="d">Runs all of nursing for the hospital — the nurse equivalent of the CMO.</div></div></div>
+      <div class="fc-node"><div class="rank">TOP</div><div class="body"><div class="t">CNO</div><div class="d">Chief Nursing Officer — runs all of nursing for the hospital; the nurse equivalent of the CMO.</div></div></div>
       <div class="fc-arrow"></div>
       <div class="fc-node"><div class="rank">DIR</div><div class="body"><div class="t">Director of Nursing</div><div class="d">Oversees several units or a whole service line.</div></div></div>
       <div class="fc-arrow"></div>
