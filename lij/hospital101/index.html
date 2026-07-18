@@ -6,6 +6,7 @@
 <title>Hospital 101</title>
 <meta name="description" content="A plain-English guide to how a hospital works — who's who, what each role can and can't do, and how it all fits together. No clinical background needed.">
 <meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230d8a7d'/%3E%3Cpath d='M26 14h12v12h12v12H38v12H26V38H14V26h12z' fill='%23fff'/%3E%3C/svg%3E">
 <meta property="og:title" content="Hospital 101 — how a hospital actually works">
 <meta property="og:description" content="A plain-English guide to who's who in a hospital, what each role can and can't do, and how it all fits together.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,14 +31,14 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 body{font-family:var(--body);background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-.wrap{max-width:820px;margin:0 auto;padding:0 20px}
+.wrap{max-width:880px;margin:0 auto;padding:0 20px}
 section{scroll-margin-top:60px}
 /* mono for data chips & labels */
 .abbr,.spec h3 .tag,.wbar .pct,.fc-node .rank,.prog .amt,.eyebrow,.kicker,.speccat .pill,.hbadge{font-family:var(--mono);font-weight:500}
 
 /* ---------- TOP NAV ---------- */
 .topnav{position:sticky;top:0;z-index:50;background:rgba(247,244,238,.86);backdrop-filter:saturate(180%) blur(10px);-webkit-backdrop-filter:saturate(180%) blur(10px);border-bottom:1px solid var(--line)}
-.topnav-in{max-width:820px;margin:0 auto;padding:0 20px;height:54px;display:flex;align-items:center;justify-content:space-between}
+.topnav-in{max-width:880px;margin:0 auto;padding:0 20px;height:54px;display:flex;align-items:center;justify-content:space-between}
 .brand{font-family:var(--disp);font-weight:700;font-size:16px;color:var(--ink);text-decoration:none;letter-spacing:-.01em;display:flex;align-items:center;gap:8px}
 .brand .bd{width:9px;height:9px;border-radius:50%;background:var(--nurse)}
 .menu{position:relative}
@@ -52,9 +53,11 @@ section{scroll-margin-top:60px}
 .menu-panel a:hover{background:var(--line-soft)}
 
 /* ---------- SIDE RAIL NAV ---------- */
-.sidenav{position:fixed;top:50%;transform:translateY(-50%);left:calc(50% - 600px);width:168px;z-index:40;display:none;opacity:0;pointer-events:none;transition:opacity .3s ease}
-@media(min-width:1240px){.sidenav{display:block}}
+.sidenav{position:fixed;top:50%;transform:translateY(-50%);left:calc(50% - 632px);width:168px;z-index:40;display:none;opacity:0;pointer-events:none;transition:opacity .3s ease}
+@media(min-width:1320px){.sidenav{display:block}}
 .sidenav.show{opacity:1;pointer-events:auto}
+.sidenav .sn-top{margin-top:16px;padding-top:13px;border-top:1px solid var(--line);font-family:var(--mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-faint);text-decoration:none;display:block}
+.sidenav .sn-top:hover{color:var(--nurse)}
 .sidenav .sn-h{font-family:var(--mono);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-faint);margin:0 0 7px 2px}
 .sidenav .sn-group+.sn-group{margin-top:15px}
 .sidenav a{display:flex;align-items:center;gap:9px;font-size:11.5px;color:var(--ink-faint);text-decoration:none;padding:3px 0;line-height:1.25}
@@ -82,7 +85,7 @@ section{scroll-margin-top:60px}
 .toc-num{font-family:var(--mono);font-size:11px;color:var(--ink-faint);margin-right:9px}
 
 /* ---------- TIER DIVIDER ---------- */
-.tier{max-width:820px;margin:16px auto 0;padding:0 20px}
+.tier{max-width:880px;margin:16px auto 0;padding:0 20px}
 .tier-in{background:var(--support-bg);border:1px solid var(--support-line);border-radius:14px;padding:16px 20px;text-align:center}
 .tier-in .k{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--support);font-weight:600}
 .tier-in .t{font-family:var(--disp);font-weight:700;font-size:19px;color:var(--ink);margin-top:4px}
@@ -106,7 +109,7 @@ section{padding:44px 0}
 .eyebrow.n{color:var(--nurse)} .eyebrow.s{color:var(--support)}
 h2{font-family:var(--disp);font-weight:700;font-size:clamp(22px,5.2vw,30px);line-height:1.15;letter-spacing:-.015em;margin-bottom:14px}
 h2 .num{color:var(--ink-faint);font-weight:600;margin-right:8px}
-.lead{font-size:16.5px;color:var(--ink-soft);max-width:64ch;margin-bottom:8px}
+.lead{font-size:16.5px;color:var(--ink-soft);max-width:760px;margin-bottom:8px}
 .lead strong{color:var(--ink);font-weight:600}
 
 /* ---------- BIG PICTURE DIAGRAM ---------- */
@@ -192,7 +195,7 @@ h2 .num{color:var(--ink-faint);font-weight:600;margin-right:8px}
 .note .ic{flex:0 0 auto;width:32px;height:32px;border-radius:9px;background:var(--support-bg);color:var(--support);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;line-height:1}
 .note b{color:var(--ink)}
 .note.myth .ic{background:var(--doc-bg);color:var(--doc)}
-.note,.equity,.example,.verdict{max-width:640px}
+.note,.equity,.example,.verdict{max-width:760px}
 
 /* ---------- VERTICAL HIERARCHY ---------- */
 .hier{margin-top:22px;display:grid;gap:0}
@@ -406,6 +409,7 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
     <a href="#words"><span class="d"></span>Words you'll hear</a>
     <a href="#glossary"><span class="d"></span>Cheat sheet</a>
   </div>
+  <a href="#top" class="sn-top">↑ Back to top</a>
 </aside>
 
 <header class="hero" id="top">
