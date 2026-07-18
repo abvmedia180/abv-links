@@ -52,8 +52,9 @@ section{scroll-margin-top:60px}
 .menu-panel a:hover{background:var(--line-soft)}
 
 /* ---------- SIDE RAIL NAV ---------- */
-.sidenav{position:fixed;top:50%;transform:translateY(-50%);left:calc(50% - 600px);width:168px;z-index:40;display:none}
+.sidenav{position:fixed;top:50%;transform:translateY(-50%);left:calc(50% - 600px);width:168px;z-index:40;display:none;opacity:0;pointer-events:none;transition:opacity .3s ease}
 @media(min-width:1240px){.sidenav{display:block}}
+.sidenav.show{opacity:1;pointer-events:auto}
 .sidenav .sn-h{font-family:var(--mono);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-faint);margin:0 0 7px 2px}
 .sidenav .sn-group+.sn-group{margin-top:15px}
 .sidenav a{display:flex;align-items:center;gap:9px;font-size:11.5px;color:var(--ink-faint);text-decoration:none;padding:3px 0;line-height:1.25}
@@ -1452,6 +1453,8 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
     });
   },{rootMargin:'-45% 0px -50% 0px',threshold:0});
   ids.forEach(function(id){ var el=document.getElementById(id); if(el) obs.observe(el); });
+  var hero=document.getElementById('top'), rail=document.querySelector('.sidenav');
+  if(hero&&rail){ new IntersectionObserver(function(es){ es.forEach(function(e){ rail.classList.toggle('show',!e.isIntersecting); }); },{threshold:0}).observe(hero); }
 })();
 </script>
 
