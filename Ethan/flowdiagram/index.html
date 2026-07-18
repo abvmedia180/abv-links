@@ -73,8 +73,9 @@ h2 .num{color:var(--ink-faint);font-weight:600;margin-right:8px}
 
 /* ---------- WIDE UNIFIED ORG CHART ---------- */
 .orgscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}
-.orgchart{min-width:640px}
-.org-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;align-items:start}
+.orgchart{min-width:760px}
+.org-cols{display:grid;grid-template-columns:1fr 1fr 1.95fr;gap:15px;align-items:start}
+.sup-2col{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .org-col{display:flex;flex-direction:column}
 .org-head{border-radius:11px;padding:11px 10px;text-align:center;font-weight:700;font-size:14px;color:#fff;margin-bottom:13px;line-height:1.2}
 .org-head small{display:block;font-weight:500;font-size:11px;opacity:.92;margin-top:2px}
@@ -87,7 +88,7 @@ h2 .num{color:var(--ink-faint);font-weight:600;margin-right:8px}
 .org-conn{width:2px;height:12px;margin:0 auto;background:var(--line)}
 .org-col.sup{gap:8px}
 .org-col.sup .org-head{margin-bottom:4px}
-.org-stubs{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-top:0}
+.org-stubs{display:grid;grid-template-columns:1fr 1fr 1.95fr;gap:15px;margin-top:0}
 .org-stub{width:2px;height:16px;margin:0 auto;background:var(--line)}
 .org-converge{text-align:center;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-faint);margin:7px 0}
 .org-patient{background:var(--patient-bg);border:1.5px solid #f0b7b0;border-radius:12px;padding:13px;text-align:center;color:var(--patient);font-weight:700;font-size:15.5px}
@@ -368,16 +369,18 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
 
             <div class="org-col sup">
               <div class="org-head sup">🧩 Support<small>services around the care</small></div>
-              <div class="org-item sup">Patient Access<small>registration &amp; insurance</small></div>
-              <div class="org-item sup">Bed Management<small>finds the bed</small></div>
-              <div class="org-item sup">Patient Navigation<small>moves patients</small></div>
-              <div class="org-item sup">Case Management<small>aides, equipment, home services</small></div>
-              <div class="org-item sup">Social Work<small>rehab / nursing-home placement</small></div>
-              <div class="org-item sup">Pharmacy<small>mixes, doses &amp; checks meds</small></div>
-              <div class="org-item sup">Lab<small>runs the tests</small></div>
-              <div class="org-item sup">EVS<small>cleaning &amp; bed turnover</small></div>
-              <div class="org-item sup">Food &amp; Nutrition<small>meals &amp; diets</small></div>
-              <div class="org-item sup">Engineering<small>keeps the building running</small></div>
+              <div class="sup-2col">
+                <div class="org-item sup">Patient Access<small>registration &amp; insurance</small></div>
+                <div class="org-item sup">Bed Management<small>finds the bed</small></div>
+                <div class="org-item sup">Patient Navigation<small>moves patients</small></div>
+                <div class="org-item sup">Case Management<small>home aides &amp; equipment</small></div>
+                <div class="org-item sup">Social Work<small>facility placement</small></div>
+                <div class="org-item sup">Pharmacy<small>mixes, doses, checks meds</small></div>
+                <div class="org-item sup">Lab<small>runs the tests</small></div>
+                <div class="org-item sup">EVS<small>cleaning &amp; turnover</small></div>
+                <div class="org-item sup">Food &amp; Nutrition<small>meals &amp; diets</small></div>
+                <div class="org-item sup">Engineering<small>building &amp; equipment</small></div>
+              </div>
             </div>
 
           </div>
@@ -438,7 +441,24 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
             <li>Follow you after discharge — they hand off to your outpatient doctor</li>
           </ul></div>
         </div>
-        <div class="aka"><b>Why it matters:</b> that generic "Attending" box in the big picture is, most of the time, a hospitalist.</div>
+        <div class="aka"><b>Why it matters:</b> for a medical admission, that "Attending" box is filled by <b>either</b> a hospitalist (in-house) <b>or</b> a private attending (below) — one or the other, never both.</div>
+      </div>
+
+      <div class="role doc">
+        <div class="role-head"><h3>The Private Attending</h3><span class="abbr">a type of attending</span></div>
+        <p class="what">A community physician with their <b>own outpatient clinic</b> who admits their own patients and stays their attending in the hospital. Unlike a hospitalist, <b>the hospital isn't their home base</b> — they typically round <b>early in the morning</b>, then leave for their practice.</p>
+        <div class="cc">
+          <div class="box can"><h4>Can do</h4><ul>
+            <li>Be the attending for their own patients — set the plan and orders</li>
+            <li>Bring in specialists and manage the whole stay</li>
+            <li>Carry the relationship from clinic → hospital → back to clinic</li>
+          </ul></div>
+          <div class="box cant"><h4>The catch</h4><ul>
+            <li>Not on-site 24/7 — in clinic most of the day, so harder to reach</li>
+            <li>Off-hours, a <b>group colleague covers</b> their patients, not them</li>
+          </ul></div>
+        </div>
+        <div class="aka"><b>The practical difference:</b> a hospitalist is in the building all shift; a private attending swoops in early, then during the day you're often reaching their <b>group's covering colleague</b> instead.</div>
       </div>
 
       <div class="role doc">
