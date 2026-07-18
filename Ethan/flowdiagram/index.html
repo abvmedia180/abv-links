@@ -258,6 +258,28 @@ h2 .num{color:var(--ink-faint);font-weight:600;margin-right:8px}
 .prog .amt.ind{background:var(--line-soft);color:var(--ink-soft)}
 .prog p{font-size:13px;color:var(--ink-soft);line-height:1.45}
 
+/* ---------- IMAGING TABLE ---------- */
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:16px;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}
+.itable{width:100%;border-collapse:collapse;min-width:560px;font-size:13px}
+.itable th,.itable td{text-align:left;padding:10px 13px;border-bottom:1px solid var(--line-soft);white-space:nowrap}
+.itable thead th{background:var(--bg);font-weight:700;color:var(--ink)}
+.itable tbody tr:last-child td{border-bottom:none}
+.itable td:first-child,.itable th:first-child{font-weight:600;white-space:normal}
+.itable .yes{color:var(--cant);font-weight:700}
+.itable .no{color:var(--can);font-weight:700}
+.itable .mid{color:var(--support);font-weight:600}
+.vs{display:grid;gap:12px;margin-top:16px}
+@media(min-width:620px){.vs{grid-template-columns:1fr 1fr}}
+.vscol{border-radius:12px;padding:16px 17px;box-shadow:var(--shadow)}
+.vscol.ct{background:var(--doc-bg);border:1px solid var(--doc-line)}
+.vscol.mri{background:var(--nurse-bg);border:1px solid var(--nurse-line)}
+.vscol h4{font-family:var(--disp);font-size:17px;font-weight:700;margin-bottom:8px}
+.vscol.ct h4{color:var(--doc)} .vscol.mri h4{color:var(--nurse)}
+.vscol ul{list-style:none;display:grid;gap:6px}
+.vscol li{font-size:13px;color:var(--ink);padding-left:16px;position:relative;line-height:1.4}
+.vscol li::before{content:"•";position:absolute;left:2px;color:var(--ink-faint)}
+.vscol b{font-weight:700}
+
 /* ---------- GLOSSARY ---------- */
 .gloss{margin-top:22px;display:grid;gap:2px;background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)}
 .grow{display:grid;grid-template-columns:auto 1fr;gap:14px;padding:13px 18px;border-bottom:1px solid var(--line-soft);align-items:baseline}
@@ -1123,6 +1145,93 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
     <div class="note" style="margin-top:16px">
       <div class="ic">◎</div>
       <div><b>The through-line:</b> you can manage the <i>experience</i> — dignity, communication, responsiveness, believing the patient — without touching the <i>clinical call</i>. Those are two different levers, and good patient-experience work pulls the first hard while respecting the second.</div>
+    </div>
+  </div>
+</section>
+
+<!-- IMAGING -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="eyebrow">Deep dive</div>
+    <h2>Imaging — MRI, CT, and the cardiac tests</h2>
+    <p class="lead">"Imaging" is how the team sees inside the body. The two big scanners — MRI and CT — get confused constantly, and the safety rules around MRI are genuinely life-or-death, so they're worth knowing. <span style="color:var(--ink-faint)">(General orientation, not medical advice — clinicians make the calls, and some thresholds are set by each hospital's policy.)</span></p>
+
+    <div class="subh">MRI — the magnet</div>
+    <p class="lead" style="margin-bottom:0"><b>MRI (Magnetic Resonance Imaging)</b> uses a very strong magnet and radio waves — <b>no radiation</b> — to build detailed pictures. It's best for <b>soft tissue</b>: brain, spinal cord, nerves, joints, ligaments, and organs. The trade-off: it's <b>loud, enclosed, and slow</b> (often 20–60+ minutes lying still inside a tube).</p>
+    <ul class="terms" style="border:none;padding-top:12px;margin-top:4px;display:grid;gap:8px;list-style:none">
+      <li style="font-size:13.5px;color:var(--ink-soft)"><b style="color:var(--ink)">With vs. without contrast:</b> "contrast" for MRI is <b>gadolinium</b>, a dye given by IV that makes vessels, tumors, and inflammation stand out. Many scans don't need it. Because gadolinium is cleared by the kidneys, patients are usually screened for kidney problems first (today's agents are very low-risk, but screening is still standard).</li>
+      <li style="font-size:13.5px;color:var(--ink-soft)"><b style="color:var(--ink)">Medication sometimes needed first:</b> a patient with a prior contrast reaction may be pre-treated with a <b>steroid + antihistamine</b>; a claustrophobic patient may get a mild <b>anti-anxiety pill</b> (and then needs a ride home).</li>
+      <li style="font-size:13.5px;color:var(--ink-soft)"><b style="color:var(--ink)">When it needs anesthesia:</b> because you must hold still so long, <b>young children, severe claustrophobia, or patients who can't cooperate</b> may need sedation or general anesthesia — which adds an anesthesia team, <b>NPO</b> (no food/drink) beforehand, and a recovery period. A real scheduling and cost driver.</li>
+    </ul>
+
+    <div class="equity" style="background:#fbf0ee">
+      <h4>⚠ MRI safety — the part that can kill someone</h4>
+      <p>The <b>MRI magnet is ALWAYS on</b>, even when the room looks empty — you can't "turn it off" to grab something. <b>Iron-containing metal becomes a projectile</b> (oxygen tanks, scissors, wheelchairs have flown across rooms and killed people). So <b>everyone is screened for metal and implants before entering</b> — no exceptions. Implants are labeled <b>MRI-safe, MRI-conditional</b> (okay only under specific conditions), or <b>MRI-unsafe.</b> A key nuance on <b>pacemakers/defibrillators:</b> many modern ones are MRI-conditional, but the device team must be involved — they <b>don't literally "turn it off,"</b> they interrogate it, switch it into a protective <b>"MRI mode,"</b> monitor the patient throughout, and reset it afterward. Metal fragments in the eye (welders) may require an X-ray first. When in doubt, it's a hard stop until radiology clears it.</p>
+    </div>
+
+    <div class="subh">CT — the fast X-ray</div>
+    <p class="lead" style="margin-bottom:0"><b>CT (Computed Tomography, the old "CAT scan")</b> spins X-rays around the patient to build cross-section "slice" images. It <b>uses radiation</b>, but it's <b>fast</b> (seconds to minutes) and the patient lies in a short, open ring — far less claustrophobic than MRI. It's the go-to for <b>bleeding, trauma, lungs, bones, kidney stones, and emergencies.</b> CT contrast is <b>iodine-based</b> (different from MRI's gadolinium), with similar kidney/allergy screening.</p>
+    <div class="note" style="margin-top:14px"><div class="ic">✕</div><div><b>Myth worth killing:</b> a shellfish allergy or a reaction to iodine skin prep (Betadine) is <b>not</b> a reason to withhold CT contrast — they don't cross-react. That old belief still causes unnecessary delays.</div></div>
+
+    <div class="subh">MRI vs. CT — when each is used</div>
+    <div class="vs">
+      <div class="vscol ct"><h4>CT — fast &amp; acute</h4><ul>
+        <li>X-rays; <b>uses radiation</b></li>
+        <li>Seconds to minutes; open ring</li>
+        <li>Best for <b>bleeding, trauma, bone, lung, emergencies</b></li>
+        <li>Contrast = <b>iodine</b></li>
+        <li>Cheaper, more available — <b>why the ER leans on it</b></li>
+      </ul></div>
+      <div class="vscol mri"><h4>MRI — detailed &amp; soft-tissue</h4><ul>
+        <li>Magnet + radio waves; <b>no radiation</b></li>
+        <li>20–60+ minutes; long, loud tube</li>
+        <li>Best for <b>brain, spine, joints, detailed soft tissue</b></li>
+        <li>Contrast = <b>gadolinium</b></li>
+        <li>Pricier, fewer scanners — usually <b>scheduled</b></li>
+      </ul></div>
+    </div>
+
+    <div class="subh">Cardiac imaging — the heart tests</div>
+    <p class="lead" style="margin-bottom:0">Cardiology has its own alphabet of tests. Here's what each actually is and when it's used.</p>
+    <div class="specgrid">
+      <div class="spec"><h3>Echo / TTE</h3><div class="desc"><b>Ultrasound of the heart</b> from a probe on the chest — shows the heart pumping, valves, and squeeze in real time. The everyday workhorse.</div>
+        <ul class="terms"><li>No radiation · no sedation · no NPO</li></ul></div>
+      <div class="spec"><h3>TEE</h3><div class="desc"><b>Trans<i>esophageal</i> echo</b> — the ultrasound probe goes <b>down the swallowing tube</b> for a much closer look. Used to hunt for clots, inspect valves, and diagnose heart-valve infection.</div>
+        <ul class="terms"><li><b>Needs sedation + NPO</b> · no radiation</li></ul></div>
+      <div class="spec"><h3>Stress test</h3><div class="desc">Checks blood flow to the heart <b>under stress</b> — a treadmill on EKG, or medication if the patient can't walk. The <b>nuclear</b> version adds a radiotracer to map blood flow at rest vs. stress.</div>
+        <ul class="terms"><li>Nuclear = radiation · caffeine held · short NPO</li></ul></div>
+      <div class="spec"><h3>Cardiac cath / angiogram</h3><div class="desc">A <b>catheter</b> threaded to the heart injects dye to see the coronary arteries directly on live X-ray. Also <b>interventional</b> — blockages can be <b>stented</b> in the same trip.</div>
+        <ul class="terms"><li><b>Radiation · iodine contrast · sedation · NPO</b></li></ul></div>
+      <div class="spec"><h3>Cardiac CT / CTA · calcium score</h3><div class="desc"><b>Non-invasive</b> CT look at the heart arteries. <b>CTA</b> uses iodine contrast to image them without a catheter; the <b>calcium score</b> is a quick, no-contrast risk number.</div>
+        <ul class="terms"><li>Radiation · CTA uses contrast · no sedation</li></ul></div>
+      <div class="spec"><h3>Cardiac MRI</h3><div class="desc">Detailed <b>MRI of the heart muscle</b> — scar, inflammation, precise function. For tricky cases echo can't resolve.</div>
+        <ul class="terms"><li>No radiation · often gadolinium · full MRI metal screening applies</li></ul></div>
+      <div class="spec"><h3>Holter / event monitor</h3><div class="desc">A <b>wearable rhythm recorder</b> worn for days to weeks to catch an irregular heartbeat a snapshot would miss.</div>
+        <ul class="terms"><li>Records rhythm, not an image · nothing needed</li></ul></div>
+      <div class="spec"><h3>EKG / ECG</h3><div class="desc">The <b>basic electrical tracing</b> of the heartbeat from stickers on the skin — about a minute. The universal first cardiac test.</div>
+        <ul class="terms"><li>No radiation · no prep</li></ul></div>
+    </div>
+
+    <div class="subh">Quick "what needs what" cheat sheet</div>
+    <div class="tablewrap">
+      <table class="itable">
+        <thead><tr><th>Test</th><th>Radiation</th><th>Contrast</th><th>Sedation</th><th>NPO</th></tr></thead>
+        <tbody>
+          <tr><td>MRI (no contrast)</td><td class="no">No</td><td class="no">No</td><td class="mid">If needed</td><td class="mid">If sedated</td></tr>
+          <tr><td>MRI (with contrast)</td><td class="no">No</td><td class="yes">Gadolinium</td><td class="mid">If needed</td><td class="mid">If sedated</td></tr>
+          <tr><td>CT (no contrast)</td><td class="yes">Yes</td><td class="no">No</td><td class="no">No</td><td class="no">No</td></tr>
+          <tr><td>CT (with contrast)</td><td class="yes">Yes</td><td class="yes">Iodine</td><td class="no">No</td><td class="mid">Often short</td></tr>
+          <tr><td>Echo / TTE</td><td class="no">No</td><td class="no">Usually no</td><td class="no">No</td><td class="no">No</td></tr>
+          <tr><td>TEE</td><td class="no">No</td><td class="no">No</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+          <tr><td>Treadmill stress</td><td class="no">No</td><td class="no">No</td><td class="no">No</td><td class="mid">Often short</td></tr>
+          <tr><td>Nuclear stress</td><td class="yes">Yes</td><td class="no">Tracer</td><td class="no">No</td><td class="mid">Short + no caffeine</td></tr>
+          <tr><td>Cardiac cath / angiogram</td><td class="yes">Yes</td><td class="yes">Iodine</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+          <tr><td>Coronary CTA</td><td class="yes">Yes</td><td class="yes">Iodine</td><td class="no">No</td><td class="mid">Short</td></tr>
+          <tr><td>Calcium score</td><td class="yes">Yes</td><td class="no">No</td><td class="no">No</td><td class="no">No</td></tr>
+          <tr><td>Cardiac MRI</td><td class="no">No</td><td class="mid">Usually gadolinium</td><td class="no">Usually no</td><td class="no">Usually no</td></tr>
+          <tr><td>Holter / EKG</td><td class="no">No</td><td class="no">No</td><td class="no">No</td><td class="no">No</td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </section>
