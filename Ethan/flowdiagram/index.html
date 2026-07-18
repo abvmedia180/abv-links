@@ -85,6 +85,8 @@ h2 .num{color:var(--ink-faint);font-weight:600;margin-right:8px}
 .org-col.nurse .org-item{border-top-color:var(--nurse)}
 .org-col.sup .org-item{border-top-color:var(--support)}
 .org-conn{width:2px;height:12px;margin:0 auto;background:var(--line)}
+.org-col.sup{gap:8px}
+.org-col.sup .org-head{margin-bottom:4px}
 .org-stubs{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-top:0}
 .org-stub{width:2px;height:16px;margin:0 auto;background:var(--line)}
 .org-converge{text-align:center;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-faint);margin:7px 0}
@@ -250,7 +252,7 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
   <div class="wrap">
     <div class="eyebrow">Start here</div>
     <h2>The whole thing in one picture</h2>
-    <p class="lead">A hospital runs on <strong>two separate chains of command</strong> that only meet at the patient's bedside. One chain is the doctors. The other is the nurses. Around them sit a few support teams that handle money, logistics, and life-after-discharge. Once you see these three groups, everything else clicks.</p>
+    <p class="lead">A hospital runs on <strong>two separate chains of command</strong> that only meet at the patient's bedside. One chain is the doctors. The other is the nurses. Around them sit the <strong>support and service teams</strong> that keep everything running — from beds and discharge to pharmacy, lab, and the building itself. Once you see these three groups, everything else clicks.</p>
 
     <div class="mapcard">
       <div class="orgscroll">
@@ -272,9 +274,11 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
               <div class="org-head nurse">👩‍⚕️ Nurses<small>deliver the care 24/7</small></div>
               <div class="org-item nurse">CNO<small>top nurse in the building</small></div>
               <div class="org-conn"></div>
-              <div class="org-item nurse">Director → Nurse Manager<small>run the units</small></div>
+              <div class="org-item nurse">Director<small>oversees several units</small></div>
               <div class="org-conn"></div>
-              <div class="org-item nurse">Charge Nurse<small>runs today's shift</small></div>
+              <div class="org-item nurse">Nurse Manager / ANM<small>run the unit</small></div>
+              <div class="org-conn"></div>
+              <div class="org-item nurse">Charge Nurse<small>optional · runs the shift</small></div>
               <div class="org-conn"></div>
               <div class="org-item nurse">Bedside RN<small>at the patient</small></div>
               <div class="org-conn"></div>
@@ -282,12 +286,15 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
             </div>
 
             <div class="org-col sup">
-              <div class="org-head sup">🧩 Support<small>logistics &amp; the exit</small></div>
+              <div class="org-head sup">🧩 Support<small>services around the care</small></div>
               <div class="org-item sup">Bed Management<small>finds the bed</small></div>
-              <div class="org-conn"></div>
-              <div class="org-item sup">Case Management<small>insurance &amp; discharge</small></div>
-              <div class="org-conn"></div>
-              <div class="org-item sup">Social Work<small>complex &amp; human needs</small></div>
+              <div class="org-item sup">Case Management<small>home aides, equipment, insurance</small></div>
+              <div class="org-item sup">Social Work<small>rehab / nursing-home placement</small></div>
+              <div class="org-item sup">Pharmacy<small>checks the meds</small></div>
+              <div class="org-item sup">Lab<small>runs the tests</small></div>
+              <div class="org-item sup">EVS<small>cleaning &amp; bed turnover</small></div>
+              <div class="org-item sup">Food &amp; Nutrition<small>meals &amp; diets</small></div>
+              <div class="org-item sup">Engineering<small>keeps the building running</small></div>
             </div>
 
           </div>
@@ -486,7 +493,7 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
       <div class="fc-arrow"></div>
       <div class="fc-node"><div class="rank">ANM</div><div class="body"><div class="t">Assistant Nurse Manager</div><div class="d">The manager's right hand — often the fastest person to reach when something needs fixing now.</div></div></div>
       <div class="fc-arrow"></div>
-      <div class="fc-node"><div class="rank">CHG</div><div class="body"><div class="t">Charge Nurse</div><div class="d">An experienced RN running <i>today's shift</i> — assigning patients, solving hour-by-hour problems. A shift role, not a permanent rank.</div></div></div>
+      <div class="fc-node"><div class="rank">CHG</div><div class="body"><div class="t">Charge Nurse</div><div class="d">An experienced RN running <i>today's shift</i> — assigning patients and solving hour-by-hour problems. A role, not a permanent rank, and <b>not always present</b>: most common when the manager is off, effectively acting as the temporary manager.</div></div></div>
       <div class="fc-arrow"></div>
       <div class="fc-node"><div class="rank">RN</div><div class="body"><div class="t">Registered Nurse</div><div class="d">At the bedside — assesses, gives meds, monitors, and is the constant human link between patient and doctor.</div></div></div>
       <div class="fc-arrow"></div>
@@ -848,8 +855,8 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
 <section style="padding-top:0">
   <div class="wrap">
     <div class="eyebrow">The rest of the floor</div>
-    <h2>Allied &amp; service roles</h2>
-    <p class="lead">Not doctors, not nurses, not the placement teams — but the floor stops working without them. These are the people a new hire sees all day and needs to be able to name.</p>
+    <h2>Support &amp; service roles</h2>
+    <p class="lead">Not doctors, not nurses, not the placement teams — but the floor stops working without them. These <strong>support and ancillary services</strong> are the people a new hire sees all day and needs to be able to name.</p>
     <div class="specgrid">
       <div class="spec"><h3>Pharmacy <span class="tag">pharmacists</span></h3><div class="desc">Check every medication order before it reaches the patient — right drug, right dose, no dangerous interactions. Clinical pharmacists round with the team.</div>
         <ul class="terms">
@@ -863,10 +870,10 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
           <li><b>Vent settings</b> = how the ventilator is tuned for a patient</li>
           <li><b>Wean</b> = gradually reducing ventilator support toward breathing alone</li>
         </ul></div>
-      <div class="spec"><h3>Phlebotomy</h3><div class="desc">The blood-draw team. Early-morning "AM labs" so results are ready when doctors round.</div>
+      <div class="spec"><h3>IV Team <span class="tag">nurses</span></h3><div class="desc">A specialized group of nurses who place the <b>hard IVs</b> — often using an <b>ultrasound</b> to find deep veins when the bedside nurse can't get access.</div>
         <ul class="terms">
-          <li><b>AM labs</b> = the pre-dawn blood draws for morning rounds</li>
-          <li><b>Draw</b> = collecting a blood sample</li>
+          <li><b>Difficult access</b> = a patient whose veins are hard to get a line into</li>
+          <li><b>Ultrasound-guided IV</b> = placing a line using ultrasound to see the vein</li>
         </ul></div>
       <div class="spec"><h3>Nutrition <span class="tag">dietitians</span></h3><div class="desc">Dietitians set diets and tube-feeding plans; food services delivers the trays. Diets are prescribed like medicine.</div>
         <ul class="terms">
@@ -892,10 +899,21 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
         <ul class="terms">
           <li><b>Spiritual care</b> = non-clinical emotional/faith support</li>
         </ul></div>
-      <div class="spec"><h3>Unit Clerk <span class="tag">HUC</span></h3><div class="desc">The front desk of a nursing unit — answers phones, handles paperwork and orders, and directs traffic. Often the first person you talk to on a floor.</div>
+      <div class="spec"><h3>Unit Receptionist</h3><div class="desc">Sits at the front desk of a <b>specific unit</b> — the non-clinical face of that floor. Answers the unit phone, greets and directs visitors, manages paperwork and charts, and coordinates with the nurses at that station.</div>
         <ul class="terms">
-          <li><b>HUC</b> = Health Unit Coordinator (the unit clerk)</li>
-          <li><b>The desk</b> = the unit's central station</li>
+          <li><b>Can do:</b> phones, visitor questions, paperwork, ordering supplies, directing traffic</li>
+          <li><b>Can't do:</b> anything clinical — no care, no meds, no medical info</li>
+          <li><b>The desk</b> = the unit's central station where they sit</li>
+        </ul></div>
+      <div class="spec"><h3>Lab <span class="tag">clinical laboratory</span></h3><div class="desc">Runs the blood and fluid tests (chemistry, blood counts, cultures) behind the scenes. Nearly every diagnosis and dosing decision waits on lab results.</div>
+        <ul class="terms">
+          <li><b>Stat lab</b> = a test needed urgently</li>
+          <li><b>Resulted</b> = the test is back and posted in the chart</li>
+        </ul></div>
+      <div class="spec"><h3>Engineering <span class="tag">facilities · biomed</span></h3><div class="desc">Keeps the physical building and its equipment running — power, water, heating/cooling, and the medical devices themselves (biomed).</div>
+        <ul class="terms">
+          <li><b>Work order</b> = a logged request to fix or check something</li>
+          <li><b>Biomed</b> = the team that maintains medical equipment</li>
         </ul></div>
     </div>
   </div>
