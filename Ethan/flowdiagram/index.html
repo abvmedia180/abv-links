@@ -201,6 +201,18 @@ h2 .num{color:var(--ink-faint);font-weight:600;margin-right:8px}
 .spec .terms li{font-size:12.5px;color:var(--ink-soft);line-height:1.4}
 .spec .terms b{color:var(--ink);font-weight:700}
 
+/* ---------- ADMIN EXTRAS ---------- */
+.node.adm{background:#eef1f5;border-color:#d5dce6;color:#3d4d67}
+.org-item.adm{border-top-color:#5b6b86}
+.px-callout{background:linear-gradient(145deg,#0b5563,#0d8a7d);color:#fff;border-radius:var(--r);padding:24px 22px;margin-top:20px;box-shadow:var(--shadow-lg)}
+.px-callout .tag{font:700 11px/1 var(--body);letter-spacing:.13em;text-transform:uppercase;color:#a9ede3;margin-bottom:11px}
+.px-callout h3{font-family:var(--disp);font-size:20px;font-weight:700;margin-bottom:9px}
+.px-callout p{font-size:14.5px;color:#dcf3ef;margin-bottom:12px}
+.px-terms{display:grid;gap:8px}
+.px-terms li{list-style:none;font-size:13px;color:#eafaf7;padding-left:16px;position:relative;line-height:1.45}
+.px-terms li::before{content:"›";position:absolute;left:0;color:#a9ede3;font-weight:700}
+.px-terms b{color:#fff}
+
 /* ---------- GLOSSARY ---------- */
 .gloss{margin-top:22px;display:grid;gap:2px;background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)}
 .grow{display:grid;grid-template-columns:auto 1fr;gap:14px;padding:13px 18px;border-bottom:1px solid var(--line-soft);align-items:baseline}
@@ -828,6 +840,123 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
     <div class="note" style="margin-top:22px">
       <div class="ic">!</div>
       <div><b>Three that trip people up:</b> <b>"D/C"</b> means <i>discharge</i> OR <i>discontinue</i> — context decides. <b>Palliative ≠ hospice</b> (palliative runs alongside treatment; hospice is end-of-life). <b>"Cath"</b> is generic for catheter — a heart cath, a Foley, and a PICC are totally different things.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ALLIED ROLES -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="eyebrow">The rest of the floor</div>
+    <h2>Allied &amp; service roles</h2>
+    <p class="lead">Not doctors, not nurses, not the placement teams — but the floor stops working without them. These are the people a new hire sees all day and needs to be able to name.</p>
+    <div class="specgrid">
+      <div class="spec"><h3>Pharmacy <span class="tag">pharmacists</span></h3><div class="desc">Check every medication order before it reaches the patient — right drug, right dose, no dangerous interactions. Clinical pharmacists round with the team.</div>
+        <ul class="terms">
+          <li><b>Verify</b> = a pharmacist clears an order before it can be given</li>
+          <li><b>Formulary</b> = the hospital's approved drug list</li>
+          <li><b>Renal dosing</b> = adjusting a dose for weak kidneys</li>
+        </ul></div>
+      <div class="spec"><h3>Respiratory Therapy <span class="tag">RT</span></h3><div class="desc">The breathing team — they run ventilators, give breathing treatments and oxygen, assist intubations, and draw arterial gases. Everywhere the sickest patients are.</div>
+        <ul class="terms">
+          <li><b>Neb / breathing treatment</b> = inhaled medication mist</li>
+          <li><b>Vent settings</b> = how the ventilator is tuned for a patient</li>
+          <li><b>Wean</b> = gradually reducing ventilator support toward breathing alone</li>
+        </ul></div>
+      <div class="spec"><h3>Phlebotomy</h3><div class="desc">The blood-draw team. Early-morning "AM labs" so results are ready when doctors round.</div>
+        <ul class="terms">
+          <li><b>AM labs</b> = the pre-dawn blood draws for morning rounds</li>
+          <li><b>Draw</b> = collecting a blood sample</li>
+        </ul></div>
+      <div class="spec"><h3>Nutrition <span class="tag">dietitians</span></h3><div class="desc">Dietitians set diets and tube-feeding plans; food services delivers the trays. Diets are prescribed like medicine.</div>
+        <ul class="terms">
+          <li><b>Diet order</b> = the prescribed diet (cardiac, renal, diabetic, NPO)</li>
+          <li><b>Tube feeds (enteral)</b> = liquid nutrition through a feeding tube</li>
+        </ul></div>
+      <div class="spec"><h3>Transport</h3><div class="desc">Moves patients around the building — to CT, to the OR, to a new unit — safely and on time.</div>
+        <ul class="terms">
+          <li><b>Transport</b> = a staffed move of a patient off the unit</li>
+          <li><b>Portable</b> = bringing the test (e.g. X-ray) to the bedside instead</li>
+        </ul></div>
+      <div class="spec"><h3>Environmental Services <span class="tag">EVS</span></h3><div class="desc">Cleaning and bed turnover. Their speed directly controls how fast a bed reopens — so they're tightly linked to Bed Management.</div>
+        <ul class="terms">
+          <li><b>Terminal clean</b> = a deep clean of a room after a patient leaves</li>
+          <li><b>Bed turnover</b> = cleaning and readying a bed for the next patient</li>
+        </ul></div>
+      <div class="spec"><h3>Interpreter Services</h3><div class="desc">Live or phone/video interpreters for patients who don't speak English. Using them is often a legal requirement, not a courtesy.</div>
+        <ul class="terms">
+          <li><b>Language line</b> = on-demand phone/video interpretation</li>
+          <li><b>Limited English proficiency (LEP)</b> = the patient needs an interpreter</li>
+        </ul></div>
+      <div class="spec"><h3>Chaplaincy <span class="tag">spiritual care</span></h3><div class="desc">Emotional and spiritual support for patients and families of any faith — especially around serious illness and end of life.</div>
+        <ul class="terms">
+          <li><b>Spiritual care</b> = non-clinical emotional/faith support</li>
+        </ul></div>
+      <div class="spec"><h3>Unit Clerk <span class="tag">HUC</span></h3><div class="desc">The front desk of a nursing unit — answers phones, handles paperwork and orders, and directs traffic. Often the first person you talk to on a floor.</div>
+        <ul class="terms">
+          <li><b>HUC</b> = Health Unit Coordinator (the unit clerk)</li>
+          <li><b>The desk</b> = the unit's central station</li>
+        </ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ADMIN + PX -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="eyebrow s" style="color:var(--support)">Above it all</div>
+    <h2>Who runs the hospital</h2>
+    <p class="lead">Everything so far happens <strong>around the patient.</strong> Sitting above both the doctor and nurse chains is the hospital's <strong>leadership (the "C-suite")</strong> — the people who run it as an organization. The two clinical chiefs you already met, the <b>CMO</b> and <b>CNO</b>, report up into this.</p>
+
+    <div class="mapcard">
+      <div style="text-align:center">
+        <div class="org-item adm" style="max-width:240px;margin:0 auto">CEO<small>runs the whole hospital</small></div>
+        <div class="org-conn" style="height:16px"></div>
+        <div class="node-row">
+          <div class="node adm">COO<small>operations</small></div>
+          <div class="node adm">CFO<small>finance</small></div>
+          <div class="node doc">CMO<small>doctors</small></div>
+          <div class="node nurse">CNO<small>nurses</small></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="lead" style="margin-top:26px">Under leadership sit the <strong>quality and operations teams</strong> — they don't give bedside care, they make the whole system safer, cleaner, and better. This is the world a patient-experience or operations hire lives in.</p>
+    <div class="specgrid">
+      <div class="spec"><h3>Quality</h3><div class="desc">Tracks how well the hospital performs against safety and outcome standards, and drives improvement projects.</div>
+        <ul class="terms">
+          <li><b>Core measures</b> = standardized quality metrics hospitals are scored on</li>
+          <li><b>Never event</b> = a serious, preventable error that should never happen</li>
+        </ul></div>
+      <div class="spec"><h3>Risk Management</h3><div class="desc">Handles safety events, complaints, and anything with legal exposure — investigates what went wrong and how to prevent it.</div>
+        <ul class="terms">
+          <li><b>Incident report</b> = the internal filing when something goes wrong</li>
+          <li><b>Sentinel event</b> = a serious safety event triggering formal review</li>
+        </ul></div>
+      <div class="spec"><h3>Infection Prevention</h3><div class="desc">Stops infections from spreading in the building — tracks hospital-acquired infections and sets isolation rules.</div>
+        <ul class="terms">
+          <li><b>HAI</b> = hospital-acquired infection</li>
+          <li><b>Isolation / precautions</b> = extra steps (gown, gloves, mask) for contagious patients</li>
+        </ul></div>
+      <div class="spec"><h3>Utilization / Revenue Cycle</h3><div class="desc">Makes sure each stay is billed and coded correctly and meets insurance rules — the money-and-status side of an admission.</div>
+        <ul class="terms">
+          <li><b>Utilization review (UR)</b> = confirming a stay is medically necessary and covered</li>
+          <li><b>Capture rate</b> = the share of eligible charges/cases actually captured for billing</li>
+        </ul></div>
+    </div>
+
+    <div class="px-callout">
+      <div class="tag">★ your world</div>
+      <h3>Patient Experience (PX)</h3>
+      <p>The team that measures and improves how <b>care feels to the patient</b> — not the medicine, the experience of it. It's scored, public, and tied to how much the hospital gets paid, which is why it gets executive attention.</p>
+      <ul class="px-terms">
+        <li><b>HCAHPS</b> = the national CMS survey patients get after discharge — the official scorecard for patient experience.</li>
+        <li><b>Top Box</b> = the share of patients giving the <i>best possible</i> answer (e.g. "Always"), which is what actually counts in the score.</li>
+        <li><b>Star Rating</b> = the public 1–5 star summary of a hospital's patient-experience scores.</li>
+        <li><b>Rounding</b> = proactively checking on patients (leaders or nurses) before problems turn into complaints.</li>
+        <li><b>Service recovery</b> = making it right, fast, when a patient's experience goes wrong.</li>
+        <li><b>VBP (Value-Based Purchasing)</b> = the CMS program that ties a slice of payment to these scores.</li>
+      </ul>
     </div>
   </div>
 </section>
