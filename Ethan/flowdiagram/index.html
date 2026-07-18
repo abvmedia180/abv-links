@@ -206,6 +206,22 @@ h2 .num{color:var(--ink-faint);font-weight:600;margin-right:8px}
 /* ---------- ADMIN EXTRAS ---------- */
 .node.adm{background:#eef1f5;border-color:#d5dce6;color:#3d4d67}
 .org-item.adm{border-top-color:#5b6b86}
+/* leadership chart */
+.leadchart{display:flex;flex-direction:column;align-items:center;padding:6px 0}
+.lead-ceo{background:linear-gradient(145deg,#1c2b4d,#2a4472);color:#fff;border-radius:14px;padding:14px 34px;text-align:center;min-width:210px;box-shadow:var(--shadow-lg)}
+.lead-ceo .t{font-family:var(--disp);font-weight:700;font-size:20px;letter-spacing:.01em}
+.lead-ceo .s{font-size:12px;color:#c5d2ec;margin-top:3px}
+.lead-stem{width:2px;height:22px;background:var(--line)}
+.lead-bus{height:2px;width:min(100%,780px);background:var(--line);border-radius:2px}
+.lead-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:11px;margin-top:20px;width:100%}
+.lead-card{flex:0 0 150px;min-height:64px;display:flex;flex-direction:column;justify-content:center;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;text-align:center;box-shadow:var(--shadow)}
+.lead-card .t{font-weight:700;font-size:13.5px;color:var(--ink);line-height:1.22}
+.lead-card .s{font-size:11px;color:var(--ink-faint);margin-top:3px;line-height:1.2}
+.lead-card.doc{border-color:var(--doc-line);background:var(--doc-bg)} .lead-card.doc .t{color:var(--doc)}
+.lead-card.nurse{border-color:var(--nurse-line);background:var(--nurse-bg)} .lead-card.nurse .t{color:var(--nurse)}
+.lead-card.px{border-color:var(--nurse);background:var(--nurse-bg);box-shadow:0 0 0 1.5px var(--nurse),var(--shadow)} .lead-card.px .t{color:var(--nurse)}
+.lead-note{font-size:12.5px;color:var(--ink-faint);margin-top:18px;text-align:center;max-width:58ch;line-height:1.5}
+@media(max-width:430px){.lead-card{flex-basis:132px;min-height:60px}}
 .px-callout{background:linear-gradient(145deg,#0b5563,#0d8a7d);color:#fff;border-radius:var(--r);padding:24px 22px;margin-top:20px;box-shadow:var(--shadow-lg)}
 .px-callout .tag{font:700 11px/1 var(--body);letter-spacing:.13em;text-transform:uppercase;color:#a9ede3;margin-bottom:11px}
 .px-callout h3{font-family:var(--disp);font-size:20px;font-weight:700;margin-bottom:9px}
@@ -230,8 +246,8 @@ h2 .num{color:var(--ink-faint);font-weight:600;margin-right:8px}
 .wbar{display:grid;gap:9px;margin-top:16px}
 .wbar .row{display:grid;grid-template-columns:150px 1fr 40px;align-items:center;gap:12px}
 .wbar .lbl{font-size:13px;font-weight:600;color:var(--ink);line-height:1.2}
-.wbar .track{background:var(--line-soft);border-radius:6px;height:22px;overflow:hidden}
-.wbar .fill{height:100%;border-radius:6px;background:var(--doc)}
+.wbar .track{background:var(--line-soft);border-radius:6px;height:22px;overflow:hidden;display:block}
+.wbar .fill{display:block;height:100%;border-radius:6px;background:var(--doc)}
 .wbar .pct{font-size:13.5px;font-weight:700;color:var(--ink);text-align:right}
 .wbar .row.px .fill{background:var(--nurse)}
 .wbar .row.px .lbl{color:var(--nurse)}
@@ -354,6 +370,7 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
               <div class="org-head sup">🧩 Support<small>services around the care</small></div>
               <div class="org-item sup">Patient Access<small>registration &amp; insurance</small></div>
               <div class="org-item sup">Bed Management<small>finds the bed</small></div>
+              <div class="org-item sup">Patient Navigation<small>moves patients</small></div>
               <div class="org-item sup">Case Management<small>aides, equipment, home services</small></div>
               <div class="org-item sup">Social Work<small>rehab / nursing-home placement</small></div>
               <div class="org-item sup">Pharmacy<small>mixes, doses &amp; checks meds</small></div>
@@ -945,7 +962,7 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
           <li><b>Diet order</b> = the prescribed diet (cardiac, renal, diabetic, NPO)</li>
           <li><b>Tube feeds (enteral)</b> = liquid nutrition through a feeding tube</li>
         </ul></div>
-      <div class="spec"><h3>Transport</h3><div class="desc">Moves patients around the building — to CT, to the OR, to a new unit — safely and on time.</div>
+      <div class="spec"><h3>Patient Navigation <span class="tag">transport</span></h3><div class="desc">Moves patients around the building — to imaging, to the OR, to a new unit — safely and on time. (This hospital's name for the transport team.)</div>
         <ul class="terms">
           <li><b>Transport</b> = a staffed move of a patient off the unit</li>
           <li><b>Portable</b> = bringing the test (e.g. X-ray) to the bedside instead</li>
@@ -999,23 +1016,24 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
     <p class="lead">Everything so far happens <strong>around the patient.</strong> Sitting above both the doctor and nurse chains is the hospital's <strong>leadership (the "C-suite")</strong> — the people who run it as an organization. The two clinical chiefs you already met, the <b>CMO</b> and <b>CNO</b>, report up into this.</p>
 
     <div class="mapcard">
-      <div style="text-align:center">
-        <div class="org-item adm" style="max-width:240px;margin:0 auto">CEO<small>runs the whole hospital</small></div>
-        <div class="org-conn" style="height:16px"></div>
-        <div class="node-row">
-          <div class="node adm">COO<small>operations</small></div>
-          <div class="node adm">CFO<small>finance</small></div>
-          <div class="node doc">CMO<small>doctors</small></div>
-          <div class="node doc">Assoc. Med. Dir.<small>CMO's deputy</small></div>
-          <div class="node nurse">CNO<small>nurses</small></div>
-          <div class="node" style="background:var(--nurse-bg);border-color:var(--nurse-line);color:var(--nurse)">★ VP, Patient Exp.<small>experience</small></div>
-          <div class="node adm">VP, Periop<small>surgery / OR</small></div>
-          <div class="node adm">VP, Quality<small>quality</small></div>
-          <div class="node adm">VP, Biz Dev<small>growth</small></div>
-          <div class="node adm">VP, HR<small>people</small></div>
-          <div class="node adm">VP, IT<small>technology</small></div>
+      <div class="leadchart">
+        <div class="lead-ceo"><div class="t">CEO</div><div class="s">runs the whole hospital</div></div>
+        <div class="lead-stem"></div>
+        <div class="lead-bus"></div>
+        <div class="lead-grid">
+          <div class="lead-card"><div class="t">COO</div><div class="s">operations</div></div>
+          <div class="lead-card"><div class="t">CFO</div><div class="s">finance</div></div>
+          <div class="lead-card doc"><div class="t">CMO</div><div class="s">doctors</div></div>
+          <div class="lead-card doc"><div class="t">Assoc. Med. Dir.</div><div class="s">CMO's deputy</div></div>
+          <div class="lead-card nurse"><div class="t">CNO</div><div class="s">nurses</div></div>
+          <div class="lead-card px"><div class="t">★ VP, Patient Exp.</div><div class="s">experience</div></div>
+          <div class="lead-card"><div class="t">VP, Perioperative</div><div class="s">surgery / OR</div></div>
+          <div class="lead-card"><div class="t">VP, Quality</div><div class="s">quality</div></div>
+          <div class="lead-card"><div class="t">VP, Business Dev.</div><div class="s">growth</div></div>
+          <div class="lead-card"><div class="t">VP, HR</div><div class="s">people</div></div>
+          <div class="lead-card"><div class="t">VP, IT</div><div class="s">technology</div></div>
         </div>
-        <div style="font-size:12px;color:var(--ink-faint);margin-top:13px;line-height:1.45">All sit on the leadership team under the CEO. (Below the CNO sit the nursing Directors; each VP runs one major function.)</div>
+        <div class="lead-note">All of these report to the CEO on the leadership team. (Below the CNO sit the nursing Directors; each VP runs one major function.)</div>
       </div>
     </div>
 
@@ -1059,28 +1077,17 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
 <section style="padding-top:0">
   <div class="wrap">
     <div class="eyebrow s" style="color:var(--support)">Deep dive · your world</div>
-    <h2>How the hospital gets paid — and why PX is worth real money</h2>
-    <p class="lead">This is what makes patient experience a boardroom topic, not a nicety. Medicare doesn't just pay for care — it adjusts that payment up or down based on quality and experience. Here's how the money really flows. <span style="color:var(--ink-faint)">(Figures reflect FY 2025 Medicare rules; dollar thresholds reset yearly and the HCAHPS survey is being redesigned over 2027–2030, so treat the specifics as current, not permanent.)</span></p>
+    <h2>How the hospital gets paid — the short version</h2>
+    <p class="lead">Two ideas explain most of it. <span style="color:var(--ink-faint)">(Based on current Medicare rules; the specifics shift year to year.)</span></p>
 
     <div class="subh">1 · Paid by diagnosis, not by day</div>
-    <p class="lead" style="margin-bottom:0">Medicare mostly pays a hospital a <b>fixed, pre-set amount per admission based on the diagnosis</b> — the <b>DRG</b> (Diagnosis-Related Group) — largely regardless of how long the patient actually stays. Each DRG is priced around an expected length of stay. That single fact drives a lot of hospital behavior:</p>
+    <p class="lead" style="margin-bottom:0">Medicare pays a hospital a <b>fixed amount per admission based on the diagnosis</b> (called the <b>DRG</b>), no matter how long the patient actually stays.</p>
     <div class="example">
       <div class="h">Why length of stay is a money problem</div>
       Say a DRG is priced around a <b>15-day</b> stay. Whether the patient goes home on day 12 or stays <b>60 days</b>, the base payment is essentially the <b>same flat amount.</b> Leave efficiently → the hospital keeps the margin. A long, complicated stay → the hospital <b>eats the extra weeks.</b> That's why throughput and safe, timely discharge (Case Management, Social Work, Bed Management) is a financial issue, not just a clinical one.
     </div>
-    <div class="note" style="margin-top:14px"><div class="ic">⛑</div><div><b>The one safety valve:</b> for extraordinarily expensive cases, Medicare adds an <b>"outlier" payment</b> once costs pass a high threshold (about <b>$46,000 above the DRG</b> in FY 2025, then ~80% of costs beyond that). It softens catastrophic losses — it doesn't erase them.</div></div>
-
-    <div class="subh">2 · The four programs that move the money</div>
-    <p class="lead" style="margin-bottom:0">On top of the base DRG, four Medicare programs adjust what a hospital actually takes home. Three are penalties; one can go either way.</p>
-    <div class="progs">
-      <div class="prog"><div class="hd"><h4>Value-Based Purchasing</h4><span class="amt both">± 2%</span></div><p>2% of DRG payments is withheld and redistributed by performance. Budget-neutral — beat the field and you earn back more than 2%; lag and you get less. <b>Patient experience (HCAHPS) is 25% of the score.</b></p></div>
-      <div class="prog"><div class="hd"><h4>Readmissions (HRRP)</h4><span class="amt pen">−3% max</span></div><p>Penalty if too many patients bounce back within 30 days for six tracked conditions (heart attack, heart failure, pneumonia, COPD, hip/knee replacement, bypass). Once triggered it hits <b>all</b> your Medicare admissions, not just those six.</p></div>
-      <div class="prog"><div class="hd"><h4>Hospital-Acquired Conditions</h4><span class="amt pen">−1%</span></div><p>The worst-performing <b>25% of hospitals</b> lose 1% of Medicare payments for infections and safety events picked up <i>inside</i> the hospital. Penalty-only.</p></div>
-      <div class="prog"><div class="hd"><h4>Star Rating &amp; reporting</h4><span class="amt ind">indirect</span></div><p>No direct dollar, but the public 1–5 star rating drives reputation and patient volume — and it's the number leadership gets asked about.</p></div>
-    </div>
-
-    <div class="subh">3 · The Star Rating, decoded</div>
-    <p class="lead" style="margin-bottom:0">The public <b>1–5 star Overall Hospital Quality Star Rating</b> is built from five measure groups. Four count equally; the process group counts a bit less:</p>
+    <div class="subh">2 · Why patient experience is real money</div>
+    <p class="lead" style="margin-bottom:0">On top of that base payment, Medicare nudges a hospital's dollars <b>up or down based on quality and experience</b>, and publishes a public <b>1–5 star rating</b> that shapes its reputation. Patient experience — the <b>HCAHPS</b> survey patients get after discharge — is a big slice of that star rating:</p>
     <div class="wbar">
       <div class="row"><span class="lbl">Mortality</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="pct">22%</span></div>
       <div class="row"><span class="lbl">Safety of Care</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="pct">22%</span></div>
@@ -1088,23 +1095,18 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
       <div class="row px"><span class="lbl">Patient Experience</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="pct">22%</span></div>
       <div class="row"><span class="lbl">Timely &amp; Effective Care</span><span class="track"><span class="fill" style="width:55%"></span></span><span class="pct">12%</span></div>
     </div>
-    <p class="lead" style="margin-top:15px;margin-bottom:0">CMS standardizes every measure, averages them within each group, combines the groups with those weights, and uses <b>clustering</b> to draw the star lines — comparing you against hospitals that report a similar number of measures. <b>New in 2025:</b> a hospital in the bottom quartile for Safety is <b>capped at 4 stars</b> no matter how strong the rest looks.</p>
-    <div class="note" style="margin-top:14px"><div class="ic">≠</div><div><b>Two different "star ratings" — don't mix them up:</b> the <b>Overall Star Rating</b> above (all five groups; patient experience is only 22%) versus a separate <b>HCAHPS Star Rating</b> built purely from the patient survey. Same 1–5 look, different thing.</div></div>
+    <p class="lead" style="margin-top:15px;margin-bottom:0">The scoring rule worth burning in: on the survey, <b>only the single best answer counts.</b> "Always" is <b>"Top Box"</b> — and <b>"Usually" scores the same as "Never": zero.</b></p>
 
-    <div class="subh">4 · HCAHPS &amp; the "Top Box"</div>
-    <p class="lead" style="margin-bottom:0">HCAHPS is the survey patients get after discharge — nurse and doctor communication, staff responsiveness, communication about medicines, discharge info, care transitions, cleanliness, quietness, an overall 0–10 rating, and whether they'd recommend the hospital. Burn in the scoring rule: <b>only the single best answer counts.</b> "Always" (or 9–10, or "Definitely yes") is <b>"Top Box"</b> — and <b>"Usually" scores exactly the same as "Never": zero.</b></p>
-
-    <div class="subh">5 · The rumor, settled</div>
+    <div class="subh">3 · The rumor, settled</div>
     <div class="verdict">
-      <div class="q">"If a patient doesn't answer <b>Always</b> on the survey, we don't get reimbursed."</div>
-      <div class="v">Verdict: false as stated — but there's a real kernel.</div>
+      <div class="q">"If a patient doesn't answer <b>Always</b>, we don't get reimbursed for that patient's stay."</div>
+      <div class="v">Verdict: false — the stay is paid either way.</div>
       <ul>
-        <li class="t"><b>The kernel of truth:</b> scoring is top-box-only, so a "Usually" genuinely doesn't help you — for the score it's worth the same as "Never." That's why every non-"Always" feels like it costs you.</li>
-        <li class="f"><b>What's wrong:</b> no single survey maps to a specific dollar a patient can "cancel." HCAHPS feeds VBP — a <b>budget-neutral</b> pool (the 2% withhold) redistributed by comparing your <b>aggregate</b> scores to other hospitals over months — and HCAHPS is only about <b>25%</b> of that score.</li>
-        <li class="f"><b>The proof:</b> a hospital can have survey misses and <i>still</i> earn back more than its 2% if its overall performance beats the field. The link to money is real, but it's <b>statistical and aggregate, not one-survey-one-check.</b></li>
+        <li class="f"><b>That stay is already paid</b> by its DRG, and the survey has <b>zero effect</b> on it — no answer cancels an individual patient's payment.</li>
+        <li class="t"><b>The kernel of truth:</b> only "Always" helps the score, so a "Usually" doesn't help you — which is why every non-"Always" feels like it costs money.</li>
+        <li class="f"><b>What it actually moves:</b> all the surveys added together nudge the hospital's <i>overall</i> Medicare payment months later, measured against other hospitals. Real money — but hospital-wide and delayed, never one patient at a time.</li>
       </ul>
     </div>
-    <div class="note" style="margin-top:16px"><div class="ic">◎</div><div><b>The honest version to tell staff:</b> every "Always" matters because top-box is all-or-nothing — but no single survey is a specific payment we win or lose. It's the aggregate, over time, against everyone else.</div></div>
   </div>
 </section>
 
@@ -1165,20 +1167,15 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
     <p class="lead">"Imaging" is how the team sees inside the body. The two big scanners — MRI and CT — get confused constantly, and the safety rules around MRI are genuinely life-or-death, so they're worth knowing. <span style="color:var(--ink-faint)">(General orientation, not medical advice — clinicians make the calls, and some thresholds are set by each hospital's policy.)</span></p>
 
     <div class="subh">MRI — the magnet</div>
-    <p class="lead" style="margin-bottom:0"><b>MRI (Magnetic Resonance Imaging)</b> uses a very strong magnet and radio waves — <b>no radiation</b> — to build detailed pictures. It's best for <b>soft tissue</b>: brain, spinal cord, nerves, joints, ligaments, and organs. The trade-off: it's <b>loud, enclosed, and slow</b> (often 20–60+ minutes lying still inside a tube).</p>
-    <ul class="terms" style="border:none;padding-top:12px;margin-top:4px;display:grid;gap:8px;list-style:none">
-      <li style="font-size:13.5px;color:var(--ink-soft)"><b style="color:var(--ink)">With vs. without contrast:</b> "contrast" for MRI is <b>gadolinium</b>, a dye given by IV that makes vessels, tumors, and inflammation stand out. Many scans don't need it. Because gadolinium is cleared by the kidneys, patients are usually screened for kidney problems first (today's agents are very low-risk, but screening is still standard).</li>
-      <li style="font-size:13.5px;color:var(--ink-soft)"><b style="color:var(--ink)">Medication sometimes needed first:</b> a patient with a prior contrast reaction may be pre-treated with a <b>steroid + antihistamine</b>; a claustrophobic patient may get a mild <b>anti-anxiety pill</b> (and then needs a ride home).</li>
-      <li style="font-size:13.5px;color:var(--ink-soft)"><b style="color:var(--ink)">When it needs anesthesia:</b> because you must hold still so long, <b>young children, severe claustrophobia, or patients who can't cooperate</b> may need sedation or general anesthesia — which adds an anesthesia team, <b>NPO</b> (no food/drink) beforehand, and a recovery period. A real scheduling and cost driver.</li>
-    </ul>
+    <p class="lead" style="margin-bottom:0"><b>MRI</b> uses a strong magnet and radio waves — <b>no radiation</b> — and is best for <b>soft tissue</b> (brain, spine, joints, organs). The catch: it's <b>loud, enclosed, and slow</b> (20–60+ minutes holding still). Its dye is <b>gadolinium</b>, given by IV, and patients are screened for kidney issues first. Some need medication before the scan — a <b>steroid + antihistamine</b> if they've reacted to contrast before, or an <b>anti-anxiety pill</b> for claustrophobia — and those who can't hold still (young kids, severe claustrophobia) may need <b>sedation or anesthesia</b> (which means no food beforehand and a recovery period).</p>
 
     <div class="equity" style="background:#fbf0ee">
       <h4>⚠ MRI safety — the part that can kill someone</h4>
-      <p>The <b>MRI magnet is ALWAYS on</b>, even when the room looks empty — you can't "turn it off" to grab something. <b>Iron-containing metal becomes a projectile</b> (oxygen tanks, scissors, wheelchairs have flown across rooms and killed people). So <b>everyone is screened for metal and implants before entering</b> — no exceptions. Implants are labeled <b>MRI-safe, MRI-conditional</b> (okay only under specific conditions), or <b>MRI-unsafe.</b> A key nuance on <b>pacemakers/defibrillators:</b> many modern ones are MRI-conditional, but the device team must be involved — they <b>don't literally "turn it off,"</b> they interrogate it, switch it into a protective <b>"MRI mode,"</b> monitor the patient throughout, and reset it afterward. Metal fragments in the eye (welders) may require an X-ray first. When in doubt, it's a hard stop until radiology clears it.</p>
+      <p>The <b>magnet is always on.</b> Iron-containing metal (oxygen tanks, scissors, wheelchairs) becomes a deadly projectile, so <b>everyone is screened for metal and implants before entering</b> — no exceptions. Pacemakers and defibrillators are the big one: many modern ones are fine, but the device team must first switch them into a special <b>"MRI mode"</b> (they don't literally "turn it off") and reset them after. When in doubt, it's a hard stop until radiology clears it.</p>
     </div>
 
     <div class="subh">CT — the fast X-ray</div>
-    <p class="lead" style="margin-bottom:0"><b>CT (Computed Tomography, the old "CAT scan")</b> spins X-rays around the patient to build cross-section "slice" images. It <b>uses radiation</b>, but it's <b>fast</b> (seconds to minutes) and the patient lies in a short, open ring — far less claustrophobic than MRI. It's the go-to for <b>bleeding, trauma, lungs, bones, kidney stones, and emergencies.</b> CT contrast is <b>iodine-based</b> (different from MRI's gadolinium), with similar kidney/allergy screening.</p>
+    <p class="lead" style="margin-bottom:0"><b>CT</b> (the old "CAT scan") spins X-rays to build cross-section images. It <b>uses radiation</b>, but it's <b>fast</b> (seconds) and open — the ER's go-to for <b>bleeding, trauma, lungs, bones, and emergencies.</b> Its contrast is <b>iodine</b>-based (different from MRI's gadolinium).</p>
     <div class="note" style="margin-top:14px"><div class="ic">✕</div><div><b>Myth worth killing:</b> a shellfish allergy or a reaction to iodine skin prep (Betadine) is <b>not</b> a reason to withhold CT contrast — they don't cross-react. That old belief still causes unnecessary delays.</div></div>
 
     <div class="subh">MRI vs. CT — when each is used</div>
@@ -1220,27 +1217,6 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
         <ul class="terms"><li>No radiation · no prep</li></ul></div>
     </div>
 
-    <div class="subh">Quick "what needs what" cheat sheet</div>
-    <div class="tablewrap">
-      <table class="itable">
-        <thead><tr><th>Test</th><th>Radiation</th><th>Contrast</th><th>Sedation</th><th>NPO</th></tr></thead>
-        <tbody>
-          <tr><td>MRI (no contrast)</td><td class="no">No</td><td class="no">No</td><td class="mid">If needed</td><td class="mid">If sedated</td></tr>
-          <tr><td>MRI (with contrast)</td><td class="no">No</td><td class="yes">Gadolinium</td><td class="mid">If needed</td><td class="mid">If sedated</td></tr>
-          <tr><td>CT (no contrast)</td><td class="yes">Yes</td><td class="no">No</td><td class="no">No</td><td class="no">No</td></tr>
-          <tr><td>CT (with contrast)</td><td class="yes">Yes</td><td class="yes">Iodine</td><td class="no">No</td><td class="mid">Often short</td></tr>
-          <tr><td>Echo / TTE</td><td class="no">No</td><td class="no">Usually no</td><td class="no">No</td><td class="no">No</td></tr>
-          <tr><td>TEE</td><td class="no">No</td><td class="no">No</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
-          <tr><td>Treadmill stress</td><td class="no">No</td><td class="no">No</td><td class="no">No</td><td class="mid">Often short</td></tr>
-          <tr><td>Nuclear stress</td><td class="yes">Yes</td><td class="no">Tracer</td><td class="no">No</td><td class="mid">Short + no caffeine</td></tr>
-          <tr><td>Cardiac cath / angiogram</td><td class="yes">Yes</td><td class="yes">Iodine</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
-          <tr><td>Coronary CTA</td><td class="yes">Yes</td><td class="yes">Iodine</td><td class="no">No</td><td class="mid">Short</td></tr>
-          <tr><td>Calcium score</td><td class="yes">Yes</td><td class="no">No</td><td class="no">No</td><td class="no">No</td></tr>
-          <tr><td>Cardiac MRI</td><td class="no">No</td><td class="mid">Usually gadolinium</td><td class="no">Usually no</td><td class="no">Usually no</td></tr>
-          <tr><td>Holter / EKG</td><td class="no">No</td><td class="no">No</td><td class="no">No</td><td class="no">No</td></tr>
-        </tbody>
-      </table>
-    </div>
   </div>
 </section>
 
