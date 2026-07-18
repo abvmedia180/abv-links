@@ -184,6 +184,23 @@ h2 .num{color:var(--ink-faint);font-weight:600;margin-right:8px}
 .jbody .t{font-weight:600;font-size:15.5px}
 .jbody .d{font-size:14px;color:var(--ink-soft);margin-top:3px}
 
+/* ---------- SPECIALTIES ---------- */
+.speccat{font-family:var(--disp);font-weight:600;font-size:17px;color:var(--ink);margin:30px 0 2px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.speccat .pill{font:700 10.5px/1 var(--body);letter-spacing:.05em;text-transform:uppercase;padding:5px 9px;border-radius:6px}
+.speccat .pill.op{background:var(--doc-bg);color:var(--doc)}
+.speccat .pill.med{background:var(--nurse-bg);color:var(--nurse)}
+.speccat .pill.proc{background:var(--support-bg);color:var(--support)}
+.speccat-sub{font-size:13.5px;color:var(--ink-soft);margin:2px 0 4px}
+.specgrid{display:grid;gap:14px;margin-top:14px}
+@media(min-width:600px){.specgrid{grid-template-columns:1fr 1fr}}
+.spec{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:15px 16px;box-shadow:var(--shadow)}
+.spec h3{font-family:var(--disp);font-size:16px;font-weight:700;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;line-height:1.2}
+.spec h3 .tag{font:700 10px/1 var(--body);text-transform:uppercase;letter-spacing:.04em;color:var(--ink-faint);background:var(--line-soft);padding:3px 7px;border-radius:5px;position:relative;top:-1px}
+.spec .desc{font-size:13px;color:var(--ink-soft);margin:6px 0 10px}
+.spec .terms{list-style:none;display:grid;gap:6px;border-top:1px dashed var(--line);padding-top:10px}
+.spec .terms li{font-size:12.5px;color:var(--ink-soft);line-height:1.4}
+.spec .terms b{color:var(--ink);font-weight:700}
+
 /* ---------- GLOSSARY ---------- */
 .gloss{margin-top:22px;display:grid;gap:2px;background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)}
 .grow{display:grid;grid-template-columns:auto 1fr;gap:14px;padding:13px 18px;border-bottom:1px solid var(--line-soft);align-items:baseline}
@@ -526,40 +543,42 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
     <div class="supflow">
       <div class="supstage"><div class="when">On arrival</div><div class="team">Bed Management</div><div class="role">Finds and assigns the bed; runs the flow of patients in, across, and out.</div></div>
       <div class="suparrow">➜</div>
-      <div class="supstage"><div class="when">Throughout the stay</div><div class="team">Case Management</div><div class="role">Plans the exit from day one — insurance, equipment, and where the patient goes next.</div></div>
+      <div class="supstage"><div class="when">Throughout the stay</div><div class="team">Case Management</div><div class="role">Handles insurance and everything needed to go home — home health, equipment, oxygen.</div></div>
       <div class="suparrow">➜</div>
-      <div class="supstage"><div class="when">When it gets complicated</div><div class="team">Social Work</div><div class="role">Steps in for counseling, safety, and hard personal or financial situations.</div></div>
+      <div class="supstage"><div class="when">If home isn't safe yet</div><div class="team">Social Work</div><div class="role">Sets up placement at a rehab or nursing facility and arranges the transfer.</div></div>
     </div>
 
     <div class="roles">
       <div class="role sup">
         <div class="role-head"><h3>Case Management</h3></div>
-        <p class="what">The <b>discharge logistics and insurance</b> engine. Often nurses by background. They plan the exit from day one: where does the patient go next, who pays, and what equipment do they need.</p>
+        <p class="what">The <b>insurance and go-home</b> engine. Often nurses by background. They work the payer side and set up everything a patient needs to be safe <b>at home.</b></p>
         <div class="cc">
           <div class="box can"><h4>Handles</h4><ul>
             <li>Insurance approvals and "is this covered?"</li>
-            <li>Booking rehab, nursing-home, or home-health placement</li>
-            <li>Home equipment (oxygen, walker, hospital bed)</li>
+            <li>Home aides and visiting-nurse services</li>
+            <li>Home equipment and supplies — oxygen, hospital bed, walker</li>
           </ul></div>
           <div class="box cant"><h4>Doesn't</h4><ul>
-            <li>Make medical decisions</li><li>Provide counseling or crisis support (that's Social Work)</li>
+            <li>Arrange rehab or nursing-home placement (Social Work does that here)</li>
+            <li>Make medical decisions or provide counseling</li>
           </ul></div>
         </div>
       </div>
       <div class="role sup">
         <div class="role-head"><h3>Social Work</h3></div>
-        <p class="what">The <b>human/psychosocial</b> side. They step in when a patient's situation is complicated — emotionally, financially, or for safety — and connect people to resources.</p>
+        <p class="what">Here, Social Work owns <b>discharge planning to a facility.</b> When a patient can't go straight home and needs a <b>rehab center or nursing home,</b> Social Work finds the placement and sets up the transfer. They also handle the harder human situations — safety, counseling, resources.</p>
         <div class="cc">
           <div class="box can"><h4>Handles</h4><ul>
-            <li>Counseling and crisis support</li>
-            <li>Complex or unsafe home situations, abuse/neglect concerns</li>
-            <li>Resources for homelessness, substance use, financial hardship</li>
+            <li>Placement at a rehab, skilled nursing, or nursing-home facility</li>
+            <li>Coordinating the transfer and its paperwork</li>
+            <li>Counseling, safety concerns, and community resources</li>
           </ul></div>
           <div class="box cant"><h4>Doesn't</h4><ul>
-            <li>Handle insurance authorizations day-to-day (that's Case Management)</li>
+            <li>Set up home aides or home equipment (that's Case Management)</li>
+            <li>Handle day-to-day insurance authorizations</li>
           </ul></div>
         </div>
-        <div class="aka"><b>Good to know:</b> nearly every patient gets a case manager, but only some get a social worker — they're pulled in when the situation is genuinely complex.</div>
+        <div class="aka"><b>The clean split:</b> "where does the patient go after the hospital?" — <b>home → Case Management, a facility → Social Work.</b></div>
       </div>
       <div class="role sup">
         <div class="role-head"><h3>Bed Management</h3></div>
@@ -577,8 +596,8 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
     </div>
 
     <div class="note">
-      <div class="ic">↺</div>
-      <div><b>The correction on your board:</b> you split it as "Social Work = rehab, Case Management = home." In practice it's the other way around and fuzzier: <b>Case Management</b> owns the logistics and insurance for <i>all</i> destinations (rehab and home), while <b>Social Work</b> owns the complicated human situations. Both work on getting the patient safely out the door — just from different angles.</div>
+      <div class="ic">✓</div>
+      <div><b>Your board was right — and this part is hospital-specific.</b> Who owns rehab-vs-home placement genuinely varies building to building. <b>Here it's exactly how you drew it:</b> a patient going <b>home</b> is Case Management (aides, equipment, insurance); a patient going to a <b>facility</b> is Social Work. Some hospitals split it differently, so it's worth confirming wherever you land.</div>
     </div>
   </div>
 </section>
@@ -596,10 +615,6 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
       <div class="estep"><div><div class="t">Then the department director / hospitalist lead</div><div class="d">The right stop before you ever bother the C-suite.</div></div></div>
       <div class="estep"><div><div class="t">Only then, the CMO</div><div class="d">Approachable, but use sparingly. Going here without looping in the attending first reflects badly on you, not them.</div></div></div>
     </div>
-    <div class="note">
-      <div class="ic">★</div>
-      <div><b>The relationships worth building:</b> Bed Management, Nurse Managers, and especially the Assistant Nurse Managers. They're often the most reachable and the most able to make something happen the same day.</div>
-    </div>
   </div>
 </section>
 
@@ -611,11 +626,229 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
     <p class="lead">Watch all the roles show up in order for a made-up patient — call her Ms. Rivera, admitted overnight from the ER with pneumonia.</p>
     <div class="journey">
       <div class="jstep"><div class="jrail"><div class="jdot"></div><div class="jline"></div></div><div class="jbody"><div class="t">ER → a bed</div><div class="d"><b>Bed Management</b> finds her an open bed on a medical floor and assigns it.</div></div></div>
-      <div class="jstep"><div class="jrail"><div class="jdot"></div><div class="jline"></div></div><div class="jbody"><div class="t">A team forms</div><div class="d">A <b>hospitalist</b> becomes her attending. A <b>resident</b> and an <b>NP or PA</b> handle the hour-to-hour. An <b>RN</b> is assigned to her at the bedside.</div></div></div>
+      <div class="jstep"><div class="jrail"><div class="jdot"></div><div class="jline"></div></div><div class="jbody"><div class="t">A team forms</div><div class="d">A <b>hospitalist</b> becomes her attending. The hour-to-hour is handled by <b>either a resident or an NP/PA</b> — one or the other, not both. An <b>RN</b> is assigned to her at the bedside.</div></div></div>
       <div class="jstep"><div class="jrail"><div class="jdot"></div><div class="jline"></div></div><div class="jbody"><div class="t">Daily care</div><div class="d">The <b>RN</b> gives meds and monitors; a <b>PCA</b> takes vitals and helps her walk; the doctors round each morning and adjust the plan.</div></div></div>
       <div class="jstep"><div class="jrail"><div class="jdot"></div><div class="jline"></div></div><div class="jbody"><div class="t">A complication</div><div class="d">Her heart rhythm looks off. The <b>hospitalist consults cardiology</b> — a <b>specialist</b> advises, but the hospitalist stays in charge.</div></div></div>
-      <div class="jstep"><div class="jrail"><div class="jdot"></div><div class="jline"></div></div><div class="jbody"><div class="t">Planning the exit</div><div class="d">From early on, <b>Case Management</b> lines up home oxygen and checks insurance. She lives alone and is anxious, so <b>Social Work</b> arranges support at home.</div></div></div>
+      <div class="jstep"><div class="jrail"><div class="jdot"></div><div class="jline"></div></div><div class="jbody"><div class="t">Planning the exit</div><div class="d">From early on, <b>Case Management</b> checks insurance and sets up home oxygen and a visiting nurse so she can go home. (If she couldn't manage at home and needed a rehab facility, <b>Social Work</b> would arrange that placement instead.)</div></div></div>
       <div class="jstep"><div class="jrail"><div class="jdot"></div></div><div class="jbody"><div class="t">Discharge</div><div class="d">The <b>attending</b> signs off, the <b>RN</b> gives instructions, and she goes home with a follow-up booked. The hospital team hands her back to her outpatient doctor.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SPECIALTIES -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">The directory</div>
+    <h2>The specialists — who does what</h2>
+    <p class="lead">When the attending needs an expert, they <strong>consult a specialty.</strong> Here's the full cast you'll hear paged, grouped by how they work, plus the words and procedures that actually get said out loud on the floor.</p>
+
+    <div class="speccat"><span class="pill op">Group 1</span>The front door &amp; the OR</div>
+    <div class="specgrid">
+      <div class="spec"><h3>Emergency Medicine <span class="tag">ED / ER</span></h3><div class="desc">The front door — stabilize anyone, for anything, then decide: home, admit, or transfer.</div>
+        <ul class="terms">
+          <li><b>Triage</b> = sorting patients sickest-first</li>
+          <li><b>Workup</b> = the tests ordered to figure out what's wrong</li>
+          <li><b>Boarding</b> = an admitted patient stuck in the ED waiting for a bed</li>
+        </ul></div>
+      <div class="spec"><h3>Anesthesiology <span class="tag">OR · PACU · pain</span></h3><div class="desc">Keep you asleep, still, and pain-free during surgery; run pre-op clearance and the recovery room.</div>
+        <ul class="terms">
+          <li><b>PACU</b> = the recovery room where patients wake up</li>
+          <li><b>General vs. regional</b> = fully asleep vs. numbing one area (epidural, nerve block)</li>
+          <li><b>Extubate</b> = remove the breathing tube once they can breathe on their own</li>
+        </ul></div>
+    </div>
+
+    <div class="speccat"><span class="pill op">Group 2</span>Surgical specialties<span class="pill op">they operate</span></div>
+    <div class="speccat-sub">Called to the case, and often take a patient to the operating room.</div>
+    <div class="specgrid">
+      <div class="spec"><h3>General Surgery</h3><div class="desc">The "belly &amp; soft-tissue" surgeons — abdomen, bowel, gallbladder, appendix, hernias.</div>
+        <ul class="terms">
+          <li><b>Lap chole</b> = keyhole gallbladder removal</li>
+          <li><b>Appy</b> = appendectomy (removing the appendix)</li>
+          <li><b>Ex-lap</b> = opening the abdomen to find/fix a problem</li>
+          <li><b>Ostomy</b> = rerouting the bowel to a bag on the belly</li>
+        </ul></div>
+      <div class="spec"><h3>Orthopedics <span class="tag">Ortho</span></h3><div class="desc">Bones, joints, muscles, ligaments, tendons. Fractures, hip/knee replacements, trauma.</div>
+        <ul class="terms">
+          <li><b>ORIF</b> = setting a broken bone with plates/screws</li>
+          <li><b>THA / TKA</b> = total hip / knee replacement</li>
+          <li><b>Closed reduction</b> = setting a bone without cutting</li>
+          <li><b>Non-weight-bearing</b> = no weight on that limb</li>
+        </ul></div>
+      <div class="spec"><h3>Vascular Surgery</h3><div class="desc">Blood vessels everywhere except heart and brain. Poor circulation, aneurysms, clots, dialysis access.</div>
+        <ul class="terms">
+          <li><b>AAA</b> ("triple-A") = a bulge in the body's main artery</li>
+          <li><b>Fem-pop bypass</b> = rerouting blood around a blocked leg artery</li>
+          <li><b>Fistula / graft</b> = a made access point in the arm for dialysis</li>
+          <li><b>BKA / AKA</b> = below-/above-knee amputation</li>
+        </ul></div>
+      <div class="spec"><h3>ENT <span class="tag">Otolaryngology</span></h3><div class="desc">Ear, nose, throat — plus head, neck, and the airway.</div>
+        <ul class="terms">
+          <li><b>Trach</b> = a surgical airway opening in the neck</li>
+          <li><b>Epistaxis</b> = a nosebleed (and packing it)</li>
+          <li><b>Laryngoscopy</b> = looking at the voice box with a scope</li>
+          <li><b>Neck dissection</b> = removing lymph nodes/tumor from the neck</li>
+        </ul></div>
+      <div class="spec"><h3>Plastic Surgery</h3><div class="desc">In hospitals, mostly <i>reconstructive</i> — complex wounds, flaps, hand injuries, breast reconstruction.</div>
+        <ul class="terms">
+          <li><b>Flap</b> = moving living tissue (with its blood supply) to cover a defect</li>
+          <li><b>Skin graft</b> = a thin sheet of skin moved to cover a wound</li>
+          <li><b>Debridement</b> = cutting away dead/infected tissue</li>
+          <li><b>Wound vac</b> = a suction dressing that speeds healing</li>
+        </ul></div>
+      <div class="spec"><h3>Neurosurgery</h3><div class="desc"><i>Surgery</i> on the brain, spine, and nerves. Brain bleeds, tumors, trauma, high pressure.</div>
+        <ul class="terms">
+          <li><b>Craniotomy</b> = surgically opening the skull</li>
+          <li><b>EVD</b> = a drain into the brain's fluid spaces to relieve pressure</li>
+          <li><b>Shunt (VP shunt)</b> = a permanent tube draining brain fluid to the belly</li>
+          <li><b>Burr hole</b> = a small drilled hole in the skull</li>
+        </ul></div>
+      <div class="spec"><h3>Urology</h3><div class="desc">Urinary tract (kidney-to-bladder plumbing) and male reproductive system.</div>
+        <ul class="terms">
+          <li><b>Foley</b> = a tube in the bladder to drain urine</li>
+          <li><b>Cystoscopy</b> = a scope into the bladder</li>
+          <li><b>TURP</b> = trimming an enlarged prostate to unblock urine flow</li>
+          <li><b>Ureteral stent</b> = a tube holding the ureter open (often after a stone)</li>
+        </ul></div>
+      <div class="spec"><h3>OB / GYN</h3><div class="desc">Pregnancy and childbirth (OB) plus female reproductive health (GYN). Based in Labor &amp; Delivery.</div>
+        <ul class="terms">
+          <li><b>C-section</b> = surgical delivery through the abdomen</li>
+          <li><b>L&amp;D</b> = the Labor and Delivery unit</li>
+          <li><b>Preeclampsia</b> = dangerous high blood pressure in pregnancy</li>
+        </ul></div>
+    </div>
+
+    <div class="speccat"><span class="pill med">Group 3</span>Medical specialties<span class="pill med">they consult &amp; manage</span></div>
+    <div class="speccat-sub">Brains of a problem — they advise and manage, and mostly don't operate.</div>
+    <div class="specgrid">
+      <div class="spec"><h3>Cardiology</h3><div class="desc">The heart — pump, arteries, and electrical rhythm. <b>Interventional</b> opens arteries; <b>EP</b> handles rhythm.</div>
+        <ul class="terms">
+          <li><b>Cath / PCI</b> = catheter to the heart's arteries; a <b>stent</b> props one open</li>
+          <li><b>STEMI</b> = a major heart attack needing emergency artery opening</li>
+          <li><b>Echo</b> = ultrasound of the heart</li>
+          <li><b>Pacemaker / ICD</b> = implanted device to pace or shock the heart</li>
+        </ul></div>
+      <div class="spec"><h3>Pulmonology / Critical Care</h3><div class="desc">Lungs and breathing; many also run the ICU as "intensivists."</div>
+        <ul class="terms">
+          <li><b>Intubation</b> = placing a breathing tube into the windpipe</li>
+          <li><b>Vent</b> = the machine that breathes for a patient</li>
+          <li><b>Bronchoscopy</b> = a scope into the airways</li>
+          <li><b>ICU</b> = Intensive Care Unit; the sickest patients</li>
+        </ul></div>
+      <div class="spec"><h3>Nephrology</h3><div class="desc">Kidneys — filtering blood, fluid balance, electrolytes. Runs dialysis.</div>
+        <ul class="terms">
+          <li><b>HD</b> = hemodialysis; a machine filters the blood</li>
+          <li><b>Fistula / graft</b> = the arm access used for dialysis</li>
+          <li><b>CRRT</b> = slow, continuous dialysis run 24/7 in the ICU</li>
+          <li><b>AKI</b> = acute kidney injury (sudden drop in function)</li>
+        </ul></div>
+      <div class="spec"><h3>Neurology</h3><div class="desc">Brain, spinal cord, nerves — the <i>medical</i> (non-surgical) side. Strokes, seizures, weakness.</div>
+        <ul class="terms">
+          <li><b>tPA</b> = a clot-busting drug for certain strokes (tight time window)</li>
+          <li><b>EEG</b> = a recording of the brain's electrical activity</li>
+          <li><b>LP ("spinal tap")</b> = a needle in the low back to sample spinal fluid</li>
+          <li><b>TIA</b> = a "mini-stroke" that resolves</li>
+        </ul></div>
+      <div class="spec"><h3>Gastroenterology <span class="tag">GI</span></h3><div class="desc">The digestive tract — esophagus to intestines, plus liver and pancreas.</div>
+        <ul class="terms">
+          <li><b>EGD</b> = a scope down to the stomach ("upper endoscopy")</li>
+          <li><b>Colonoscopy</b> = a scope up through the colon</li>
+          <li><b>ERCP</b> = a scope that clears blocked bile/pancreatic ducts</li>
+          <li><b>PEG tube</b> = a stomach feeding tube placed with a scope</li>
+        </ul></div>
+      <div class="spec"><h3>Endocrinology <span class="tag">Endo</span></h3><div class="desc">Hormone glands — thyroid, adrenal, pituitary — and, mostly, diabetes. Consult only.</div>
+        <ul class="terms">
+          <li><b>DKA</b> = a dangerous high-blood-sugar emergency</li>
+          <li><b>Sliding scale / insulin drip</b> = dosing insulin to the current sugar</li>
+          <li><b>Fingerstick / accucheck</b> = a bedside blood-sugar check</li>
+        </ul></div>
+      <div class="spec"><h3>Hematology / Oncology <span class="tag">Heme/Onc</span></h3><div class="desc">Blood disorders (heme) and cancer (onc) — usually one combined team.</div>
+        <ul class="terms">
+          <li><b>Chemo</b> = drug treatment that kills cancer cells</li>
+          <li><b>Port</b> = an implanted access point for repeated chemo/draws</li>
+          <li><b>Neutropenia</b> = dangerously low infection-fighting cells</li>
+          <li><b>Neutropenic fever</b> = a fever in that state — an emergency</li>
+        </ul></div>
+      <div class="spec"><h3>Infectious Disease <span class="tag">ID</span></h3><div class="desc">Serious or complicated infections and the antibiotics to treat them. Consult only.</div>
+        <ul class="terms">
+          <li><b>Abx</b> = antibiotics</li>
+          <li><b>Cultures</b> = growing a sample to identify the bug</li>
+          <li><b>Sensitivities</b> = which antibiotics will kill that organism</li>
+          <li><b>PICC for long abx</b> = a durable line for weeks of IV antibiotics</li>
+        </ul></div>
+      <div class="spec"><h3>Psychiatry <span class="tag">C-L Psych</span></h3><div class="desc">Mental health on medical/surgical patients — the <b>Consultation-Liaison</b> team. Suicide risk, agitation, delirium, withdrawal.</div>
+        <ul class="terms">
+          <li><b>1:1 (sitter)</b> = staff staying with a patient at all times for safety</li>
+          <li><b>Capacity eval</b> = can this patient make their own decisions?</li>
+          <li><b>CIWA</b> = a score tracking alcohol-withdrawal severity</li>
+          <li><b>Delirium</b> = sudden acute confusion from a medical cause</li>
+        </ul></div>
+      <div class="spec"><h3>Palliative Care</h3><div class="desc">Comfort, symptom relief, and matching care to the patient's goals. Runs <i>alongside</i> treatment; <b>hospice</b> is end-of-life.</div>
+        <ul class="terms">
+          <li><b>Goals of care</b> = defining what the patient wants treatment to achieve</li>
+          <li><b>Comfort care</b> = focus shifts entirely to comfort, not cure</li>
+          <li><b>DNR / DNI</b> = no CPR / no breathing tube</li>
+        </ul></div>
+    </div>
+
+    <div class="speccat"><span class="pill proc">Group 4</span>Procedures, imaging &amp; the lab</div>
+    <div class="speccat-sub">Behind the scenes, but their results and tubes drive everything.</div>
+    <div class="specgrid">
+      <div class="spec"><h3>Interventional Radiology <span class="tag">IR</span></h3><div class="desc">"Surgery through a pinhole" — needles, tubes, and catheters guided by live imaging, no open surgery.</div>
+        <ul class="terms">
+          <li><b>G-tube / J-tube / GJ-tube</b> = feeding tube into the <b>stomach</b> / <b>small intestine</b> / a combined tube (J-route when the stomach isn't safe to feed)</li>
+          <li><b>PICC line</b> = a long IV from the arm to a big vein near the heart</li>
+          <li><b>Drain (pigtail)</b> = a tube draining an abscess or fluid collection</li>
+          <li><b>Embolization</b> = deliberately blocking a vessel to stop bleeding</li>
+          <li><b>Nephrostomy</b> = a tube through the back draining a blocked kidney</li>
+          <li><b>Para / thora-centesis</b> = draining fluid from the belly / around the lung</li>
+        </ul></div>
+      <div class="spec"><h3>Diagnostic Radiology</h3><div class="desc">The doctors who <i>read</i> the images (IR <i>does procedures</i>). Every scan gets read and reported by them.</div>
+        <ul class="terms">
+          <li><b>CT</b> = fast, detailed cross-section X-ray imaging</li>
+          <li><b>MRI</b> = magnet imaging; best for brain, spine, soft tissue</li>
+          <li><b>US</b> = ultrasound; sound waves, no radiation</li>
+          <li><b>Wet read</b> = a quick preliminary read for urgent cases; formal report follows</li>
+        </ul></div>
+      <div class="spec"><h3>Pathology / Lab</h3><div class="desc">Examine tissue, blood, and fluids under the microscope to make the diagnosis. Rarely seen, but results drive care.</div>
+        <ul class="terms">
+          <li><b>Biopsy</b> = a tissue sample taken to examine for disease</li>
+          <li><b>Frozen section</b> = a rapid biopsy read <i>during</i> surgery</li>
+          <li><b>Path report</b> = the final microscope diagnosis (benign vs. cancer)</li>
+        </ul></div>
+      <div class="spec"><h3>PM&amp;R / PT &amp; OT</h3><div class="desc">Restoring function. <b>PT</b> = movement/walking; <b>OT</b> = daily-living tasks. They also help decide rehab placement.</div>
+        <ul class="terms">
+          <li><b>Acute rehab (IRF)</b> = intensive inpatient rehab (~3 hrs/day)</li>
+          <li><b>SNF ("sniff")</b> = Skilled Nursing Facility; lower-intensity recovery</li>
+          <li><b>ADLs</b> = basic self-care tasks (dressing, bathing)</li>
+          <li><b>Dispo</b> = the plan for where the patient goes next</li>
+        </ul></div>
+    </div>
+
+    <div class="note" style="margin-top:22px">
+      <div class="ic">!</div>
+      <div><b>Three that trip people up:</b> <b>"D/C"</b> means <i>discharge</i> OR <i>discontinue</i> — context decides. <b>Palliative ≠ hospice</b> (palliative runs alongside treatment; hospice is end-of-life). <b>"Cath"</b> is generic for catheter — a heart cath, a Foley, and a PICC are totally different things.</div>
+    </div>
+  </div>
+</section>
+
+<!-- WORDS -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="eyebrow">Floor talk</div>
+    <h2>Words you'll hear constantly</h2>
+    <div class="gloss">
+      <div class="grow"><span class="term">NPO</span><span class="def">"Nothing by mouth" — no food or drink, usually before surgery or a procedure.</span></div>
+      <div class="grow"><span class="term">Stat</span><span class="def">Do it immediately, right now.</span></div>
+      <div class="grow"><span class="term">PRN</span><span class="def">"As needed" — e.g. a pain med given only when the patient needs it.</span></div>
+      <div class="grow"><span class="term">Consult</span><span class="def">One team formally asking another specialty to weigh in.</span></div>
+      <div class="grow"><span class="term">Rounds</span><span class="def">The team's daily walk-through to review each patient and set the plan.</span></div>
+      <div class="grow"><span class="term">Vitals</span><span class="def">The core measurements — heart rate, blood pressure, temp, breathing, oxygen.</span></div>
+      <div class="grow"><span class="term">Code (Blue)</span><span class="def">A patient stopped breathing or their heart stopped — all-hands emergency.</span></div>
+      <div class="grow"><span class="term">Rapid Response</span><span class="def">A step below a code — a patient is deteriorating and a team is called before they crash.</span></div>
+      <div class="grow"><span class="term">Admit vs. Observation</span><span class="def">Full inpatient stay vs. a shorter "observation" status — a billing distinction that affects coverage.</span></div>
+      <div class="grow"><span class="term">DNR / DNI</span><span class="def">Do Not Resuscitate (no CPR) / Do Not Intubate (no breathing tube). Can have one, both, or neither.</span></div>
+      <div class="grow"><span class="term">Discharge (D/C)</span><span class="def">Sending the patient home or to a facility. Heads-up: "D/C" can also mean discontinue an order.</span></div>
     </div>
   </div>
 </section>
@@ -640,8 +873,8 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
       <div class="grow"><span class="term">Charge Nurse</span><span class="def">The RN running a given shift on a floor. A role, not a rank.</span></div>
       <div class="grow"><span class="term">LPN</span><span class="def">Licensed Practical Nurse — licensed, focused scope; works under an RN.</span></div>
       <div class="grow"><span class="term">PCA</span><span class="def">Patient Care Assistant — unlicensed aide; vitals, comfort, safety, no meds.</span></div>
-      <div class="grow"><span class="term">Case Management</span><span class="def">Discharge logistics, insurance, equipment, post-hospital placement.</span></div>
-      <div class="grow"><span class="term">Social Work</span><span class="def">Psychosocial support — counseling, safety, resources for complex situations.</span></div>
+      <div class="grow"><span class="term">Case Management</span><span class="def">Insurance plus the go-home setup — home aides, visiting nurses, equipment.</span></div>
+      <div class="grow"><span class="term">Social Work</span><span class="def">Discharge planning to a facility (rehab/nursing home), plus counseling and safety.</span></div>
       <div class="grow"><span class="term">Bed Management</span><span class="def">Air-traffic control for hospital beds and patient flow.</span></div>
     </div>
   </div>
