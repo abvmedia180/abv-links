@@ -118,9 +118,14 @@ h2 .num{color:var(--ink-faint);font-weight:600;margin-right:8px}
 
 /* ---------- WIDE UNIFIED ORG CHART ---------- */
 .orgscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}
-.orgchart{min-width:760px}
-.org-cols{display:grid;grid-template-columns:1fr 1fr 1.95fr;gap:15px;align-items:start}
-.sup-2col{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.orgchart{min-width:0}
+.org-cols2{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+.org-merge{display:flex;flex-direction:column;align-items:center;margin-top:4px}
+.org-merge-line{width:2px;height:22px;background:var(--line)}
+.org-merge .org-patient{width:min(100%,460px)}
+.org-support{margin-top:22px;border-top:1px solid var(--line);padding-top:18px}
+.org-support-head{font-family:var(--disp);font-weight:600;font-size:14.5px;color:var(--support);margin-bottom:13px;text-align:center}
+.org-support-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:9px}
 .org-col{display:flex;flex-direction:column}
 .org-head{border-radius:11px;padding:11px 10px;text-align:center;font-weight:700;font-size:14px;color:#fff;margin-bottom:13px;line-height:1.2}
 .org-head small{display:block;font-weight:500;font-size:11px;opacity:.92;margin-top:2px}
@@ -452,60 +457,54 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
     <p class="lead">A hospital runs on <strong>two separate chains of command</strong> that only meet at the patient's bedside. One chain is the doctors. The other is the nurses. Around them sit the <strong>support and service teams</strong> that keep everything running — from beds and discharge to pharmacy, lab, and the building itself. Once you see these three groups, everything else clicks.</p>
 
     <div class="mapcard">
-      <div class="orgscroll">
-        <div class="orgchart">
-          <div class="org-cols">
-
-            <div class="org-col doc">
-              <div class="org-head doc">🩺 Doctors<small>decide the medical plan</small></div>
-              <div class="org-item doc">CMO<small>top doctor in the building</small></div>
-              <div class="org-conn"></div>
-              <div class="org-item doc">Attending<small>owns your case</small></div>
-              <div class="org-conn"></div>
-              <div class="org-item doc">Residents &amp; Fellows<small>doctors in training</small></div>
-              <div class="org-conn"></div>
-              <div class="org-item doc">NPs &amp; PAs<small>grouped as "ACPs"</small></div>
-            </div>
-
-            <div class="org-col nurse">
-              <div class="org-head nurse">👩‍⚕️ Nurses<small>deliver the care 24/7</small></div>
-              <div class="org-item nurse">CNO<small>top nurse in the building</small></div>
-              <div class="org-conn"></div>
-              <div class="org-item nurse">Director<small>oversees several units</small></div>
-              <div class="org-conn"></div>
-              <div class="org-item nurse">Nurse Manager / ANM<small>run the unit</small></div>
-              <div class="org-conn"></div>
-              <div class="org-item nurse">Charge Nurse<small>optional · runs the shift</small></div>
-              <div class="org-conn"></div>
-              <div class="org-item nurse">Bedside RN<small>at the patient</small></div>
-              <div class="org-conn"></div>
-              <div class="org-item nurse">LPN <i>or</i> PCA<small>one supports the RN</small></div>
-            </div>
-
-            <div class="org-col sup">
-              <div class="org-head sup">🧩 Support<small>services around the care</small></div>
-              <div class="sup-2col">
-                <div class="org-item sup">Patient Access<small>registration &amp; insurance</small></div>
-                <div class="org-item sup">Bed Management<small>finds the bed</small></div>
-                <div class="org-item sup">Patient Navigation<small>moves patients</small></div>
-                <div class="org-item sup">Case Management<small>home aides &amp; equipment</small></div>
-                <div class="org-item sup">Social Work<small>facility placement</small></div>
-                <div class="org-item sup">Pharmacy<small>mixes, doses, checks meds</small></div>
-                <div class="org-item sup">Lab<small>runs the tests</small></div>
-                <div class="org-item sup">EVS<small>cleaning &amp; turnover</small></div>
-                <div class="org-item sup">Food &amp; Nutrition<small>meals &amp; diets</small></div>
-                <div class="org-item sup">Engineering<small>building &amp; equipment</small></div>
-              </div>
-            </div>
-
-          </div>
-
-          <div class="org-stubs"><div class="org-stub"></div><div class="org-stub"></div><div class="org-stub"></div></div>
-          <div class="org-converge">all three come together at</div>
-          <div class="org-patient">THE PATIENT<small>the one place every chain meets</small></div>
+      <div class="org-cols2">
+        <div class="org-col doc">
+          <div class="org-head doc">🩺 Doctors<small>decide the medical plan</small></div>
+          <div class="org-item doc">CMO<small>top doctor in the building</small></div>
+          <div class="org-conn"></div>
+          <div class="org-item doc">Attending<small>owns your case</small></div>
+          <div class="org-conn"></div>
+          <div class="org-item doc">Residents &amp; Fellows<small>doctors in training</small></div>
+          <div class="org-conn"></div>
+          <div class="org-item doc">NPs &amp; PAs<small>grouped as "ACPs"</small></div>
+        </div>
+        <div class="org-col nurse">
+          <div class="org-head nurse">👩‍⚕️ Nurses<small>deliver the care 24/7</small></div>
+          <div class="org-item nurse">CNO<small>top nurse in the building</small></div>
+          <div class="org-conn"></div>
+          <div class="org-item nurse">Director<small>oversees several units</small></div>
+          <div class="org-conn"></div>
+          <div class="org-item nurse">Nurse Manager / ANM<small>run the unit</small></div>
+          <div class="org-conn"></div>
+          <div class="org-item nurse">Charge Nurse<small>optional · runs the shift</small></div>
+          <div class="org-conn"></div>
+          <div class="org-item nurse">Bedside RN<small>at the patient</small></div>
+          <div class="org-conn"></div>
+          <div class="org-item nurse">LPN <i>or</i> PCA<small>one supports the RN</small></div>
         </div>
       </div>
-      <div class="scrollhint">swipe to see all three columns</div>
+
+      <div class="org-merge">
+        <span class="org-merge-line"></span>
+        <div class="org-converge">both chains meet at</div>
+        <div class="org-patient">THE PATIENT<small>the one place the two chains meet</small></div>
+      </div>
+
+      <div class="org-support">
+        <div class="org-support-head">🧩 Support — the services that keep it all running</div>
+        <div class="org-support-grid">
+          <div class="org-item sup">Patient Access<small>registration &amp; insurance</small></div>
+          <div class="org-item sup">Bed Management<small>finds the bed</small></div>
+          <div class="org-item sup">Patient Navigation<small>moves patients</small></div>
+          <div class="org-item sup">Case Management<small>home aides &amp; equipment</small></div>
+          <div class="org-item sup">Social Work<small>facility placement</small></div>
+          <div class="org-item sup">Pharmacy<small>mixes, doses, checks meds</small></div>
+          <div class="org-item sup">Lab<small>runs the tests</small></div>
+          <div class="org-item sup">EVS<small>cleaning &amp; turnover</small></div>
+          <div class="org-item sup">Food &amp; Nutrition<small>meals &amp; diets</small></div>
+          <div class="org-item sup">Engineering<small>building &amp; equipment</small></div>
+        </div>
+      </div>
     </div>
 
     <div class="rule">
@@ -561,7 +560,7 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
 
       <div class="role doc">
         <div class="role-head"><h3>The Private Attending</h3><span class="abbr">a type of attending</span></div>
-        <p class="what">A community physician with their <b>own outpatient clinic</b> who admits their own patients and stays their attending in the hospital. Unlike a hospitalist, <b>the hospital isn't their home base</b> — they typically round <b>early in the morning</b>, then leave for their practice.</p>
+        <p class="what">A community physician with their <b>own outpatient clinic</b> who admits their own patients and stays their attending in the hospital. Unlike a hospitalist, <b>the hospital isn't their home base</b> — they come in to see their patients (often <b>early in the morning</b>) and move <b>in and out</b> between the hospital and their clinic. They're not offsite all day; they're just <b>not continuously onsite</b> the way a hospitalist is.</p>
         <div class="cc">
           <div class="box can"><h4>Can do</h4><ul>
             <li>Be the attending for their own patients — set the plan and orders</li>
@@ -569,11 +568,11 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
             <li>Carry the relationship from clinic → hospital → back to clinic</li>
           </ul></div>
           <div class="box cant"><h4>The catch</h4><ul>
-            <li>Not on-site 24/7 — in clinic most of the day, so harder to reach</li>
-            <li>Off-hours, a <b>group colleague covers</b> their patients, not them</li>
+            <li>Not continuously on-site — in and out during the day, so harder to reach at any given moment</li>
+            <li>A <b>group partner covers</b> only when they're truly away (vacation, or if a patient switches off them) — not as a routine daily hand-off</li>
           </ul></div>
         </div>
-        <div class="aka"><b>The practical difference:</b> a hospitalist is in the building all shift; a private attending swoops in early, then during the day you're often reaching their <b>group's covering colleague</b> instead.</div>
+        <div class="aka"><b>The practical difference:</b> a hospitalist is in the building the whole shift; a private attending comes in to round — early, or in and out — but isn't there continuously. A group partner steps in mainly when they're actually off, not during a normal day.</div>
       </div>
 
       <div class="role doc">
