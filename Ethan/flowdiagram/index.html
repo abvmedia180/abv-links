@@ -226,6 +226,38 @@ h2 .num{color:var(--ink-faint);font-weight:600;margin-right:8px}
 .howto li::before{content:"✓";position:absolute;left:0;color:var(--nurse);font-weight:700}
 .howto b{font-weight:700}
 
+/* ---------- MONEY / WEIGHTS ---------- */
+.wbar{display:grid;gap:9px;margin-top:16px}
+.wbar .row{display:grid;grid-template-columns:150px 1fr 40px;align-items:center;gap:12px}
+.wbar .lbl{font-size:13px;font-weight:600;color:var(--ink);line-height:1.2}
+.wbar .track{background:var(--line-soft);border-radius:6px;height:22px;overflow:hidden}
+.wbar .fill{height:100%;border-radius:6px;background:var(--doc)}
+.wbar .pct{font-size:13.5px;font-weight:700;color:var(--ink);text-align:right}
+.wbar .row.px .fill{background:var(--nurse)}
+.wbar .row.px .lbl{color:var(--nurse)}
+@media(max-width:480px){.wbar .row{grid-template-columns:120px 1fr 34px;gap:8px}.wbar .lbl{font-size:11.5px}}
+.verdict{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--support);border-radius:12px;padding:19px 20px;margin-top:18px;box-shadow:var(--shadow)}
+.verdict .q{font-size:14px;color:var(--ink-soft);font-style:italic;margin-bottom:9px}
+.verdict .v{font-weight:700;font-size:15.5px;color:var(--support);margin-bottom:12px;font-family:var(--disp)}
+.verdict ul{list-style:none;display:grid;gap:10px}
+.verdict li{font-size:13.5px;color:var(--ink);padding-left:19px;position:relative;line-height:1.5}
+.verdict li.t::before{content:"✓";position:absolute;left:0;color:var(--can);font-weight:700}
+.verdict li.f::before{content:"✕";position:absolute;left:0;color:var(--cant);font-weight:700}
+.verdict b{font-weight:700}
+.example{background:#f0f4fb;border:1px solid var(--doc-line);border-radius:12px;padding:17px 19px;margin-top:16px;font-size:14px;color:var(--ink);line-height:1.55}
+.example .h{font:700 11px/1 var(--body);letter-spacing:.07em;text-transform:uppercase;color:var(--doc);margin-bottom:8px}
+.example b{font-weight:700}
+.progs{display:grid;gap:12px;margin-top:16px}
+@media(min-width:560px){.progs{grid-template-columns:1fr 1fr}}
+.prog{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:15px 16px;box-shadow:var(--shadow)}
+.prog .hd{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:6px}
+.prog h4{font-family:var(--disp);font-size:15px;font-weight:700}
+.prog .amt{font:700 12px/1 var(--body);padding:4px 8px;border-radius:6px;white-space:nowrap}
+.prog .amt.pen{background:var(--cant-bg);color:var(--cant)}
+.prog .amt.both{background:var(--support-bg);color:var(--support)}
+.prog .amt.ind{background:var(--line-soft);color:var(--ink-soft)}
+.prog p{font-size:13px;color:var(--ink-soft);line-height:1.45}
+
 /* ---------- GLOSSARY ---------- */
 .gloss{margin-top:22px;display:grid;gap:2px;background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)}
 .grow{display:grid;grid-template-columns:auto 1fr;gap:14px;padding:13px 18px;border-bottom:1px solid var(--line-soft);align-items:baseline}
@@ -299,9 +331,9 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
             <div class="org-col sup">
               <div class="org-head sup">🧩 Support<small>services around the care</small></div>
               <div class="org-item sup">Bed Management<small>finds the bed</small></div>
-              <div class="org-item sup">Case Management<small>home aides, equipment, insurance</small></div>
+              <div class="org-item sup">Case Management<small>aides, equipment, home services</small></div>
               <div class="org-item sup">Social Work<small>rehab / nursing-home placement</small></div>
-              <div class="org-item sup">Pharmacy<small>checks the meds</small></div>
+              <div class="org-item sup">Pharmacy<small>mixes, doses &amp; checks meds</small></div>
               <div class="org-item sup">Lab<small>runs the tests</small></div>
               <div class="org-item sup">EVS<small>cleaning &amp; bed turnover</small></div>
               <div class="org-item sup">Food &amp; Nutrition<small>meals &amp; diets</small></div>
@@ -480,10 +512,6 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
       </div>
     </div>
 
-    <div class="note">
-      <div class="ic">↺</div>
-      <div><b>The correction on your board:</b> you had the gist, with one nuance. An NP isn't locked out of ever switching specialties — it's that they're certified for a <i>population</i> (adults, kids, psych…), so a big switch needs new training. The PA's flexibility is the real headline: general training in, easy specialty-hopping out. And both, not just doctors, can write prescriptions.</div>
-    </div>
   </div>
 </section>
 
@@ -573,7 +601,7 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
     <div class="supflow">
       <div class="supstage"><div class="when">On arrival</div><div class="team">Bed Management</div><div class="role">Finds and assigns the bed; runs the flow of patients in, across, and out.</div></div>
       <div class="suparrow">➜</div>
-      <div class="supstage"><div class="when">Throughout the stay</div><div class="team">Case Management</div><div class="role">Handles insurance and everything needed to go home — home health, equipment, oxygen.</div></div>
+      <div class="supstage"><div class="when">Throughout the stay</div><div class="team">Case Management</div><div class="role">Sets up everything needed to go home — aides, equipment, oxygen, and home services.</div></div>
       <div class="suparrow">➜</div>
       <div class="supstage"><div class="when">If home isn't safe yet</div><div class="team">Social Work</div><div class="role">Sets up placement at a rehab or nursing facility and arranges the transfer.</div></div>
     </div>
@@ -581,12 +609,13 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
     <div class="roles">
       <div class="role sup">
         <div class="role-head"><h3>Case Management</h3></div>
-        <p class="what">The <b>insurance and go-home</b> engine. Often nurses by background. They work the payer side and set up everything a patient needs to be safe <b>at home.</b></p>
+        <p class="what">The <b>go-home</b> engine. Often nurses by background. They set up everything a patient needs to be safe and cared for <b>at home</b> after discharge.</p>
         <div class="cc">
           <div class="box can"><h4>Handles</h4><ul>
-            <li>Insurance approvals and "is this covered?"</li>
-            <li>Home aides and visiting-nurse services</li>
-            <li>Home equipment and supplies — oxygen, hospital bed, walker</li>
+            <li>Home health aides &amp; personal-care aides (bathing, dressing, daily tasks)</li>
+            <li>Visiting/skilled nurses and home physical or occupational therapy</li>
+            <li>Durable equipment — oxygen, hospital bed, walker, wheelchair, commode</li>
+            <li>Home supplies &amp; services — wound/ostomy supplies, home IV infusion, delivery &amp; setup</li>
           </ul></div>
           <div class="box cant"><h4>Doesn't</h4><ul>
             <li>Arrange rehab or nursing-home placement (Social Work does that here)</li>
@@ -869,11 +898,13 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
     <h2>Support &amp; service roles</h2>
     <p class="lead">Not doctors, not nurses, not the placement teams — but the floor stops working without them. These <strong>support and ancillary services</strong> are the people a new hire sees all day and needs to be able to name.</p>
     <div class="specgrid">
-      <div class="spec"><h3>Pharmacy <span class="tag">pharmacists</span></h3><div class="desc">Check every medication order before it reaches the patient — right drug, right dose, no dangerous interactions. Clinical pharmacists round with the team.</div>
+      <div class="spec"><h3>Pharmacy <span class="tag">pharmacists</span></h3><div class="desc">Far more than a drug counter. They verify every order, but also <b>prepare and mix medications</b> (IV drips, chemo, IV nutrition), <b>dose the tricky drugs</b> (blood thinners, key antibiotics), guide antibiotic use, reconcile a patient's home meds, respond to codes, and counsel patients at discharge.</div>
         <ul class="terms">
           <li><b>Verify</b> = a pharmacist clears an order before it can be given</li>
+          <li><b>Med rec</b> = reconciling home meds vs. hospital orders to catch conflicts</li>
+          <li><b>Stewardship</b> = pharmacists steering the right antibiotic use</li>
+          <li><b>Compounding</b> = mixing custom IVs, chemo, and nutrition in a clean room</li>
           <li><b>Formulary</b> = the hospital's approved drug list</li>
-          <li><b>Renal dosing</b> = adjusting a dose for weak kidneys</li>
         </ul></div>
       <div class="spec"><h3>Respiratory Therapy <span class="tag">RT</span></h3><div class="desc">The breathing team — they run ventilators, give breathing treatments and oxygen, assist intubations, and draw arterial gases. Everywhere the sickest patients are.</div>
         <ul class="terms">
@@ -945,25 +976,22 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
           <div class="node adm">COO<small>operations</small></div>
           <div class="node adm">CFO<small>finance</small></div>
           <div class="node doc">CMO<small>doctors</small></div>
+          <div class="node doc">Assoc. Med. Dir.<small>CMO's deputy</small></div>
           <div class="node nurse">CNO<small>nurses</small></div>
+          <div class="node" style="background:var(--nurse-bg);border-color:var(--nurse-line);color:var(--nurse)">★ VP, Patient Exp.<small>experience</small></div>
+          <div class="node adm">VP, Periop<small>surgery / OR</small></div>
+          <div class="node adm">VP, Quality<small>quality</small></div>
+          <div class="node adm">VP, Biz Dev<small>growth</small></div>
+          <div class="node adm">VP, HR<small>people</small></div>
+          <div class="node adm">VP, IT<small>technology</small></div>
         </div>
-        <div style="font-size:12.5px;color:var(--ink-faint);margin-top:11px;line-height:1.45">The CMO's deputy is the <b style="color:var(--doc)">Associate Medical Director</b>; below the CNO sit the nursing Directors.</div>
-        <div class="org-conn" style="height:16px"></div>
-        <div style="font:700 11px/1 var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:11px">Vice Presidents — each runs a major function</div>
-        <div class="node-row">
-          <div class="node" style="background:var(--nurse-bg);border-color:var(--nurse-line);color:var(--nurse)">★ VP Patient Experience</div>
-          <div class="node adm">VP Perioperative</div>
-          <div class="node adm">VP Quality</div>
-          <div class="node adm">VP Business Development</div>
-          <div class="node adm">VP Human Resources</div>
-          <div class="node adm">VP Information Technology</div>
-        </div>
+        <div style="font-size:12px;color:var(--ink-faint);margin-top:13px;line-height:1.45">All sit on the leadership team under the CEO. (Below the CNO sit the nursing Directors; each VP runs one major function.)</div>
       </div>
     </div>
 
     <p class="lead" style="margin-top:26px">Under leadership sit the <strong>quality and operations teams</strong> — they don't give bedside care, they make the whole system safer, cleaner, and better. This is the world a patient-experience or operations hire lives in.</p>
     <div class="specgrid">
-      <div class="spec"><h3>Quality &amp; Risk Management</h3><div class="desc">Two closely-linked functions, usually lumped together here. <b>Quality</b> tracks how the hospital performs against safety and outcome standards and drives improvement; <b>Risk</b> handles safety events, complaints, and anything with legal exposure.</div>
+      <div class="spec"><h3>Quality</h3><div class="desc">The on-site team that tracks how the hospital performs against safety and outcome standards, runs improvement work, and handles most of what comes up day-to-day. <b>Risk Management</b> sits at the corporate level — Quality loops them in when a case actually needs it.</div>
         <ul class="terms">
           <li><b>Core measures</b> = standardized quality metrics hospitals are scored on</li>
           <li><b>Incident report</b> = the internal filing when something goes wrong</li>
@@ -994,6 +1022,59 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
         <li><b>VBP (Value-Based Purchasing)</b> = the CMS program that ties a slice of payment to these scores.</li>
       </ul>
     </div>
+  </div>
+</section>
+
+<!-- MONEY -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="eyebrow s" style="color:var(--support)">Deep dive · your world</div>
+    <h2>How the hospital gets paid — and why PX is worth real money</h2>
+    <p class="lead">This is what makes patient experience a boardroom topic, not a nicety. Medicare doesn't just pay for care — it adjusts that payment up or down based on quality and experience. Here's how the money really flows. <span style="color:var(--ink-faint)">(Figures reflect FY 2025 Medicare rules; dollar thresholds reset yearly and the HCAHPS survey is being redesigned over 2027–2030, so treat the specifics as current, not permanent.)</span></p>
+
+    <div class="subh">1 · Paid by diagnosis, not by day</div>
+    <p class="lead" style="margin-bottom:0">Medicare mostly pays a hospital a <b>fixed, pre-set amount per admission based on the diagnosis</b> — the <b>DRG</b> (Diagnosis-Related Group) — largely regardless of how long the patient actually stays. Each DRG is priced around an expected length of stay. That single fact drives a lot of hospital behavior:</p>
+    <div class="example">
+      <div class="h">Why length of stay is a money problem</div>
+      Say a DRG is priced around a <b>15-day</b> stay. Whether the patient goes home on day 12 or stays <b>60 days</b>, the base payment is essentially the <b>same flat amount.</b> Leave efficiently → the hospital keeps the margin. A long, complicated stay → the hospital <b>eats the extra weeks.</b> That's why throughput and safe, timely discharge (Case Management, Social Work, Bed Management) is a financial issue, not just a clinical one.
+    </div>
+    <div class="note" style="margin-top:14px"><div class="ic">⛑</div><div><b>The one safety valve:</b> for extraordinarily expensive cases, Medicare adds an <b>"outlier" payment</b> once costs pass a high threshold (about <b>$46,000 above the DRG</b> in FY 2025, then ~80% of costs beyond that). It softens catastrophic losses — it doesn't erase them.</div></div>
+
+    <div class="subh">2 · The four programs that move the money</div>
+    <p class="lead" style="margin-bottom:0">On top of the base DRG, four Medicare programs adjust what a hospital actually takes home. Three are penalties; one can go either way.</p>
+    <div class="progs">
+      <div class="prog"><div class="hd"><h4>Value-Based Purchasing</h4><span class="amt both">± 2%</span></div><p>2% of DRG payments is withheld and redistributed by performance. Budget-neutral — beat the field and you earn back more than 2%; lag and you get less. <b>Patient experience (HCAHPS) is 25% of the score.</b></p></div>
+      <div class="prog"><div class="hd"><h4>Readmissions (HRRP)</h4><span class="amt pen">−3% max</span></div><p>Penalty if too many patients bounce back within 30 days for six tracked conditions (heart attack, heart failure, pneumonia, COPD, hip/knee replacement, bypass). Once triggered it hits <b>all</b> your Medicare admissions, not just those six.</p></div>
+      <div class="prog"><div class="hd"><h4>Hospital-Acquired Conditions</h4><span class="amt pen">−1%</span></div><p>The worst-performing <b>25% of hospitals</b> lose 1% of Medicare payments for infections and safety events picked up <i>inside</i> the hospital. Penalty-only.</p></div>
+      <div class="prog"><div class="hd"><h4>Star Rating &amp; reporting</h4><span class="amt ind">indirect</span></div><p>No direct dollar, but the public 1–5 star rating drives reputation and patient volume — and it's the number leadership gets asked about.</p></div>
+    </div>
+
+    <div class="subh">3 · The Star Rating, decoded</div>
+    <p class="lead" style="margin-bottom:0">The public <b>1–5 star Overall Hospital Quality Star Rating</b> is built from five measure groups. Four count equally; the process group counts a bit less:</p>
+    <div class="wbar">
+      <div class="row"><span class="lbl">Mortality</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="pct">22%</span></div>
+      <div class="row"><span class="lbl">Safety of Care</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="pct">22%</span></div>
+      <div class="row"><span class="lbl">Readmission</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="pct">22%</span></div>
+      <div class="row px"><span class="lbl">Patient Experience</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="pct">22%</span></div>
+      <div class="row"><span class="lbl">Timely &amp; Effective Care</span><span class="track"><span class="fill" style="width:55%"></span></span><span class="pct">12%</span></div>
+    </div>
+    <p class="lead" style="margin-top:15px;margin-bottom:0">CMS standardizes every measure, averages them within each group, combines the groups with those weights, and uses <b>clustering</b> to draw the star lines — comparing you against hospitals that report a similar number of measures. <b>New in 2025:</b> a hospital in the bottom quartile for Safety is <b>capped at 4 stars</b> no matter how strong the rest looks.</p>
+    <div class="note" style="margin-top:14px"><div class="ic">≠</div><div><b>Two different "star ratings" — don't mix them up:</b> the <b>Overall Star Rating</b> above (all five groups; patient experience is only 22%) versus a separate <b>HCAHPS Star Rating</b> built purely from the patient survey. Same 1–5 look, different thing.</div></div>
+
+    <div class="subh">4 · HCAHPS &amp; the "Top Box"</div>
+    <p class="lead" style="margin-bottom:0">HCAHPS is the survey patients get after discharge — nurse and doctor communication, staff responsiveness, communication about medicines, discharge info, care transitions, cleanliness, quietness, an overall 0–10 rating, and whether they'd recommend the hospital. Burn in the scoring rule: <b>only the single best answer counts.</b> "Always" (or 9–10, or "Definitely yes") is <b>"Top Box"</b> — and <b>"Usually" scores exactly the same as "Never": zero.</b></p>
+
+    <div class="subh">5 · The rumor, settled</div>
+    <div class="verdict">
+      <div class="q">"If a patient doesn't answer <b>Always</b> on the survey, we don't get reimbursed."</div>
+      <div class="v">Verdict: false as stated — but there's a real kernel.</div>
+      <ul>
+        <li class="t"><b>The kernel of truth:</b> scoring is top-box-only, so a "Usually" genuinely doesn't help you — for the score it's worth the same as "Never." That's why every non-"Always" feels like it costs you.</li>
+        <li class="f"><b>What's wrong:</b> no single survey maps to a specific dollar a patient can "cancel." HCAHPS feeds VBP — a <b>budget-neutral</b> pool (the 2% withhold) redistributed by comparing your <b>aggregate</b> scores to other hospitals over months — and HCAHPS is only about <b>25%</b> of that score.</li>
+        <li class="f"><b>The proof:</b> a hospital can have survey misses and <i>still</i> earn back more than its 2% if its overall performance beats the field. The link to money is real, but it's <b>statistical and aggregate, not one-survey-one-check.</b></li>
+      </ul>
+    </div>
+    <div class="note" style="margin-top:16px"><div class="ic">◎</div><div><b>The honest version to tell staff:</b> every "Always" matters because top-box is all-or-nothing — but no single survey is a specific payment we win or lose. It's the aggregate, over time, against everyone else.</div></div>
   </div>
 </section>
 
@@ -1087,7 +1168,7 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
       <div class="grow"><span class="term">Charge Nurse</span><span class="def">The RN running a given shift on a floor. A role, not a rank.</span></div>
       <div class="grow"><span class="term">LPN</span><span class="def">Licensed Practical Nurse — licensed, focused scope; works under an RN.</span></div>
       <div class="grow"><span class="term">PCA</span><span class="def">Patient Care Assistant — unlicensed aide; vitals, comfort, safety, no meds.</span></div>
-      <div class="grow"><span class="term">Case Management</span><span class="def">Insurance plus the go-home setup — home aides, visiting nurses, equipment.</span></div>
+      <div class="grow"><span class="term">Case Management</span><span class="def">The go-home setup — home aides, visiting nurses, equipment, and supplies.</span></div>
       <div class="grow"><span class="term">Social Work</span><span class="def">Discharge planning to a facility (rehab/nursing home), plus counseling and safety.</span></div>
       <div class="grow"><span class="term">Bed Management</span><span class="def">Air-traffic control for hospital beds and patient flow.</span></div>
     </div>
