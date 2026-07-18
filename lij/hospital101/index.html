@@ -192,6 +192,7 @@ h2 .num{color:var(--ink-faint);font-weight:600;margin-right:8px}
 .note .ic{flex:0 0 auto;width:32px;height:32px;border-radius:9px;background:var(--support-bg);color:var(--support);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;line-height:1}
 .note b{color:var(--ink)}
 .note.myth .ic{background:var(--doc-bg);color:var(--doc)}
+.note,.equity,.example,.verdict{max-width:640px}
 
 /* ---------- VERTICAL HIERARCHY ---------- */
 .hier{margin-top:22px;display:grid;gap:0}
@@ -398,7 +399,7 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
           <a href="#specialties">The specialties</a>
           <a href="#services">Support &amp; service roles</a>
           <a href="#leadership">Who runs the hospital</a>
-          <a href="#money">How the hospital gets paid</a>
+          <a href="#money">Reimbursement</a>
           <a href="#pain">Pain management</a>
           <a href="#imaging">Imaging (MRI, CT, cardiac)</a>
           <a href="#words">Words you'll hear</a>
@@ -425,7 +426,7 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
     <a href="#specialties"><span class="d"></span>Specialties</a>
     <a href="#services"><span class="d"></span>Service roles</a>
     <a href="#leadership"><span class="d"></span>Leadership</a>
-    <a href="#money"><span class="d"></span>Getting paid</a>
+    <a href="#money"><span class="d"></span>Reimbursement</a>
     <a href="#pain"><span class="d"></span>Pain mgmt</a>
     <a href="#imaging"><span class="d"></span>Imaging</a>
     <a href="#words"><span class="d"></span>Words you'll hear</a>
@@ -454,7 +455,7 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
       <div class="tag">The whole hospital in 30 seconds</div>
       <p>A hospital runs on <b>two separate chains</b> that meet at the patient: <b>doctors</b> decide the medical plan, <b>nurses</b> deliver the care. They don't report to each other.</p>
       <p>Around them, <b>support teams</b> handle beds, discharge, pharmacy, lab, and the building. When something's wrong, you <b>climb the ladder one step at a time</b> — bedside first, never straight to the top.</p>
-      <p>Everything else here — specialties, imaging, how the hospital gets paid — is just detail hanging off those few ideas.</p>
+      <p>Everything else here — specialties, imaging, reimbursement — is just detail hanging off those few ideas.</p>
     </div>
     <div class="howuse"><b>How to use this page:</b> read <b>Start here</b> for the map — that's the day-one essential. The <b>Reference</b> sections are there to look things up when you need them, not to read straight through. Jump around anytime with the <b>Contents</b> menu at the top.</div>
     <div class="toc">
@@ -473,7 +474,7 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
         <a href="#specialties"><span class="toc-num">08</span>The specialties</a>
         <a href="#services"><span class="toc-num">09</span>Support &amp; service roles</a>
         <a href="#leadership"><span class="toc-num">10</span>Who runs the hospital</a>
-        <a href="#money"><span class="toc-num">11</span>How the hospital gets paid</a>
+        <a href="#money"><span class="toc-num">11</span>Reimbursement</a>
         <a href="#pain"><span class="toc-num">12</span>Pain management</a>
         <a href="#imaging"><span class="toc-num">13</span>Imaging</a>
         <a href="#words"><span class="toc-num">14</span>Words you'll hear</a>
@@ -882,7 +883,7 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
 <div class="tier"><div class="tier-in">
   <div class="k">▽ you've got the map</div>
   <div class="t">The rest is reference</div>
-  <div class="d">Everything below is here to look up when a question comes up — specialties, imaging, how the hospital gets paid. Skim it or skip it; it'll be waiting when you need it.</div>
+  <div class="d">Everything below is here to look up when a question comes up — specialties, imaging, reimbursement. Skim it or skip it; it'll be waiting when you need it.</div>
 </div></div>
 
 <!-- SPECIALTIES -->
@@ -1184,7 +1185,7 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
           <div class="lead-card"><div class="t">VP, HR</div><div class="s">people</div></div>
           <div class="lead-card"><div class="t">VP, IT</div><div class="s">technology</div></div>
         </div>
-        <div class="lead-note">All of these report to the CEO on the leadership team. (Below the CNO sit the nursing Directors; each VP runs one major function.)</div>
+        <div class="lead-note">All of these executives report to the CEO and make up the hospital's executive team.</div>
       </div>
     </div>
 
@@ -1233,7 +1234,7 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
 <section id="money" style="padding-top:0">
   <div class="wrap">
     <div class="eyebrow s" style="color:var(--support)">Deep dive · your world</div>
-    <h2>How the hospital gets paid — the short version</h2>
+    <h2>How reimbursement works</h2>
     <p class="lead">Two ideas explain most of it. <span style="color:var(--ink-faint)">(Based on current Medicare rules; the specifics shift year to year.)</span></p>
 
     <div class="subh">1 · Paid by diagnosis, not by day</div>
@@ -1255,12 +1256,13 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
 
     <div class="subh">3 · The rumor, settled</div>
     <div class="verdict">
-      <div class="q">"If a patient doesn't answer <b>Always</b>, we don't get reimbursed for that patient's stay."</div>
-      <div class="v">Verdict: not per-patient — but it matters a lot more than the rumor makes it sound.</div>
+      <div class="q">"If a patient doesn't answer 'Always' on the survey, we lose money for that patient's stay."</div>
+      <div class="v">Not for that one stay — but the surveys add up to something that matters a lot.</div>
       <ul>
-        <li class="f"><b>Not that one stay:</b> the individual admission is paid by its DRG, and the survey has no effect on that specific bill. No single answer cancels one patient's payment.</li>
-        <li class="t"><b>But every "Always" counts:</b> scoring is top-box-only, so a "Usually" scores like a "Never." Each survey feeds the hospital's <i>overall</i> patient-experience score.</li>
-        <li class="t"><b>And in aggregate it's big:</b> that overall score sets the hospital's Medicare payment adjustment and its public star rating, measured against every other hospital. Across a <b>large multi-hospital system</b>, small score differences move real dollars and reputation. It's not one patient at a time — it's <b>all of them together, and it's very real money.</b></li>
+        <li class="f"><b>That patient is already paid for.</b> The hospital gets a set amount for their diagnosis, and the survey doesn't change it. No single survey cancels a specific bill.</li>
+        <li class="t"><b>Only the top answer counts.</b> The choices are Never → Sometimes → Usually → Always, and the hospital only gets credit for <b>"Always."</b> Even "Usually" counts as a zero. That's the whole reason "Always" matters so much.</li>
+        <li class="t"><b>All the answers add up to a score.</b> The hospital's overall "Always" rate becomes a number, compared against every other hospital — and that number sets a slice of its Medicare payment and its public 1–5 star rating.</li>
+        <li class="t"><b>So it does matter — just not one patient at a time.</b> Across a big multi-hospital system, small differences in that score move real money and reputation.</li>
       </ul>
     </div>
   </div>
