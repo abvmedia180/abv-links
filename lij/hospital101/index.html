@@ -51,6 +51,17 @@ section{scroll-margin-top:60px}
 .menu-panel a{display:block;font-size:13.5px;color:var(--ink);text-decoration:none;padding:7px 9px;border-radius:8px;line-height:1.3}
 .menu-panel a:hover{background:var(--line-soft)}
 
+/* ---------- SIDE RAIL NAV ---------- */
+.sidenav{position:fixed;top:50%;transform:translateY(-50%);left:calc(50% - 600px);width:168px;z-index:40;display:none}
+@media(min-width:1240px){.sidenav{display:block}}
+.sidenav .sn-h{font-family:var(--mono);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-faint);margin:0 0 7px 2px}
+.sidenav .sn-group+.sn-group{margin-top:15px}
+.sidenav a{display:flex;align-items:center;gap:9px;font-size:11.5px;color:var(--ink-faint);text-decoration:none;padding:3px 0;line-height:1.25}
+.sidenav a .d{width:6px;height:6px;border-radius:50%;background:var(--line);flex:0 0 auto;transition:background .2s,transform .2s}
+.sidenav a:hover{color:var(--ink-soft)}
+.sidenav a.active{color:var(--ink);font-weight:600}
+.sidenav a.active .d{background:var(--nurse);transform:scale(1.55)}
+
 /* ---------- CONTENTS / TL;DR ---------- */
 .tldr{background:linear-gradient(145deg,#12233f,#20365c);color:#fff;border-radius:var(--r);padding:24px 22px;box-shadow:var(--shadow-lg)}
 .tldr .tag{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#8fb0ff;margin-bottom:12px}
@@ -176,8 +187,8 @@ h2 .num{color:var(--ink-faint);font-weight:600;margin-right:8px}
 .role .aka b{color:var(--ink-soft)}
 
 /* ---------- MYTH / NOTE CALLOUT ---------- */
-.note{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-top:18px;font-size:14px;color:var(--ink-soft);display:flex;gap:13px}
-.note .ic{flex:0 0 auto;width:30px;height:30px;border-radius:8px;background:var(--support-bg);color:var(--support);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px}
+.note{background:#faf7f1;border:1px solid var(--line);border-radius:12px;padding:15px 17px;margin-top:18px;font-size:14px;color:var(--ink-soft);display:flex;gap:13px;align-items:flex-start}
+.note .ic{flex:0 0 auto;width:32px;height:32px;border-radius:9px;background:var(--support-bg);color:var(--support);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;line-height:1}
 .note b{color:var(--ink)}
 .note.myth .ic{background:var(--doc-bg);color:var(--doc)}
 
@@ -396,6 +407,30 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
     </details>
   </div>
 </nav>
+
+<aside class="sidenav" aria-label="Section navigation">
+  <div class="sn-group">
+    <div class="sn-h">Start here</div>
+    <a href="#map"><span class="d"></span>Big picture</a>
+    <a href="#doctors"><span class="d"></span>Doctors</a>
+    <a href="#acps"><span class="d"></span>NPs &amp; PAs</a>
+    <a href="#nurses"><span class="d"></span>Nurses</a>
+    <a href="#support"><span class="d"></span>Support teams</a>
+    <a href="#escalation"><span class="d"></span>Who to go to</a>
+    <a href="#journey"><span class="d"></span>One patient</a>
+  </div>
+  <div class="sn-group">
+    <div class="sn-h">Reference</div>
+    <a href="#specialties"><span class="d"></span>Specialties</a>
+    <a href="#services"><span class="d"></span>Service roles</a>
+    <a href="#leadership"><span class="d"></span>Leadership</a>
+    <a href="#money"><span class="d"></span>Getting paid</a>
+    <a href="#pain"><span class="d"></span>Pain mgmt</a>
+    <a href="#imaging"><span class="d"></span>Imaging</a>
+    <a href="#words"><span class="d"></span>Words you'll hear</a>
+    <a href="#glossary"><span class="d"></span>Cheat sheet</a>
+  </div>
+</aside>
 
 <header class="hero" id="top">
   <div class="wrap">
@@ -1220,11 +1255,11 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
     <div class="subh">3 · The rumor, settled</div>
     <div class="verdict">
       <div class="q">"If a patient doesn't answer <b>Always</b>, we don't get reimbursed for that patient's stay."</div>
-      <div class="v">Verdict: false — the stay is paid either way.</div>
+      <div class="v">Verdict: not per-patient — but it matters a lot more than the rumor makes it sound.</div>
       <ul>
-        <li class="f"><b>That stay is already paid</b> by its DRG, and the survey has <b>zero effect</b> on it — no answer cancels an individual patient's payment.</li>
-        <li class="t"><b>The kernel of truth:</b> only "Always" helps the score, so a "Usually" doesn't help you — which is why every non-"Always" feels like it costs money.</li>
-        <li class="f"><b>What it actually moves:</b> all the surveys added together nudge the hospital's <i>overall</i> Medicare payment months later, measured against other hospitals. Real money — but hospital-wide and delayed, never one patient at a time.</li>
+        <li class="f"><b>Not that one stay:</b> the individual admission is paid by its DRG, and the survey has no effect on that specific bill. No single answer cancels one patient's payment.</li>
+        <li class="t"><b>But every "Always" counts:</b> scoring is top-box-only, so a "Usually" scores like a "Never." Each survey feeds the hospital's <i>overall</i> patient-experience score.</li>
+        <li class="t"><b>And in aggregate it's big:</b> that overall score sets the hospital's Medicare payment adjustment and its public star rating, measured against every other hospital. Across a <b>large multi-hospital system</b>, small score differences move real dollars and reputation. It's not one patient at a time — it's <b>all of them together, and it's very real money.</b></li>
       </ul>
     </div>
   </div>
@@ -1234,8 +1269,8 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
 <section id="pain" style="padding-top:0">
   <div class="wrap">
     <div class="eyebrow">Deep dive · your world</div>
-    <h2>Pain management — the patient-experience minefield</h2>
-    <p class="lead">Pain is the place where <strong>good clinical care and good patient experience can pull in opposite directions.</strong> That's exactly why it matters for your role — so it's worth understanding properly.</p>
+    <h2>Pain management</h2>
+    <p class="lead">Pain is one place where <strong>good clinical care and good patient experience can pull in different directions</strong> — which is exactly why it's worth understanding for your role.</p>
 
     <div class="subh">What it is, and the goal</div>
     <p class="lead" style="margin-bottom:0">Pain management is how a hospital controls pain that routine medicine can't handle alone — after surgery, with cancer, or during an acute flare. Big hospitals have an anesthesiology-led <b>Acute Pain Service</b> for complex cases; <b>Palliative Care</b> handles comfort in serious illness; but most pain is managed by the bedside nurse and the primary team. The modern standard is <b>multimodal</b> — combining opioids with non-opioids (Tylenol, anti-inflammatories, nerve blocks, nerve-pain meds, ice/heat, PT) to control pain with fewer opioids. And the goal is deliberately realistic: <b>tolerable pain and the ability to move, breathe, and sleep — not a pain score of zero.</b> Setting that expectation early is itself a patient-experience skill.</p>
@@ -1248,11 +1283,11 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
     </div>
 
     <div class="subh">Sickle cell &amp; the pain crisis</div>
-    <p class="lead" style="margin-bottom:0">Sickle cell disease (SCD) is inherited: red blood cells form a rigid, crescent shape, get stuck in small vessels, and block blood flow. When flow is blocked, the result is a <b>vaso-occlusive crisis (VOC)</b> — sudden, severe, <b>real</b> pain. People with SCD are hospitalized often over a lifetime, so many are <b>opioid-tolerant</b> and genuinely need higher doses to get relief — that reflects their disease and history, not misuse. National guidelines (ASH, NHLBI) say to treat fast (first opioid dose within about an hour), reassess every 15–30 minutes, dose to the patient's own individual pain plan, use a PCA pump for steady control, and — crucially — <b>not withhold pain medicine out of suspicion.</b></p>
+    <p class="lead" style="margin-bottom:0">Sickle cell disease (SCD) is inherited: red blood cells form a rigid, crescent shape, get stuck in small vessels, and block blood flow. When flow is blocked, the result is a <b>vaso-occlusive crisis (VOC)</b> — sudden, severe pain. Because people with SCD are hospitalized often over a lifetime, many are <b>opioid-tolerant</b> and need higher doses to get relief — a reflection of their disease and history. National guidelines call for prompt treatment (first opioid dose within about an hour), frequent reassessment, dosing to the patient's own <b>written pain plan</b>, and a PCA pump for steady control.</p>
 
-    <div class="equity">
-      <h4>★ Believe the pain</h4>
-      <p>People with sickle cell — a group that is disproportionately Black in the U.S. — are frequently and wrongly labeled <b>"drug-seeking"</b> and <b>under-treated</b> for real, severe pain, with longer ER waits and delayed relief. This is one of the most documented equity failures in hospital care, and it's a patient-experience problem as much as a clinical one. The default assumption should be that <b>the pain is real</b>, because the historical error has overwhelmingly been the opposite. Language to retire on sight: <b>"frequent flyer," "sickler," "drug-seeking"</b> — those labels are what drive the bias.</p>
+    <div class="note">
+      <div class="ic">i</div>
+      <div><b>Why the context helps:</b> a crisis is hard to see from the outside, and these are frequent, high-need patients — so the practical point for your role is simply to <b>follow the individual pain plan and route clinical questions to the care team</b>, rather than read anything into how much medication a patient needs.</div>
     </div>
 
     <div class="subh">The IV Benadryl question</div>
@@ -1287,32 +1322,29 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
     <p class="lead">"Imaging" is how the team sees inside the body. The two big scanners — MRI and CT — get confused constantly, and the safety rules around MRI are genuinely life-or-death, so they're worth knowing. <span style="color:var(--ink-faint)">(General orientation, not medical advice — clinicians make the calls, and some thresholds are set by each hospital's policy.)</span></p>
 
     <div class="subh">MRI — the magnet</div>
-    <p class="lead" style="margin-bottom:0"><b>MRI</b> uses a strong magnet and radio waves — <b>no radiation</b> — and is best for <b>soft tissue</b> (brain, spine, joints, organs). The catch: it's <b>loud, enclosed, and slow</b> (20–60+ minutes holding still). Its dye is <b>gadolinium</b>, given by IV, and patients are screened for kidney issues first. Some need medication before the scan — a <b>steroid + antihistamine</b> if they've reacted to contrast before, or an <b>anti-anxiety pill</b> for claustrophobia — and those who can't hold still (young kids, severe claustrophobia) may need <b>sedation or anesthesia</b> (which means no food beforehand and a recovery period).</p>
+    <p class="lead" style="margin-bottom:0"><b>MRI</b> uses a strong magnet — <b>no radiation</b> — and is best for <b>soft tissue</b> like the brain, spine, and joints. The downside: it's <b>slow, loud, and enclosed</b>, so patients who can't hold still (young kids, severe claustrophobia) may need sedation.</p>
 
     <div class="equity" style="background:#fbf0ee">
       <h4>⚠ MRI safety — the part that can kill someone</h4>
-      <p>The <b>magnet is always on.</b> Iron-containing metal (oxygen tanks, scissors, wheelchairs) becomes a deadly projectile, so <b>everyone is screened for metal and implants before entering</b> — no exceptions. Pacemakers and defibrillators are the big one: many modern ones are fine, but the device team must first switch them into a special <b>"MRI mode"</b> (they don't literally "turn it off") and reset them after. When in doubt, it's a hard stop until radiology clears it.</p>
+      <p>The <b>magnet is always on</b>, and metal becomes a dangerous projectile — so <b>everyone is screened for metal and implants before going in.</b> Pacemakers are the big one: many are fine, but only after the device team sets them to a special mode first. When in doubt, it's a hard stop until radiology clears it.</p>
     </div>
 
     <div class="subh">CT — the fast X-ray</div>
-    <p class="lead" style="margin-bottom:0"><b>CT</b> (the old "CAT scan") spins X-rays to build cross-section images. It <b>uses radiation</b>, but it's <b>fast</b> (seconds) and open — the ER's go-to for <b>bleeding, trauma, lungs, bones, and emergencies.</b> Its contrast is <b>iodine</b>-based (different from MRI's gadolinium).</p>
-    <div class="note" style="margin-top:14px"><div class="ic">✕</div><div><b>Myth worth killing:</b> a shellfish allergy or a reaction to iodine skin prep (Betadine) is <b>not</b> a reason to withhold CT contrast — they don't cross-react. That old belief still causes unnecessary delays.</div></div>
+    <p class="lead" style="margin-bottom:0"><b>CT</b> (the old "CAT scan") is a <b>fast X-ray</b> that builds cross-section images. It <b>uses radiation</b>, but it takes seconds and is open (not a tube) — so it's the ER's go-to for <b>bleeding, trauma, bones, and emergencies.</b></p>
 
     <div class="subh">MRI vs. CT — when each is used</div>
     <div class="vs">
-      <div class="vscol ct"><h4>CT — fast &amp; acute</h4><ul>
-        <li>X-rays; <b>uses radiation</b></li>
-        <li>Seconds to minutes; open ring</li>
-        <li>Best for <b>bleeding, trauma, bone, lung, emergencies</b></li>
-        <li>Contrast = <b>iodine</b></li>
-        <li>Cheaper, more available — <b>why the ER leans on it</b></li>
+      <div class="vscol ct"><h4>CT — fast &amp; urgent</h4><ul>
+        <li><b>Uses radiation</b> (X-rays)</li>
+        <li>Fast — seconds; open, not a tube</li>
+        <li>Best for <b>bleeding, trauma, bone, lungs, emergencies</b></li>
+        <li>The <b>ER's</b> go-to</li>
       </ul></div>
       <div class="vscol mri"><h4>MRI — detailed &amp; soft-tissue</h4><ul>
-        <li>Magnet + radio waves; <b>no radiation</b></li>
-        <li>20–60+ minutes; long, loud tube</li>
-        <li>Best for <b>brain, spine, joints, detailed soft tissue</b></li>
-        <li>Contrast = <b>gadolinium</b></li>
-        <li>Pricier, fewer scanners — usually <b>scheduled</b></li>
+        <li><b>No radiation</b> (magnet)</li>
+        <li>Slow — 20–60+ min; loud, enclosed</li>
+        <li>Best for <b>brain, spine, joints, fine detail</b></li>
+        <li>Usually <b>scheduled</b></li>
       </ul></div>
     </div>
 
@@ -1369,6 +1401,7 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
     <div class="gloss">
       <div class="grow"><span class="term">Attending</span><span class="def">The fully-licensed doctor in charge of a patient's case. The buck stops here.</span></div>
       <div class="grow"><span class="term">Hospitalist</span><span class="def">A doctor who only works in the hospital; usually the attending for medical admissions.</span></div>
+      <div class="grow"><span class="term">Private Attending</span><span class="def">A community doctor with their own clinic who admits and attends their own patients; not on-site continuously like a hospitalist.</span></div>
       <div class="grow"><span class="term">Resident</span><span class="def">A doctor in training, fresh out of med school, working under an attending.</span></div>
       <div class="grow"><span class="term">Fellow</span><span class="def">A doctor who finished residency and is training in a subspecialty.</span></div>
       <div class="grow"><span class="term">CMO</span><span class="def">Chief Medical Officer — the top doctor in the building.</span></div>
@@ -1384,6 +1417,14 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
       <div class="grow"><span class="term">Case Management</span><span class="def">The go-home setup — home aides, visiting nurses, equipment, and supplies.</span></div>
       <div class="grow"><span class="term">Social Work</span><span class="def">Discharge planning to a facility (rehab/nursing home), plus counseling and safety.</span></div>
       <div class="grow"><span class="term">Bed Management</span><span class="def">Air-traffic control for hospital beds and patient flow.</span></div>
+      <div class="grow"><span class="term">Patient Access</span><span class="def">Front end of revenue cycle — registration, demographics, and insurance.</span></div>
+      <div class="grow"><span class="term">Patient Navigation</span><span class="def">This hospital's name for the transport team that moves patients around the building.</span></div>
+      <div class="grow"><span class="term">IV Team</span><span class="def">Nurses who place hard IVs, often with ultrasound.</span></div>
+      <div class="grow"><span class="term">Pharmacy</span><span class="def">Verifies, mixes, and doses meds; guides antibiotics; reconciles home meds.</span></div>
+      <div class="grow"><span class="term">Lab</span><span class="def">Runs blood and fluid tests behind the scenes.</span></div>
+      <div class="grow"><span class="term">EVS</span><span class="def">Environmental Services — cleaning and bed turnover.</span></div>
+      <div class="grow"><span class="term">Unit Receptionist</span><span class="def">Front desk of a specific unit — phones, visitors, paperwork; non-clinical.</span></div>
+      <div class="grow"><span class="term">TJC / Joint Commission</span><span class="def">The Joint Commission — accredits hospitals; its on-site "survey" is a high-stakes inspection. (Formerly JCAHO.)</span></div>
     </div>
   </div>
 </section>
@@ -1395,6 +1436,24 @@ footer .disc{margin-top:12px;font-size:11.5px;color:#68779a;max-width:56ch;margi
     <div class="disc">General educational overview only — exact titles, scopes, and reporting lines vary by hospital and by state, and this is not clinical or legal guidance.</div>
   </div>
 </footer>
+
+<script>
+(function(){
+  var ids=['map','doctors','acps','nurses','support','escalation','journey','specialties','services','leadership','money','pain','imaging','words','glossary'];
+  var map={};
+  [].forEach.call(document.querySelectorAll('.sidenav a[href^="#"]'),function(a){ map[a.getAttribute('href').slice(1)]=a; });
+  if(!('IntersectionObserver' in window)) return;
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        for(var k in map) map[k].classList.remove('active');
+        if(map[e.target.id]) map[e.target.id].classList.add('active');
+      }
+    });
+  },{rootMargin:'-45% 0px -50% 0px',threshold:0});
+  ids.forEach(function(id){ var el=document.getElementById(id); if(el) obs.observe(el); });
+})();
+</script>
 
 </body>
 </html>
