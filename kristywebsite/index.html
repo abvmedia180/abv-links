@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How Your Website Was Made — A Simple Guide for Kristy</title>
+<meta name="description" content="A plain-English, no-jargon guide to how your website was built with Claude, GitHub, and Namecheap, and how you could make one yourself.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FBF6EC; --cream2:#F3EADB; --ink:#2A2320; --ink70:#5c534a;
+    --coral:#E0654A; --coral-d:#C24E36; --teal:#2E7D74; --gold:#C9932F;
+    --card:#FFFDF8; --line:rgba(42,35,32,.12); --line-soft:rgba(42,35,32,.07);
+    --shadow:0 20px 50px -26px rgba(42,35,32,.4); --shadow-sm:0 3px 14px rgba(42,35,32,.07);
+    --display:"Fraunces",Georgia,serif; --text:"Hanken Grotesk",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--text);color:var(--ink);background:var(--cream);line-height:1.65;font-size:clamp(1rem,.97rem+.2vw,1.13rem);-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:var(--display);font-weight:500;line-height:1.08;letter-spacing:-.015em}
+  a{color:var(--coral-d)}
+  img{max-width:100%;display:block}
+  .wrap{width:100%;max-width:960px;margin-inline:auto;padding-inline:clamp(1.2rem,5vw,2rem)}
+  .narrow{max-width:760px}
+  section{padding-block:clamp(2.6rem,6vw,4.5rem)}
+  .eyebrow{font-size:.8rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--coral-d);display:inline-flex;align-items:center;gap:.6em}
+  .eyebrow::before{content:"";width:22px;height:2px;background:currentColor;border-radius:2px}
+
+  /* top bar */
+  .bar{display:flex;align-items:center;justify-content:space-between;padding:1rem clamp(1.2rem,5vw,2rem);max-width:960px;margin-inline:auto}
+  .badge{font-family:var(--display);font-weight:600;font-size:1.05rem}
+  .badge b{color:var(--coral-d)}
+  .bar .hi{font-size:.9rem;color:var(--ink70);background:var(--cream2);padding:.4em 1em;border-radius:100px}
+
+  /* hero */
+  .hero{padding-top:clamp(1.5rem,4vw,2.5rem)}
+  .hero h1{font-size:clamp(2.3rem,1.5rem+3.4vw,4.2rem);max-width:16ch}
+  .hero h1 em{font-style:italic;color:var(--coral-d)}
+  .hero p.lead{font-size:clamp(1.15rem,1rem+.6vw,1.45rem);color:var(--ink70);max-width:44ch;margin-top:1.3rem}
+  .reassure{display:inline-flex;align-items:center;gap:.6em;margin-top:1.8rem;background:var(--card);border:1px solid var(--line);border-radius:100px;padding:.6em 1.1em;font-weight:600;font-size:.95rem;box-shadow:var(--shadow-sm)}
+  .reassure .dot{width:9px;height:9px;border-radius:50%;background:var(--teal)}
+
+  /* 3 pieces */
+  .pieces{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+  @media(max-width:760px){.pieces{grid-template-columns:1fr}}
+  .piece{background:var(--card);border:1px solid var(--line-soft);border-radius:20px;padding:1.8rem;box-shadow:var(--shadow-sm)}
+  .piece .ic{width:56px;height:56px;border-radius:15px;display:grid;place-items:center;margin-bottom:1.1rem}
+  .piece .ic svg{width:28px;height:28px}
+  .ic.c1{background:rgba(224,101,74,.14);color:var(--coral-d)}
+  .ic.c2{background:rgba(46,125,116,.15);color:var(--teal)}
+  .ic.c3{background:rgba(201,147,47,.16);color:var(--gold)}
+  .piece h3{font-size:1.35rem;margin-bottom:.2rem}
+  .piece .role{font-size:.8rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink70);margin-bottom:.7rem}
+  .piece p{color:var(--ink70);font-size:.98rem}
+
+  .card-soft{background:var(--card);border:1px solid var(--line-soft);border-radius:22px;padding:clamp(1.6rem,4vw,2.6rem);box-shadow:var(--shadow-sm)}
+  h2.big{font-size:clamp(1.8rem,1.3rem+2vw,2.9rem);margin-bottom:.4rem}
+  .sub{color:var(--ink70);font-size:1.1rem;max-width:56ch}
+  p+p{margin-top:1rem}
+  .prose p{color:var(--ink70)}
+  .prose strong{color:var(--ink)}
+  .callout{background:var(--cream2);border-left:4px solid var(--teal);border-radius:0 14px 14px 0;padding:1.1rem 1.3rem;margin-top:1.4rem;font-size:.98rem}
+  .callout b{color:var(--teal)}
+
+  /* steps */
+  .steps{display:grid;gap:1.1rem;margin-top:2rem}
+  .step{display:grid;grid-template-columns:auto 1fr;gap:1.3rem;background:var(--card);border:1px solid var(--line-soft);border-radius:20px;padding:1.6rem 1.7rem;box-shadow:var(--shadow-sm)}
+  .step .n{width:48px;height:48px;border-radius:50%;background:var(--coral);color:#fff;font-family:var(--display);font-size:1.4rem;font-weight:600;display:grid;place-items:center}
+  .step h3{font-size:1.3rem;margin-bottom:.35rem}
+  .step p{color:var(--ink70);font-size:.99rem}
+  .step .meta{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.9rem}
+  .tag{font-size:.75rem;font-weight:600;letter-spacing:.03em;background:var(--cream2);color:var(--ink70);padding:.35em .8em;border-radius:100px}
+  .tag.free{background:rgba(46,125,116,.14);color:var(--teal)}
+  @media(max-width:560px){.step{grid-template-columns:1fr}.step .n{margin-bottom:.2rem}}
+
+  /* cost table */
+  .costs{width:100%;border-collapse:collapse;margin-top:1.6rem;background:var(--card);border-radius:16px;overflow:hidden;box-shadow:var(--shadow-sm)}
+  .costs th,.costs td{padding:1rem 1.1rem;text-align:left;border-bottom:1px solid var(--line-soft);font-size:.98rem}
+  .costs th{background:var(--cream2);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink70)}
+  .costs td:last-child{font-weight:700;white-space:nowrap}
+  .costs tr:last-child td{border-bottom:0;background:var(--cream2);font-family:var(--display);font-size:1.05rem}
+  .costs .free{color:var(--teal)}
+
+  /* reassure list */
+  .yeslist{display:grid;gap:.9rem;margin-top:1.6rem}
+  .yeslist li{list-style:none;display:grid;grid-template-columns:auto 1fr;gap:.9rem;align-items:start}
+  .yeslist .chk{width:26px;height:26px;border-radius:50%;background:rgba(46,125,116,.15);color:var(--teal);display:grid;place-items:center;flex-shrink:0}
+  .yeslist .chk svg{width:15px;height:15px}
+  .yeslist b{color:var(--ink)}
+  .yeslist span{color:var(--ink70)}
+
+  /* videos */
+  .vids{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-top:2rem}
+  @media(max-width:760px){.vids{grid-template-columns:1fr}}
+  .vid{background:var(--card);border:1px solid var(--line-soft);border-radius:18px;overflow:hidden;box-shadow:var(--shadow-sm);transition:transform .25s,box-shadow .25s;display:block;color:inherit}
+  .vid:hover{transform:translateY(-5px);box-shadow:var(--shadow)}
+  .vthumb{position:relative;aspect-ratio:16/9;background:var(--cream2);overflow:hidden}
+  .vthumb img{width:100%;height:100%;object-fit:cover}
+  .vthumb .play{position:absolute;inset:0;display:grid;place-items:center}
+  .vthumb .play span{width:54px;height:54px;border-radius:50%;background:rgba(224,101,74,.94);display:grid;place-items:center;box-shadow:0 6px 20px rgba(0,0,0,.3)}
+  .vthumb .play svg{width:22px;height:22px;color:#fff;margin-left:3px}
+  .vbody{padding:1.1rem 1.2rem 1.3rem}
+  .vbody .num{font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--coral-d)}
+  .vbody h3{font-size:1.05rem;line-height:1.25;margin:.3rem 0 0;font-family:var(--text);font-weight:700}
+  .vbody p{font-size:.85rem;color:var(--ink70);margin-top:.4rem}
+
+  /* closing */
+  .closing{background:var(--ink);color:var(--cream);border-radius:26px;padding:clamp(2.2rem,5vw,3.4rem);text-align:center}
+  .closing h2{color:#fff;font-size:clamp(1.7rem,1.2rem+2vw,2.7rem);max-width:20ch;margin-inline:auto}
+  .closing p{color:#d8ccb8;max-width:48ch;margin:1rem auto 0}
+  .closing .heart{font-size:1.6rem;margin-top:1.2rem}
+
+  footer{padding:2.5rem 0 3rem;text-align:center;color:var(--ink70);font-size:.85rem}
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <div class="badge"><b>Claude</b> × your website</div>
+  <div class="hi">Made for Kristy 💛</div>
+</div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow">A no-jargon guide</span>
+    <h1 style="margin-top:1rem">How your website was made, and how <em>you</em> could too.</h1>
+    <p class="lead">If you can send an email and describe what you want, you can do every bit of this. Here is the whole thing, explained like we&rsquo;re sitting at a kitchen table.</p>
+    <div class="reassure"><span class="dot"></span> Honestly, none of this is hard. Promise.</div>
+  </div>
+</header>
+
+<!-- THE 3 PIECES -->
+<section>
+  <div class="wrap">
+    <span class="eyebrow">The big picture</span>
+    <h2 class="big" style="margin-top:.8rem">A website is really just 3 pieces.</h2>
+    <p class="sub">That&rsquo;s it. Once you see these three, the whole thing clicks. Everything below is just these three, in more detail.</p>
+    <div class="pieces" style="margin-top:2rem">
+      <div class="piece">
+        <div class="ic c1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a5 5 0 0 1 5 5v1a4 4 0 0 1 0 8 5 5 0 0 1-10 0 4 4 0 0 1 0-8V7a5 5 0 0 1 5-5z"/><path d="M12 8v8M9 12h6"/></svg></div>
+        <div class="role">The builder</div>
+        <h3>Claude</h3>
+        <p>The AI that actually <strong>makes</strong> the website. You describe what you want in plain words, and it writes all the behind-the-scenes code for you. Like a designer who works instantly and never gets tired.</p>
+      </div>
+      <div class="piece">
+        <div class="ic c2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9.5"/><path d="M9.5 21v-6h5v6"/></svg></div>
+        <div class="role">The home</div>
+        <h3>GitHub</h3>
+        <p>A <strong>free</strong> place on the internet where your website&rsquo;s files live and get published for the world to see. Think of it as free land where your house gets to sit, forever, at no cost.</p>
+      </div>
+      <div class="piece">
+        <div class="ic c3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9h16M4 15h16M10 3 8 21M16 3l-2 18"/></svg></div>
+        <div class="role">The address</div>
+        <h3>Namecheap</h3>
+        <p>Where you <strong>buy your web address</strong>, like <em>kristyoffenburger.com</em>, so people can find you. It&rsquo;s the street sign that points to your house. About $12 a year.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT IS CLAUDE -->
+<section>
+  <div class="wrap narrow">
+    <div class="card-soft prose">
+      <span class="eyebrow">First things first</span>
+      <h2 class="big" style="margin-top:.7rem">So, what is Claude?</h2>
+      <p style="margin-top:1rem">Claude is an <strong>AI you talk to, like texting a very smart, very patient friend</strong>. You don&rsquo;t need to know anything technical. You just <em>describe</em> what you want in normal English, and Claude does the hard part.</p>
+      <p>For a website, that means you say something like:</p>
+      <div class="callout"><b>You type:</b> &ldquo;Make me a clean, modern website for my design business. A home page, a portfolio, and a contact page. Warm colors. Here&rsquo;s my bio and my photos.&rdquo;</div>
+      <p style="margin-top:1.4rem">&hellip;and Claude writes the entire website, the words, the layout, the code, all of it. If you want something changed, you just say so: &ldquo;make the header bigger,&rdquo; &ldquo;use a softer blue,&rdquo; &ldquo;add a page about my prints.&rdquo; It changes it. No code, no menus, no stress.</p>
+      <p><strong>That is exactly how your Blue Horse website was built.</strong> It was all just describing what we wanted, in plain words.</p>
+    </div>
+  </div>
+</section>
+
+<!-- STEP BY STEP -->
+<section>
+  <div class="wrap">
+    <span class="eyebrow">The recipe</span>
+    <h2 class="big" style="margin-top:.8rem">How it&rsquo;s done, step by step.</h2>
+    <p class="sub">Six steps. Take them one at a time. Most people do the whole thing in an afternoon, and you only ever set it up once.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="n">1</div>
+        <div>
+          <h3>Describe your website to Claude</h3>
+          <p>Go to <strong>claude.ai</strong>, sign up (it&rsquo;s free to start), and tell it what you want, your pages, your info, the style, your photos. It writes the whole website for you. Ask for any changes until you love it.</p>
+          <div class="meta"><span class="tag free">Free to start</span><span class="tag">~an hour of chatting</span></div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="n">2</div>
+        <div>
+          <h3>Make a free GitHub account</h3>
+          <p>Go to <strong>github.com</strong> and sign up. This is the free &ldquo;home&rdquo; where your website will live. Signing up is exactly like making any other account, an email and a password.</p>
+          <div class="meta"><span class="tag free">Free</span><span class="tag">~5 minutes</span></div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="n">3</div>
+        <div>
+          <h3>Put your files on GitHub and turn on &ldquo;Pages&rdquo;</h3>
+          <p>You upload the website files Claude made into a GitHub &ldquo;repository&rdquo; (just a folder), then flip on a free setting called <strong>GitHub Pages</strong>. The moment you do, your site is live on the internet at a free address. Claude can walk you through every click.</p>
+          <div class="meta"><span class="tag free">Free hosting, forever</span><span class="tag">~15 minutes</span></div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="n">4</div>
+        <div>
+          <h3>Buy your web address on Namecheap</h3>
+          <p>Go to <strong>namecheap.com</strong>, search for the name you want (like <em>yourname.com</em>), and buy it. This is the one part that costs a little, about $10–15 for the whole year.</p>
+          <div class="meta"><span class="tag">≈ $12 / year</span><span class="tag">~5 minutes</span></div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="n">5</div>
+        <div>
+          <h3>Point your address to your website</h3>
+          <p>This just means telling Namecheap and GitHub to shake hands, so your new address shows your website. You copy a few settings from GitHub into Namecheap. It sounds technical, but it&rsquo;s literally copy-and-paste, and the video at the bottom shows every click. Claude can guide you too.</p>
+          <div class="meta"><span class="tag free">Free</span><span class="tag">~10 minutes</span></div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="n">6</div>
+        <div>
+          <h3>You&rsquo;re live! 🎉</h3>
+          <p>That&rsquo;s it. Your website is on the internet, at your own address, and you own all of it. Want to change something later? Just ask Claude and re-upload. No monthly website bills, no designer on retainer.</p>
+          <div class="meta"><span class="tag free">Done</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COSTS -->
+<section>
+  <div class="wrap narrow">
+    <span class="eyebrow">The honest numbers</span>
+    <h2 class="big" style="margin-top:.8rem">What it all costs.</h2>
+    <p class="sub">Almost everything is free. The only real cost is your web address.</p>
+    <table class="costs">
+      <thead><tr><th>What</th><th>What it&rsquo;s for</th><th>Cost</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Claude</strong></td><td>Builds the website for you</td><td class="free">Free to start<br><span style="font-weight:400;color:var(--ink70)">($20/mo optional, for the most powerful version)</span></td></tr>
+        <tr><td><strong>GitHub + Pages</strong></td><td>Stores &amp; publishes your site</td><td class="free">Free, forever</td></tr>
+        <tr><td><strong>Namecheap domain</strong></td><td>Your web address</td><td>≈ $10–15 / year</td></tr>
+        <tr><td>Your total</td><td>To be live at your own address</td><td>≈ $12 / year</td></tr>
+      </tbody>
+    </table>
+    <div class="callout"><b>Compare that</b> to a website builder like Squarespace or Wix, which runs about <b>$200–$400 every year</b> and you never really own it. This way, you own everything and pay for little more than the address.</div>
+  </div>
+</section>
+
+<!-- IS IT HARD -->
+<section>
+  <div class="wrap narrow">
+    <div class="card-soft">
+      <span class="eyebrow">A little pep talk</span>
+      <h2 class="big" style="margin-top:.7rem">Is this hard? Honestly, no.</h2>
+      <ul class="yeslist">
+        <li><span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span><span><b>You never touch code.</b> Claude writes it. You just describe and click.</span></li>
+        <li><span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span><span><b>It&rsquo;s a one-time setup.</b> You do the steps once. After that, changes are easy.</span></li>
+        <li><span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span><span><b>When you get stuck, ask Claude.</b> Paste in what you see and say &ldquo;what do I do next?&rdquo; It will literally guide you, step by step.</span></li>
+        <li><span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span><span><b>Nothing can break.</b> If something looks off, you just try again. You can&rsquo;t hurt anything.</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEOS -->
+<section>
+  <div class="wrap">
+    <span class="eyebrow">Watch &amp; learn</span>
+    <h2 class="big" style="margin-top:.8rem">3 short videos to watch first.</h2>
+    <p class="sub">If you like seeing it done before you try, these three cover the whole journey. Watch them in order.</p>
+    <div class="vids">
+      <a class="vid" href="https://www.youtube.com/watch?v=-xEF5WrdIWs" target="_blank" rel="noopener">
+        <div class="vthumb"><img loading="lazy" src="https://img.youtube.com/vi/-xEF5WrdIWs/hqdefault.jpg" alt=""><div class="play"><span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></div></div>
+        <div class="vbody"><div class="num">Video 1 · Meet Claude</div><h3>How to Use Claude AI, Step by Step (for Beginners)</h3><p>Get comfortable talking to the AI that builds your site.</p></div>
+      </a>
+      <a class="vid" href="https://www.youtube.com/watch?v=RbXAcr2YULg" target="_blank" rel="noopener">
+        <div class="vthumb"><img loading="lazy" src="https://img.youtube.com/vi/RbXAcr2YULg/hqdefault.jpg" alt=""><div class="play"><span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></div></div>
+        <div class="vbody"><div class="num">Video 2 · The free home</div><h3>Host a Website for FREE Using GitHub Pages</h3><p>Get your site live on the internet at no cost.</p></div>
+      </a>
+      <a class="vid" href="https://www.youtube.com/watch?v=UKvacCPUyzc" target="_blank" rel="noopener">
+        <div class="vthumb"><img loading="lazy" src="https://img.youtube.com/vi/UKvacCPUyzc/hqdefault.jpg" alt=""><div class="play"><span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></div></div>
+        <div class="vbody"><div class="num">Video 3 · Your address</div><h3>Connect a Namecheap Domain to GitHub Pages</h3><p>Point your own web address at your new site.</p></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- CLOSING -->
+<section>
+  <div class="wrap narrow">
+    <div class="closing">
+      <h2>You already did the hard part. You have the vision.</h2>
+      <p>The tech is just clicking buttons in the right order, and now you know the order. Whenever you&rsquo;re ready, Claude is right there to walk you through every single step.</p>
+      <div class="heart">🐴💛</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Made with Claude · A friendly guide, not a sales pitch · You&rsquo;ve got this.
+</footer>
+
+</body>
+</html>
