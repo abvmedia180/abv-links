@@ -201,6 +201,19 @@ p { max-width: 68ch; }
 .scrollcue::after { content:""; width:1px; height:34px; background:linear-gradient(#fff, transparent); animation: cue 1.8s ease-in-out infinite; }
 @keyframes cue { 0%,100%{ transform: scaleY(.4); opacity:.4; transform-origin:top;} 50%{ transform: scaleY(1); opacity:1; } }
 
+/* Mobile hero (phones): centered, breathing room, no scrollcue collisions */
+@media (max-width:640px){
+  .hero-inner { padding-block: 7rem 3.2rem; text-align: center; }
+  .hero .eyebrow { font-size:.72rem; letter-spacing:.13em; line-height:1.7; justify-content:center; text-shadow:0 1px 14px rgba(0,0,0,.5); }
+  .hero .eyebrow::before { display:none; }
+  .hero h1 { font-size: clamp(2.3rem, 10.5vw, 2.9rem); line-height:1.14; max-width:none; text-wrap:balance; }
+  .hero-sub { font-size:1.06rem; line-height:1.55; max-width:36ch; margin-inline:auto; }
+  .hero-actions { flex-direction:column; align-items:stretch; max-width:300px; margin-inline:auto; margin-top:1.7rem; gap:.75rem; }
+  .hero-actions .btn { justify-content:center; }
+  .hero-tags { justify-content:center; gap:.7rem 1.3rem; margin-top:2rem; }
+  .scrollcue { display:none; }
+}
+
 /* ---------- Stat strip ---------- */
 .stats { background: var(--espresso); color: var(--bone); }
 .stats .wrap { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; padding-block: clamp(2.2rem,4vw,3.2rem); }
@@ -208,7 +221,13 @@ p { max-width: 68ch; }
 .stat:not(:last-child)::after { content:""; position:absolute; right:0; top:15%; height:70%; width:1px; background: rgba(246,241,231,.16); }
 .stat b { display:block; font-family: var(--display); font-size: clamp(2.2rem,5vw,3.4rem); font-weight: 500; color:#fff; line-height:1; }
 .stat span { font-size: var(--step--1); letter-spacing: .12em; text-transform: uppercase; color: #d9c9ad; }
-@media (max-width:640px){ .stats .wrap { grid-template-columns: repeat(2,1fr); gap:1.6rem 1rem; } .stat:nth-child(2)::after{ display:none;} }
+@media (max-width:640px){
+  .stats .wrap { grid-template-columns: repeat(2,1fr); gap:1.9rem .8rem; padding-block:2.4rem; }
+  .stat { padding:.2rem; display:flex; flex-direction:column; justify-content:flex-start; gap:.35rem; }
+  .stat:not(:last-child)::after { display:none; }
+  .stat b { font-size:2.5rem; }
+  .stat span { font-size:.72rem; letter-spacing:.08em; }
+}
 
 /* ---------- Section heads ---------- */
 .sec-head { max-width: 62ch; margin-bottom: clamp(2rem,4vw,3.5rem); }
