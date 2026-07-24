@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Honest Abe Tax | Nassau County Property Tax Grievances</title>
+<meta name="description" content="I'm Abe. I live in Nassau County and I grieve property assessments. The big firms take half your savings; I take a third, and you pay $0 if your taxes don't drop. Get on the January filing list.">
+<link rel="icon" type="image/png" sizes="64x64" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=IBM+Plex+Mono:wght@400;600&family=Public+Sans:wght@400;700;800&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "ProfessionalService",
+      "name": "Honest Abe Tax",
+      "description": "Nassau County property tax grievance service. Fee is one-third of first-year savings, only if the assessment is reduced. The big firms charge up to half.",
+      "url": "https://abvlinks.com/honestabegrok/",
+      "areaServed": {"@type": "AdministrativeArea", "name": "Nassau County, NY"},
+      "priceRange": "33% of first-year tax savings, contingency only",
+      "founder": {"@type": "Person", "name": "Abe Varughese"}
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {"@type": "Question", "name": "Can filing a tax grievance raise my taxes in Nassau County?", "acceptedAnswer": {"@type": "Answer", "text": "No. Under New York law, your assessment cannot be increased because you challenged it. The worst realistic outcome of a grievance is that nothing changes."}},
+        {"@type": "Question", "name": "Is tax grievance legit?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Nassau County runs a formal review process, the Assessment Review Commission, that exists specifically to hear these challenges, and hundreds of thousands of Long Island homeowners file every year."}},
+        {"@type": "Question", "name": "What does a Nassau County tax grievance service cost?", "acceptedAnswer": {"@type": "Answer", "text": "Honest Abe Tax charges 33% of first-year tax savings, billed once, only after a reduction is final. No reduction, no fee. Typical large firms charge up to 50% of first-year savings."}},
+        {"@type": "Question", "name": "Do I need a lawyer to grieve my property taxes?", "acceptedAnswer": {"@type": "Answer", "text": "No. Residential assessment grievances do not require an attorney, at the county review stage or at the small-claims appeal stage after it."}},
+        {"@type": "Question", "name": "How long does a Nassau County grievance take?", "acceptedAnswer": {"@type": "Answer", "text": "Grievances are filed in the winter window starting January 2, and the county typically answers by summer. One real 2026 filing took 134 days from filing to settlement offer."}}
+      ]
+    }
+  ]
+}
+</script>
+<style>
+:root{
+  --paper:#F5EEDC;
+  --paper-deep:#EADFC3;
+  --ink:#1C2733;
+  --ink-soft:#4A5766;
+  --stamp:#BE3425;
+  --copper:#9E5B2E;
+  --approve:#1F6B45;
+  --highlight:#FFE066;
+  --line:rgba(28,39,51,.22);
+  --line-soft:rgba(28,39,51,.12);
+  --radius:6px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+body{
+  font-family:'Public Sans',system-ui,sans-serif;
+  background:var(--paper);
+  color:var(--ink);
+  line-height:1.6;
+  font-size:17px;
+}
+.mono{font-family:'IBM Plex Mono',monospace}
+a{color:inherit}
+img{max-width:100%}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+
+/* ---------- top disclosure bar ---------- */
+.gov-bar{
+  background:var(--ink);color:var(--paper);
+  font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.04em;
+  text-align:center;padding:7px 16px;
+}
+.gov-bar strong{color:var(--highlight);font-weight:600}
+
+/* ---------- nav ---------- */
+nav{
+  border-bottom:2px solid var(--ink);
+  background:var(--paper);
+  position:sticky;top:0;z-index:50;
+}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;max-width:1080px;margin:0 auto}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand-mark{
+  font-family:'Archivo Black',sans-serif;font-size:13px;line-height:1;
+  background:var(--copper);color:var(--paper);padding:8px 9px;border-radius:50%;
+  letter-spacing:.02em;
+}
+.brand-name{font-family:'Archivo Black',sans-serif;font-size:17px;letter-spacing:.01em}
+.nav-right{display:flex;align-items:center;gap:18px}
+.nav-note{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-soft)}
+.btn{
+  display:inline-block;background:var(--ink);color:var(--paper);
+  font-family:'Public Sans',sans-serif;font-weight:800;font-size:15px;
+  padding:13px 22px;border-radius:var(--radius);text-decoration:none;
+  border:2px solid var(--ink);cursor:pointer;
+  transition:transform .12s ease,background .12s ease;
+}
+.btn:hover{background:var(--stamp);border-color:var(--stamp);transform:translateY(-1px)}
+.btn:focus-visible,a:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible{
+  outline:3px solid var(--stamp);outline-offset:2px;
+}
+.btn-sm{padding:9px 16px;font-size:13.5px}
+
+/* ---------- hero ---------- */
+.hero{padding:64px 0 56px;border-bottom:2px solid var(--ink);overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+.eyebrow{
+  font-family:'IBM Plex Mono',monospace;font-size:12.5px;font-weight:600;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--stamp);margin-bottom:18px;
+}
+h1{
+  font-family:'Archivo Black',sans-serif;font-size:clamp(30px,4.6vw,52px);
+  line-height:1.08;letter-spacing:-.01em;margin-bottom:20px;
+}
+.hero-sub{font-size:17.5px;color:var(--ink-soft);max-width:52ch;margin-bottom:16px}
+.hero-sub b{color:var(--ink)}
+.hero-fee-line{
+  font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;
+  letter-spacing:.03em;margin-bottom:24px;
+}
+.hero-fee-line b{color:var(--approve)}
+.hero-cta{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.cta-micro{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-soft)}
+.hero-trust{
+  font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-soft);
+  letter-spacing:.03em;margin-top:14px;
+}
+
+/* ---------- settlement document (signature) ---------- */
+.doc{
+  background:#FBF7EA;
+  border:1.5px solid var(--ink);
+  border-radius:4px;
+  box-shadow:6px 6px 0 var(--paper-deep),6px 6px 0 1.5px var(--ink);
+  padding:26px 28px 30px;
+  position:relative;
+  transform:rotate(.6deg);
+}
+.doc-head{
+  display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--ink-soft);
+  border-bottom:1.5px solid var(--ink);padding-bottom:12px;margin-bottom:18px;
+}
+.doc-row{
+  display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;
+  padding:11px 0;border-bottom:1px dashed var(--line);
+  font-size:15px;
+}
+.doc-row dt{font-family:'IBM Plex Mono',monospace;font-size:12.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-soft)}
+.doc-row dd{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:19px}
+.num-old{position:relative;color:var(--ink-soft)}
+.num-old::after{
+  content:"";position:absolute;left:-4%;right:-4%;top:52%;
+  border-top:2.5px solid var(--stamp);transform:rotate(-4deg);
+}
+.num-new{color:var(--approve)}
+.doc-row.save dd{background:var(--highlight);padding:2px 8px;border-radius:3px;color:var(--ink)}
+.stamp{
+  position:absolute;right:24px;bottom:84px;
+  font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;letter-spacing:.14em;
+  color:var(--stamp);border:2.5px solid var(--stamp);border-radius:4px;
+  padding:6px 12px;transform:rotate(-8deg);text-transform:uppercase;
+  opacity:.85;
+}
+.doc-caption{
+  font-size:12.5px;color:var(--ink-soft);margin-top:56px;line-height:1.5;
+}
+
+/* ---------- truth strip ---------- */
+.strip{background:var(--ink);color:var(--paper);padding:18px 0}
+.strip-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;text-align:center}
+.strip-item{font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:.03em}
+.strip-item b{color:var(--highlight);font-weight:600}
+
+/* ---------- sections ---------- */
+section{padding:64px 0}
+.sec-eyebrow{
+  font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--stamp);margin-bottom:12px;
+}
+h2{
+  font-family:'Archivo Black',sans-serif;font-size:clamp(26px,3.4vw,38px);
+  line-height:1.12;letter-spacing:-.01em;margin-bottom:14px;max-width:28ch;
+}
+.sec-sub{color:var(--ink-soft);max-width:62ch;margin-bottom:40px;font-size:17.5px}
+
+/* steps */
+.section-steps{padding-top:64px}
+.steps{border-top:2px solid var(--ink);margin-top:36px}
+.step{
+  display:grid;grid-template-columns:88px 1fr;gap:24px;
+  padding:28px 0;border-bottom:1px solid var(--line);
+}
+.step-no{
+  font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;color:var(--stamp);
+  letter-spacing:.08em;padding-top:4px;
+}
+.step h3{font-weight:800;font-size:19px;margin-bottom:6px}
+.step p{color:var(--ink-soft);font-size:16px;max-width:66ch}
+
+/* pricing — elevated commercial band */
+.section-price{
+  background:var(--paper-deep);
+  border-top:2px solid var(--ink);
+  border-bottom:2px solid var(--ink);
+}
+.price-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:860px}
+.price-card{border:1.5px solid var(--ink);border-radius:var(--radius);padding:30px 28px;background:#FBF7EA}
+.price-card.them{background:transparent;border-style:dashed;border-color:var(--ink-soft)}
+.price-label{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;color:var(--ink-soft)}
+.price-num{font-family:'Archivo Black',sans-serif;font-size:56px;line-height:1;margin-bottom:6px}
+.them .price-num{color:var(--ink-soft)}
+.us .price-num{color:var(--approve)}
+.price-sub{font-size:14.5px;color:var(--ink-soft);margin-bottom:18px}
+.price-card ul{list-style:none}
+.price-card li{
+  font-size:15px;padding:9px 0 9px 26px;border-top:1px dashed var(--line);position:relative;
+}
+.price-card li::before{
+  content:"✗";position:absolute;left:0;color:var(--ink-soft);font-weight:700;
+}
+.us li::before{content:"✓";color:var(--approve)}
+.price-guarantee{font-size:11.5px;letter-spacing:.08em;margin-top:18px;color:var(--stamp)}
+.mid-cta{margin-top:40px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+
+/* about abe */
+.about-grid{display:grid;grid-template-columns:280px 1fr;gap:44px;align-items:start;margin-top:36px}
+.photo-card{
+  background:#FBF7EA;border:1.5px solid var(--ink);border-radius:4px;
+  box-shadow:6px 6px 0 var(--paper-deep),6px 6px 0 1.5px var(--ink);
+  padding:14px;transform:rotate(-.8deg);
+  position:relative;
+}
+.photo-frame{
+  aspect-ratio:4/5;border-radius:3px;overflow:hidden;
+  background:var(--paper);
+}
+.photo-frame img{width:100%;height:100%;object-fit:cover;object-position:58% 18%;display:block}
+.photo-penny{
+  position:absolute;right:-18px;top:-18px;
+  width:64px;height:64px;border-radius:50%;background:var(--copper);color:var(--paper);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Archivo Black',sans-serif;font-size:20px;
+  border:2px solid var(--ink);
+  box-shadow:3px 3px 0 var(--paper-deep);
+}
+.photo-note{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--ink-soft);text-align:center}
+.photo-video{
+  font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;
+  color:var(--stamp);text-align:center;margin-top:6px;font-weight:600;
+}
+.about-copy p{margin-bottom:16px;font-size:17px;color:var(--ink-soft);max-width:60ch}
+.about-copy p b{color:var(--ink)}
+.about-sign{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.1em;color:var(--stamp);margin-top:4px}
+@media (max-width:900px){
+  .about-grid{grid-template-columns:1fr;gap:28px}
+  .photo-card{max-width:280px;transform:none}
+}
+
+/* racket cards — editorial, demoted */
+.section-racket{padding-top:0}
+.cards{display:grid;grid-template-columns:1fr;gap:20px;max-width:680px}
+.card{
+  background:#FBF7EA;border:1.5px solid var(--ink);border-radius:var(--radius);
+  padding:26px 24px;
+}
+.card h3{font-family:'Public Sans',sans-serif;font-weight:800;font-size:18px;line-height:1.3;margin-bottom:12px}
+.card h3 .q{color:var(--stamp)}
+.card p{font-size:15.5px;color:var(--ink-soft)}
+.card p b{color:var(--ink)}
+
+/* faq */
+.section-faq{padding-top:0}
+.faq{max-width:760px;margin-top:32px}
+details{border-bottom:1px solid var(--line)}
+summary{
+  cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;
+  padding:20px 4px;font-weight:800;font-size:17.5px;
+}
+summary::-webkit-details-marker{display:none}
+summary::after{
+  content:"+";font-family:'IBM Plex Mono',monospace;font-size:20px;color:var(--stamp);flex-shrink:0;
+}
+details[open] summary::after{content:"–"}
+details p{padding:0 4px 22px;color:var(--ink-soft);font-size:16px;max-width:64ch}
+details p a{color:var(--stamp)}
+
+/* form */
+.signup{background:var(--ink);color:var(--paper);scroll-margin-top:80px}
+.signup .sec-eyebrow{color:var(--highlight)}
+.signup h2{color:var(--paper)}
+.signup .sec-sub{color:rgba(245,238,220,.75)}
+.form-grid{
+  max-width:640px;
+  background:rgba(251,247,234,.06);
+  border:1.5px solid rgba(245,238,220,.22);
+  border-radius:var(--radius);
+  padding:28px 22px;
+}
+.field{margin-bottom:18px}
+label{
+  display:block;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;
+  letter-spacing:.08em;text-transform:uppercase;margin-bottom:7px;color:rgba(245,238,220,.85);
+}
+input,select{
+  width:100%;padding:14px 14px;font-size:16px;font-family:'Public Sans',sans-serif;
+  background:#FBF7EA;color:var(--ink);border:1.5px solid var(--ink);border-radius:var(--radius);
+}
+.form-trust{
+  font-family:'IBM Plex Mono',monospace;font-size:12.5px;font-weight:600;letter-spacing:.05em;
+  color:var(--highlight);text-align:center;margin:4px 0 12px;
+}
+.btn-submit{
+  background:var(--stamp);border-color:var(--stamp);color:#FBF7EA;width:100%;
+  font-size:17px;padding:16px;margin-top:2px;
+}
+.btn-submit:hover{background:#a52a24;border-color:#a52a24}
+.form-micro{font-family:'IBM Plex Mono',monospace;font-size:12px;color:rgba(245,238,220,.75);margin-top:14px;text-align:center}
+.form-success{
+  display:none;border:1.5px solid var(--highlight);border-radius:var(--radius);
+  padding:28px;text-align:center;max-width:640px;
+}
+.form-success h3{font-family:'Archivo Black',sans-serif;font-size:22px;color:var(--highlight);margin-bottom:10px}
+.form-success p{color:rgba(245,238,220,.85)}
+
+/* footer */
+footer{padding:48px 0 64px;border-top:2px solid var(--ink)}
+.foot-disclaimer{
+  font-size:12px;color:var(--ink-soft);line-height:1.55;max-width:760px;margin-top:28px;
+}
+.foot-brand{font-family:'Archivo Black',sans-serif;font-size:15px}
+.foot-note{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-soft);margin-top:6px}
+.foot-note a{color:var(--stamp)}
+
+/* mobile sticky CTA bar */
+.m-cta-bar{
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;z-index:40;
+  padding:10px 16px calc(10px + env(safe-area-inset-bottom));
+  background:var(--paper);
+  border-top:2px solid var(--ink);
+  box-shadow:0 -4px 16px rgba(28,39,51,.08);
+  text-align:center;
+}
+.m-cta-bar.hidden{display:none!important}
+
+/* responsive */
+@media (max-width:900px){
+  .hero-grid{grid-template-columns:1fr;gap:40px}
+  .strip-grid{grid-template-columns:1fr;gap:10px;text-align:left}
+  .strip-item b{display:block;margin-top:2px;font-size:15px}
+  .price-grid{grid-template-columns:1fr}
+  .price-card.us{order:-1}
+  .nav-note{display:none}
+  section{padding:48px 0}
+  .section-steps{padding-top:48px}
+  .doc{transform:none;padding:20px 20px 24px}
+  .stamp{position:static;display:inline-block;transform:rotate(-4deg);margin-top:14px}
+  .doc-caption{margin-top:12px}
+  .price-num{font-size:44px}
+  summary{font-size:16.5px;font-weight:700}
+}
+@media (max-width:600px){
+  .m-cta-bar{display:block}
+  body.mbar{padding-bottom:72px}
+}
+@media (max-width:480px){
+  body{font-size:16px}
+  .wrap{padding:0 16px}
+  .gov-bar{font-size:11px;padding:8px 12px;line-height:1.4}
+  .brand-name{font-size:14.5px}
+  .brand-mark{font-size:11px;padding:7px 8px}
+  .btn-sm{padding:8px 12px;font-size:12.5px}
+  .nav-inner{padding:12px 16px}
+  .hero{padding:36px 0 40px}
+  h1{font-size:clamp(30px,8.5vw,40px)}
+  .btn{width:100%;text-align:center}
+  .btn-sm{width:auto}
+  .hero-cta{flex-direction:column;align-items:stretch}
+  .cta-micro{text-align:center}
+  .hero-trust{text-align:center}
+  .step{grid-template-columns:1fr;gap:6px;padding:22px 0}
+  .step-no{padding-top:0}
+  .photo-penny{right:-8px}
+}
+</style>
+</head>
+<body>
+
+<div class="gov-bar">INDEPENDENT SERVICE · <strong>NOT</strong> AFFILIATED WITH NASSAU COUNTY, ARC, OR ANY GOVERNMENT AGENCY</div>
+
+<nav>
+  <div class="nav-inner">
+    <a class="brand" href="#top">
+      <span class="brand-mark">1¢</span>
+      <span class="brand-name">Honest Abe Tax</span>
+    </a>
+    <div class="nav-right">
+      <span class="nav-note">2028/29 filing window opens Jan 2</span>
+      <a class="btn btn-sm" href="#signup">Get on the list</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow">Nassau County property tax grievance</p>
+      <h1>I lower your property taxes.</h1>
+      <p class="hero-sub">I'm Abe. I file the grievance that gets your Nassau County tax bill reduced. If your taxes don't drop, <b>you pay $0</b>. If they do, my fee is <b>1/3 of the first-year savings</b>. The big firms take 1/2.</p>
+      <p class="hero-fee-line">Big firms: 50% · Abe: <b>33%</b> · <b>$0 if no cut</b></p>
+      <div class="hero-cta">
+        <a class="btn" href="#signup">Get on the January list</a>
+        <span class="cta-micro">60 seconds · no payment info · no obligation</span>
+      </div>
+      <p class="hero-trust">Solo Nassau filer · NYU&nbsp;Stern · Contingency&nbsp;only</p>
+    </div>
+    <div>
+      <div class="doc" aria-label="Example settlement result">
+        <div class="doc-head">
+          <span>Actual result · Nassau County, NY</span>
+          <span>Tax year 2027/28</span>
+        </div>
+        <dl>
+          <div class="doc-row">
+            <dt>County taxed it as if worth</dt>
+            <dd class="num-old">$768,000</dd>
+          </div>
+          <div class="doc-row">
+            <dt>After the grievance, taxed as if worth</dt>
+            <dd class="num-new">$616,000</dd>
+          </div>
+          <div class="doc-row save">
+            <dt>Reduction</dt>
+            <dd>19.79%</dd>
+          </div>
+          <div class="doc-row">
+            <dt>Filing to result</dt>
+            <dd>134 days</dd>
+          </div>
+        </dl>
+        <span class="stamp">Accepted · Jul 06 2026</span>
+        <p class="doc-caption">One Nassau County home (Zillow-estimated near $958,700), one filing, one year. Every property is different; past results don't guarantee yours.</p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="strip">
+  <div class="wrap strip-grid">
+    <div class="strip-item">FILED FEB 18 → OFFER JUL 2 · <b>134 DAYS</b></div>
+    <div class="strip-item">COST TO FILE A GRIEVANCE · <b>$0 UP FRONT</b></div>
+    <div class="strip-item">MY FEE IF YOU DON'T SAVE · <b>$0</b></div>
+  </div>
+</div>
+
+<section class="section-steps">
+  <div class="wrap">
+    <p class="sec-eyebrow">How it works</p>
+    <h2>Three steps. You do one of them.</h2>
+    <p class="sec-sub">Nobody wakes up wanting to learn assessment ratios, comparable sales, and county paperwork. You shouldn't have to. I do the boring part: the analysis, the forms, the filing, the follow-up. Your whole job is one signature.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-no">STEP 01</div>
+        <div>
+          <h3>Sign up in about 60 seconds.</h3>
+          <p>Name, address, email. I pull your parcel details, prepare the paperwork, and send you one authorization form to e-sign. That's the whole job on your end.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-no">STEP 02</div>
+        <div>
+          <h3>I file the day the window opens.</h3>
+          <p>Nassau accepts grievances starting January 2. I file early and confirm the county's receipt the same day, so your appeal is in well before the deadline.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-no">STEP 03</div>
+        <div>
+          <h3>The county answers, typically by summer. You keep two of every three dollars.</h3>
+          <p>If there's a settlement offer, I send it your way with what it means in plain English. If your assessment doesn't come down, you owe me nothing. Not a filing fee, not a service charge, nothing.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-price">
+  <div class="wrap">
+    <p class="sec-eyebrow">Pricing</p>
+    <h2>They take half. I take a third.</h2>
+    <p class="sec-sub">Same filing, very different bill. Everyone in this business works on contingency: no savings, no fee. The difference is what happens when you win.</p>
+    <div class="price-grid">
+      <div class="price-card them">
+        <p class="price-label">The typical big firm</p>
+        <p class="price-num">50%</p>
+        <p class="price-sub">of your first-year savings</p>
+        <ul>
+          <li>Up to half your savings, gone</li>
+          <li>Add-on charges at some firms (court filing, appraisal)</li>
+          <li>You're one of tens of thousands of files</li>
+        </ul>
+      </div>
+      <div class="price-card us">
+        <p class="price-label">Honest Abe</p>
+        <p class="price-num">33%</p>
+        <p class="price-sub">of your first-year savings. A third, once, and only if you save</p>
+        <ul>
+          <li>You keep two of every three dollars saved</li>
+          <li>No add-ons, no fine-print charges</li>
+          <li>$0 if your assessment doesn't come down</li>
+        </ul>
+        <p class="mono price-guarantee">THE HONEST ABE GUARANTEE: NO SAVINGS, NO FEE, NO FINE PRINT.</p>
+      </div>
+    </div>
+    <div class="mid-cta">
+      <a class="btn" href="#signup">Get on the January list</a>
+      <span class="cta-micro">$0 due today · contingency only</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="sec-eyebrow">Meet Abe</p>
+    <h2>There's no firm. There's a guy named Abe.</h2>
+    <div class="about-grid">
+      <div class="photo-card">
+        <a href="https://youtu.be/0ImRfJegB4o?si=I66LxCxRPl61wbEF" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit" title="Watch Abe's intro video (opens YouTube)">
+          <div class="photo-frame">
+            <img src="abe.jpg" alt="Abe Varughese speaking at the NYU Stern podium">
+          </div>
+          <p class="photo-note" style="margin-top:10px">ABE VARUGHESE · NYU STERN</p>
+          <p class="photo-video">▶ 2-MIN&nbsp;INTRO · OPENS&nbsp;YOUTUBE</p>
+        </a>
+        <span class="photo-penny" aria-hidden="true">1¢</span>
+      </div>
+      <div class="about-copy">
+        <p>I'm Abe Varughese. I live in Nassau County, same as you, and this started the way most good things do: <b>I did it for myself first.</b> I filed my own grievance and watched it work. The filing wasn't the hard part. The hard part was understanding the system: what everything meant, how to do it, how the county calculates the numbers, and how an assessment compares to what a home is actually worth.</p>
+        <p>That's the part I'm built for. I'm a <b>former real estate agent turned real estate investor</b> and a graduate of <b>NYU Stern</b>. I've spent years analyzing Long Island property values and understand how the whole system works. When you sign up, I pull your parcel, I file the grievance, I handle the back-and-forth with the county, and send you the settlement offer. Worst case, your taxes stay exactly where they are and you owe me nothing.</p>
+        <p>As for why: I'm the money guy in my family and my friend group, the one always pushing people to track their finances and fight for their own dollars. <b>It's your money. If you don't fight for it, it quietly slips away.</b> An over-assessed tax bill is exactly that kind of leak. It's also one of the easiest to fix. And if you're into free financial education, check out my other website, <a href="https://abvinvest.com/" rel="noopener" target="_blank" style="color:var(--stamp)">abvinvest.com</a>, where I share what works for me.</p>
+        <p class="about-sign">SIGNED,<br>ABE VARUGHESE</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-racket">
+  <div class="wrap">
+    <p class="sec-eyebrow">The part nobody says out loud</p>
+    <h2>Questions the big grievance firms hope you never ask.</h2>
+    <p class="sec-sub">You've gotten their mailers. Everyone in Nassau has. Here's what they'd rather not put in the envelope.</p>
+    <div class="cards">
+      <div class="card">
+        <h3><span class="q">Q:</span> Why is the fee 50%?</h3>
+        <p>Some of the biggest names on Long Island keep <b>up to half</b> of your first-year savings. <b>My fee is a third</b>, with no add-ons. The whole point is putting money back in your pocket: <b>two of every three dollars saved stay yours</b>.</p>
+      </div>
+      <div class="card">
+        <h3><span class="q">Q:</span> Why not mention I can file myself?</h3>
+        <p>You can, for free, at the county's website. I'm here for everyone who was never going to spend an evening on assessment ratios and comparable sales.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-faq">
+  <div class="wrap">
+    <p class="sec-eyebrow">Fair questions</p>
+    <h2>What homeowners always ask.</h2>
+    <div class="faq">
+      <details>
+        <summary>Can filing a grievance raise my taxes?</summary>
+        <p>No. Under New York law, your assessment cannot be increased because you challenged it. The worst realistic outcome of a grievance is that nothing changes.</p>
+      </details>
+      <details>
+        <summary>Is this actually legit?</summary>
+        <p>Completely. Nassau County runs a formal review process (the Assessment Review Commission) that exists specifically to hear these challenges, and hundreds of thousands of Long Island homeowners file every single year. Grieving your assessment is a normal, expected part of how the system works.</p>
+      </details>
+      <details>
+        <summary>What's the catch?</summary>
+        <p>The honest catch is time. Grievances are filed in the winter window and the county typically answers in the summer. Our own filing took 134 days. The savings then show up on your following tax bills. It's slow. It's also worth it.</p>
+      </details>
+      <details>
+        <summary>I already signed with one of the big firms. Can I switch?</summary>
+        <p>Not this year. The county only accepts one authorized representative per property per filing year, and duplicate authorizations can get a filing denied. But you're free every new season. Sign up and I'll file for you next window.</p>
+      </details>
+      <details>
+        <summary>Do I need a lawyer for this?</summary>
+        <p>No. Residential assessment grievances don't require an attorney, not at the county review stage and not at the small-claims appeal stage after it. If a case ever genuinely needs a lawyer, I'll tell you that instead of pretending otherwise.</p>
+      </details>
+      <details>
+        <summary>What does it cost, exactly?</summary>
+        <p>33% of your first-year tax savings: a third, versus the half the big firms take. Billed once, only after your reduction is final. If you don't save, you don't pay. There is no other fee, ever.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="signup" id="signup">
+  <div class="wrap">
+    <p class="sec-eyebrow">The list is open</p>
+    <h2>Get on the January filing list.</h2>
+    <p class="sec-sub">The 2028/29 window opens January 2. I prepare filings in signup order. No payment info now, nothing ever owed unless your taxes come down.</p>
+    <form id="lead-form" class="form-grid">
+      <div class="field">
+        <label for="f-name">Full name</label>
+        <input id="f-name" name="name" type="text" autocomplete="name" required>
+      </div>
+      <div class="field">
+        <label for="f-address">Property address (Nassau County)</label>
+        <input id="f-address" name="address" type="text" autocomplete="street-address" placeholder="123 Maple St, Levittown, NY" required>
+      </div>
+      <div class="field">
+        <label for="f-email">Email</label>
+        <input id="f-email" name="email" type="email" autocomplete="email" required>
+      </div>
+      <div class="field">
+        <label for="f-phone">Phone (optional)</label>
+        <input id="f-phone" name="phone" type="tel" autocomplete="tel">
+      </div>
+      <div class="field">
+        <label for="f-signed">Already signed with another firm for next year?</label>
+        <select id="f-signed" name="signed">
+          <option value="No" selected>No</option>
+          <option value="Yes">Yes</option>
+          <option value="Not sure">Not sure</option>
+        </select>
+      </div>
+      <p class="form-trust">$0 DUE TODAY · NO PAYMENT INFO · CONTINGENCY ONLY</p>
+      <button class="btn btn-submit" type="submit">Put my house on the list</button>
+      <p class="form-micro">I'LL EMAIL YOUR AUTHORIZATION FORM BEFORE THE WINDOW OPENS. NO SPAM, NO MAILERS. SIGNED, ABE.</p>
+    </form>
+    <div id="form-success" class="form-success" tabindex="-1">
+      <h3>You're on the list.</h3>
+      <p>Watch your inbox. I'll send your authorization form and next steps before the January window opens. Total remaining effort on your end: one signature.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p class="foot-brand">Honest Abe Tax</p>
+    <p class="foot-note">A penny saved is a penny earned. I deal in dollars. And why the penny? Look who's on it.</p>
+    <p class="foot-note">Nassau County, NY · © 2026 Honest Abe Tax. All rights reserved.</p>
+    <p class="foot-disclaimer">
+      The result shown is one actual 2027/28 Nassau County settlement. Every property is different and results are never guaranteed. Honest Abe Tax is an independent service, not a law firm, offers no legal or tax advice, and is not affiliated with Nassau County, the Assessment Review Commission, or any government agency. Homeowners can always file on their own, free, at the county's website. The fee is 33% of first-year tax savings, due only after a successful reduction. No reduction, no fee.
+    </p>
+  </div>
+</footer>
+
+<div class="m-cta-bar" id="m-cta-bar">
+  <a class="btn btn-sm" href="#signup">Get on the January list</a>
+</div>
+
+<script>
+(function(){
+  var FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdoypQqrOl_v6fKOpBrX9u3l3lWiosA4PGdsOlwJBBZ4uiePg/formResponse";
+  var ENTRY = {name:"entry.89794457", address:"entry.416537932", email:"entry.394856863", phone:"entry.910750957", signed:"entry.1508888554"};
+  var form = document.getElementById("lead-form");
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    var data = new FormData();
+    data.append(ENTRY.name, document.getElementById("f-name").value);
+    data.append(ENTRY.address, document.getElementById("f-address").value);
+    data.append(ENTRY.email, document.getElementById("f-email").value);
+    data.append(ENTRY.phone, document.getElementById("f-phone").value);
+    data.append(ENTRY.signed, document.getElementById("f-signed").value);
+    fetch(FORM_URL, {method:"POST", mode:"no-cors", body:data}).finally(function(){
+      form.style.display = "none";
+      var ok = document.getElementById("form-success");
+      ok.style.display = "block";
+      ok.focus();
+    });
+  });
+
+  // Mobile sticky CTA bar: only under 600px, hides while the signup form is on screen
+  var bar = document.getElementById("m-cta-bar");
+  var signup = document.getElementById("signup");
+  if (window.matchMedia("(max-width:600px)").matches) {
+    document.body.classList.add("mbar");
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function(entries){
+        bar.classList.toggle("hidden", entries[0].isIntersecting);
+      }, {threshold:.15}).observe(signup);
+    }
+  }
+})();
+</script>
+
+</body>
+</html>
