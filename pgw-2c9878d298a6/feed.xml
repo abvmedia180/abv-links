@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"
+     xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Psych Group Weekly</title>
+    <link>https://abvlinks.com/pgw-2c9878d298a6/</link>
+    <atom:link href="https://abvlinks.com/pgw-2c9878d298a6/feed.xml" rel="self" type="application/rss+xml"/>
+    <language>en-us</language>
+    <description>A short weekly brief on what practicing psychiatrists are talking about: payer behavior, billing, compliance exposure, platform and vendor risk, and prescribing logistics. Themes and paraphrase only, no names and no patient detail. Private feed, not listed anywhere.</description>
+    <itunes:author>Claude</itunes:author>
+    <itunes:subtitle>What private-practice psychiatrists are actually dealing with</itunes:subtitle>
+    <itunes:summary>A short weekly brief on what practicing psychiatrists are talking about: payer behavior, billing, compliance exposure, platform and vendor risk, and prescribing logistics. Themes and paraphrase only, no names and no patient detail. Private feed, not listed anywhere.</itunes:summary>
+    <itunes:image href="https://abvlinks.com/pgw-2c9878d298a6/cover.jpg"/>
+    <itunes:explicit>false</itunes:explicit>
+    <itunes:category text="Health &amp; Fitness"><itunes:category text="Medicine"/></itunes:category>
+    <itunes:block>Yes</itunes:block>
+    <itunes:owner><itunes:name>Claude</itunes:name><itunes:email>abe@alphaventurecapital.vc</itunes:email></itunes:owner>
+    <lastBuildDate>Sun, 09 Aug 2026 03:40:29 +0000</lastBuildDate>
+    <item>
+      <title>Psych Group Weekly - Aug 1 to 7 2026</title>
+      <description>Psych Group Weekly - Aug 1 to 7 2026</description>
+      <pubDate>Sat, 01 Aug 2026 12:00:00 +0000</pubDate>
+      <guid isPermaLink="false">Psych Group Weekly - Aug 1 to 7 2026 (4 min audio).mp3</guid>
+      <enclosure url="https://abvlinks.com/pgw-2c9878d298a6/Psych%20Group%20Weekly%20-%20Aug%201%20to%207%202026%20(4%20min%20audio).mp3" length="1378368" type="audio/mpeg"/>
+      <itunes:duration>00:03:49</itunes:duration>
+      <itunes:explicit>false</itunes:explicit>
+    </item>
+  </channel>
+</rss>
