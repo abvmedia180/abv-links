@@ -79,6 +79,8 @@ h1{font-family:'Bangers',cursive;letter-spacing:2px;text-align:center;line-heigh
 .controls{width:100%;display:flex;gap:10px;align-items:center;justify-content:center;margin:16px 0 8px}
 .mic{width:92px;height:92px;border-radius:50%;background:#0f1338;border:5px solid var(--red);font-size:2.3rem;display:flex;align-items:center;justify-content:center}
 .mic.live{border-color:var(--green);animation:pulse 1.4s infinite}
+.mic.ready{border-color:var(--gold);background:#2a2410;animation:ready 1.1s ease-in-out infinite}
+@keyframes ready{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(255,182,39,.6)}50%{transform:scale(1.08);box-shadow:0 0 0 16px rgba(255,182,39,0)}}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(46,204,113,.55)}100%{box-shadow:0 0 0 26px rgba(46,204,113,0)}}
 .again{width:70px;height:70px;border-radius:50%;background:#0f1338;border:4px solid var(--blue);font-size:1.9rem}
 .giveup{width:70px;height:70px;border-radius:50%;background:#0f1338;border:4px solid #555c8a;font-size:1.9rem}
@@ -170,7 +172,7 @@ h1{font-family:'Bangers',cursive;letter-spacing:2px;text-align:center;line-heigh
     <button class="mic" id="micBtn" aria-label="Talk">🎤</button>
     <button class="giveup" id="giveBtn" aria-label="Tell me">🤷</button>
   </div>
-  <div class="cap"><div>Again</div><div>Talk</div><div>Tell me</div></div>
+  <div class="cap"><div>Again</div><div>Tap &amp; talk</div><div>Tell me</div></div>
   <div class="status" id="status"></div>
   <div class="heard" id="heard"></div>
   <div class="msg" id="msg"></div>
@@ -308,35 +310,52 @@ const wantsAgain = t => /\b(again|repeat|what number)\b/.test(norm(t));
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
 let rec = null, wantListen = false, live = false, idleTimer = null, idleCount = 0;
 function setMic(on, txt){ $("micBtn").classList.toggle("live", on); $("status").textContent = txt; }
-function makeRec(){
-  if (!SR) return null;
+// A fresh recognizer per listening session: reusing one after abort() silently fails on iOS Safari.
+function startRec(){
   const r = new SR(); r.lang = "en-US"; r.continuous = true; r.interimResults = true; r.maxAlternatives = 3;
-  r.onstart = () => { live = true; setMic(true, "Listening... say a player!"); };
-  r.onend = () => { live = false; if (wantListen && !speaking) setTimeout(() => { if (wantListen && !speaking && !live) try{ r.start(); }catch(e){} }, 200); else if (!wantListen) setMic(false, "Tap 🎤 to talk"); };
-  r.onerror = e => { if (e.error === "not-allowed" || e.error === "service-not-allowed"){ wantListen = false; setMic(false, "Tap 🎤 to talk"); } };
+  rec = r;
+  r.onstart = () => { if (rec !== r) { try{ r.abort(); }catch(e){} return; } live = true; $("heard").textContent = ""; setMic(true, "Listening... say a player!"); };
+  r.onend = () => {
+    if (rec !== r) return;
+    live = false; rec = null;
+    if (wantListen && !speaking) setTimeout(() => { if (wantListen && !speaking && !rec) startRec(); }, 250);
+    else if (!wantListen && G.state === "ask" && !speaking) listen();
+  };
+  r.onerror = e => { if (rec !== r) return; if (e.error === "not-allowed" || e.error === "service-not-allowed"){ rec = null; live = false; listen(); } };
   r.onresult = e => {
+    if (rec !== r) return;
     for (let i = e.resultIndex; i < e.results.length; i++){
       const res = e.results[i], alts = [...res].map(a => a.transcript);
       $("heard").textContent = `"${alts[0].trim()}"`;
       onSpeech(alts, res.isFinal);
+      if (rec !== r) return;
     }
   };
-  return r;
+  try { r.start(); } catch(e) { rec = null; listen(); return; }
+  setTimeout(() => { if (rec === r && !live) listen(); }, 2500);
 }
+// Tap-to-talk: iOS Safari only starts the mic reliably from a tap, so every listening session starts from one.
 function listen(){
   if (!SR){ setMic(false, "Type your answer below!"); return; }
-  if (!rec) rec = makeRec();
-  wantListen = true; armIdle();
-  if (!live && !speaking) try{ rec.start(); }catch(e){}
+  wantListen = false; dropRec(); clearTimeout(idleTimer);
+  if (G.state !== "ask") return;
+  setMic(false, "Tap 🎤 and say the name!"); $("micBtn").classList.add("ready");
 }
-function pauseListening(){ clearTimeout(idleTimer); if (rec && live) try{ rec.abort(); }catch(e){} }
-function stopListening(){ wantListen = false; clearTimeout(idleTimer); if (rec) try{ rec.abort(); }catch(e){} setMic(false, "Tap 🎤 to talk"); }
+function talk(){
+  if (!SR || G.state !== "ask") return;
+  hush(); $("micBtn").classList.remove("ready");
+  wantListen = true; armIdle(); dropRec(); startRec();
+}
+function dropRec(){ const r = rec; rec = null; live = false; if (r) try{ r.abort(); }catch(e){} }
+function pauseListening(){ clearTimeout(idleTimer); dropRec(); }
+function stopListening(){ wantListen = false; clearTimeout(idleTimer); dropRec(); $("micBtn").classList.remove("ready"); setMic(false, ""); }
 function armIdle(){
   clearTimeout(idleTimer);
   idleTimer = setTimeout(() => {
     if (G.state !== "ask") return;
-    if (++idleCount > 2){ stopListening(); setMic(false, "Tap 🎤 when you're ready!"); return; }
-    say([[`g-wait${idleCount}`, D.generic[`wait${idleCount}`]], [`q-${G.p.id}`, qText()]], () => { if (wantListen) listen(); });
+    wantListen = false; dropRec();
+    if (++idleCount > 2) return listen();
+    say([[`g-wait${idleCount}`, D.generic[`wait${idleCount}`]], [`q-${G.p.id}`, qText()]], listen);
   }, 10000);
 }
 
@@ -428,6 +447,7 @@ function wrong(){
     ? [`h1-${G.p.id}`, `Here's a hint! He plays ${G.p.pos}, and his first name starts with "${first[0].toUpperCase()}".`]
     : [`h2-${G.p.id}`, `Big hint! His first name is ${first}!`];
   showMsg(`${D.generic[no]} ${hint[1]}`, "hint");
+  wantListen = false; dropRec();
   say([[`g-${no}`, D.generic[no]], hint], listen);
 }
 function reveal(){
@@ -437,7 +457,7 @@ function reveal(){
   say([[`rv-${G.p.id}`, `That was ${G.p.name}! You'll get the next one!`]]);
 }
 function giveUp(){ if (G.state === "ask") reveal(); }
-function sayAgain(){ if (G.p) say([[`q-${G.p.id}`, qText()]], () => { if (G.state === "ask") listen(); }); }
+function sayAgain(){ if (!G.p) return; wantListen = false; dropRec(); say([[`q-${G.p.id}`, qText()]], () => { if (G.state === "ask") listen(); }); }
 function nextPlayer(){ if (S.mode === 2) G.turn = 1 - G.turn; newRound(false); }
 
 function confetti(){
@@ -462,7 +482,7 @@ $("resetBtn").onclick = () => {
   if (!confirm("Reset the score back to zero?")) return;
   S.score = [{p:0,st:0,best:0},{p:0,st:0,best:0}]; save(); drawScores();
 };
-$("micBtn").onclick = () => { if (G.state !== "ask") return; if (live) stopListening(); else { hush(); idleCount = 0; listen(); } };
+$("micBtn").onclick = () => { if (G.state !== "ask") return; if (live || rec) listen(); else { idleCount = 0; talk(); } };
 $("againBtn").onclick = sayAgain;
 $("giveBtn").onclick = giveUp;
 $("nextBtn").onclick = nextPlayer;
