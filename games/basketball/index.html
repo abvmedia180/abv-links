@@ -337,14 +337,22 @@ const clipBuf = url => H.bufs[url] || (H.bufs[url] = fetch(url).then(r => { if (
 function ctxPlay(key, token, ended, fallback){
   clipBuf(`audio/${key}.mp3`).then(buf => {
     if (token !== speakToken) return;
-    const s = H.ctx.createBufferSource(); s.buffer = buf; s.connect(H.gain); H.src = s;
+    // 8 ms fade in and out: a clip that starts or stops mid-wave pops
+    const s = H.ctx.createBufferSource(), f = H.ctx.createGain(), t0 = H.ctx.currentTime, F = .008;
+    s.buffer = buf; s.connect(f); f.connect(H.gain); H.src = s; H.fade = f;
+    f.gain.setValueAtTime(0, t0); f.gain.linearRampToValueAtTime(1, t0 + F);
+    if (buf.duration > 4 * F){ f.gain.setValueAtTime(1, t0 + buf.duration - F); f.gain.linearRampToValueAtTime(0, t0 + buf.duration); }
     s.onended = () => { if (H.src === s) H.src = null; if (token === speakToken) ended(); };
-    s.start();
+    s.start(t0);
   }).catch(() => fallback());
 }
 function hush(){
   speakToken++; audio.pause(); audio.removeAttribute("src"); try{ audio.load(); }catch(e){} try{ speechSynthesis.cancel(); }catch(e){}
-  if (H.src){ try{ H.src.onended = null; H.src.stop(); }catch(e){} H.src = null; }
+  if (H.src){
+    const s = H.src, f = H.fade, t = H.ctx.currentTime; s.onended = null;
+    try{ f.gain.cancelScheduledValues(t); f.gain.setValueAtTime(f.gain.value, t); f.gain.linearRampToValueAtTime(0, t + .01); s.stop(t + .012); }catch(e){ try{ s.stop(); }catch(e2){} }
+    H.src = null;
+  }
   speaking = false; talking(false); gate(false);
 }
 
@@ -384,8 +392,28 @@ function isRight(t, p){
   const w = norm(t).split(" ").filter(Boolean);
   if (hit(p._full, w)) return true;
   if (D.players.some(o => o !== p && o._full !== p._full && hit(o._full, w, .1))) return false;
+  if (wrongLast(t, p)) return false;
   return p._mine.some(a => hit(a, w));
 }
+// His first name right, then a DIFFERENT last name ("Jalen Smith" for Jalen Brunson) is wrong, not a point.
+// The word after the first name only counts as a last-name try when it is a real word (not "um", "right?").
+function wrongLast(t, p){
+  const parts = p._full.split(" "); if (parts.length < 2) return false;
+  const w = norm(t).split(" ").filter(Boolean), rest = [...parts.slice(1), ...(p.say ? norm(p.say).split(" ").slice(1) : [])];
+  for (let i = 0; i < w.length - 1; i++){
+    if (sim(parts[0], w[i]) < need(parts[0])) continue;
+    const nx = w[i + 1];
+    if (nx.length < 3 || FILLER.has(nx) || NOT_NAMES.has(nx) || CHAT.has(nx)) continue;
+    if (rest.some(r => sim(r, nx) >= need(r) || sim(r.replace(/ /g, ""), nx + (w[i + 2] || "")) >= need(r))) continue;
+    if ((p.nick || []).some(x => hit(norm(x), [nx]))) continue;
+    // Whisper spells a hard last name the way it sounds ("Nikola Yokech"): that is still his name
+    const sn = [sound(nx), sound(nx + (w[i + 2] || ""))];
+    if (p._snd.some(k => k.length >= 4 && sn.some(s => lev(k, s) <= (k.length >= 5 ? 2 : 1)))) continue;
+    return true;
+  }
+  return false;
+}
+const CHAT = new Set("right correct yes yeah yep nope maybe please papa again sure definitely obviously easy".split(" "));
 // Hands-free only: Whisper writes a hard name the way it SOUNDS ("Yokech", "JoeyLL and Bead", "Shang-gong").
 // Compare sound keys (c/k, ph/f, ch/tch, vowels blurred to "front" e/i or "back" a/o/u) with THIS player's names
 // and his "say" respelling. Only ever gives a point, never uses a try. Short names must match exactly, and a
@@ -555,8 +583,10 @@ function hfStart(){
   const AC = window.AudioContext || window.webkitAudioContext;
   H.ctx = new AC(); H.ctx.resume();
   // game voice: a bit louder (play-and-record can be quiet), with a limiter so 1.5x doesn't crackle
-  H.gain = H.ctx.createGain(); H.gain.gain.value = 1.5;
-  const lim = H.ctx.createDynamicsCompressor(); lim.threshold.value = -6; lim.knee.value = 0; lim.ratio.value = 20;
+  // (a slow limiter let the 1.5x peaks clip into static on the phone: fastest attack, a soft knee, and room below 0 dB)
+  H.gain = H.ctx.createGain(); H.gain.gain.value = 1.3;
+  const lim = H.ctx.createDynamicsCompressor(); lim.threshold.value = -12; lim.knee.value = 6; lim.ratio.value = 12;
+  lim.attack.value = 0.001; lim.release.value = 0.15;
   H.gain.connect(lim); lim.connect(H.ctx.destination);
   // iOS parks the context as "interrupted" on a call, Siri or screen lock: try to resume, else ask for a tap
   const ctx = H.ctx;
@@ -792,10 +822,14 @@ function endRound(delay = 0){
 function onSpeech(alts, final, near){
   if (G.state !== "ask" || speaking) return;
   armIdle();
-  if (alts.some(t => isRight(t, G.p))) return correct();
+  // mid-sentence (tap mode), a line that ENDS on his first name waits: the last name may still be coming
+  const endsOnFirst = t => { const w = norm(t).split(" "), f = G.p._full.split(" ")[0]; return G.p._full.includes(" ") && sim(f, w[w.length - 1]) >= need(f); };
+  if (alts.some(t => isRight(t, G.p) && (final || !endsOnFirst(t)))) return correct();
   if (!final) return;
-  if (near && !alts.some(isNameGuess)) return correct();   // hands-free: sounds like HIS name, and no other player was named
+  const badLast = alts.some(t => wrongLast(t, G.p));
+  if (near && !badLast && !alts.some(isNameGuess)) return correct();   // hands-free: sounds like HIS name, and no other player was named
   const t = alts[0];
+  if (badLast) return wrong();
   if (wantsAgain(t)) return sayAgain();
   if (wantsHelp(t)) return giveUp();
   if (alts.some(isNameGuess) || looksLikeName(t)) return wrong();
