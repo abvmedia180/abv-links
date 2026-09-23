@@ -77,8 +77,11 @@ h1{font-family:'Bangers',cursive;letter-spacing:2px;text-align:center;line-heigh
 #game.done .num{font-size:clamp(4.5rem,20vw,7rem)}
 #game.done .card{padding-bottom:12px}
 .controls{width:100%;display:flex;gap:10px;align-items:center;justify-content:center;margin:16px 0 8px}
-.mic{width:92px;height:92px;border-radius:50%;background:#0f1338;border:5px solid var(--red);font-size:2.3rem;display:flex;align-items:center;justify-content:center}
-.mic.live{border-color:var(--green);animation:pulse 1.4s infinite}
+.mic{width:92px;height:92px;border-radius:50%;background:#0f1338;border:5px solid #555c8a;font-size:2.3rem;display:flex;align-items:center;justify-content:center;transition:opacity .2s}
+.mic.talk{opacity:.45;filter:grayscale(1)}
+.again.talk{animation:talk .8s ease-in-out infinite}
+@keyframes talk{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+.mic.live{border-color:var(--green);background:#0f3a24;animation:pulse 1.4s infinite}
 .mic.ready{border-color:var(--gold);background:#2a2410;animation:ready 1.1s ease-in-out infinite}
 @keyframes ready{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(255,182,39,.6)}50%{transform:scale(1.08);box-shadow:0 0 0 16px rgba(255,182,39,0)}}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(46,204,113,.55)}100%{box-shadow:0 0 0 26px rgba(46,204,113,0)}}
@@ -106,7 +109,41 @@ h1{font-family:'Bangers',cursive;letter-spacing:2px;text-align:center;line-heigh
   #game.done .reveal{margin:0}
 }
 .msg.hint{background:rgba(76,201,240,.12);border:2px solid var(--blue)}
-.msg.rv{background:rgba(255,77,109,.12);border:2px solid var(--red)}
+.msg.rv{background:rgba(155,93,229,.14);border:2px solid #9b5de5}
+.turnb{width:100%;text-align:center;font-family:'Bangers',cursive;letter-spacing:2px;font-size:1.7rem;padding:6px;margin:-4px 0 10px;border:3px solid;border-radius:16px;background:rgba(0,0,0,.25);animation:pop .4s ease-out}
+.reveal img{transition:filter .6s}
+.reveal.blur img{filter:blur(9px)}.reveal.blur2 img{filter:blur(4px)}
+.sc.bump .p{animation:bump .7s ease-out}
+@keyframes bump{0%{transform:scale(1)}35%{transform:scale(1.6);color:#fff}100%{transform:scale(1)}}
+/* phone turned sideways: number card left, controls right, so the mic never falls off the screen */
+@media (orientation:landscape) and (max-height:500px){
+  .screen#game{max-width:900px;display:none;grid-template-columns:1fr 1fr;column-gap:16px;align-items:start;padding-top:8px}
+  .screen#game.on{display:grid}
+  #game .top,#game .scores,#game .turnb{grid-column:1/-1;margin-bottom:6px}
+  #game .card{grid-column:1;grid-row:span 6;padding:10px 12px}
+  #game .num{font-size:5.5rem}#game .team{font-size:1.6rem}
+  #game .controls,#game .cap,#game .status,#game .heard,#game .msg,#game .next,#game .typebox,#game #dbg{grid-column:2}
+  #game .controls{margin:4px 0}
+  #game .reveal img{height:96px}
+  #game.done .num{font-size:4rem} #game.done .card{padding:8px 12px}
+  #game .top{margin-bottom:4px} #game .small{padding:4px 12px;font-size:.8rem}
+  #game .sc{padding:4px 8px} #game .sc .p{font-size:1.5rem} #game .sc .s{display:none}
+  #game .turnb{font-size:1.2rem;padding:2px;margin:0 0 6px}
+  #game .mic{width:96px;height:96px;font-size:2.4rem}
+  #game .again,#game .giveup{width:72px;height:72px;font-size:1.9rem}
+  #game .cap div{width:96px} #game .cap div:first-child,#game .cap div:last-child{width:72px}
+}
+/* hint photo showing: shrink the number like the end-of-round card so everything fits at real Safari heights */
+#game:has(.reveal.on) .num{font-size:clamp(4.5rem,20vw,7rem)}
+.reveal img{height:min(124px,16vh)}
+.reveal.blur img,.reveal.blur2 img{background:transparent;transform:scale(1.05)}
+.again{border-color:#555c8a}
+.again.talk{border-color:var(--blue);box-shadow:0 0 0 6px rgba(76,201,240,.25)}
+.next{scroll-margin-bottom:16px}
+html{overflow-x:hidden}
+body{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}
+@media (orientation:landscape) and (max-height:500px){ #game:has(.reveal.on) .num{font-size:4rem} }
+.pts{font-family:'Bangers',cursive;letter-spacing:1px;font-size:clamp(1.6rem,7vw,2.2rem);margin-bottom:4px}
 .typebox{width:100%;display:flex;gap:8px;margin-top:12px}
 .typebox input{flex:1;min-width:0;padding:13px;border-radius:14px;border:2px solid #2a3170;background:#0f1338;color:#fff;font:600 1.05rem 'Fredoka'}
 .typebox button{padding:0 18px;border-radius:14px;background:var(--blue);color:#0d1030;font-weight:700;font-size:1.05rem}
@@ -159,6 +196,7 @@ h1{font-family:'Bangers',cursive;letter-spacing:2px;text-align:center;line-heigh
     <button class="small" id="resetBtn">↺ Reset score</button>
   </div>
   <div class="scores" id="scores"></div>
+  <div class="turnb" id="turnBanner" style="display:none"></div>
 
   <div class="card" id="card">
     <div class="team" id="teamName"></div>
@@ -209,8 +247,8 @@ const nameOf = i => (S.names[i] || "").trim() || `Player ${i+1}`;
 function drawSetup(){
   document.querySelectorAll("#modeSeg button").forEach(b => b.classList.toggle("sel", +b.dataset.m === S.mode));
   $("n2").style.display = S.mode === 2 ? "" : "none";
-  $("n1").placeholder = S.mode === 2 ? "✏️ Player 1 name" : "✏️ Your name (optional)";
-  $("n2").placeholder = "✏️ Player 2 name";
+  $("n1").placeholder = S.mode === 2 ? "🔵 Blue player's name" : "✏️ Your name (optional)";
+  $("n2").placeholder = "🟠 Orange player's name";
   $("n1").value = S.names[0]; $("n2").value = S.names[1];
   $("starsSw").classList.toggle("on", S.stars);
   document.querySelectorAll(".tier").forEach(b => b.classList.toggle("sel", b.dataset.t === S.tier));
@@ -248,21 +286,26 @@ function tts(text, done){
   u.onend = u.onerror = done; speechSynthesis.speak(u);
 }
 // items: [[clipKey, fallbackText], ...]
+function talking(on){ $("micBtn").classList.toggle("talk", on); $("againBtn").classList.toggle("talk", on); }
 function say(items, done){
-  const token = ++speakToken; speaking = true; pauseListening();
+  const token = ++speakToken; speaking = true; pauseListening(); talking(true);
+  if (G.state === "ask") $("status").textContent = "👂 Listen...";
   let i = 0;
   const next = () => {
     if (token !== speakToken) return;
-    if (i >= items.length){ speaking = false; if (done) done(); return; }
+    if (i >= items.length){ speaking = false; talking(false); if (done) done(); return; }
     const [key, text] = items[i++];
-    audio.onended = next;
-    audio.onerror = () => tts(text, next);
+    // one fallback per clip, and never for a line that was already interrupted (stale play() rejections)
+    let fired = false;
+    const fb = () => { if (fired || token !== speakToken) return; fired = true; tts(text, () => { if (token === speakToken) next(); }); };
+    audio.onended = () => { if (!fired) { fired = true; next(); } };
+    audio.onerror = fb;
     audio.src = `audio/${key}.mp3`;
-    const p = audio.play(); if (p) p.catch(() => tts(text, next));
+    const p = audio.play(); if (p) p.catch(e => { if (e && e.name !== "AbortError") fb(); });
   };
   next();
 }
-function hush(){ speakToken++; audio.pause(); try{ speechSynthesis.cancel(); }catch(e){} speaking = false; }
+function hush(){ speakToken++; audio.pause(); audio.removeAttribute("src"); try{ audio.load(); }catch(e){} try{ speechSynthesis.cancel(); }catch(e){} speaking = false; talking(false); }
 
 // ---------- matching ----------
 const norm = s => (s||"").normalize("NFKD").replace(/[̀-ͯ]/g,"").toLowerCase()
@@ -284,7 +327,7 @@ function hit(alias, words, bump = 0){
   }
   return false;
 }
-const STOP = new Set("will mike max miles chase grant bones love ball white green brown hart smart castle fox jones king bron ant book amen turner brooks young rich walker payton jordan nick nate sam ron cam gary pat justin james bam steph ty dean mark sun heat".split(" "));
+const STOP = new Set("will mike max miles chase grant bones love ball white green brown hart smart castle fox jones king bron ant book amen turner brooks young rich walker payton jordan nick nate sam ron cam gary pat justin james bam steph ty dean mark sun heat cat shy shay katie jay".split(" "));
 function aliasesFor(p, strict){
   const n = norm(p.name), parts = n.split(" "), out = new Set([n]);
   const last = parts[parts.length-1], first = parts[0];
@@ -293,18 +336,28 @@ function aliasesFor(p, strict){
   (p.nick||[]).forEach(x => { const a = norm(x); if (a && (!strict || !STOP.has(a))) out.add(a); });
   return [...out];
 }
-D.players.forEach(p => { p._mine = aliasesFor(p,false); p._other = aliasesFor(p,true); });
-const isRight = (t, p) => { const w = norm(t).split(" ").filter(Boolean); return p._mine.some(a => hit(a, w)); };
+D.players.forEach(p => { p._mine = aliasesFor(p,false); p._other = aliasesFor(p,true); p._full = norm(p.name); });
+// Right = the kid said this player's full name, or a short name of his, and did NOT say some other player's
+// full name ("LeBron James" is not Bronny James, "Jalen Williams" is not Jalen Brunson).
+function isRight(t, p){
+  const w = norm(t).split(" ").filter(Boolean);
+  if (hit(p._full, w)) return true;
+  if (D.players.some(o => o !== p && o._full !== p._full && hit(o._full, w, .1))) return false;
+  return p._mine.some(a => hit(a, w));
+}
 const isNameGuess = t => { const w = norm(t).split(" ").filter(Boolean); return D.players.some(p => p._other.some(a => hit(a, w, .1))); };
 const FILLER = new Set("um umm uh uhh hmm hm er ah oh like so well okay ok hello hi hey wait yeah yes no i is it its a the that this he his who me my think maybe guess and or um".split(" "));
 const NOT_NAMES = new Set(["i","is","it","its","hello","hi","hey","um","uh","oh","okay","ok","yes","no","wait","what","who","the","a","my","maybe","mom","mommy","mama","dad","daddy","papa","nba","new","york","la","sixers","knicks","lakers","spurs","thunder","celtics","heat","cavaliers","cavs","warriors","mavericks","mavs","bucks","nuggets","suns","bulls","timberwolves","wolves","rockets","basketball"]);
-function looksLikeName(raw){
+// typed = true: the kid typed it, so any real word counts. Spoken: Safari capitalizes the first word of every
+// sentence, so a capital only means "a name" when it is NOT the first word ("Is it Elmo", "Michael Jordan").
+function looksLikeName(raw, typed){
   const toks = raw.trim().split(/\s+/).map(w => w.replace(/[^A-Za-z']/g, "").replace(/'s$/, "")).filter(Boolean);
-  if (toks.some(w => /^[A-Z][a-z]/.test(w) && !NOT_NAMES.has(w.toLowerCase()))) return true;
+  if (typed) return toks.some(w => w.length >= 2 && !NOT_NAMES.has(w.toLowerCase()) && !FILLER.has(w.toLowerCase()));
+  if (toks.some((w, i) => i > 0 && /^[A-Z][a-z]/.test(w) && !NOT_NAMES.has(w.toLowerCase()))) return true;
   const m = norm(raw).match(/\b(?:is it|it s|it is|i think it s|i think it is|i think|maybe it s|is that)\s+(.+)$/);
   return !!m && m[1].split(" ").filter(w => w && !FILLER.has(w)).length >= 1;
 }
-const wantsHelp = t => /\b(give up|tell me|i don t know|idk)\b/.test(norm(t));
+const wantsHelp = t => /\b(give up|tell me|i don t know|idk|dunno|no idea|pass|skip)\b/.test(norm(t));
 const wantsAgain = t => /\b(again|repeat|what number)\b/.test(norm(t));
 
 // ---------- listening ----------
@@ -323,15 +376,30 @@ const MIC_ERR = {
   "network": "Speech needs internet. Check the connection, then tap 🎤.",
   "no-speech": "I didn't hear anything. Tap 🎤 and try again!",
 };
-let settle = null;
-function startRec(){
+let settle = null, talkAt = 0;
+function startRec(retry = 0){
   const r = new SR(); r.lang = "en-US"; r.continuous = !IOS; r.interimResults = true; r.maxAlternatives = 3;
-  rec = r; let latest = null, done = false;
+  rec = r; let latest = null, done = false, heardAudio = false, gotResult = false;
   const decide = final => { if (rec !== r || done || !latest) return; clearTimeout(settle); if (final) done = true; onSpeech(latest, final); if (final && rec === r) { done = false; latest = null; } };
-  if (DEBUG && r.addEventListener) ["audiostart","soundstart","speechstart","speechend","soundend","audioend"].forEach(ev => r.addEventListener(ev, () => dbg(ev)));
-  r.onstart = () => { dbg("start"); if (rec !== r) { try{ r.abort(); }catch(e){} return; } live = true; $("heard").textContent = ""; setMic(true, "Listening... say a player!"); };
+  if (r.addEventListener){
+    ["audiostart","soundstart","speechstart","speechend","soundend","audioend"].forEach(ev => r.addEventListener(ev, () => dbg(ev)));
+    r.addEventListener("audiostart", () => { heardAudio = true; });
+    // Safari's words arrive in bursts; once the kid stops talking, decide soon instead of waiting the full settle
+    r.addEventListener("speechend", () => { if (rec === r && latest){ clearTimeout(settle); settle = setTimeout(() => decide(true), 400); } });
+  }
+  r.onstart = () => {
+    dbg("start"); if (rec !== r) { try{ r.abort(); }catch(e){} return; }
+    live = true; $("heard").textContent = ""; setMic(true, "🎤 I'm listening... say a player!");
+    // iPhone "zombie" session: it starts but never gets audio (common right after the game talked). Retry once.
+    setTimeout(() => {
+      if (rec !== r || heardAudio || gotResult || !r.addEventListener) return;
+      dbg("no audio after start" + (retry ? ", giving up" : ", retrying"));
+      if (!retry){ dropRec(); startRec(1); } else { listen(); $("status").textContent = "The mic didn't turn on. Tap 🎤 again!"; }
+    }, 2500);
+  };
   r.onresult = e => {
     if (rec !== r) return;
+    gotResult = true;
     const last = e.results[e.results.length - 1];
     const full = [...e.results].map(x => x[0].transcript).join(" ").replace(/\s+/g, " ").trim();
     latest = [full, ...[...last].slice(1).map(a => a.transcript)];
@@ -340,14 +408,15 @@ function startRec(){
     decide(false);
     if (rec !== r) return;
     if (last.isFinal) decide(true);
-    else settle = setTimeout(() => decide(true), 1300);
+    else { clearTimeout(settle); settle = setTimeout(() => decide(true), 1800); }
   };
   r.onerror = e => {
     dbg("error: " + e.error);
-    if (rec !== r) return;
-    if (e.error === "aborted") return;
+    if (rec !== r || r._ours) return;
     rec = null; live = false; clearTimeout(settle);
-    if (G.state === "ask" && !speaking){ listen(); if (MIC_ERR[e.error]) $("status").textContent = MIC_ERR[e.error]; }
+    if (G.state !== "ask" || speaking) return;
+    if (e.error === "no-speech" || e.error === "aborted") return missed();
+    listen(); if (MIC_ERR[e.error]) $("status").textContent = MIC_ERR[e.error];
   };
   r.onend = () => {
     dbg("end");
@@ -356,10 +425,19 @@ function startRec(){
     if (rec !== r) return;
     live = false; rec = null; clearTimeout(settle);
     if (wantListen && !speaking && !IOS) setTimeout(() => { if (wantListen && !speaking && !rec) startRec(); }, 250);
-    else if (G.state === "ask" && !speaking){ const was = wantListen; listen(); if (IOS && was) $("status").textContent = "I didn't catch a name. Tap 🎤 and try again!"; }
+    else if (G.state === "ask" && !speaking){ if (IOS && wantListen) missed(); else listen(); }
   };
-  try { r.start(); dbg("start() called, ios=" + IOS); } catch(e) { dbg("start() threw: " + e.name); rec = null; listen(); return; }
-  setTimeout(() => { if (rec === r && !live) { dbg("no start after 2.5s"); listen(); } }, 2500);
+  try { r.start(); dbg("start() called, ios=" + IOS + (retry ? ", retry" : "")); } catch(e) { dbg("start() threw: " + e.name); rec = null; listen(); return; }
+  // Safari fires "start" only after the kid (or a grown-up) answers the mic permission pop-up. Wait for it; don't abort.
+  setTimeout(() => { if (rec === r && !live) { dbg("waiting for permission"); $("status").textContent = "If Safari asks, tap Allow!"; } }, 2500);
+  setTimeout(() => { if (rec === r && !live) { dbg("no start after 12s"); listen(); } }, 12000);
+}
+// The session ended and nothing counted: say so out loud (the kids can't read), twice per question at most.
+let missCount = 0;
+function missed(){
+  wantListen = false;
+  if (++missCount > 2){ listen(); $("status").textContent = "I didn't catch a name. Tap 🎤 and try again!"; return; }
+  say([["g-wait2", D.generic.wait2]], () => { listen(); $("status").textContent = "I didn't catch a name. Tap 🎤 and try again!"; });
 }
 // Tap-to-talk: iOS Safari only starts the mic reliably from a tap, so every listening session starts from one.
 function listen(){
@@ -367,14 +445,20 @@ function listen(){
   wantListen = false; dropRec(); clearTimeout(idleTimer);
   if (G.state !== "ask") return;
   setMic(false, "Tap 🎤 and say the name!"); $("micBtn").classList.add("ready");
+  // nobody tapped: gently ask again out loud (twice), then just wait
+  idleTimer = setTimeout(() => {
+    if (G.state !== "ask" || speaking || rec || ++idleCount > 2) return;
+    say([[`g-wait${idleCount}`, D.generic[`wait${idleCount}`]], [`q-${G.p.id}`, qText()]], listen);
+  }, 15000);
 }
 function talk(){
   if (!SR || G.state !== "ask") return;
+  talkAt = Date.now();
   hush(); $("micBtn").classList.remove("ready");
   wantListen = true; armIdle(); dropRec(); startRec();
 }
-function dropRec(){ const r = rec; rec = null; live = false; if (r) try{ r.abort(); }catch(e){} }
-function pauseListening(){ clearTimeout(idleTimer); dropRec(); }
+function dropRec(){ const r = rec; rec = null; live = false; if (r){ r._ours = true; try{ r.abort(); }catch(e){} } }
+function pauseListening(){ clearTimeout(idleTimer); dropRec(); $("micBtn").classList.remove("live", "ready"); }
 function stopListening(){ wantListen = false; clearTimeout(idleTimer); dropRec(); $("micBtn").classList.remove("ready"); setMic(false, ""); }
 function armIdle(){
   clearTimeout(idleTimer);
@@ -395,11 +479,18 @@ function drawScores(){
   for (let i = 0; i < S.mode; i++){
     const s = S.score[i], d = document.createElement("div");
     d.className = "sc" + (S.mode === 2 && G.turn === i ? " turn" : "");
+    if (S.mode === 2) d.style.borderColor = G.turn === i ? SIDE[i].c : "";
     d.innerHTML = `<div class="n"></div><div class="p">${s.p}</div><div class="s">${s.st >= 2 ? "🔥 " + s.st + " in a row" : s.best ? "Best: " + s.best : ""}</div>`;
-    d.querySelector(".n").textContent = nameOf(i);
+    d.querySelector(".n").textContent = S.mode === 2 ? `${SIDE[i].e} ${(S.names[i] || "").trim() || SIDE[i].n}` : nameOf(i);
     box.appendChild(d);
   }
+  const tb = $("turnBanner");
+  tb.style.display = S.mode === 2 ? "" : "none";
+  if (S.mode === 2){ tb.textContent = `${SIDE[G.turn].e} ${SIDE[G.turn].n.toUpperCase()}, YOUR TURN!`; tb.style.color = SIDE[G.turn].c; tb.style.borderColor = SIDE[G.turn].c; }
 }
+// Two players: each kid is a color, so nobody has to read or know "player two" (and no real names in the public repo)
+const SIDE = [{e:"🔵", n:"Blue", c:"#4cc9f0"}, {e:"🟠", n:"Orange", c:"#f58426"}];
+const photoUrl = p => `https://a.espncdn.com/i/headshots/nba/players/full/${p.id}.png`;
 function pool(){
   const teams = teamsChosen();
   let ps = D.players.filter(p => teams.includes(p.team) && (!S.stars || p.star));
@@ -410,14 +501,16 @@ function pool(){
 }
 function newRound(first){
   hush(); stopListening();
-  G.p = pick(pool()); G.used.add(G.p.id); G.tries = 0; G.state = "ask"; idleCount = 0;
-  $("game").classList.remove("done"); window.scrollTo({top: 0, behavior: "smooth"});
+  G.p = pick(pool()); G.used.add(G.p.id); G.tries = 0; G.state = "ask"; idleCount = 0; missCount = 0;
+  $("game").classList.remove("done"); window.scrollTo(0, 0);
   const [fg, bg] = TEAMS[G.p.team];
   $("card").style.background = `linear-gradient(160deg, ${bg} 0%, #0b0e2a 95%)`;
   $("teamName").textContent = G.p.team.toUpperCase(); $("teamName").style.color = fg;
   const n = $("num"); n.textContent = G.p.number; n.style.color = fg;
   n.classList.remove("pop"); void n.offsetWidth; n.classList.add("pop");
-  $("reveal").classList.remove("on"); $("num").style.display = "";
+  $("reveal").classList.remove("on", "blur", "blur2"); $("num").style.display = "";
+  // preload the photo: it is hint 1 (blurry), so only use it if it really loads
+  G.photoOk = false; { const im = new Image(), id = G.p.id; im.onload = () => { if (G.p && G.p.id === id) G.photoOk = true; }; im.src = photoUrl(G.p); }
   document.querySelectorAll("#tries i").forEach(i => i.classList.remove("used"));
   $("msg").className = "msg"; $("nextBtn").classList.remove("on"); $("heard").textContent = "";
   $("typeIn").value = ""; $("giveBtn").disabled = false;
@@ -425,24 +518,36 @@ function newRound(first){
   const items = [];
   if (first) items.push(["g-hello", D.generic.hello]);
   if (G.allSeen){ items.push(["g-allseen", D.generic.allseen]); G.allSeen = false; }
-  if (S.mode === 2) items.push([`g-p${G.turn+1}`, `${nameOf(G.turn)}, you're up!`]);
+  if (S.mode === 2) items.push([`g-p${G.turn+1}`, `${SIDE[G.turn].n} team, you're up!`]);
   items.push([`q-${G.p.id}`, qText()]);
   say(items, listen);
 }
 const nb = s => s.replace(/Go Knicks/g, "Go Knicks").replace(/Let's GOOO/g, "Let's GOOO")
   .replace(/with "(.)"/g, 'with "$1"').replace(/ (\S+)$/, " $1");
 function showMsg(text, cls){ const m = $("msg"); m.textContent = nb(text); m.className = "msg on " + cls; }
-function showNext(){ requestAnimationFrame(() => $("nextBtn").scrollIntoView({block: "end", behavior: "smooth"})); }
+// only scroll when the Next button is actually off screen (scrolling otherwise hides the score)
+function showNext(){ requestAnimationFrame(() => { const b = $("nextBtn"), r = b.getBoundingClientRect(); if (r.bottom > innerHeight - 8 || r.top < 0) b.scrollIntoView({block: "end", behavior: "smooth"}); }); }
 function showReveal(){
   const img = $("photo");
   img.onload = showNext;
   img.onerror = () => { img.style.display = "none"; showNext(); };
   img.style.display = "";
-  img.src = `https://a.espncdn.com/i/headshots/nba/players/full/${G.p.id}.png`;
+  $("reveal").classList.remove("blur", "blur2");
+  img.src = photoUrl(G.p);
   $("who").textContent = G.p.name;
   $("reveal").classList.add("on");
 }
-function endRound(){ G.state = "done"; stopListening(); $("game").classList.add("done"); $("nextBtn").classList.add("on"); $("giveBtn").disabled = true; drawScores(); save(); showNext(); }
+// hint photo: blurry after try 1, less blurry after try 2
+function showBlurred(level){
+  const img = $("photo"); img.onload = img.onerror = null; img.style.display = "";
+  img.src = photoUrl(G.p); $("who").textContent = "";
+  $("reveal").classList.remove("blur", "blur2"); $("reveal").classList.add("on", level === 1 ? "blur" : "blur2");
+}
+function endRound(delay = 0){
+  G.state = "done"; stopListening(); $("game").classList.add("done"); $("nextBtn").classList.add("on"); $("giveBtn").disabled = true; drawScores(); save();
+  if (S.mode === 2){ const tb = $("turnBanner"), o = SIDE[1 - G.turn]; tb.textContent = `NEXT: ${o.e} ${o.n.toUpperCase()}!`; tb.style.color = o.c; tb.style.borderColor = o.c; }
+  if (delay) setTimeout(() => { if (G.state === "done") showNext(); }, delay); else showNext();
+}
 
 function onSpeech(alts, final){
   if (G.state !== "ask" || speaking) return;
@@ -453,7 +558,7 @@ function onSpeech(alts, final){
   if (wantsAgain(t)) return sayAgain();
   if (wantsHelp(t)) return giveUp();
   if (alts.some(isNameGuess) || looksLikeName(t)) return wrong();
-  $("status").textContent = "Listening... say a player!";   // not a name: ignore, keep listening
+  $("status").textContent = "🎤 I'm listening... say a player!";   // not a name: ignore, keep listening
 }
 function correct(){
   const s = S.score[G.turn]; s.p++; s.st++; s.best = Math.max(s.best, s.st);
@@ -462,7 +567,10 @@ function correct(){
   const items = [[`g-${key}`, D.generic[key]], [`ok-${G.p.id}`, `That's ${G.p.name}!`]];
   if (s.st >= 3) { const k = `s${Math.min(s.st,10)}`; items.push([`g-${k}`, D.generic[k]]); }
   showMsg(`${D.generic[key]} That's ${G.p.name}!` + (s.st >= 3 ? " " + D.generic[`s${Math.min(s.st,10)}`] : ""), "ok");
-  showReveal(); confetti(); endRound();
+  showReveal(); confetti(); endRound(900);
+  // the score going up is the best part: bounce it while the scores are still on screen, then scroll to Next
+  const sc = $("scores").children[G.turn]; if (sc){ sc.classList.add("bump"); }
+  $("msg").insertAdjacentHTML("afterbegin", `<div class="pts">⭐ ${S.mode === 2 ? SIDE[G.turn].e + " " : ""}${s.p} POINT${s.p === 1 ? "" : "S"}!</div>`);
   say(items);
 }
 function wrong(){
@@ -470,10 +578,13 @@ function wrong(){
   document.querySelectorAll("#tries i").forEach((i, k) => i.classList.toggle("used", k < G.tries));
   if (G.tries >= 3) return reveal();
   const no = `no${1+Math.floor(Math.random()*4)}`, first = G.p.name.split(" ")[0];
-  const hint = G.tries === 1
-    ? [`h1-${G.p.id}`, `Here's a hint! He plays ${G.p.pos}, and his first name starts with "${first[0].toUpperCase()}".`]
-    : [`h2-${G.p.id}`, `Big hint! His first name is ${first}!`];
+  let hint;
+  if (G.tries === 1 && G.photoOk){ showBlurred(1); hint = ["g-pic", D.generic.pic]; }
+  else if (G.tries === 1) hint = [`h1-${G.p.id}`, G.p.hint1 || `Here's a hint! His first name starts with ${first[0].toUpperCase()}.`];
+  else { if (G.photoOk) showBlurred(2); hint = [`h2-${G.p.id}`, `Big hint! His first name is ${first}!`]; }
   showMsg(`${D.generic[no]} ${hint[1]}`, "hint");
+  // scroll only after the pop animation, or it measures the shrunken box and leaves the hint cut off
+  $("msg").addEventListener("animationend", () => $("msg").scrollIntoView({block: "nearest", behavior: "smooth"}), {once: true});
   wantListen = false; dropRec();
   say([[`g-${no}`, D.generic[no]], hint], listen);
 }
@@ -509,12 +620,18 @@ $("resetBtn").onclick = () => {
   if (!confirm("Reset the score back to zero?")) return;
   S.score = [{p:0,st:0,best:0},{p:0,st:0,best:0}]; save(); drawScores();
 };
-$("micBtn").onclick = () => { if (G.state !== "ask") return; if (live || rec) listen(); else { idleCount = 0; talk(); } };
+// A second tap never turns the mic off (kids double-tap). Taps right after starting are ignored; a later tap restarts fresh.
+$("micBtn").onclick = () => { if (G.state !== "ask" || Date.now() - talkAt < 800) return; idleCount = 0; talk(); };
 $("againBtn").onclick = sayAgain;
 $("giveBtn").onclick = giveUp;
 $("nextBtn").onclick = nextPlayer;
 const typed = () => { const t = $("typeIn").value.trim(); if (!t || G.state !== "ask") return; $("typeIn").value = "";
-  $("heard").textContent = `"${t}"`; if (isRight(t, G.p)) correct(); else wrong(); };
+  $("heard").textContent = `"${t}"`;
+  if (isRight(t, G.p)) return correct();
+  if (wantsAgain(t)) return sayAgain();
+  if (wantsHelp(t)) return giveUp();
+  if (isNameGuess(t) || looksLikeName(t, true)) return wrong();   // typed "um" doesn't use a try
+};
 $("typeBtn").onclick = typed;
 $("typeIn").onkeydown = e => { if (e.key === "Enter") typed(); };
 if ("speechSynthesis" in window) speechSynthesis.getVoices();
