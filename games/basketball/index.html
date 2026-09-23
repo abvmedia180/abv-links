@@ -149,6 +149,16 @@ body{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env
 .typebox button{padding:0 18px;border-radius:14px;background:var(--blue);color:#0d1030;font-weight:700;font-size:1.05rem}
 .next{display:none;width:100%;margin-top:12px}
 .next.on{display:block}
+/* hands-free: blue "thinking" mic, first-load progress bar, tap-to-wake cover */
+.mic.think{border-color:var(--blue);background:#0f2a3a;animation:think .9s ease-in-out infinite}
+@keyframes think{50%{transform:scale(.9)}}
+.ears{display:none;width:100%;margin-top:8px;text-align:center;color:#c9cdf5;font-size:.9rem}
+.ears.on{display:block}
+.ears b{display:block;height:10px;margin-top:5px;border-radius:6px;background:#0f1338;overflow:hidden}
+.ears i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--blue));transition:width .4s}
+.wake{position:fixed;inset:0;z-index:60;display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;background:rgba(13,16,48,.94);text-align:center;color:var(--dim)}
+.wake.on{display:flex}
+.wake .go{max-width:420px;padding:34px 20px}
 .confetti{position:fixed;top:-12px;z-index:50;pointer-events:none;animation:fall 2.8s ease-in forwards}
 @keyframes fall{to{transform:translateY(105vh) rotate(760deg);opacity:.2}}
 </style>
@@ -176,6 +186,11 @@ body{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env
   <div class="panel toggle" id="starsRow">
     <div><div class="label" style="margin:0">STARS ONLY ⭐</div><small>Just the famous players.</small></div>
     <div class="sw" id="starsSw"></div>
+  </div>
+
+  <div class="panel toggle" id="hfRow">
+    <div><div class="label" style="margin:0">HANDS-FREE 🎤</div><small id="hfNote">Just talk. No tapping the mic.</small></div>
+    <div class="sw" id="hfSw"></div>
   </div>
 
   <div class="panel">
@@ -210,14 +225,17 @@ body{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env
     <button class="mic" id="micBtn" aria-label="Talk">🎤</button>
     <button class="giveup" id="giveBtn" aria-label="Tell me">🤷</button>
   </div>
-  <div class="cap"><div>Again</div><div>Tap &amp; talk</div><div>Tell me</div></div>
+  <div class="cap"><div>Again</div><div id="capMic">Tap &amp; talk</div><div>Tell me</div></div>
   <div class="status" id="status"></div>
+  <div class="ears" id="ears"><span id="earsTxt"></span><b><i id="earsBar"></i></b></div>
   <div class="heard" id="heard"></div>
   <div class="msg" id="msg"></div>
   <button class="go next" id="nextBtn">NEXT PLAYER ➜</button>
   <pre id="dbg" style="display:none;width:100%;margin-top:10px;padding:8px;border-radius:10px;background:#000;color:#7CFC9A;font:12px/1.35 ui-monospace,monospace;white-space:pre-wrap;max-height:180px;overflow:auto"></pre>
   <div class="typebox"><input id="typeIn" placeholder="Or type a name..." autocomplete="off" autocapitalize="words"><button id="typeBtn">Go</button></div>
 </section>
+
+<div class="wake" id="wake"><button class="go" id="wakeBtn">👆 TAP TO KEEP PLAYING</button><p>The game took a little nap.</p></div>
 
 <script src="data.js"></script>
 <script>
@@ -239,8 +257,9 @@ const S = {
   custom: saved.custom || TIER1.slice(),
   names: saved.names || ["", ""],
   score: saved.score || [{p:0,st:0,best:0},{p:0,st:0,best:0}],
+  hf: saved.hf !== false,   // hands-free is the main mode: on unless turned off
 };
-const save = () => localStorage.setItem("bbgame", JSON.stringify({mode:S.mode,stars:S.stars,tier:S.tier,custom:S.custom,names:S.names,score:S.score}));
+const save = () => localStorage.setItem("bbgame", JSON.stringify({mode:S.mode,stars:S.stars,tier:S.tier,custom:S.custom,names:S.names,score:S.score,hf:S.hf}));
 const nameOf = i => (S.names[i] || "").trim() || `Player ${i+1}`;
 
 // ---------- setup screen ----------
@@ -251,6 +270,8 @@ function drawSetup(){
   $("n2").placeholder = "🟠 Orange player's name";
   $("n1").value = S.names[0]; $("n2").value = S.names[1];
   $("starsSw").classList.toggle("on", S.stars);
+  $("hfSw").classList.toggle("on", S.hf && !TAP_ONLY);
+  $("hfNote").textContent = TAP_ONLY ? "Off for this link (?tap)." : hfPaused() ? "Resting on this phone for a day. Tap 🎤 works." : "Just talk. No tapping the mic.";
   document.querySelectorAll(".tier").forEach(b => b.classList.toggle("sel", b.dataset.t === S.tier));
   $("grid").classList.toggle("on", S.tier === "c");
   const g = $("grid"); g.innerHTML = "";
@@ -268,6 +289,7 @@ function teamsChosen(){ return S.tier === "1" ? TIER1 : S.tier === "2" ? Object.
 document.querySelectorAll("#modeSeg button").forEach(b => b.onclick = () => { S.mode = +b.dataset.m; save(); drawSetup(); });
 document.querySelectorAll(".tier").forEach(b => b.onclick = () => { S.tier = b.dataset.t; save(); drawSetup(); });
 $("starsSw").onclick = () => { S.stars = !S.stars; save(); drawSetup(); };
+$("hfSw").onclick = () => { if (TAP_ONLY) return; S.hf = !S.hf; if (S.hf) localStorage.removeItem("hfSkipUntil"); save(); drawSetup(); };
 $("n1").oninput = e => { S.names[0] = e.target.value; save(); };
 $("n2").oninput = e => { S.names[1] = e.target.value; save(); };
 $("foot").textContent = `Rosters: ${D.season} season, checked ${D.built.slice(0,10)}. ${D.players.length} players.`;
@@ -288,24 +310,43 @@ function tts(text, done){
 // items: [[clipKey, fallbackText], ...]
 function talking(on){ $("micBtn").classList.toggle("talk", on); $("againBtn").classList.toggle("talk", on); }
 function say(items, done){
-  const token = ++speakToken; speaking = true; pauseListening(); talking(true);
+  const token = ++speakToken; speaking = true; pauseListening(); talking(true); gate(true); if (H.node) hfNote("talk");
   if (G.state === "ask") $("status").textContent = "👂 Listen...";
   let i = 0;
   const next = () => {
     if (token !== speakToken) return;
-    if (i >= items.length){ speaking = false; talking(false); if (done) done(); return; }
+    if (i >= items.length){ speaking = false; talking(false); gate(false); if (H.node) hfNote("quiet"); if (done) done(); return; }
     const [key, text] = items[i++];
     // one fallback per clip, and never for a line that was already interrupted (stale play() rejections)
     let fired = false;
     const fb = () => { if (fired || token !== speakToken) return; fired = true; tts(text, () => { if (token === speakToken) next(); }); };
-    audio.onended = () => { if (!fired) { fired = true; next(); } };
-    audio.onerror = fb;
-    audio.src = `audio/${key}.mp3`;
-    const p = audio.play(); if (p) p.catch(e => { if (e && e.name !== "AbortError") fb(); });
+    const ended = () => { if (!fired) { fired = true; next(); } };
+    const html = () => {
+      if (token !== speakToken) return;
+      audio.onended = ended; audio.onerror = fb;
+      audio.src = `audio/${key}.mp3`;
+      const p = audio.play(); if (p) p.catch(e => { if (e && e.name !== "AbortError") fb(); });
+    };
+    // hands-free has the mic: talk through the same AudioContext so iOS never flips the audio session
+    if (H.stream && H.ctx && H.ctx.state === "running") ctxPlay(key, token, ended, html); else html();
   };
   next();
 }
-function hush(){ speakToken++; audio.pause(); audio.removeAttribute("src"); try{ audio.load(); }catch(e){} try{ speechSynthesis.cancel(); }catch(e){} speaking = false; talking(false); }
+const clipBuf = url => H.bufs[url] || (H.bufs[url] = fetch(url).then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); })
+  .then(b => new Promise((ok, no) => H.ctx.decodeAudioData(b, ok, no))).catch(e => { delete H.bufs[url]; throw e; }));
+function ctxPlay(key, token, ended, fallback){
+  clipBuf(`audio/${key}.mp3`).then(buf => {
+    if (token !== speakToken) return;
+    const s = H.ctx.createBufferSource(); s.buffer = buf; s.connect(H.gain); H.src = s;
+    s.onended = () => { if (H.src === s) H.src = null; if (token === speakToken) ended(); };
+    s.start();
+  }).catch(() => fallback());
+}
+function hush(){
+  speakToken++; audio.pause(); audio.removeAttribute("src"); try{ audio.load(); }catch(e){} try{ speechSynthesis.cancel(); }catch(e){}
+  if (H.src){ try{ H.src.onended = null; H.src.stop(); }catch(e){} H.src = null; }
+  speaking = false; talking(false); gate(false);
+}
 
 // ---------- matching ----------
 const norm = s => (s||"").normalize("NFKD").replace(/[̀-ͯ]/g,"").toLowerCase()
@@ -345,6 +386,22 @@ function isRight(t, p){
   if (D.players.some(o => o !== p && o._full !== p._full && hit(o._full, w, .1))) return false;
   return p._mine.some(a => hit(a, w));
 }
+// Hands-free only: Whisper writes a hard name the way it SOUNDS ("Yokech", "JoeyLL and Bead", "Shang-gong").
+// Compare sound keys (c/k, ph/f, ch/tch, vowels blurred to "front" e/i or "back" a/o/u) with THIS player's names
+// and his "say" respelling. Only ever gives a point, never uses a try. Short names must match exactly, and a
+// 3-letter one only when it is the whole answer ("Cut" for KAT yes, "give it back" for Book no).
+const sound = s => norm(s).replace(/ /g, "").replace(/^gi(?=[aeiou])|^j(?=o)/, "y").replace(/ph/g, "f").replace(/t?ch|sh/g, "x")
+  .replace(/ck|q/g, "k").replace(/c(?=[eiy])/g, "s").replace(/c/g, "k").replace(/z/g, "s").replace(/([aeiou])[hwy]/g, "$1")
+  .replace(/y$/, "i").replace(/[aeiou]+/g, v => /[ei]/.test(v[0]) ? "e" : "a").replace(/(.)\1+/g, "$1");
+D.players.forEach(p => { p._snd = [...new Set([...p._mine, ...(p.say ? [p.say, ...p.say.split(" ")] : [])].map(sound))].filter(k => k.length >= 3); });
+function soundsLike(t, p){
+  const w = norm(t).split(" ").filter(Boolean);
+  for (const k of p._snd) for (let n = 1; n <= 3; n++) for (let i = 0; i + n <= w.length; i++){
+    const s = sound(w.slice(i, i + n).join("")), d = lev(k, s);
+    if ((d === 0 && (k.length > 3 || w.length === 1)) || (k.length >= 5 && d <= 1) || (k.length >= 8 && d / k.length <= .25)) return true;
+  }
+  return false;
+}
 const isNameGuess = t => { const w = norm(t).split(" ").filter(Boolean); return D.players.some(p => p._other.some(a => hit(a, w, .1))); };
 const FILLER = new Set("um umm uh uhh hmm hm er ah oh like so well okay ok hello hi hey wait yeah yes no i is it its a the that this he his who me my think maybe guess and or um".split(" "));
 const NOT_NAMES = new Set(["i","is","it","its","hello","hi","hey","um","uh","oh","okay","ok","yes","no","wait","what","who","the","a","my","maybe","mom","mommy","mama","dad","daddy","papa","nba","new","york","la","sixers","knicks","lakers","spurs","thunder","celtics","heat","cavaliers","cavs","warriors","mavericks","mavs","bucks","nuggets","suns","bulls","timberwolves","wolves","rockets","basketball"]);
@@ -368,7 +425,7 @@ function setMic(on, txt){ $("micBtn").classList.toggle("live", on); $("status").
 // without a tap fails silently. So on iOS: one short session per tap, and "final" = words stopped changing.
 const IOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 const DEBUG = /[?&]debug/.test(location.search);
-function dbg(msg){ if (!DEBUG) return; const d = $("dbg"); d.textContent = (new Date().toTimeString().slice(3,8) + " " + msg + "\n" + d.textContent).slice(0, 1500); }
+function dbg(msg){ if (!DEBUG) return; const d = $("dbg"); d.textContent = (new Date().toTimeString().slice(3,8) + " " + msg + "\n" + d.textContent).slice(0, 3000); }
 const MIC_ERR = {
   "not-allowed": "Mic is blocked. In Safari tap aA > Website Settings > Microphone > Allow.",
   "service-not-allowed": "Mic is blocked. On iPhone turn on Settings > General > Keyboard > Enable Dictation.",
@@ -441,6 +498,7 @@ function missed(){
 }
 // Tap-to-talk: iOS Safari only starts the mic reliably from a tap, so every listening session starts from one.
 function listen(){
+  if (hfLive()) return hfListen();
   if (!SR){ setMic(false, "Type your answer below!"); return; }
   wantListen = false; dropRec(); clearTimeout(idleTimer);
   if (G.state !== "ask") return;
@@ -458,8 +516,8 @@ function talk(){
   wantListen = true; armIdle(); dropRec(); startRec();
 }
 function dropRec(){ const r = rec; rec = null; live = false; if (r){ r._ours = true; try{ r.abort(); }catch(e){} } }
-function pauseListening(){ clearTimeout(idleTimer); dropRec(); $("micBtn").classList.remove("live", "ready"); }
-function stopListening(){ wantListen = false; clearTimeout(idleTimer); dropRec(); $("micBtn").classList.remove("ready"); setMic(false, ""); }
+function pauseListening(){ clearTimeout(idleTimer); dropRec(); $("micBtn").classList.remove("live", "ready", "think"); }
+function stopListening(){ wantListen = false; clearTimeout(idleTimer); dropRec(); gate(true); $("micBtn").classList.remove("ready", "think"); setMic(false, ""); }
 function armIdle(){
   clearTimeout(idleTimer);
   idleTimer = setTimeout(() => {
@@ -468,6 +526,186 @@ function armIdle(){
     if (++idleCount > 2) return listen();
     say([[`g-wait${idleCount}`, D.generic[`wait${idleCount}`]], [`q-${G.p.id}`, qText()]], listen);
   }, 10000);
+}
+
+// ---------- hands-free: the mic stays open, Whisper runs on the phone, no Siri ----------
+// One tap at Let's Go opens everything. While the model downloads, or if anything fails, tap-to-talk takes over.
+const TAP_ONLY = /[?&]tap\b/.test(location.search);
+const HF_MODEL = "onnx-community/whisper-tiny.en", HF_BYTES = 43.5e6;   // q8 encoder + decoder + tokenizer
+const VAD = { endMs: 800, capMs: 5000, preMs: 300, minMs: 300, minPeak: .02 };
+// HF_SLOW_MS: a 1 s test clip takes 1.2 to 2 s on a desktop (one WASM thread), so the phone gets room before we give up
+const TAIL_MS = 400, HF_IDLE_MS = 12000, HF_SLOW_MS = 6000;
+const H = { ctx:null, gain:null, stream:null, node:null, srcNode:null, worker:null, ready:false, busy:false, asleep:false,
+  queued:null, epoch:0, gateT:null, src:null, bufs:{}, lock:null, errs:0, clips:0, gatedLoud:0, log:[] };
+// a tab that died while loading the model (iOS memory) comes back with this still set: rest hands-free for a day
+if (sessionStorage.getItem("whisperLoading")){ sessionStorage.removeItem("whisperLoading"); localStorage.setItem("hfSkipUntil", Date.now() + 864e5); }
+addEventListener("pagehide", () => sessionStorage.removeItem("whisperLoading"));   // a normal reload is not a crash
+const hfPaused = () => +localStorage.getItem("hfSkipUntil") > Date.now();
+const hfWanted = () => S.hf && !TAP_ONLY && !hfPaused() && !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.AudioWorkletNode && window.Worker);
+const hfLive = () => H.ready && !!H.stream && !H.asleep;
+function hfNote(ev){ H.log.push({ ev, t: Math.round(performance.now()), speaking }); if (H.log.length > 200) H.log.shift(); }
+const MIC_OPTS = { audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true, channelCount: 1 } };
+
+// Let's Go tap: everything that needs a user gesture happens here, in this order
+function hfStart(){
+  if (!hfWanted()) return hfStop();
+  if (H.ctx) return;   // already open from an earlier round
+  H.failed = null;
+  try { if (navigator.audioSession) navigator.audioSession.type = "play-and-record"; } catch(e){}
+  const AC = window.AudioContext || window.webkitAudioContext;
+  H.ctx = new AC(); H.ctx.resume();
+  // game voice: a bit louder (play-and-record can be quiet), with a limiter so 1.5x doesn't crackle
+  H.gain = H.ctx.createGain(); H.gain.gain.value = 1.5;
+  const lim = H.ctx.createDynamicsCompressor(); lim.threshold.value = -6; lim.knee.value = 0; lim.ratio.value = 20;
+  H.gain.connect(lim); lim.connect(H.ctx.destination);
+  // iOS parks the context as "interrupted" on a call, Siri or screen lock: try to resume, else ask for a tap
+  const ctx = H.ctx;
+  ctx.onstatechange = () => {
+    dbg("context " + ctx.state);
+    if (ctx !== H.ctx || !/interrupted|suspended/.test(ctx.state)) return;
+    ctx.resume().catch(() => {}).then(() => setTimeout(() => { if (ctx === H.ctx && ctx.state !== "running") hfSleep("context " + ctx.state); }, 600));
+  };
+  navigator.mediaDevices.getUserMedia(MIC_OPTS).then(hfMic, e => hfFail("mic " + e.name, e.name === "NotAllowedError" ? MIC_ERR["not-allowed"] : ""));
+  wakeLock();
+  hfLoad();
+}
+function wakeLock(){ if (navigator.wakeLock && !document.hidden) navigator.wakeLock.request("screen").then(l => H.lock = l, e => dbg("wake lock " + e.name)); }
+async function hfMic(stream){
+  if (!H.ctx){ stream.getTracks().forEach(t => t.stop()); return; }
+  H.stream = stream;
+  const tr = stream.getAudioTracks()[0];
+  tr.onended = () => hfSleep("mic track ended");
+  tr.onmute = () => dbg("mic muted"); tr.onunmute = () => dbg("mic unmuted");
+  try {
+    if (!H.node){
+      await H.ctx.audioWorklet.addModule("../models/vad-worklet.js");
+      H.node = new AudioWorkletNode(H.ctx, "vad", { processorOptions: VAD });
+      H.node.port.onmessage = e => hfVad(e.data);
+      const mute = H.ctx.createGain(); mute.gain.value = 0; H.node.connect(mute); mute.connect(H.ctx.destination);   // keeps the worklet pulled
+    }
+    if (H.srcNode) H.srcNode.disconnect();
+    H.srcNode = H.ctx.createMediaStreamSource(stream); H.srcNode.connect(H.node);
+  } catch(e){ return hfFail("worklet " + (e.name || e)); }
+  dbg(`mic open, ${H.ctx.sampleRate} Hz, session ${navigator.audioSession ? navigator.audioSession.type : "n/a"}`);
+  hfNote("mic");
+  hfReadyUp();
+}
+function hfLoad(){
+  sessionStorage.setItem("whisperLoading", "1");
+  if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});   // ask Safari to keep the model
+  try { H.worker = new Worker("../models/ear-worker.js", { type: "module" }); } catch(e){ return hfFail("worker " + e.name); }
+  H.worker.onmessage = e => hfWorker(e.data);
+  H.worker.onerror = e => hfFail("worker " + (e.message || "error"));
+  H.worker.postMessage({ type: "load", model: HF_MODEL, bytes: HF_BYTES });
+  ears(0); H.t0 = performance.now();
+}
+function ears(pct){
+  $("ears").classList.toggle("on", pct != null);
+  if (pct == null) return;
+  $("earsTxt").textContent = `Getting the game's ears ready... ${pct}%`; $("earsBar").style.width = pct + "%";
+}
+function hfWorker(m){
+  if (m.type === "progress") return ears(m.pct);
+  if (m.type === "ready"){
+    sessionStorage.removeItem("whisperLoading"); ears(null);
+    H.loadMs = m.loadMs; H.warmMs = m.warmMs;
+    dbg(`model ready: load ${m.loadMs}ms, test run ${m.warmMs}ms`); hfNote("ready");
+    if (m.warmMs > HF_SLOW_MS){ localStorage.setItem("hfSkipUntil", Date.now() + 864e5); return hfFail("too slow on this device (" + m.warmMs + "ms)"); }
+    H.ready = true; return hfReadyUp();
+  }
+  if (m.type === "error"){
+    dbg("model error: " + m.msg);
+    if (!H.ready || ++H.errs >= 3) return hfFail("model " + m.msg);
+    H.busy = false; return hfListen();
+  }
+  if (m.type === "text"){
+    H.busy = false;
+    const clean = hfClean(m.text), tr = H.stream && H.stream.getAudioTracks()[0];
+    dbg(`asr ${m.ms}ms, clip ${m.sec}s: "${m.text}" -> "${clean}" | ctx ${H.ctx && H.ctx.state}, muted ${tr && tr.muted}`);
+    H.log.push({ ev: "text", raw: m.text, clean, ms: m.ms, sec: m.sec, stale: m.id !== H.epoch });
+    if (m.id === H.epoch && G.state === "ask" && !speaking){
+      if (clean){ $("heard").textContent = `"${clean}"`; onSpeech([clean], true, soundsLike(clean, G.p)); }
+      if (G.state === "ask" && !speaking) hfListen();
+    }
+    if (H.queued){ const q = H.queued; H.queued = null; hfSend(q); }
+  }
+}
+// both halves arrive in any order (permission pop-up vs download): switch over when mic AND model are ready
+function hfReadyUp(){
+  if (!hfLive()) return;
+  $("capMic").textContent = "Just talk!";
+  if (G.state === "ask" && !speaking && !rec){ gate(false); hfListen(); }
+}
+function hfVad(m){
+  if (m.type === "open"){ H.gatedLoud += m.gatedLoud; if (m.gatedLoud) dbg(`gate open (${m.gatedLoud} loud frames ignored while the game talked)`); return; }
+  hfNote("vad-" + m.type);
+  if (m.type === "start"){ dbg(`vad start @${m.t}ms`); clearTimeout(idleTimer); return; }
+  if (m.type === "drop"){ dbg(`vad drop: ${m.ms}ms, voiced ${m.voicedMs}ms, peak ${m.peak}`); if (G.state === "ask" && !speaking && !H.busy) hfListen(); return; }
+  if (m.type === "clip"){
+    H.clips++; dbg(`vad end @${m.t}ms: clip ${m.ms}ms, voiced ${m.voicedMs}ms, peak ${m.peak}`);
+    if (G.state === "ask" && !speaking && hfLive()) hfSend(m);
+  }
+}
+function hfSend(m){
+  if (H.busy){ H.queued = m; return; }
+  H.busy = true; clearTimeout(idleTimer);
+  $("micBtn").classList.remove("live"); $("micBtn").classList.add("think"); $("status").textContent = "🤔 Thinking...";
+  H.worker.postMessage({ type: "clip", id: H.epoch, pcm: m.pcm, sr: m.sr }, [m.pcm.buffer]);
+}
+// green mic, and the same gentle re-ask as tap mode when nobody says anything (twice, then just keep listening)
+function hfListen(){
+  clearTimeout(idleTimer);
+  if (G.state !== "ask" || speaking) return;
+  $("micBtn").classList.remove("ready", "think"); setMic(true, "🎤 I'm listening... just say the name!");
+  idleTimer = setTimeout(() => {
+    if (G.state !== "ask" || speaking || H.busy || idleCount >= 2) return;
+    idleCount++; hfNote("idle");
+    say([[`g-wait${idleCount}`, D.generic[`wait${idleCount}`]], [`q-${G.p.id}`, qText()]], listen);
+  }, HF_IDLE_MS);
+}
+// the mic ignores everything while the game talks, plus a short tail for the room echo
+function gate(shut){
+  clearTimeout(H.gateT);
+  if (!H.node) return;
+  if (shut){ H.epoch++; H.queued = null; H.node.port.postMessage({ gate: true }); return; }
+  H.gateT = setTimeout(() => { if (!speaking && G.state === "ask" && hfLive()) H.node.port.postMessage({ gate: false }); }, TAIL_MS);
+}
+// Whisper invents words in silence ("you", "thank you", "[BLANK_AUDIO]"), and capitalizes every new sentence,
+// which looksLikeName would read as a name. So: drop bracketed bits and known ghosts, join sentences in lower case.
+const GHOSTS = new Set(["you", "thank you", "thanks", "thank you so much", "thanks for watching", "thank you for watching", "bye", "bye bye", "oh", "so", "okay", "hmm", "the end", "you you"]);
+function hfClean(t){
+  t = (t || "").replace(/\[[^\]]*\]|\([^)]*\)|\*[^*]*\*|[♪♫]/g, " ")
+    .replace(/[.!?;:]+\s*([A-Za-z]?)/g, (m, c) => " " + c.toLowerCase()).replace(/\s+/g, " ").trim();
+  return !/[a-z0-9]/i.test(t) || GHOSTS.has(norm(t)) ? "" : t;
+}
+function hfSleep(why){
+  if (!H.stream || H.asleep) return;
+  H.asleep = true; dbg("asleep: " + why); hfNote("sleep");
+  hush(); pauseListening(); gate(true);
+  if ($("game").classList.contains("on")) $("wake").classList.add("on"); else H.asleep = false;
+}
+$("wakeBtn").onclick = () => {
+  $("wake").classList.remove("on"); H.asleep = false;
+  if (H.ctx) H.ctx.resume().catch(() => {});
+  const tr = H.stream && H.stream.getAudioTracks()[0];
+  if (!tr || tr.readyState === "ended") navigator.mediaDevices.getUserMedia(MIC_OPTS).then(hfMic, e => hfFail("mic again " + e.name));
+  wakeLock(); idleCount = 0;
+  if (G.state === "ask") sayAgain();
+};
+document.addEventListener("visibilitychange", () => { if (document.hidden) hfSleep("page hidden"); });
+// give the mic back and fall back to tap-to-talk (Web Speech), keeping the game going
+function hfStop(){
+  if (H.worker) H.worker.terminate();
+  if (H.stream) H.stream.getTracks().forEach(t => t.stop());
+  if (H.ctx) H.ctx.close().catch(() => {});
+  Object.assign(H, { worker:null, stream:null, ctx:null, node:null, srcNode:null, src:null, bufs:{}, ready:false, busy:false, asleep:false, queued:null });
+  try { if (navigator.audioSession) navigator.audioSession.type = "auto"; } catch(e){}
+  sessionStorage.removeItem("whisperLoading"); ears(null); $("capMic").textContent = "Tap & talk";
+}
+function hfFail(why, msg){
+  dbg("hands-free off: " + why); H.failed = why; hfNote("fail");
+  hfStop();
+  if (G.state === "ask" && !speaking && !rec){ listen(); if (msg) $("status").textContent = msg; }
 }
 
 // ---------- game ----------
@@ -501,7 +739,9 @@ function pool(){
 }
 function newRound(first){
   hush(); stopListening();
-  G.p = pick(pool()); G.used.add(G.p.id); G.tries = 0; G.state = "ask"; idleCount = 0; missCount = 0;
+  G.p = (window.__forcePlayer && D.players.find(p => p.name === window.__forcePlayer)) || pick(pool()); G.used.add(G.p.id);   // __forcePlayer: test hook
+  // hands-free voice: keep decoded clips for this round only (plus the shared lines), and fetch the likely ones now
+  if (H.ctx){ for (const k in H.bufs) if (!k.includes("/g-")) delete H.bufs[k]; ["q", "ok", "h2"].forEach(k => clipBuf(`audio/${k}-${G.p.id}.mp3`).catch(() => {})); } G.tries = 0; G.state = "ask"; idleCount = 0; missCount = 0;
   $("game").classList.remove("done"); window.scrollTo(0, 0);
   const [fg, bg] = TEAMS[G.p.team];
   $("card").style.background = `linear-gradient(160deg, ${bg} 0%, #0b0e2a 95%)`;
@@ -549,11 +789,12 @@ function endRound(delay = 0){
   if (delay) setTimeout(() => { if (G.state === "done") showNext(); }, delay); else showNext();
 }
 
-function onSpeech(alts, final){
+function onSpeech(alts, final, near){
   if (G.state !== "ask" || speaking) return;
   armIdle();
   if (alts.some(t => isRight(t, G.p))) return correct();
   if (!final) return;
+  if (near && !alts.some(isNameGuess)) return correct();   // hands-free: sounds like HIS name, and no other player was named
   const t = alts[0];
   if (wantsAgain(t)) return sayAgain();
   if (wantsHelp(t)) return giveUp();
@@ -611,6 +852,7 @@ function confetti(){
 
 // ---------- wiring ----------
 $("goBtn").onclick = () => {
+  hfStart();   // must run inside this tap: audio session, AudioContext, mic, wake lock, model download
   G.used.clear(); G.turn = 0;
   $("setup").classList.remove("on"); $("game").classList.add("on"); window.scrollTo(0,0);
   newRound(true);
@@ -621,7 +863,12 @@ $("resetBtn").onclick = () => {
   S.score = [{p:0,st:0,best:0},{p:0,st:0,best:0}]; save(); drawScores();
 };
 // A second tap never turns the mic off (kids double-tap). Taps right after starting are ignored; a later tap restarts fresh.
-$("micBtn").onclick = () => { if (G.state !== "ask" || Date.now() - talkAt < 800) return; idleCount = 0; talk(); };
+$("micBtn").onclick = () => {
+  if (G.state !== "ask" || Date.now() - talkAt < 800) return;
+  idleCount = 0;
+  if (hfLive()){ if (!H.busy){ hush(); hfListen(); } return; }   // hands-free: a tap just stops the game talking
+  talk();
+};
 $("againBtn").onclick = sayAgain;
 $("giveBtn").onclick = giveUp;
 $("nextBtn").onclick = nextPlayer;
@@ -635,7 +882,7 @@ const typed = () => { const t = $("typeIn").value.trim(); if (!t || G.state !== 
 $("typeBtn").onclick = typed;
 $("typeIn").onkeydown = e => { if (e.key === "Enter") typed(); };
 if ("speechSynthesis" in window) speechSynthesis.getVoices();
-if (DEBUG) { $("dbg").style.display = "block"; dbg(`ua ${navigator.userAgent.slice(0,70)} | SR ${!!SR} | ios ${IOS}`); }
+if (DEBUG) { $("dbg").style.display = "block"; dbg(`ua ${navigator.userAgent.slice(0,70)} | SR ${!!SR} | ios ${IOS} | hands-free ${hfWanted()}${hfPaused() ? " (paused)" : ""}`); }
 drawSetup();
 </script>
 </body>
