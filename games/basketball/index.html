@@ -120,7 +120,7 @@ h1{font-family:'Bangers',cursive;letter-spacing:2px;text-align:center;line-heigh
 
 <section class="screen on" id="setup">
   <div class="ball">🏀</div>
-  <div class="kicker">GAME ONE</div>
+  <div class="kicker">GAMES BY ABIE PAPA &middot; GAME ONE</div>
   <h1 class="title">BASKETBALL GAME</h1>
   <p class="sub">I say a jersey number. You say the player!</p>
 
@@ -177,6 +177,7 @@ h1{font-family:'Bangers',cursive;letter-spacing:2px;text-align:center;line-heigh
   <div class="heard" id="heard"></div>
   <div class="msg" id="msg"></div>
   <button class="go next" id="nextBtn">NEXT PLAYER ➜</button>
+  <pre id="dbg" style="display:none;width:100%;margin-top:10px;padding:8px;border-radius:10px;background:#000;color:#7CFC9A;font:12px/1.35 ui-monospace,monospace;white-space:pre-wrap;max-height:180px;overflow:auto"></pre>
   <div class="typebox"><input id="typeIn" placeholder="Or type a name..." autocomplete="off" autocapitalize="words"><button id="typeBtn">Go</button></div>
 </section>
 
@@ -310,29 +311,55 @@ const wantsAgain = t => /\b(again|repeat|what number)\b/.test(norm(t));
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
 let rec = null, wantListen = false, live = false, idleTimer = null, idleCount = 0;
 function setMic(on, txt){ $("micBtn").classList.toggle("live", on); $("status").textContent = txt; }
-// A fresh recognizer per listening session: reusing one after abort() silently fails on iOS Safari.
+// iOS Safari: continuous mode is unreliable and often never marks a result final, and a restart
+// without a tap fails silently. So on iOS: one short session per tap, and "final" = words stopped changing.
+const IOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+const DEBUG = /[?&]debug/.test(location.search);
+function dbg(msg){ if (!DEBUG) return; const d = $("dbg"); d.textContent = (new Date().toTimeString().slice(3,8) + " " + msg + "\n" + d.textContent).slice(0, 1500); }
+const MIC_ERR = {
+  "not-allowed": "Mic is blocked. In Safari tap aA > Website Settings > Microphone > Allow.",
+  "service-not-allowed": "Mic is blocked. On iPhone turn on Settings > General > Keyboard > Enable Dictation.",
+  "audio-capture": "Can't reach the mic. Close other apps using it, then tap 🎤.",
+  "network": "Speech needs internet. Check the connection, then tap 🎤.",
+  "no-speech": "I didn't hear anything. Tap 🎤 and try again!",
+};
+let settle = null;
 function startRec(){
-  const r = new SR(); r.lang = "en-US"; r.continuous = true; r.interimResults = true; r.maxAlternatives = 3;
-  rec = r;
-  r.onstart = () => { if (rec !== r) { try{ r.abort(); }catch(e){} return; } live = true; $("heard").textContent = ""; setMic(true, "Listening... say a player!"); };
-  r.onend = () => {
-    if (rec !== r) return;
-    live = false; rec = null;
-    if (wantListen && !speaking) setTimeout(() => { if (wantListen && !speaking && !rec) startRec(); }, 250);
-    else if (!wantListen && G.state === "ask" && !speaking) listen();
-  };
-  r.onerror = e => { if (rec !== r) return; if (e.error === "not-allowed" || e.error === "service-not-allowed"){ rec = null; live = false; listen(); } };
+  const r = new SR(); r.lang = "en-US"; r.continuous = !IOS; r.interimResults = true; r.maxAlternatives = 3;
+  rec = r; let latest = null, done = false;
+  const decide = final => { if (rec !== r || done || !latest) return; clearTimeout(settle); if (final) done = true; onSpeech(latest, final); if (final && rec === r) { done = false; latest = null; } };
+  if (DEBUG && r.addEventListener) ["audiostart","soundstart","speechstart","speechend","soundend","audioend"].forEach(ev => r.addEventListener(ev, () => dbg(ev)));
+  r.onstart = () => { dbg("start"); if (rec !== r) { try{ r.abort(); }catch(e){} return; } live = true; $("heard").textContent = ""; setMic(true, "Listening... say a player!"); };
   r.onresult = e => {
     if (rec !== r) return;
-    for (let i = e.resultIndex; i < e.results.length; i++){
-      const res = e.results[i], alts = [...res].map(a => a.transcript);
-      $("heard").textContent = `"${alts[0].trim()}"`;
-      onSpeech(alts, res.isFinal);
-      if (rec !== r) return;
-    }
+    const last = e.results[e.results.length - 1];
+    const full = [...e.results].map(x => x[0].transcript).join(" ").replace(/\s+/g, " ").trim();
+    latest = [full, ...[...last].slice(1).map(a => a.transcript)];
+    dbg(`result${last.isFinal ? " FINAL" : ""}: ${full}`);
+    $("heard").textContent = `"${full}"`;
+    decide(false);
+    if (rec !== r) return;
+    if (last.isFinal) decide(true);
+    else settle = setTimeout(() => decide(true), 1300);
   };
-  try { r.start(); } catch(e) { rec = null; listen(); return; }
-  setTimeout(() => { if (rec === r && !live) listen(); }, 2500);
+  r.onerror = e => {
+    dbg("error: " + e.error);
+    if (rec !== r) return;
+    if (e.error === "aborted") return;
+    rec = null; live = false; clearTimeout(settle);
+    if (G.state === "ask" && !speaking){ listen(); if (MIC_ERR[e.error]) $("status").textContent = MIC_ERR[e.error]; }
+  };
+  r.onend = () => {
+    dbg("end");
+    if (rec !== r) return;
+    if (latest) decide(true);
+    if (rec !== r) return;
+    live = false; rec = null; clearTimeout(settle);
+    if (wantListen && !speaking && !IOS) setTimeout(() => { if (wantListen && !speaking && !rec) startRec(); }, 250);
+    else if (G.state === "ask" && !speaking){ const was = wantListen; listen(); if (IOS && was) $("status").textContent = "I didn't catch a name. Tap 🎤 and try again!"; }
+  };
+  try { r.start(); dbg("start() called, ios=" + IOS); } catch(e) { dbg("start() threw: " + e.name); rec = null; listen(); return; }
+  setTimeout(() => { if (rec === r && !live) { dbg("no start after 2.5s"); listen(); } }, 2500);
 }
 // Tap-to-talk: iOS Safari only starts the mic reliably from a tap, so every listening session starts from one.
 function listen(){
@@ -491,6 +518,7 @@ const typed = () => { const t = $("typeIn").value.trim(); if (!t || G.state !== 
 $("typeBtn").onclick = typed;
 $("typeIn").onkeydown = e => { if (e.key === "Enter") typed(); };
 if ("speechSynthesis" in window) speechSynthesis.getVoices();
+if (DEBUG) { $("dbg").style.display = "block"; dbg(`ua ${navigator.userAgent.slice(0,70)} | SR ${!!SR} | ios ${IOS}`); }
 drawSetup();
 </script>
 </body>
