@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Basketball Game">
+<meta name="theme-color" content="#0d1030">
+<title>Game One: Basketball Game</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏀</text></svg>">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--bg:#0d1030;--card:#171c4a;--gold:#ffb627;--red:#ff4d6d;--green:#2ecc71;--blue:#4cc9f0;--dim:#a6accd;--knicks:#f58426}
+html,body{background:radial-gradient(ellipse at top,#1b2266 0%,var(--bg) 60%) fixed;color:#fff;font-family:'Fredoka',system-ui,sans-serif;min-height:100%}
+body{padding:env(safe-area-inset-top) 16px calc(env(safe-area-inset-bottom) + 16px);overflow-x:hidden;font-weight:500;font-kerning:normal;font-variant-ligatures:none;font-synthesis:none}
+button,input{font-weight:600}
+button{font-family:inherit;cursor:pointer;border:none}
+.screen{display:none;flex-direction:column;align-items:center;max-width:560px;margin:0 auto;padding-top:18px}
+.screen.on{display:flex}
+h1{font-family:'Bangers',cursive;letter-spacing:2px;text-align:center;line-height:1}
+.kicker{font-family:'Bangers',cursive;color:var(--blue);letter-spacing:3px;font-size:1.2rem}
+.title{font-size:clamp(2.6rem,11vw,4.2rem);color:var(--gold);text-shadow:3px 3px 0 var(--red),6px 6px 0 rgba(0,0,0,.35);margin:4px 0 6px}
+.ball{font-size:3.2rem;display:inline-block;animation:spin 4s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.sub{color:var(--dim);margin-bottom:18px;text-align:center}
+.panel{width:100%;background:rgba(23,28,74,.85);border:2px solid #2a3170;border-radius:20px;padding:16px;margin-bottom:14px}
+.label{font-family:'Bangers',cursive;letter-spacing:1.5px;color:var(--gold);font-size:1.3rem;margin-bottom:10px}
+.seg{display:flex;gap:8px}
+.seg button{flex:1;padding:14px 8px;border-radius:14px;background:#0f1338;color:var(--dim);font-size:1.1rem;font-weight:700;border:2px solid #2a3170}
+.seg button.sel{background:linear-gradient(135deg,#ff9f1c,#ff4d6d);color:#fff;border-color:transparent}
+.names{display:flex;gap:8px;margin-top:10px}
+.names input{flex:1;min-width:0;padding:12px;border-radius:12px;border:2px dashed #4a5299;background:#0b0e2a;color:#fff;font:600 1rem 'Fredoka';text-align:left}
+.names input::placeholder{color:#8990bf}
+.names input:focus{outline:none;border-color:var(--blue)}
+.toggle{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.toggle small{display:block;color:var(--dim);font-size:.85rem}
+.sw{width:76px;height:44px;border-radius:22px;background:#2a3170;position:relative;flex-shrink:0;transition:.2s}
+.sw::after{content:'';position:absolute;top:5px;left:5px;width:34px;height:34px;border-radius:50%;background:#fff;transition:.2s}
+.sw.on{background:var(--green)}.sw.on::after{left:37px}
+.tier{width:100%;text-align:left;padding:14px 16px;border-radius:16px;background:#0f1338;color:#fff;border:3px solid #2a3170;margin-bottom:10px}
+.tier b{font-family:'Bangers',cursive;font-size:1.4rem;letter-spacing:1.5px;color:var(--gold);font-weight:400}
+.tier span{display:block;color:var(--dim);font-size:.9rem}
+.tier.sel{border-color:var(--gold);box-shadow:0 0 18px rgba(255,182,39,.35)}
+.grid{display:none;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:8px;margin-top:4px}
+.grid.on{display:grid}
+.chip{padding:11px 6px;border-radius:12px;border:2px solid #2a3170;background:#0f1338;color:var(--dim);font-weight:700;text-align:center;user-select:none}
+.chip.sel{color:#fff;border-color:var(--c,var(--gold));box-shadow:inset 0 0 0 2px var(--c,var(--gold));background:linear-gradient(135deg,rgba(255,182,39,.28),#171c4a)}
+.chip.sel::before{content:'✓ ';color:var(--gold)}
+.go{width:100%;padding:20px;border-radius:20px;background:linear-gradient(135deg,#ff9f1c,#ff4d6d);color:#fff;font-family:'Bangers',cursive;font-size:2.2rem;letter-spacing:3px;box-shadow:0 8px 0 #a3243d;margin:6px 0 10px}
+.go:active{transform:translateY(4px);box-shadow:0 4px 0 #a3243d}
+.go:disabled{opacity:.4}
+.foot{color:#6b7199;font-size:.75rem;text-align:center;margin-top:8px}
+/* game */
+.top{width:100%;display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+.small{min-height:46px;padding:9px 14px;border-radius:12px;background:#0f1338;color:var(--dim);border:2px solid #2a3170;font-weight:600;font-size:.9rem}
+.scores{width:100%;display:flex;gap:8px;margin-bottom:14px}
+.sc{flex:1;padding:10px;border-radius:16px;background:#0f1338;border:3px solid #2a3170;text-align:center;transition:.25s}
+.sc.turn{border-color:var(--gold);box-shadow:0 0 18px rgba(255,182,39,.4)}
+.sc .n{font-weight:700;color:var(--dim);font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sc .p{font-family:'Bangers',cursive;font-size:2.2rem;color:var(--gold);line-height:1}
+.sc .s{font-size:.8rem;color:var(--gold);min-height:1em}
+.card{width:100%;border-radius:28px;padding:22px 16px 18px;text-align:center;position:relative;overflow:hidden;box-shadow:0 14px 40px rgba(0,0,0,.5);border:3px solid rgba(255,255,255,.12)}
+.team{font-family:'Bangers',cursive;font-size:clamp(1.8rem,8vw,2.6rem);letter-spacing:3px}
+.num{font-family:'Bangers',cursive;font-size:clamp(7rem,34vw,10.5rem);line-height:.95;text-shadow:5px 5px 0 rgba(0,0,0,.35)}
+.pop{animation:pop .5s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pop{0%{transform:scale(.2);opacity:0}100%{transform:scale(1);opacity:1}}
+.reveal{display:none;flex-direction:column;align-items:center;margin-top:6px}
+.reveal.on{display:flex}
+.reveal img{height:min(124px,20vh);aspect-ratio:350/254;object-fit:cover;object-position:top;border-radius:18px;background:rgba(255,255,255,.12)}
+.reveal .who{font-family:'Bangers',cursive;font-size:1.8rem;letter-spacing:1.5px;margin-top:6px}
+.tries{display:flex;gap:10px;justify-content:center;margin-top:8px;font-size:2rem}
+.tries i{font-style:normal;transition:.3s}.tries i.used{opacity:.22;filter:grayscale(1);transform:scale(.8)}
+#game.done .controls,#game.done .cap,#game.done .status,#game.done .heard,#game.done .typebox{display:none}
+#game.done .num{font-size:clamp(4.5rem,20vw,7rem)}
+#game.done .card{padding-bottom:12px}
+.controls{width:100%;display:flex;gap:10px;align-items:center;justify-content:center;margin:16px 0 8px}
+.mic{width:92px;height:92px;border-radius:50%;background:#0f1338;border:5px solid var(--red);font-size:2.3rem;display:flex;align-items:center;justify-content:center}
+.mic.live{border-color:var(--green);animation:pulse 1.4s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(46,204,113,.55)}100%{box-shadow:0 0 0 26px rgba(46,204,113,0)}}
+.again{width:70px;height:70px;border-radius:50%;background:#0f1338;border:4px solid var(--blue);font-size:1.9rem}
+.giveup{width:70px;height:70px;border-radius:50%;background:#0f1338;border:4px solid #555c8a;font-size:1.9rem}
+.cap{display:flex;gap:10px;justify-content:center;width:100%;color:#c9cdf5;font-size:.85rem;font-weight:600;text-align:center}
+.cap div{width:92px;white-space:nowrap}.cap div:first-child,.cap div:last-child{width:70px}
+.status{min-height:1.4em;color:#c9cdf5;margin-top:14px;text-align:center}
+.heard{min-height:1.3em;color:var(--blue);font-style:italic;text-align:center}
+.msg{width:100%;margin-top:12px;padding:14px;border-radius:18px;text-align:center;font-size:1.2rem;font-weight:600;display:none;text-wrap:balance}
+.msg.on{display:block;animation:pop .35s ease-out}
+.msg.ok{background:#1f9d57;border:2px solid #2ecc71;color:#fff;font-weight:700;font-size:clamp(1.25rem,5.5vw,1.6rem)}
+.typebox{margin-bottom:10px}
+@media (min-width:700px){
+  .screen{max-width:640px}
+  .mic{width:120px;height:120px;font-size:3rem}.again,.giveup{width:92px;height:92px;font-size:2.4rem}
+  .cap div{width:120px}.cap div:first-child,.cap div:last-child{width:92px}
+  .num{font-size:12rem}
+}
+@media (min-width:700px) and (max-height:820px){ .num{font-size:8rem} .card{padding:14px 16px 12px} .controls{margin:10px 0 4px} }
+@media (min-width:900px) and (orientation:landscape){
+  #game.done .card{display:grid;grid-template-columns:1fr 1fr;align-items:center;column-gap:10px}
+  #game.done .team,#game.done .tries{grid-column:1/-1}
+  #game.done .num{font-size:8rem}
+  #game.done .reveal{margin:0}
+}
+.msg.hint{background:rgba(76,201,240,.12);border:2px solid var(--blue)}
+.msg.rv{background:rgba(255,77,109,.12);border:2px solid var(--red)}
+.typebox{width:100%;display:flex;gap:8px;margin-top:12px}
+.typebox input{flex:1;min-width:0;padding:13px;border-radius:14px;border:2px solid #2a3170;background:#0f1338;color:#fff;font:600 1.05rem 'Fredoka'}
+.typebox button{padding:0 18px;border-radius:14px;background:var(--blue);color:#0d1030;font-weight:700;font-size:1.05rem}
+.next{display:none;width:100%;margin-top:12px}
+.next.on{display:block}
+.confetti{position:fixed;top:-12px;z-index:50;pointer-events:none;animation:fall 2.8s ease-in forwards}
+@keyframes fall{to{transform:translateY(105vh) rotate(760deg);opacity:.2}}
+</style>
+</head>
+<body>
+
+<section class="screen on" id="setup">
+  <div class="ball">🏀</div>
+  <div class="kicker">GAME ONE</div>
+  <h1 class="title">BASKETBALL GAME</h1>
+  <p class="sub">I say a jersey number. You say the player!</p>
+
+  <div class="panel">
+    <div class="label">WHO'S PLAYING?</div>
+    <div class="seg" id="modeSeg">
+      <button data-m="1">1 Player</button>
+      <button data-m="2">2 Players</button>
+    </div>
+    <div class="names" id="names">
+      <input id="n1" maxlength="14" placeholder="Player 1">
+      <input id="n2" maxlength="14" placeholder="Player 2">
+    </div>
+  </div>
+
+  <div class="panel toggle" id="starsRow">
+    <div><div class="label" style="margin:0">STARS ONLY ⭐</div><small>Just the famous players.</small></div>
+    <div class="sw" id="starsSw"></div>
+  </div>
+
+  <div class="panel">
+    <div class="label">PICK YOUR TEAMS</div>
+    <button class="tier" data-t="1"><b>TIER 1</b><span>Knicks, Lakers, Spurs, Thunder</span></button>
+    <button class="tier" data-t="2"><b>TIER 2: ALL TEAMS</b><span>All 16 teams. Think you can handle it?</span></button>
+    <button class="tier" data-t="c"><b>PICK MY OWN</b><span>Tap the teams you want</span></button>
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <button class="go" id="goBtn">LET'S GO!</button>
+  <div class="foot" id="foot"></div>
+</section>
+
+<section class="screen" id="game">
+  <div class="top">
+    <button class="small" id="backBtn">⬅ Teams</button>
+    <button class="small" id="resetBtn">↺ Reset score</button>
+  </div>
+  <div class="scores" id="scores"></div>
+
+  <div class="card" id="card">
+    <div class="team" id="teamName"></div>
+    <div class="num" id="num"></div>
+    <div class="reveal" id="reveal"><img id="photo" alt=""><div class="who" id="who"></div></div>
+    <div class="tries" id="tries"><i>🏀</i><i>🏀</i><i>🏀</i></div>
+  </div>
+
+  <div class="controls">
+    <button class="again" id="againBtn" aria-label="Say it again">🔊</button>
+    <button class="mic" id="micBtn" aria-label="Talk">🎤</button>
+    <button class="giveup" id="giveBtn" aria-label="Tell me">🤷</button>
+  </div>
+  <div class="cap"><div>Again</div><div>Talk</div><div>Tell me</div></div>
+  <div class="status" id="status"></div>
+  <div class="heard" id="heard"></div>
+  <div class="msg" id="msg"></div>
+  <button class="go next" id="nextBtn">NEXT PLAYER ➜</button>
+  <div class="typebox"><input id="typeIn" placeholder="Or type a name..." autocomplete="off" autocapitalize="words"><button id="typeBtn">Go</button></div>
+</section>
+
+<script src="data.js"></script>
+<script>
+const D = window.GAME_DATA;
+const TEAMS = {
+  Knicks:["#f58426","#006bb6",1], Lakers:["#fdb927","#552583",1], Spurs:["#c4ced4","#1a1a1a",1], Thunder:["#ef6100","#007ac1",1],
+  Celtics:["#ffffff","#007a33",2], "76ers":["#ffffff","#006bb6",2], Heat:["#f9a01b","#98002e",2], Cavaliers:["#fdbb30","#860038",2],
+  Warriors:["#ffc72c","#1d428a",2], Mavericks:["#b8c4ca","#00538c",2], Bucks:["#eee1c6","#00471b",2], Nuggets:["#fec524","#0e2240",2],
+  Suns:["#e56020","#1d1160",2], Bulls:["#ffffff","#ce1141",2], Timberwolves:["#78be20","#0c2340",2], Rockets:["#ffffff","#ce1141",2]
+};
+const TIER1 = ["Knicks","Lakers","Spurs","Thunder"];
+const $ = id => document.getElementById(id);
+const pick = a => a[Math.floor(Math.random()*a.length)];
+
+// ---------- saved state ----------
+const saved = JSON.parse(localStorage.getItem("bbgame") || "{}");
+const S = {
+  mode: saved.mode || 1, stars: !!saved.stars, tier: saved.tier || "1",
+  custom: saved.custom || TIER1.slice(),
+  names: saved.names || ["", ""],
+  score: saved.score || [{p:0,st:0,best:0},{p:0,st:0,best:0}],
+};
+const save = () => localStorage.setItem("bbgame", JSON.stringify({mode:S.mode,stars:S.stars,tier:S.tier,custom:S.custom,names:S.names,score:S.score}));
+const nameOf = i => (S.names[i] || "").trim() || `Player ${i+1}`;
+
+// ---------- setup screen ----------
+function drawSetup(){
+  document.querySelectorAll("#modeSeg button").forEach(b => b.classList.toggle("sel", +b.dataset.m === S.mode));
+  $("n2").style.display = S.mode === 2 ? "" : "none";
+  $("n1").placeholder = S.mode === 2 ? "✏️ Player 1 name" : "✏️ Your name (optional)";
+  $("n2").placeholder = "✏️ Player 2 name";
+  $("n1").value = S.names[0]; $("n2").value = S.names[1];
+  $("starsSw").classList.toggle("on", S.stars);
+  document.querySelectorAll(".tier").forEach(b => b.classList.toggle("sel", b.dataset.t === S.tier));
+  $("grid").classList.toggle("on", S.tier === "c");
+  const g = $("grid"); g.innerHTML = "";
+  Object.keys(TEAMS).forEach(t => {
+    const c = document.createElement("div");
+    c.className = "chip" + (S.custom.includes(t) ? " sel" : "");
+    c.style.setProperty("--c", TEAMS[t][0] === "#ffffff" ? TEAMS[t][1] : TEAMS[t][0]);
+    c.textContent = t;
+    c.onclick = () => { S.custom = S.custom.includes(t) ? S.custom.filter(x => x !== t) : [...S.custom, t]; save(); drawSetup(); };
+    g.appendChild(c);
+  });
+  $("goBtn").disabled = teamsChosen().length === 0;
+}
+function teamsChosen(){ return S.tier === "1" ? TIER1 : S.tier === "2" ? Object.keys(TEAMS) : S.custom; }
+document.querySelectorAll("#modeSeg button").forEach(b => b.onclick = () => { S.mode = +b.dataset.m; save(); drawSetup(); });
+document.querySelectorAll(".tier").forEach(b => b.onclick = () => { S.tier = b.dataset.t; save(); drawSetup(); });
+$("starsSw").onclick = () => { S.stars = !S.stars; save(); drawSetup(); };
+$("n1").oninput = e => { S.names[0] = e.target.value; save(); };
+$("n2").oninput = e => { S.names[1] = e.target.value; save(); };
+$("foot").textContent = `Rosters: ${D.season} season, checked ${D.built.slice(0,10)}. ${D.players.length} players.`;
+
+// ---------- audio ----------
+const audio = new Audio(); audio.preload = "auto";
+let speaking = false, speakToken = 0;
+function bestVoice(){
+  const vs = speechSynthesis.getVoices().filter(v => v.lang.startsWith("en"));
+  return vs.find(v => /Natural|Premium|Enhanced|Siri/i.test(v.name)) || vs.find(v => /Google US/i.test(v.name)) || vs[0];
+}
+function tts(text, done){
+  if (!("speechSynthesis" in window)) return done();
+  const u = new SpeechSynthesisUtterance(text); u.rate = .95; u.pitch = 1.1;
+  const v = bestVoice(); if (v) u.voice = v;
+  u.onend = u.onerror = done; speechSynthesis.speak(u);
+}
+// items: [[clipKey, fallbackText], ...]
+function say(items, done){
+  const token = ++speakToken; speaking = true; pauseListening();
+  let i = 0;
+  const next = () => {
+    if (token !== speakToken) return;
+    if (i >= items.length){ speaking = false; if (done) done(); return; }
+    const [key, text] = items[i++];
+    audio.onended = next;
+    audio.onerror = () => tts(text, next);
+    audio.src = `audio/${key}.mp3`;
+    const p = audio.play(); if (p) p.catch(() => tts(text, next));
+  };
+  next();
+}
+function hush(){ speakToken++; audio.pause(); try{ speechSynthesis.cancel(); }catch(e){} speaking = false; }
+
+// ---------- matching ----------
+const norm = s => (s||"").normalize("NFKD").replace(/[̀-ͯ]/g,"").toLowerCase()
+  .replace(/\b(jr|sr|ii|iii|iv)\b\.?/g,"").replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim();
+function lev(a,b){
+  const m = a.length, n = b.length; if (!m) return n; if (!n) return m;
+  let prev = Array.from({length:n+1},(_,j)=>j);
+  for (let i=1;i<=m;i++){ const cur=[i]; for (let j=1;j<=n;j++) cur[j]=Math.min(prev[j]+1,cur[j-1]+1,prev[j-1]+(a[i-1]===b[j-1]?0:1)); prev=cur; }
+  return prev[n];
+}
+const sim = (a,b) => 1 - lev(a,b)/Math.max(a.length,b.length);
+const need = a => { const L = a.replace(/ /g,"").length; return L <= 3 ? 1 : L <= 5 ? .8 : .72; };
+function hit(alias, words){
+  const k = alias.split(" ").length, flat = alias.replace(/ /g,"");
+  for (let w = k; w <= k+2; w++) for (let i = 0; i + w <= words.length; i++){
+    const seg = words.slice(i,i+w);
+    if (w === k && sim(alias, seg.join(" ")) >= need(alias)) return true;
+    if (sim(flat, seg.join("")) >= need(alias)) return true;
+  }
+  return false;
+}
+const STOP = new Set("will mike max miles chase grant bones love ball white green brown hart smart castle fox jones king bron ant book amen turner brooks young rich walker payton jordan nick nate sam ron cam gary pat justin james bam steph ty dean mark sun heat".split(" "));
+function aliasesFor(p, strict){
+  const n = norm(p.name), parts = n.split(" "), out = new Set([n]);
+  const last = parts[parts.length-1], first = parts[0];
+  if (!strict || !STOP.has(last)) out.add(last);
+  if (!strict || (!STOP.has(first) && first.length >= 4)) out.add(first);
+  (p.nick||[]).forEach(x => { const a = norm(x); if (a && (!strict || !STOP.has(a))) out.add(a); });
+  return [...out];
+}
+D.players.forEach(p => { p._mine = aliasesFor(p,false); p._other = aliasesFor(p,true); });
+const isRight = (t, p) => { const w = norm(t).split(" ").filter(Boolean); return p._mine.some(a => hit(a, w)); };
+const isNameGuess = t => { const w = norm(t).split(" ").filter(Boolean); return D.players.some(p => p._other.some(a => hit(a, w))); };
+const wantsHelp = t => /\b(give up|tell me|i don t know|idk)\b/.test(norm(t));
+const wantsAgain = t => /\b(again|repeat|what number)\b/.test(norm(t));
+
+// ---------- listening ----------
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let rec = null, wantListen = false, live = false, idleTimer = null, idleCount = 0;
+function setMic(on, txt){ $("micBtn").classList.toggle("live", on); $("status").textContent = txt; }
+function makeRec(){
+  if (!SR) return null;
+  const r = new SR(); r.lang = "en-US"; r.continuous = true; r.interimResults = true; r.maxAlternatives = 3;
+  r.onstart = () => { live = true; setMic(true, "Listening... say a player!"); };
+  r.onend = () => { live = false; if (wantListen && !speaking) setTimeout(() => { if (wantListen && !speaking && !live) try{ r.start(); }catch(e){} }, 200); else if (!wantListen) setMic(false, "Tap 🎤 to talk"); };
+  r.onerror = e => { if (e.error === "not-allowed" || e.error === "service-not-allowed"){ wantListen = false; setMic(false, "Tap 🎤 to talk"); } };
+  r.onresult = e => {
+    for (let i = e.resultIndex; i < e.results.length; i++){
+      const res = e.results[i], alts = [...res].map(a => a.transcript);
+      $("heard").textContent = `"${alts[0].trim()}"`;
+      onSpeech(alts, res.isFinal);
+    }
+  };
+  return r;
+}
+function listen(){
+  if (!SR){ setMic(false, "Type your answer below!"); return; }
+  if (!rec) rec = makeRec();
+  wantListen = true; armIdle();
+  if (!live && !speaking) try{ rec.start(); }catch(e){}
+}
+function pauseListening(){ clearTimeout(idleTimer); if (rec && live) try{ rec.abort(); }catch(e){} }
+function stopListening(){ wantListen = false; clearTimeout(idleTimer); if (rec) try{ rec.abort(); }catch(e){} setMic(false, "Tap 🎤 to talk"); }
+function armIdle(){
+  clearTimeout(idleTimer);
+  idleTimer = setTimeout(() => {
+    if (G.state !== "ask") return;
+    if (++idleCount > 2){ stopListening(); setMic(false, "Tap 🎤 when you're ready!"); return; }
+    say([[`g-wait${idleCount}`, D.generic[`wait${idleCount}`]], [`q-${G.p.id}`, qText()]], () => { if (wantListen) listen(); });
+  }, 10000);
+}
+
+// ---------- game ----------
+const G = { p:null, tries:0, turn:0, used:new Set(), state:"idle" };
+const qText = () => `Number ${G.p.number === "00" ? "double zero" : G.p.number} on the ${G.p.team === "76ers" ? "Sixers" : G.p.team}! Who is it?`;
+
+function drawScores(){
+  const box = $("scores"); box.innerHTML = "";
+  for (let i = 0; i < S.mode; i++){
+    const s = S.score[i], d = document.createElement("div");
+    d.className = "sc" + (S.mode === 2 && G.turn === i ? " turn" : "");
+    d.innerHTML = `<div class="n"></div><div class="p">${s.p}</div><div class="s">${s.st >= 2 ? "🔥 " + s.st + " in a row" : s.best ? "Best: " + s.best : ""}</div>`;
+    d.querySelector(".n").textContent = nameOf(i);
+    box.appendChild(d);
+  }
+}
+function pool(){
+  const teams = teamsChosen();
+  let ps = D.players.filter(p => teams.includes(p.team) && (!S.stars || p.star));
+  let fresh = ps.filter(p => !G.used.has(p.id));
+  if (!fresh.length){ G.used.clear(); fresh = ps; G.allSeen = true; }
+  const weighted = []; fresh.forEach(p => { weighted.push(p); if (p.star) weighted.push(p, p); });
+  return weighted;
+}
+function newRound(first){
+  hush(); stopListening();
+  G.p = pick(pool()); G.used.add(G.p.id); G.tries = 0; G.state = "ask"; idleCount = 0;
+  $("game").classList.remove("done"); window.scrollTo({top: 0, behavior: "smooth"});
+  const [fg, bg] = TEAMS[G.p.team];
+  $("card").style.background = `linear-gradient(160deg, ${bg} 0%, #0b0e2a 95%)`;
+  $("teamName").textContent = G.p.team.toUpperCase(); $("teamName").style.color = fg;
+  const n = $("num"); n.textContent = G.p.number; n.style.color = fg;
+  n.classList.remove("pop"); void n.offsetWidth; n.classList.add("pop");
+  $("reveal").classList.remove("on"); $("num").style.display = "";
+  document.querySelectorAll("#tries i").forEach(i => i.classList.remove("used"));
+  $("msg").className = "msg"; $("nextBtn").classList.remove("on"); $("heard").textContent = "";
+  $("typeIn").value = ""; $("giveBtn").disabled = false;
+  drawScores();
+  const items = [];
+  if (first) items.push(["g-hello", D.generic.hello]);
+  if (G.allSeen){ items.push(["g-allseen", D.generic.allseen]); G.allSeen = false; }
+  if (S.mode === 2) items.push([`g-p${G.turn+1}`, `${nameOf(G.turn)}, you're up!`]);
+  items.push([`q-${G.p.id}`, qText()]);
+  say(items, listen);
+}
+const nb = s => s.replace(/Go Knicks/g, "Go Knicks").replace(/Let's GOOO/g, "Let's GOOO")
+  .replace(/with "(.)"/g, 'with "$1"').replace(/ (\S+)$/, " $1");
+function showMsg(text, cls){ const m = $("msg"); m.textContent = nb(text); m.className = "msg on " + cls; }
+function showNext(){ requestAnimationFrame(() => $("nextBtn").scrollIntoView({block: "end", behavior: "smooth"})); }
+function showReveal(){
+  const img = $("photo");
+  img.onload = showNext;
+  img.onerror = () => { img.style.display = "none"; showNext(); };
+  img.style.display = "";
+  img.src = `https://a.espncdn.com/i/headshots/nba/players/full/${G.p.id}.png`;
+  $("who").textContent = G.p.name;
+  $("reveal").classList.add("on");
+}
+function endRound(){ G.state = "done"; stopListening(); $("game").classList.add("done"); $("nextBtn").classList.add("on"); $("giveBtn").disabled = true; drawScores(); save(); showNext(); }
+
+function onSpeech(alts, final){
+  if (G.state !== "ask" || speaking) return;
+  armIdle();
+  if (alts.some(t => isRight(t, G.p))) return correct();
+  if (!final) return;
+  const t = alts[0];
+  if (wantsAgain(t)) return sayAgain();
+  if (wantsHelp(t)) return giveUp();
+  if (alts.some(isNameGuess)) return wrong();
+  $("status").textContent = "Listening... say a player!";   // not a name: ignore, keep listening
+}
+function correct(){
+  const s = S.score[G.turn]; s.p++; s.st++; s.best = Math.max(s.best, s.st);
+  const knicks = G.p.team === "Knicks";
+  const key = knicks ? `nyk${1+Math.floor(Math.random()*5)}` : `ok${1+Math.floor(Math.random()*8)}`;
+  const items = [[`g-${key}`, D.generic[key]], [`ok-${G.p.id}`, `That's ${G.p.name}!`]];
+  if (s.st >= 3) { const k = `s${Math.min(s.st,10)}`; items.push([`g-${k}`, D.generic[k]]); }
+  showMsg(`${D.generic[key]} That's ${G.p.name}!` + (s.st >= 3 ? " " + D.generic[`s${Math.min(s.st,10)}`] : ""), "ok");
+  showReveal(); confetti(); endRound();
+  say(items);
+}
+function wrong(){
+  G.tries++;
+  document.querySelectorAll("#tries i").forEach((i, k) => i.classList.toggle("used", k < G.tries));
+  if (G.tries >= 3) return reveal();
+  const no = `no${1+Math.floor(Math.random()*4)}`, first = G.p.name.split(" ")[0];
+  const hint = G.tries === 1
+    ? [`h1-${G.p.id}`, `Here's a hint! He plays ${G.p.pos}, and his first name starts with "${first[0].toUpperCase()}".`]
+    : [`h2-${G.p.id}`, `Big hint! His first name is ${first}!`];
+  showMsg(`${D.generic[no]} ${hint[1]}`, "hint");
+  say([[`g-${no}`, D.generic[no]], hint], listen);
+}
+function reveal(){
+  S.score[G.turn].st = 0;
+  showMsg(`That was ${G.p.name}! You'll get the next one!`, "rv");
+  showReveal(); endRound();
+  say([[`rv-${G.p.id}`, `That was ${G.p.name}! You'll get the next one!`]]);
+}
+function giveUp(){ if (G.state === "ask") reveal(); }
+function sayAgain(){ if (G.p) say([[`q-${G.p.id}`, qText()]], () => { if (G.state === "ask") listen(); }); }
+function nextPlayer(){ if (S.mode === 2) G.turn = 1 - G.turn; newRound(false); }
+
+function confetti(){
+  const cs = ["#ffb627","#ff4d6d","#2ecc71","#4cc9f0","#f58426","#ffffff"];
+  for (let i = 0; i < 40; i++){
+    const c = document.createElement("div"); c.className = "confetti";
+    const sz = 7 + Math.random()*9;
+    Object.assign(c.style, { left: Math.random()*100+"vw", width: sz+"px", height: sz+"px",
+      background: pick(cs), borderRadius: Math.random() > .5 ? "50%" : "3px", animationDelay: Math.random()*.4+"s" });
+    document.body.appendChild(c); setTimeout(() => c.remove(), 3400);
+  }
+}
+
+// ---------- wiring ----------
+$("goBtn").onclick = () => {
+  G.used.clear(); G.turn = 0;
+  $("setup").classList.remove("on"); $("game").classList.add("on"); window.scrollTo(0,0);
+  newRound(true);
+};
+$("backBtn").onclick = () => { hush(); stopListening(); G.state = "idle"; $("game").classList.remove("on"); $("setup").classList.add("on"); drawSetup(); };
+$("resetBtn").onclick = () => {
+  if (!confirm("Reset the score back to zero?")) return;
+  S.score = [{p:0,st:0,best:0},{p:0,st:0,best:0}]; save(); drawScores();
+};
+$("micBtn").onclick = () => { if (G.state !== "ask") return; if (live) stopListening(); else { hush(); idleCount = 0; listen(); } };
+$("againBtn").onclick = sayAgain;
+$("giveBtn").onclick = giveUp;
+$("nextBtn").onclick = nextPlayer;
+const typed = () => { const t = $("typeIn").value.trim(); if (!t || G.state !== "ask") return; $("typeIn").value = "";
+  $("heard").textContent = `"${t}"`; if (isRight(t, G.p)) correct(); else wrong(); };
+$("typeBtn").onclick = typed;
+$("typeIn").onkeydown = e => { if (e.key === "Enter") typed(); };
+if ("speechSynthesis" in window) speechSynthesis.getVoices();
+drawSetup();
+</script>
+</body>
+</html>
