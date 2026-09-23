@@ -272,12 +272,12 @@ function lev(a,b){
 }
 const sim = (a,b) => 1 - lev(a,b)/Math.max(a.length,b.length);
 const need = a => { const L = a.replace(/ /g,"").length; return L <= 3 ? 1 : L <= 5 ? .8 : .72; };
-function hit(alias, words){
-  const k = alias.split(" ").length, flat = alias.replace(/ /g,"");
+function hit(alias, words, bump = 0){
+  const k = alias.split(" ").length, flat = alias.replace(/ /g,""), th = Math.min(1, need(alias) + bump);
   for (let w = k; w <= k+2; w++) for (let i = 0; i + w <= words.length; i++){
     const seg = words.slice(i,i+w);
-    if (w === k && sim(alias, seg.join(" ")) >= need(alias)) return true;
-    if (sim(flat, seg.join("")) >= need(alias)) return true;
+    if (w === k && sim(alias, seg.join(" ")) >= th) return true;
+    if (sim(flat, seg.join("")) >= th) return true;
   }
   return false;
 }
@@ -292,7 +292,15 @@ function aliasesFor(p, strict){
 }
 D.players.forEach(p => { p._mine = aliasesFor(p,false); p._other = aliasesFor(p,true); });
 const isRight = (t, p) => { const w = norm(t).split(" ").filter(Boolean); return p._mine.some(a => hit(a, w)); };
-const isNameGuess = t => { const w = norm(t).split(" ").filter(Boolean); return D.players.some(p => p._other.some(a => hit(a, w))); };
+const isNameGuess = t => { const w = norm(t).split(" ").filter(Boolean); return D.players.some(p => p._other.some(a => hit(a, w, .1))); };
+const FILLER = new Set("um umm uh uhh hmm hm er ah oh like so well okay ok hello hi hey wait yeah yes no i is it its a the that this he his who me my think maybe guess and or um".split(" "));
+const NOT_NAMES = new Set(["i","is","it","its","hello","hi","hey","um","uh","oh","okay","ok","yes","no","wait","what","who","the","a","my","maybe","mom","mommy","mama","dad","daddy","papa","nba","new","york","la","sixers","knicks","lakers","spurs","thunder","celtics","heat","cavaliers","cavs","warriors","mavericks","mavs","bucks","nuggets","suns","bulls","timberwolves","wolves","rockets","basketball"]);
+function looksLikeName(raw){
+  const toks = raw.trim().split(/\s+/).map(w => w.replace(/[^A-Za-z']/g, "").replace(/'s$/, "")).filter(Boolean);
+  if (toks.some(w => /^[A-Z][a-z]/.test(w) && !NOT_NAMES.has(w.toLowerCase()))) return true;
+  const m = norm(raw).match(/\b(?:is it|it s|it is|i think it s|i think it is|i think|maybe it s|is that)\s+(.+)$/);
+  return !!m && m[1].split(" ").filter(w => w && !FILLER.has(w)).length >= 1;
+}
 const wantsHelp = t => /\b(give up|tell me|i don t know|idk)\b/.test(norm(t));
 const wantsAgain = t => /\b(again|repeat|what number)\b/.test(norm(t));
 
@@ -398,7 +406,7 @@ function onSpeech(alts, final){
   const t = alts[0];
   if (wantsAgain(t)) return sayAgain();
   if (wantsHelp(t)) return giveUp();
-  if (alts.some(isNameGuess)) return wrong();
+  if (alts.some(isNameGuess) || looksLikeName(t)) return wrong();
   $("status").textContent = "Listening... say a player!";   // not a name: ignore, keep listening
 }
 function correct(){
