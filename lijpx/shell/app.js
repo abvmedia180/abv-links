@@ -5,9 +5,9 @@ import { createChart, disposeCharts, loadECharts, resizeCharts } from './charts.
 import { decryptText, fetchEnvelope, unlock } from './crypto.js?v=76839e4d3b';
 import { h } from './dom.js?v=e03acf3e7a';
 import { downloadCsv, downloadXlsx, exportFilename } from './exporter.js?v=61eabf369c';
-import { calendarDate } from './format.js?v=4974441338';
+import { calendarDate } from './format.js?v=4796f631fd';
 import { icon } from './icons.js?v=5a859aeff6';
-import { initPrint, setPrintContext } from './print.js?v=993aa62df6';
+import { initPrint, setPrintContext } from './print.js?v=dbeb237793';
 import { emptyState } from './ui.js?v=08586281b3';
 
 const GROUPS = ['Dashboards', 'Past Analyses', 'Resources'];

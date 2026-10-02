@@ -1,39 +1,39 @@
 {
   "site": {
     "version": "5.0",
-    "lastUpdated": "October 1, 2026 2:05 PM ET"
+    "lastUpdated": "October 2, 2026 1:56 PM ET"
   },
   "check": "data/check.enc?v=fe922920fb",
   "tools": [
     {
       "id": "rising-star",
       "version": "2.0",
-      "lastUpdated": "August 21, 2026 4:05 PM ET",
-      "module": "tools/rising-star/tool.js?v=7b60bffaaf",
-      "data": "data/rising-star.enc?v=7cfff9fea2",
+      "lastUpdated": "October 2, 2026 1:56 PM ET",
+      "module": "tools/rising-star/tool.js?v=7e1c0ff542",
+      "data": "data/rising-star.enc?v=e0fbf2782c",
       "css": "tools/rising-star/tool.css?v=2d1382dee6"
     },
     {
       "id": "quiet",
       "version": "2.0",
-      "lastUpdated": "July 21, 2026 3:21 PM ET",
-      "module": "tools/quiet/tool.js?v=6027849b29",
-      "data": "data/quiet.enc?v=fcfd2bc545",
+      "lastUpdated": "October 2, 2026 1:56 PM ET",
+      "module": "tools/quiet/tool.js?v=a94e8ada3a",
+      "data": "data/quiet.enc?v=a87ebb273f",
       "css": "tools/quiet/tool.css?v=78633619d4"
     },
     {
       "id": "cfam",
       "version": "2.0",
-      "lastUpdated": "April 9, 2026 12:16 PM ET",
-      "module": "tools/cfam/tool.js?v=9e4f0d4139",
-      "data": "data/cfam.enc?v=2ebaef4216",
+      "lastUpdated": "October 2, 2026 1:56 PM ET",
+      "module": "tools/cfam/tool.js?v=bbdc40ebbc",
+      "data": "data/cfam.enc?v=348a81a3c1",
       "css": "tools/cfam/tool.css?v=95638953b5"
     },
     {
       "id": "call-logs",
       "version": "3.0",
       "lastUpdated": "July 27, 2026 12:27 PM ET",
-      "module": "tools/call-logs/tool.js?v=0e55d8afa5",
+      "module": "tools/call-logs/tool.js?v=e4a5448769",
       "data": "data/call-logs.enc?v=cbc8494de3",
       "css": "tools/call-logs/tool.css?v=b36e4ef070"
     },
@@ -41,7 +41,7 @@
       "id": "visitors",
       "version": "4.0",
       "lastUpdated": "April 2, 2026 6:49 PM ET",
-      "module": "tools/visitors/tool.js?v=f6a0367c2d",
+      "module": "tools/visitors/tool.js?v=be96a914f6",
       "data": "data/visitors.enc?v=0e8e29dbe0",
       "css": "tools/visitors/tool.css?v=98cf89518b"
     },

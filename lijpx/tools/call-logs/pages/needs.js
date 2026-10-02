@@ -4,9 +4,9 @@
 
 import { tooltipContent } from '../../../shell/charts.js?v=72034d3cd0';
 import { h } from '../../../shell/dom.js?v=e03acf3e7a';
-import { HOURS } from '../../../shell/format.js?v=4974441338';
+import { HOURS } from '../../../shell/format.js?v=4796f631fd';
 import { card } from '../../../shell/ui.js?v=08586281b3';
-import { RAMPS, detailContent, detailPanel, heatTable, hoverTip, legend, legendBar, ramp, shortNeed } from '../model.js?v=8664ca03f5';
+import { RAMPS, detailContent, detailPanel, heatTable, hoverTip, legend, legendBar, ramp, shortNeed } from '../model.js?v=a532a8c377';
 
 const MIN_CALLS = 3; // fewer calls than this in a cell is too thin to read
 const SHOW_FROM = 1.5; // print the ratio in cells this concentrated or more

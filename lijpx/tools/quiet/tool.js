@@ -1,11 +1,11 @@
 // Quiet at Night: Press Ganey quietness scores by unit and division, quarter by quarter.
 // Data: prepared by build/prep/quiet.py.
 
-import { fixed } from '../../shell/format.js?v=4974441338';
-import divisions from './pages/divisions.js?v=04db686028';
-import heatmap from './pages/heatmap.js?v=62398589a3';
-import snapshot from './pages/snapshot.js?v=ded29f8bf6';
-import trends from './pages/trends.js?v=ab04626058';
+import { fixed } from '../../shell/format.js?v=4796f631fd';
+import divisions from './pages/divisions.js?v=700aeaa25c';
+import heatmap from './pages/heatmap.js?v=6522c1f967';
+import snapshot from './pages/snapshot.js?v=fbdffbd638';
+import trends from './pages/trends.js?v=11cbcdb614';
 import { latestQuarter, siteAverage } from './model.js?v=2a5c448782';
 
 export default {

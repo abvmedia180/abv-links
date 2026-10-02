@@ -3,11 +3,11 @@
 
 import { AXIS_STYLE, TOOLTIP_STYLE, tooltipContent } from '../../../shell/charts.js?v=72034d3cd0';
 import { h } from '../../../shell/dom.js?v=e03acf3e7a';
-import { HOURS, monthLabel, whole } from '../../../shell/format.js?v=4974441338';
+import { HOURS, monthLabel, whole } from '../../../shell/format.js?v=4796f631fd';
 import { card, kpiCard } from '../../../shell/ui.js?v=08586281b3';
 import {
   COLORS, OVERNIGHT_HOURS, OVERNIGHT_LABEL, aggregate, filterControls, frozenNotice, monthAxis, percent, scopeLine, selection,
-} from '../model.js?v=42f6854b8c';
+} from '../model.js?v=549548d47e';
 
 export default {
   id: 'overnight',

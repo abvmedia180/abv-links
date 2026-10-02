@@ -2,9 +2,9 @@
 
 import { AXIS_STYLE, TOOLTIP_STYLE, tooltipContent } from '../../../shell/charts.js?v=72034d3cd0';
 import { h } from '../../../shell/dom.js?v=e03acf3e7a';
-import { DAYS_SHORT, HOURS, whole } from '../../../shell/format.js?v=4974441338';
+import { DAYS_SHORT, HOURS, whole } from '../../../shell/format.js?v=4796f631fd';
 import { card } from '../../../shell/ui.js?v=08586281b3';
-import { SHIFTS } from '../model.js?v=8664ca03f5';
+import { SHIFTS } from '../model.js?v=a532a8c377';
 
 const HOT_OVER_INDEX = 1.25; // over-index shown in orange from here
 const NARROW_CHART = 520; // px; below this the bar chart uses short need names

@@ -1,10 +1,10 @@
 // Overview: what the archive is, the headline numbers, three findings and the suggested plays.
 
 import { h } from '../../../shell/dom.js?v=e03acf3e7a';
-import { DAYS, DAYS_SHORT, HOURS, calendarDate, shortDate, whole } from '../../../shell/format.js?v=4974441338';
+import { DAYS, DAYS_SHORT, HOURS, calendarDate, shortDate, whole } from '../../../shell/format.js?v=4796f631fd';
 import { icon } from '../../../shell/icons.js?v=5a859aeff6';
 import { card, kpiCard } from '../../../shell/ui.js?v=08586281b3';
-import { closeOutHours, weekRank } from '../model.js?v=8664ca03f5';
+import { closeOutHours, weekRank } from '../model.js?v=a532a8c377';
 
 export default {
   id: 'overview',

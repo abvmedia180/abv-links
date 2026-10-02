@@ -28,7 +28,7 @@ export function shortDate(iso) {
   return SHORT_DATE.format(Date.parse(`${iso}T00:00:00Z`));
 }
 
-// "2026-03" to "Mar 2026".
+// "1999-03" to "Mar 1999". (Example kept outside any real data month: check.py flags real labels.)
 export function monthLabel(month) {
   return MONTH.format(Date.parse(`${month}-01T00:00:00Z`));
 }

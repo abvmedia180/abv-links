@@ -1,7 +1,7 @@
 // Hall of Fame: every medal a unit has earned across all comparison periods.
 
 import { h } from '../../../shell/dom.js?v=e03acf3e7a';
-import { signed } from '../../../shell/format.js?v=4974441338';
+import { signed } from '../../../shell/format.js?v=4796f631fd';
 import { card, emptyState, kpiCard } from '../../../shell/ui.js?v=08586281b3';
 import { PLACE_TONES, PLACES, medalTable, topPerformers } from '../model.js?v=0ac35671df';
 

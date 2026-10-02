@@ -3,7 +3,7 @@
 // entry point, or null where that entry point has no records for the day.
 
 import { h } from '../../shell/dom.js?v=e03acf3e7a';
-import { DAYS, calendarDate, monthLabel } from '../../shell/format.js?v=4974441338';
+import { DAYS, calendarDate, monthLabel } from '../../shell/format.js?v=4796f631fd';
 import { icon } from '../../shell/icons.js?v=5a859aeff6';
 import { selectControl } from '../../shell/ui.js?v=08586281b3';
 

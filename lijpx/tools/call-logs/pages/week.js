@@ -3,11 +3,11 @@
 
 import { tooltipContent } from '../../../shell/charts.js?v=72034d3cd0';
 import { h } from '../../../shell/dom.js?v=e03acf3e7a';
-import { DAYS, DAYS_SHORT, HOURS } from '../../../shell/format.js?v=4974441338';
+import { DAYS, DAYS_SHORT, HOURS } from '../../../shell/format.js?v=4796f631fd';
 import { card, selectControl } from '../../../shell/ui.js?v=08586281b3';
 import {
   HOT_SPOT, RAMPS, WEEK_ROWS, detailContent, detailPanel, heatTable, hoverTip, legend, legendBar, ramp, shortNeed,
-} from '../model.js?v=8664ca03f5';
+} from '../model.js?v=a532a8c377';
 
 const MODES = [
   { value: 'volume', label: 'Volume' },

@@ -2,7 +2,7 @@
 // `data` is the payload from build/prep/call_logs.py. The color rules are v1's.
 
 import { h } from '../../shell/dom.js?v=e03acf3e7a';
-import { HOURS } from '../../shell/format.js?v=4974441338';
+import { HOURS } from '../../shell/format.js?v=4796f631fd';
 
 export const WEEK_ROWS = [6, 0, 1, 2, 3, 4, 5]; // Sunday first, as v1 showed the week
 const HOUR_TICKS = Array.from({ length: 24 }, (_, hour) => `${hour % 12 || 12}${hour < 12 ? 'a' : 'p'}`);

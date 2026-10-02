@@ -1,14 +1,14 @@
 // Handwritten Call Log Analysis: one unit's call-light sheets, digitized once and not updated.
 // Data: prepared by build/prep/call_logs.py.
 
-import { whole } from '../../shell/format.js?v=4974441338';
-import hours from './pages/hours.js?v=1ebd27f6e2';
-import needs from './pages/needs.js?v=4b734dc6e4';
-import overview from './pages/overview.js?v=8e9d83a837';
-import reasons from './pages/reasons.js?v=a530695ff2';
-import staff from './pages/staff.js?v=5deb0a2a71';
-import time from './pages/time.js?v=dc7f965573';
-import week from './pages/week.js?v=890e3b8005';
+import { whole } from '../../shell/format.js?v=4796f631fd';
+import hours from './pages/hours.js?v=2130841579';
+import needs from './pages/needs.js?v=c577316c96';
+import overview from './pages/overview.js?v=2e41e58b91';
+import reasons from './pages/reasons.js?v=d8e01d37d4';
+import staff from './pages/staff.js?v=3079e2aefb';
+import time from './pages/time.js?v=1958036a2d';
+import week from './pages/week.js?v=cde4c647a9';
 
 export default {
   id: 'call-logs',

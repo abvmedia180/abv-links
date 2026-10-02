@@ -2,7 +2,7 @@
 // No KPI boxes on this page.
 
 import { h } from '../../../shell/dom.js?v=e03acf3e7a';
-import { fixed, signed } from '../../../shell/format.js?v=4974441338';
+import { fixed, signed } from '../../../shell/format.js?v=4796f631fd';
 import { emptyState, sectionHeader } from '../../../shell/ui.js?v=08586281b3';
 import { celebrateOnce } from '../celebrate.js?v=69342410b6';
 import { PLACE_CLASSES, PLACES, comparisonControl, selectedComparison, topImprovers } from '../model.js?v=0ac35671df';

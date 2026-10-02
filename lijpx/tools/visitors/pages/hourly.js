@@ -3,12 +3,12 @@
 
 import { AXIS_STYLE, TOOLTIP_STYLE, tooltipContent } from '../../../shell/charts.js?v=72034d3cd0';
 import { h } from '../../../shell/dom.js?v=e03acf3e7a';
-import { DAYS, DAYS_SHORT, HOURS, whole } from '../../../shell/format.js?v=4974441338';
+import { DAYS, DAYS_SHORT, HOURS, whole } from '../../../shell/format.js?v=4796f631fd';
 import { card } from '../../../shell/ui.js?v=08586281b3';
 import {
   COLORS, OVERNIGHT_HOURS, OVERNIGHT_LABEL, aggregate, daysLabel, filterControls, frozenNotice, isNarrow, scopeLine, selection,
   weekdayDays,
-} from '../model.js?v=42f6854b8c';
+} from '../model.js?v=549548d47e';
 
 // v1's heat map scale, low to high.
 const HEAT_COLORS = ['#e8f5e9', '#a5d6a7', '#fff9c4', '#ffcc80', '#ef9a9a', '#e53935', '#b71c1c'];

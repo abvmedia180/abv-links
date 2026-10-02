@@ -1,12 +1,12 @@
 // Visitor Analysis: visitor volume at the hospital's entry points from security logs. Frozen at April 2026.
 // Data: prepared by build/prep/visitors.py.
 
-import { monthLabel, whole } from '../../shell/format.js?v=4974441338';
-import destinations from './pages/destinations.js?v=f047e055cb';
-import hourly from './pages/hourly.js?v=743c896a2a';
-import overnight from './pages/overnight.js?v=d1dde059d1';
-import overview from './pages/overview.js?v=9b7ccade9d';
-import trends from './pages/trends.js?v=eb0e15ae3a';
+import { monthLabel, whole } from '../../shell/format.js?v=4796f631fd';
+import destinations from './pages/destinations.js?v=fcb7f8aa90';
+import hourly from './pages/hourly.js?v=982de6c26a';
+import overnight from './pages/overnight.js?v=ea2b965e1d';
+import overview from './pages/overview.js?v=108048ed2f';
+import trends from './pages/trends.js?v=945f91d976';
 
 export default {
   id: 'visitors',

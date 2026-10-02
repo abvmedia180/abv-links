@@ -2,7 +2,7 @@
 
 import { AXIS_STYLE, TOOLTIP_STYLE, tooltipContent } from '../../../shell/charts.js?v=72034d3cd0';
 import { h } from '../../../shell/dom.js?v=e03acf3e7a';
-import { HOURS, whole } from '../../../shell/format.js?v=4974441338';
+import { HOURS, whole } from '../../../shell/format.js?v=4796f631fd';
 import { card } from '../../../shell/ui.js?v=08586281b3';
 
 const COMPLETE_TARGET = 80; // bars under this share of calls marked complete turn orange

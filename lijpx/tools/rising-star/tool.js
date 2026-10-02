@@ -1,12 +1,12 @@
 // Rising Star Award (HCAHPS Hero): HCAHPS Top Box improvement by unit, quarter over quarter.
 // Data: prepared by build/prep/rising_star.py.
 
-import fame from './pages/fame.js?v=02c351d2c0';
-import highlights from './pages/highlights.js?v=2702cc6024';
-import raw from './pages/raw.js?v=ec219b6e37';
-import stars from './pages/stars.js?v=169ec84597';
-import trends from './pages/trends.js?v=d7e257b6b2';
-import watch from './pages/watch.js?v=d567afa949';
+import fame from './pages/fame.js?v=6f9ceeb1da';
+import highlights from './pages/highlights.js?v=e6f50a8ea3';
+import raw from './pages/raw.js?v=2898a58cc0';
+import stars from './pages/stars.js?v=1d30826d17';
+import trends from './pages/trends.js?v=9b7f3da054';
+import watch from './pages/watch.js?v=2b6ba7db8f';
 import { topImprovers } from './model.js?v=0ac35671df';
 
 export default {

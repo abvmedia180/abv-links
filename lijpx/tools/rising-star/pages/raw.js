@@ -2,7 +2,7 @@
 // No KPI boxes; the qualified unit count sits in the section header.
 
 import { h } from '../../../shell/dom.js?v=e03acf3e7a';
-import { fixed } from '../../../shell/format.js?v=4974441338';
+import { fixed } from '../../../shell/format.js?v=4796f631fd';
 import { card, sectionHeader, selectControl } from '../../../shell/ui.js?v=08586281b3';
 
 export default {

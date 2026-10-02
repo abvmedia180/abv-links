@@ -4,11 +4,11 @@
 
 import { AXIS_STYLE, TOOLTIP_STYLE, tooltipContent } from '../../../shell/charts.js?v=72034d3cd0';
 import { h } from '../../../shell/dom.js?v=e03acf3e7a';
-import { DAYS, DAYS_SHORT, monthLabel, shortDate, whole } from '../../../shell/format.js?v=4974441338';
+import { DAYS, DAYS_SHORT, monthLabel, shortDate, whole } from '../../../shell/format.js?v=4796f631fd';
 import { card } from '../../../shell/ui.js?v=08586281b3';
 import {
   COLORS, LEGEND, aggregate, daysLabel, filterControls, frozenNotice, monthAxis, scopeLine, selection, thousands, weekdayDays,
-} from '../model.js?v=42f6854b8c';
+} from '../model.js?v=549548d47e';
 
 export default {
   id: 'trends',

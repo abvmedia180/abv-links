@@ -4,9 +4,9 @@
 
 import { TOOLTIP_STYLE, tooltipContent } from '../../../shell/charts.js?v=72034d3cd0';
 import { append, h } from '../../../shell/dom.js?v=e03acf3e7a';
-import { fixed, signed } from '../../../shell/format.js?v=4974441338';
+import { fixed, signed } from '../../../shell/format.js?v=4796f631fd';
 import { card, emptyState, sectionHeader, selectControl } from '../../../shell/ui.js?v=08586281b3';
-import { BAR_COLOR, BAR_LOW_N_COLOR, change, comparison, isNarrow, percent, points, qualified, scoreAt, scoreTd, shadeLegend, trendTone } from '../model.js?v=eb6dd377a5';
+import { BAR_COLOR, BAR_LOW_N_COLOR, change, comparison, isNarrow, percent, points, qualified, scoreAt, scoreTd, shadeLegend, trendTone } from '../model.js?v=6dd27ff358';
 
 // The earlier period in gray, so the latest period carries the color. A bar with fewer than minN
 // surveys uses the faded shade of its color.

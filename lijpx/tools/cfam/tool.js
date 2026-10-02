@@ -1,10 +1,10 @@
 // CFAM Dashboard: patient experience for the CFAM units, how each unit is doing, and a benchmark.
 // Data: prepared by build/prep/cfam.py.
 
-import insights from './pages/insights.js?v=bc0b2db765';
-import overview from './pages/overview.js?v=6a32fc8348';
-import performance from './pages/performance.js?v=b15e826afe';
-import { KEY, latestQuarters, percent, scoreAt } from './model.js?v=eb6dd377a5';
+import insights from './pages/insights.js?v=2d49b33931';
+import overview from './pages/overview.js?v=b38882e587';
+import performance from './pages/performance.js?v=9c71d6a26b';
+import { KEY, latestQuarters, percent, scoreAt } from './model.js?v=6dd27ff358';
 
 export default {
   id: 'cfam',

@@ -6,7 +6,7 @@
 // Ctrl+P / Cmd+P and a headless PDF export alike, so the charts are resized in time.
 
 import { fitChartsForPrint, restoreChartsAfterPrint } from './charts.js?v=72034d3cd0';
-import { timestampET } from './format.js?v=4974441338';
+import { timestampET } from './format.js?v=4796f631fd';
 
 // US Letter minus the 0.5in margins set in styles/print.css, at 96 CSS pixels per inch.
 const PRINTABLE_WIDTH = { portrait: 720, landscape: 960 };

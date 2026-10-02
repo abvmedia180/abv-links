@@ -1,7 +1,7 @@
 // Watch List: the three largest declines per domain for the selected comparison.
 
 import { h } from '../../../shell/dom.js?v=e03acf3e7a';
-import { fixed } from '../../../shell/format.js?v=4974441338';
+import { fixed } from '../../../shell/format.js?v=4796f631fd';
 import { card, emptyState, kpiCard } from '../../../shell/ui.js?v=08586281b3';
 import { biggestDeclines, comparisonControl, selectedComparison } from '../model.js?v=0ac35671df';
 

@@ -3,7 +3,7 @@
 // complete quarter to its last. A partial quarter is shown, labelled, but left out of the trend.
 
 import { h } from '../../../shell/dom.js?v=e03acf3e7a';
-import { fixed, signed } from '../../../shell/format.js?v=4974441338';
+import { fixed, signed } from '../../../shell/format.js?v=4796f631fd';
 import { completeQuarters, divisionAverage, latestQuarter, siteAverage, trendTone, unitsInDivision } from '../model.js?v=2a5c448782';
 
 export default {

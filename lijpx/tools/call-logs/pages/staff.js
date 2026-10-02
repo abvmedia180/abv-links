@@ -5,7 +5,7 @@
 // name them reads as a performance list once forwarded, without the cautions printed beside it.
 
 import { h } from '../../../shell/dom.js?v=e03acf3e7a';
-import { monthLabel, whole } from '../../../shell/format.js?v=4974441338';
+import { monthLabel, whole } from '../../../shell/format.js?v=4796f631fd';
 import { card } from '../../../shell/ui.js?v=08586281b3';
 
 export default {

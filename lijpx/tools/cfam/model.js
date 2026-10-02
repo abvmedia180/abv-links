@@ -2,7 +2,7 @@
 // A score is { score, n }, or null when there were no surveys on that question in that period.
 
 import { h } from '../../shell/dom.js?v=e03acf3e7a';
-import { fixed, signed } from '../../shell/format.js?v=4974441338';
+import { fixed, signed } from '../../shell/format.js?v=4796f631fd';
 
 // The key question (likelihood to recommend) is first in data.questions; build/prep/cfam.py checks it.
 export const KEY = 0;

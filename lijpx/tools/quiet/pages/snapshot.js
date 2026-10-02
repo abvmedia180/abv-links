@@ -4,7 +4,7 @@
 
 import { TOOLTIP_STYLE, tooltipContent } from '../../../shell/charts.js?v=72034d3cd0';
 import { h } from '../../../shell/dom.js?v=e03acf3e7a';
-import { fixed, signed } from '../../../shell/format.js?v=4974441338';
+import { fixed, signed } from '../../../shell/format.js?v=4796f631fd';
 import { icon } from '../../../shell/icons.js?v=5a859aeff6';
 import { card, emptyState, kpiCard } from '../../../shell/ui.js?v=08586281b3';
 import { GRID_LINE, quarterAxis, scoreAxisLabel } from '../chart-style.js?v=8c8fddad0c';
