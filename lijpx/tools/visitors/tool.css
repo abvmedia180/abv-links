@@ -1,0 +1,51 @@
+/* Visitor Analysis. Everything is scoped under .tool-visitors. */
+
+.tool-visitors .vis-caption { margin-bottom: 12px; font-size: 0.8rem; line-height: 1.5; color: var(--text-muted); }
+.tool-visitors .vis-chart { height: 340px; }
+.tool-visitors .vis-chart-short { height: 230px; }
+.tool-visitors .vis-chart-tall { height: 380px; }
+
+/* Frozen-data notice, on every page */
+.tool-visitors .vis-frozen {
+  display: flex; gap: 12px; margin-bottom: 20px; padding: 12px 16px; border-radius: var(--radius);
+  background: #fef3c7; border: 1px solid #f5d98a; font-size: 0.8rem; line-height: 1.6; color: #78350f;
+}
+.tool-visitors .vis-frozen-icon { flex-shrink: 0; margin-top: 3px; }
+.tool-visitors .vis-frozen-title { font-weight: 600; }
+.tool-visitors .vis-gap {
+  display: inline-block; margin: 2px 6px 2px 0; padding: 1px 9px; border-radius: 20px; font-size: 0.72rem; font-weight: 600;
+}
+.tool-visitors .vis-gap-0 { background: #dc2626; color: #ffffff; }
+.tool-visitors .vis-gap-50 { background: #c2410c; color: #ffffff; }
+.tool-visitors .vis-gap-75 { background: #fde68a; color: #78350f; }
+.tool-visitors .vis-gap-90 { background: #fef9c3; color: #78350f; border: 1px solid #f5d98a; }
+
+.tool-visitors .vis-scope { margin: -8px 0 16px; font-size: 0.78rem; color: var(--text-muted); }
+.tool-visitors .vis-note {
+  margin-bottom: 20px; padding: 10px 14px; border-radius: var(--radius-sm); background: var(--bg-card);
+  border: 1px solid var(--border); font-size: 0.8rem; line-height: 1.5; color: var(--text-muted);
+}
+
+/* Key takeaways (v1's Key Insights box) */
+.tool-visitors .vis-takeaways { background: #eef4fa; border-color: #c9dcee; }
+.tool-visitors .vis-takeaways .card-title { color: var(--primary); }
+.tool-visitors .vis-takeaways ul { display: grid; gap: 6px; list-style: none; }
+.tool-visitors .vis-takeaways li { position: relative; padding-left: 16px; font-size: 0.85rem; line-height: 1.55; }
+.tool-visitors .vis-takeaways li::before {
+  content: ''; position: absolute; left: 0; top: 0.6em; width: 6px; height: 6px; border-radius: 50%; background: var(--primary);
+}
+
+.tool-visitors .vis-swatch { display: inline-block; width: 10px; height: 10px; margin-right: 8px; border-radius: 2px; vertical-align: middle; }
+.tool-visitors .vis-legend { margin-top: 8px; font-size: 0.72rem; color: var(--text-dim); }
+
+@media (max-width: 767px) {
+  .tool-visitors .vis-chart { height: 280px; }
+  .tool-visitors .vis-chart-tall { height: 340px; }
+}
+
+@media print {
+  .tool-visitors .vis-frozen { margin-bottom: 12px; padding: 8px 12px; font-size: 0.72rem; break-inside: avoid; }
+  .tool-visitors .vis-scope { margin: 0 0 10px; }
+  .tool-visitors .vis-keep { break-inside: avoid; }
+  .tool-visitors .vis-takeaways li { font-size: 0.78rem; }
+}

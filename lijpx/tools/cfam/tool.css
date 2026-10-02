@@ -1,0 +1,143 @@
+/* CFAM Dashboard. Everything is scoped under .tool-cfam. */
+
+.tool-cfam .page-note { margin-bottom: 20px; font-size: 0.8rem; font-style: italic; color: var(--text-dim); }
+.tool-cfam .chart-note { margin-top: 10px; font-size: 0.75rem; color: var(--text-dim); }
+.tool-cfam .section-header { margin-top: 32px; }
+.tool-cfam .page-controls + .section-header { margin-top: 0; }
+.tool-cfam .chart-trend { height: 320px; }
+
+/* Executive summary (Overview) */
+.tool-cfam .exec-summary {
+  margin-bottom: 12px; padding: 24px 28px; border-radius: var(--radius);
+  background: linear-gradient(135deg, #0a2240, #103764); color: rgba(255, 255, 255, 0.92);
+}
+.tool-cfam .summary-label {
+  margin-bottom: 8px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.7);
+}
+.tool-cfam .summary-text { font-size: 1.05rem; line-height: 1.7; }
+.tool-cfam .summary-text strong { font-weight: 600; color: #ffffff; }
+
+/* Unit rankings (Overview) */
+.tool-cfam .rank-list { display: flex; flex-direction: column; gap: 8px; list-style: none; }
+.tool-cfam .rank-item {
+  display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-radius: var(--radius-sm); background: var(--bg);
+}
+.tool-cfam .rank-num { width: 24px; flex-shrink: 0; text-align: center; font-family: var(--font-mono); font-weight: 600; color: var(--text-muted); }
+.tool-cfam .rank-name { flex: 1; min-width: 0; font-weight: 500; }
+.tool-cfam .low-n {
+  display: inline-block; margin-left: 6px; padding: 2px 6px; border-radius: 4px; vertical-align: middle;
+  background: #fef3c7; color: #92400e; font-size: 0.6rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em;
+}
+.tool-cfam .rank-bar-wrap { flex: 2; height: 8px; overflow: hidden; border-radius: 4px; background: var(--border); }
+.tool-cfam .rank-bar { display: block; height: 100%; border-radius: 4px; background: var(--primary); }
+.tool-cfam .rank-bar-low { opacity: 0.4; }
+.tool-cfam .rank-score { width: 84px; text-align: right; font-family: var(--font-mono); font-weight: 600; white-space: nowrap; }
+.tool-cfam .rank-none { font-family: var(--font); font-size: 0.8rem; font-weight: 400; font-style: italic; color: var(--text-dim); }
+.tool-cfam .rank-n { width: 48px; text-align: right; font-size: 0.75rem; color: var(--text-dim); }
+.tool-cfam .rank-change { width: 48px; text-align: right; font-family: var(--font-mono); font-size: 0.8rem; font-weight: 600; color: var(--text-dim); }
+.tool-cfam .rank-change.tone-green { color: var(--green-text); }
+.tool-cfam .rank-change.tone-red { color: var(--red-text); }
+
+/* Focus areas (Unit Performance) and movers (Insights) */
+.tool-cfam .focus-list { display: flex; flex-direction: column; gap: 8px; }
+.tool-cfam .focus-item {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 4px 16px; padding: 12px 16px;
+  border-radius: var(--radius-sm); border-left: 4px solid var(--primary); background: var(--bg-hover);
+}
+.tool-cfam .mover-up { border-left-color: var(--green); background: #f0fdf4; }
+.tool-cfam .mover-down { border-left-color: var(--red); background: #fef2f2; }
+.tool-cfam .mover-flat { border-left-color: var(--border-hover); }
+.tool-cfam .focus-unit { min-width: 140px; font-weight: 600; }
+.tool-cfam .focus-domain { flex: 1; min-width: 160px; color: var(--text-muted); }
+.tool-cfam .focus-score { font-family: var(--font-mono); font-size: 0.85rem; font-weight: 600; }
+.tool-cfam .focus-trend { min-width: 120px; text-align: right; font-size: 0.8rem; font-weight: 600; color: var(--text-dim); }
+.tool-cfam .focus-trend.tone-green { color: var(--green-text); }
+.tool-cfam .focus-trend.tone-red { color: var(--red-text); }
+
+/* Score tables: heat map and momentum. Shading is set per cell from the score (model.js). */
+.tool-cfam .heat-table th { white-space: normal; vertical-align: bottom; }
+.tool-cfam .heat-table th.num { min-width: 84px; }
+.tool-cfam .heat-cell { color: var(--text); font-weight: 600; }
+.tool-cfam .low-n-cell { color: var(--text-dim); font-style: italic; }
+.tool-cfam .cell-n { display: block; font-size: 0.65rem; }
+.tool-cfam .n-cell { color: var(--text-dim); font-size: 0.75rem; }
+.tool-cfam .shade-legend {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; font-size: 0.75rem; color: var(--text-dim);
+}
+.tool-cfam .shade-scale {
+  display: inline-block; width: 120px; height: 10px; border-radius: 3px;
+  background: linear-gradient(90deg, rgba(0, 89, 165, 0.04), rgba(0, 89, 165, 0.5));
+}
+.tool-cfam .shade-legend-note { margin-left: 8px; }
+
+.tool-cfam .scroll-hint { margin-bottom: 8px; font-size: 0.75rem; color: var(--text-dim); }
+.tool-cfam .momentum-table th.num { min-width: 64px; white-space: normal; vertical-align: bottom; }
+.tool-cfam .momentum-table th:first-child,
+.tool-cfam .momentum-table td:first-child { position: sticky; left: 0; z-index: 1; background: var(--bg-card); }
+.tool-cfam .momentum-table th:first-child { z-index: 2; background: var(--bg-hover); }
+.tool-cfam .momentum-table td.streak { font-family: var(--font); font-weight: 600; white-space: nowrap; color: var(--text-dim); }
+.tool-cfam .momentum-table td.streak.tone-green { color: var(--green-text); }
+.tool-cfam .momentum-table td.streak.tone-red { color: var(--red-text); }
+
+/* Year over year (Insights) */
+.tool-cfam .insight-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 20px; }
+.tool-cfam .insight-item { padding: 16px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-card); }
+.tool-cfam .insight-label {
+  margin-bottom: 8px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-dim);
+}
+.tool-cfam .insight-value { font-family: var(--font-mono); font-size: 1.5rem; font-weight: 600; }
+.tool-cfam .insight-detail { margin-top: 4px; font-size: 0.8rem; color: var(--text-muted); }
+.tool-cfam .insight-change { font-weight: 600; }
+.tool-cfam .insight-n { margin-top: 4px; font-size: 0.7rem; color: var(--text-dim); }
+
+/* Benchmark (Insights) */
+.tool-cfam .bench-row { display: flex; align-items: center; gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.tool-cfam .bench-row:last-of-type { border-bottom: none; }
+.tool-cfam .bench-label { width: 220px; flex-shrink: 0; font-weight: 500; }
+.tool-cfam .bench-gap { display: block; margin-top: 2px; font-size: 0.72rem; font-weight: 600; color: var(--text-dim); }
+.tool-cfam .bench-bars { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.tool-cfam .bench-bar-row { display: flex; align-items: center; gap: 8px; }
+.tool-cfam .bench-bar-label { width: 40px; flex-shrink: 0; text-align: right; font-size: 0.7rem; color: var(--text-dim); }
+.tool-cfam .bench-bar-track { flex: 1; height: 12px; overflow: hidden; border-radius: 6px; background: var(--border); }
+.tool-cfam .bench-bar-fill { display: block; height: 100%; border-radius: 6px; }
+.tool-cfam .bench-ours { background: var(--primary); }
+.tool-cfam .bench-theirs { background: var(--accent); }
+.tool-cfam .bench-bar-val { width: 110px; flex-shrink: 0; font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); }
+
+@media (max-width: 767px) {
+  .tool-cfam .exec-summary { padding: 18px 20px; }
+  .tool-cfam .summary-text { font-size: 0.95rem; }
+  /* Two lines per unit: rank and name, then score, n and change. */
+  .tool-cfam .rank-item { flex-wrap: wrap; gap: 2px 8px; padding: 10px 12px; }
+  .tool-cfam .rank-name { flex-basis: calc(100% - 40px); }
+  .tool-cfam .rank-bar-wrap { display: none; }
+  .tool-cfam .rank-score { width: auto; margin-left: 32px; text-align: left; }
+  .tool-cfam .rank-n { width: auto; }
+  .tool-cfam .rank-change { width: auto; margin-left: auto; }
+  .tool-cfam .focus-unit, .tool-cfam .focus-domain { min-width: 0; }
+  .tool-cfam .focus-domain { flex-basis: 100%; }
+  .tool-cfam .focus-trend { min-width: 0; margin-left: auto; }
+  .tool-cfam .bench-row { flex-direction: column; align-items: stretch; gap: 6px; }
+  .tool-cfam .bench-label { width: auto; }
+  .tool-cfam .bench-bar-val { width: 96px; }
+}
+
+@media print {
+  .tool-cfam .exec-summary { padding: 16px 20px; break-inside: avoid; }
+  .tool-cfam .summary-text { font-size: 0.9rem; }
+  .tool-cfam .kpi-row { grid-template-columns: repeat(5, 1fr) !important; }
+  .tool-cfam .rank-item, .tool-cfam .focus-item, .tool-cfam .insight-item, .tool-cfam .bench-row { break-inside: avoid; }
+  .tool-cfam .rank-item { padding: 6px 12px; }
+  .tool-cfam .focus-item { padding: 8px 12px; }
+  .tool-cfam .insight-grid { grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .tool-cfam .insight-item { padding: 10px; }
+  .tool-cfam .insight-value { font-size: 1.2rem; }
+  .tool-cfam .scroll-hint { display: none; }
+  .tool-cfam .momentum-table { font-size: 0.55rem; }
+  .tool-cfam .momentum-table th, .tool-cfam .momentum-table td { padding: 3px 2px; }
+  .tool-cfam .momentum-table th.num { min-width: 0; }
+  .tool-cfam .momentum-table th:first-child, .tool-cfam .momentum-table td:first-child { position: static; }
+  .tool-cfam .momentum-table td.name { white-space: normal; }
+  .tool-cfam .heat-table th.num { min-width: 0; }
+}

@@ -1,0 +1,47 @@
+/* Print: the open page of one tool on US Letter. The shell fills .print-header and sets
+   data-print-orientation on <html> for that page (see shell/print.js).
+   Tool print rules may restyle cards and grids, but must not change the horizontal padding,
+   margin or border of anything that contains a chart: the shell sizes charts for paper from
+   their on-screen insets. */
+
+@page { size: letter portrait; margin: 0.5in; }
+@page landscape { size: letter landscape; margin: 0.5in; }
+html[data-print-orientation='landscape'] body { page: landscape; }
+
+* { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+html, body { height: auto !important; overflow: visible !important; background: #ffffff !important; }
+
+.topbar, .sidebar, .scrim, .tool-header, .tab-nav, .page-controls, .export-bar { display: none !important; }
+.app, .main, .view, .tool-view, .tab-content {
+  display: block !important; height: auto !important; overflow: visible !important;
+  margin: 0 !important; padding: 0 !important;
+}
+.page { animation: none !important; }
+.chart-tooltip { display: none !important; }
+
+.print-header:not([hidden]) {
+  display: flex !important; justify-content: space-between; align-items: flex-end; gap: 16px;
+  margin-bottom: 20px; padding-bottom: 12px; border-bottom: 3px solid #0059a5;
+}
+.print-tool { font-size: 0.8rem; color: #555555; }
+.print-title { font-size: 1.4rem; font-weight: 700; line-height: 1.2; color: #0059a5; }
+.print-meta { text-align: right; font-size: 0.75rem; color: #555555; }
+
+.glass-card, .kpi-card { box-shadow: none !important; border-color: #dddddd !important; break-inside: avoid; }
+.glass-card:has(.data-table-wrap) { break-inside: auto; }
+.kpi-row { grid-template-columns: repeat(4, 1fr) !important; gap: 12px !important; margin-bottom: 16px !important; }
+.kpi-card { padding: 14px !important; }
+.kpi-value { font-size: 1.4rem !important; }
+.section-header, .card-title { break-after: avoid; }
+
+/* Tables fit the paper width: headers wrap and cells tighten instead of running off the page. */
+.data-table-wrap { overflow: visible !important; border-color: #dddddd; }
+.data-table { font-size: 0.72rem; }
+.data-table thead { display: table-header-group; }
+.data-table th {
+  position: static; padding: 6px; white-space: normal; vertical-align: bottom; font-size: 0.6rem;
+  background: #f0f0f0 !important; color: #000000 !important;
+}
+.data-table th.num { min-width: 0; }
+.data-table td { padding: 4px 6px; color: #333333; }
+.data-table tr { break-inside: avoid; }

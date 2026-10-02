@@ -1,0 +1,159 @@
+/* Handwritten Call Log Analysis. Everything is scoped under .tool-call-logs. */
+
+.tool-call-logs .cl-caption { margin-bottom: 12px; font-size: 0.8rem; line-height: 1.5; color: var(--text-muted); }
+.tool-call-logs .cl-showing { margin-bottom: 8px; font-size: 0.8rem; font-weight: 600; }
+
+/* Archive note */
+.tool-call-logs .cl-archive {
+  display: flex; gap: 12px; margin-bottom: 20px; padding: 14px 18px; border-radius: var(--radius);
+  background: #eef4fa; border: 1px solid #c9dcee; font-size: 0.82rem; line-height: 1.5; color: var(--text-muted);
+}
+.tool-call-logs .cl-archive-icon { flex-shrink: 0; margin-top: 2px; color: var(--primary); }
+.tool-call-logs .cl-archive-title { font-weight: 600; color: var(--navy); }
+
+/* Overview */
+.tool-call-logs .cl-kpis { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+.tool-call-logs .cl-findings { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 20px; }
+.tool-call-logs .cl-finding {
+  padding: 16px 18px; border-radius: var(--radius); background: var(--bg-card);
+  border: 1px solid var(--border); border-left: 4px solid var(--border); box-shadow: var(--shadow-sm);
+}
+.tool-call-logs .cl-finding-orange { border-left-color: #eb6834; }
+.tool-call-logs .cl-finding-blue { border-left-color: var(--primary); }
+.tool-call-logs .cl-finding-red { border-left-color: #c0451a; }
+.tool-call-logs .cl-finding-figure { font-family: var(--font-mono); font-size: 1.6rem; font-weight: 700; line-height: 1.1; color: var(--primary); }
+.tool-call-logs .cl-finding-headline { margin-top: 6px; font-size: 0.85rem; font-weight: 600; line-height: 1.4; color: var(--navy); }
+.tool-call-logs .cl-finding-detail { margin-top: 6px; font-size: 0.8rem; line-height: 1.55; color: var(--text-muted); }
+.tool-call-logs .cl-plays { display: grid; gap: 10px; list-style: none; }
+.tool-call-logs .cl-plays li {
+  display: flex; align-items: flex-start; gap: 12px; padding: 10px 12px; border-radius: var(--radius-sm);
+  background: var(--bg-hover); border: 1px solid var(--border);
+}
+.tool-call-logs .cl-play-badge {
+  flex-shrink: 0; padding: 3px 7px; border-radius: 6px; background: #c0451a; color: #ffffff;
+  font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700;
+}
+.tool-call-logs .cl-play-text { font-size: 0.85rem; line-height: 1.5; }
+.tool-call-logs .cl-play-why { margin-top: 2px; font-size: 0.75rem; color: var(--text-dim); }
+
+/* Heat maps */
+.tool-call-logs .cl-heat-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 4px; }
+.tool-call-logs .cl-heat { width: 100%; min-width: 680px; border-collapse: separate; border-spacing: 2px; table-layout: fixed; }
+.tool-call-logs .cl-heat th { font-weight: 600; color: var(--text-dim); }
+.tool-call-logs .cl-heat .cl-corner { width: 48px; }
+.tool-call-logs .cl-heat-wide-labels .cl-corner { width: 104px; }
+.tool-call-logs .cl-shift { padding: 2px 0; border-radius: 3px; background: #f2f5f9; font-size: 0.68rem; text-align: center; }
+.tool-call-logs .cl-hour { padding-bottom: 2px; font-size: 0.66rem; font-weight: 500; text-align: center; }
+.tool-call-logs .cl-row-label {
+  position: sticky; left: 0; z-index: 1; padding-right: 6px; background: var(--bg-card);
+  font-size: 0.72rem; color: var(--text-muted); text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.tool-call-logs .cl-cell {
+  height: 26px; border-radius: 3px; background: #f5f7fa; cursor: pointer; text-align: center;
+  font-size: 0.64rem; font-weight: 600; font-variant-numeric: tabular-nums; transition: transform 0.08s;
+}
+.tool-call-logs .cl-cell:hover { position: relative; z-index: 2; transform: scale(1.15); box-shadow: 0 2px 8px rgba(10, 34, 64, 0.28); }
+.tool-call-logs .cl-shift-start { box-shadow: inset 1.5px 0 0 #c4d2e0; }
+.tool-call-logs .cl-thin,
+.tool-call-logs .cl-legend-thin {
+  background: repeating-linear-gradient(45deg, #f6f8fa, #f6f8fa 3px, #e8ecf1 3px, #e8ecf1 6px);
+  color: var(--text-dim);
+}
+.tool-call-logs .cl-selected { outline: 2.5px solid var(--navy); outline-offset: -1px; }
+.tool-call-logs .cl-cell:focus-visible { position: relative; z-index: 2; outline: 2.5px solid var(--accent); outline-offset: -1px; }
+.tool-call-logs .cl-legend {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 10px; font-size: 0.72rem; color: var(--text-dim);
+}
+.tool-call-logs .cl-legend-bar { width: 140px; height: 10px; border-radius: 3px; }
+.tool-call-logs .cl-legend-bar-short { width: 52px; }
+.tool-call-logs .cl-legend-thin { display: inline-block; width: 16px; height: 10px; margin-left: 8px; border-radius: 2px; }
+.tool-call-logs .cl-detail {
+  min-height: 64px; margin-top: 12px; padding: 12px 14px; border-radius: var(--radius-sm);
+  background: #f7f9fc; border: 1px solid var(--border); font-size: 0.8rem; line-height: 1.55; color: var(--text-muted);
+}
+.tool-call-logs .cl-detail-title { margin-bottom: 4px; font-size: 0.88rem; font-weight: 600; color: var(--navy); }
+.tool-call-logs .cl-tip {
+  position: fixed; z-index: 50; max-width: 300px; padding: 10px 12px; pointer-events: none;
+  border-radius: 6px; background: #ffffff; border: 1px solid var(--border); box-shadow: var(--shadow-md);
+}
+.tool-call-logs .cl-tip .chart-tip { font-size: 12px; }
+.tool-call-logs .cl-tip .chart-tip-value { white-space: nowrap; }
+
+/* Chips (detail panels and staff) */
+.tool-call-logs .cl-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.tool-call-logs .cl-chip {
+  padding: 3px 8px; border-radius: 6px; background: var(--bg-card); border: 1px solid var(--border);
+  font-size: 0.75rem; color: var(--text);
+}
+.tool-call-logs .cl-chip b { color: var(--primary); }
+.tool-call-logs .cl-staff .cl-chip { padding: 5px 9px; background: #f0f4f9; font-size: 0.8rem; }
+
+/* Call Reasons */
+.tool-call-logs .cl-buckets { display: grid; gap: 10px; }
+.tool-call-logs .cl-bucket { display: grid; grid-template-columns: minmax(150px, 2fr) 3fr 44px; gap: 12px; align-items: center; font-size: 0.82rem; }
+.tool-call-logs .cl-bucket-label { font-weight: 600; }
+.tool-call-logs .cl-bucket-note { display: block; font-size: 0.72rem; font-weight: 400; line-height: 1.4; color: var(--text-dim); }
+.tool-call-logs .cl-bucket-track { height: 18px; overflow: hidden; border-radius: 5px; background: #f0f3f7; }
+.tool-call-logs .cl-bucket-fill { height: 100%; border-radius: 5px; }
+.tool-call-logs .cl-bucket-pct { font-family: var(--font-mono); text-align: right; color: var(--text-muted); }
+.tool-call-logs .cl-callout {
+  margin-top: 14px; padding: 10px 12px; border-radius: var(--radius-sm); background: #fbfaf7; border: 1px solid var(--border);
+  font-size: 0.8rem; line-height: 1.55; color: var(--text-muted);
+}
+.tool-call-logs .cl-profiles td { vertical-align: top; white-space: nowrap; }
+.tool-call-logs .cl-profiles td.cl-wording { white-space: normal; }
+.tool-call-logs .cl-hot { color: #c0451a; font-weight: 700; }
+.tool-call-logs .cl-wording { min-width: 220px; font-size: 0.75rem; color: var(--text-dim); }
+.tool-call-logs .cl-pill { display: inline-block; padding: 1px 8px; border-radius: 20px; font-size: 0.72rem; font-weight: 600; }
+.tool-call-logs .cl-pill-day { background: #e6eff8; color: var(--primary); }
+.tool-call-logs .cl-pill-evening { background: #fdece3; color: #b5481a; }
+.tool-call-logs .cl-pill-night { background: #e7f4ef; color: #0f7a53; }
+
+/* Calls by Hour and Over Time */
+.tool-call-logs .cl-chart { height: 300px; }
+.tool-call-logs .cl-key { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 4px; font-size: 0.75rem; color: var(--text-muted); }
+.tool-call-logs .cl-key-swatch { display: inline-block; width: 10px; height: 10px; margin-right: 5px; border-radius: 2px; vertical-align: middle; }
+.tool-call-logs .cl-key-line {
+  display: inline-block; width: 16px; margin-right: 5px; border-top: 2px dashed var(--navy); vertical-align: middle;
+}
+
+/* Staff Named */
+.tool-call-logs .cl-caution {
+  margin-top: 12px; padding: 10px 12px; border-radius: var(--radius-sm); background: #fbfaf7; border: 1px solid var(--border);
+  font-size: 0.8rem; line-height: 1.55; color: var(--text-muted);
+}
+.tool-call-logs .cl-caution-warn { background: #fdf2ef; border-color: #f3d3c7; border-left: 3px solid #c0451a; }
+.tool-call-logs .cl-caution ul { margin-top: 4px; padding-left: 18px; }
+.tool-call-logs .cl-caution strong { color: var(--text); }
+
+@media (max-width: 767px) {
+  .tool-call-logs .cl-kpis { grid-template-columns: 1fr 1fr; }
+  .tool-call-logs .cl-findings { grid-template-columns: 1fr; }
+  .tool-call-logs .cl-bucket { grid-template-columns: 1fr 44px; }
+  .tool-call-logs .cl-bucket-label { grid-column: 1 / -1; }
+  .tool-call-logs .cl-chart { height: 260px; }
+}
+
+@media print {
+  .tool-call-logs .cl-tip { display: none !important; }
+  .tool-call-logs .cl-archive { break-inside: avoid; }
+  .tool-call-logs .cl-kpis { grid-template-columns: repeat(3, 1fr) !important; }
+  .tool-call-logs .cl-findings { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .tool-call-logs .cl-finding { padding: 10px 12px; box-shadow: none; break-inside: avoid; }
+  .tool-call-logs .cl-finding-figure { font-size: 1.2rem; }
+  .tool-call-logs .cl-finding-detail { font-size: 0.72rem; }
+  .tool-call-logs .cl-plays-card { break-inside: auto; }
+  .tool-call-logs .cl-plays li { padding: 6px 10px; break-inside: avoid; }
+  .tool-call-logs .cl-heat-wrap { overflow: visible; }
+  .tool-call-logs .cl-heat { min-width: 0; border-spacing: 1.5px; }
+  .tool-call-logs .cl-heat .cl-corner { width: 40px; }
+  .tool-call-logs .cl-heat-wide-labels .cl-corner { width: 88px; }
+  .tool-call-logs .cl-cell { height: 30px; font-size: 0.6rem; }
+  .tool-call-logs .cl-cell:hover { transform: none; box-shadow: none; }
+  .tool-call-logs .cl-row-label { position: static; font-size: 0.66rem; }
+  .tool-call-logs .cl-hour { font-size: 0.58rem; }
+  .tool-call-logs .cl-detail { min-height: 0; break-inside: avoid; }
+  .tool-call-logs .cl-detail-hint { display: none; }
+  .tool-call-logs .cl-bucket { break-inside: avoid; }
+  .tool-call-logs .cl-caution { break-inside: avoid; }
+}

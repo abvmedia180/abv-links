@@ -1,0 +1,72 @@
+/* What Matters Most. Everything is scoped under .tool-what-matters-most.
+   The poster is v1's US Letter design in v1's fonts: Playfair Display for the headline and tagline,
+   Source Sans 3 for the labels, Inter for the small line above the headline. Every size is a share
+   of the poster's width (cqw; v1's pixel sizes divided by its 816 px page), so it keeps its
+   proportions on a phone, a monitor and paper. Positions on the ring are v1's clock-face percentages. */
+
+@font-face { font-family: 'Playfair Display'; font-style: normal; font-weight: 800; font-display: swap; src: url('../../vendor/playfair-display-5.3.0/playfair-display-latin-800-normal.woff2?v=576ff9c33a') format('woff2'); }
+@font-face { font-family: 'Playfair Display'; font-style: italic; font-weight: 400; font-display: swap; src: url('../../vendor/playfair-display-5.3.0/playfair-display-latin-400-italic.woff2?v=eabce94d4a') format('woff2'); }
+@font-face { font-family: 'Source Sans 3'; font-style: normal; font-weight: 700; font-display: swap; src: url('../../vendor/source-sans-3-5.3.0/source-sans-3-latin-700-normal.woff2?v=ae35266f2a') format('woff2'); }
+@font-face { font-family: 'Inter'; font-style: normal; font-weight: 700; font-display: swap; src: url('../../vendor/inter-5.3.0/inter-latin-700-normal.woff2?v=6f56409fd3') format('woff2'); }
+
+.tool-what-matters-most {
+  --wmm-paper: #f8f7f4;
+  --wmm-navy: #003366;
+  --wmm-teal: #007a87;
+  --wmm-kicker: #427a81; /* v1's #5ba4ad, darkened to pass WCAG AA on the paper color */
+  --wmm-tagline: #4a5b6e;
+  --wmm-serif: 'Playfair Display', Georgia, serif;
+  --wmm-sans: 'Source Sans 3', var(--font);
+  --wmm-kicker-font: 'Inter', var(--font);
+}
+
+.tool-what-matters-most .poster {
+  position: relative; overflow: hidden; width: min(100%, 8.5in, calc((100vh - 190px) * 8.5 / 11));
+  aspect-ratio: 8.5 / 11; margin: 0 auto; border: 1px solid var(--border); box-shadow: var(--shadow-md);
+  background: var(--wmm-paper); font-family: var(--wmm-sans); container-type: inline-size;
+}
+.tool-what-matters-most .poster-bar {
+  position: absolute; top: 0; left: 0; right: 0; height: 0.86cqw;
+  background: linear-gradient(90deg, #007a87 0%, #009aab 100%);
+}
+.tool-what-matters-most .poster-ring {
+  position: absolute; top: 20%; left: 11.18%; width: 77.65%; aspect-ratio: 1; border-radius: 50%;
+  border: max(1px, 0.18cqw) solid rgba(0, 122, 135, 0.18);
+  background: radial-gradient(circle, rgba(0, 122, 135, 0.03) 0%, transparent 55%);
+}
+
+.tool-what-matters-most .poster-center {
+  position: absolute; top: 50%; left: 50%; width: 41.18%; text-align: center; transform: translate(-50%, -50%);
+}
+.tool-what-matters-most .poster-eyebrow {
+  margin-bottom: 2.2cqw; font-family: var(--wmm-kicker-font); font-size: 1.1cqw; font-weight: 700;
+  letter-spacing: 0.61cqw; text-transform: uppercase; color: var(--wmm-kicker);
+}
+.tool-what-matters-most .poster-headline { font-family: var(--wmm-serif); font-size: 8.33cqw; line-height: 1.04; }
+.tool-what-matters-most .poster-headline span { display: block; font-weight: 800; letter-spacing: -0.12cqw; color: var(--wmm-navy); }
+.tool-what-matters-most .poster-headline .accent { font-weight: 400; font-style: italic; letter-spacing: 0; color: var(--wmm-teal); }
+.tool-what-matters-most .poster-rule { width: 4.41cqw; height: 0.245cqw; margin: 2.45cqw auto; background: var(--wmm-teal); opacity: 0.55; }
+.tool-what-matters-most .poster-tagline { font-family: var(--wmm-serif); font-size: 1.65cqw; font-style: italic; color: var(--wmm-tagline); }
+
+.tool-what-matters-most .poster-item {
+  position: absolute; display: flex; flex-direction: column; align-items: center; gap: 1.23cqw;
+  text-align: center; transform: translate(-50%, -50%);
+}
+.tool-what-matters-most .at-11 { top: 24%; left: 30.6%; }
+.tool-what-matters-most .at-2 { top: 35%; left: 83.6%; }
+.tool-what-matters-most .at-5 { top: 76%; left: 69.4%; }
+.tool-what-matters-most .at-7 { top: 76%; left: 30.6%; }
+.tool-what-matters-most .poster-label {
+  max-width: 12.94cqw; font-size: 1.41cqw; font-weight: 700; line-height: 1.3; color: var(--wmm-navy);
+}
+.tool-what-matters-most .poster-bubble {
+  display: flex; align-items: center; justify-content: center; width: 8.82cqw; height: 8.82cqw; border-radius: 50%;
+  background: var(--wmm-teal); box-shadow: 0 0.74cqw 2.45cqw rgba(0, 122, 135, 0.3), 0 0 0 0.49cqw rgba(0, 122, 135, 0.1);
+}
+.tool-what-matters-most .poster-bubble svg { width: 4.17cqw; height: 4.17cqw; }
+
+@media print {
+  /* The page prints without the shell's header (printHeader: false), so the poster takes the full
+     width inside the Letter margins: 7.5 by 9.7 inches on one sheet. */
+  .tool-what-matters-most .poster { width: 7.5in; border: none; box-shadow: none; break-inside: avoid; }
+}
