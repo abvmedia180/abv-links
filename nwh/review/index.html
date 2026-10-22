@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive"><meta name="referrer" content="no-referrer">
+<title>Nomination Review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0a2240;--blue:#003CA5;--bright:#009ADF;--gold:#C9962B;--bg:#f0f2f5;--card:#fff;--line:#e5e7eb;--line2:#f1f3f6;
+--text:#1a1a2e;--muted:#5f6b7a;--dim:#7b8696;--green:#1f7a4d;--red:#b42318;--amber:#8a5a00;--font:'IBM Plex Sans',-apple-system,'Segoe UI',sans-serif;
+--serif:'IBM Plex Serif',Georgia,serif;--shadow:0 1px 2px rgba(16,24,40,.05),0 1px 3px rgba(16,24,40,.06);color-scheme:light}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%}
+body{font:15px/1.5 var(--font);color:var(--text);background:var(--bg)}
+button{font:inherit}[hidden]{display:none!important}
+/* gate + name */
+.center{min-height:100vh;display:grid;place-items:center;padding:24px}
+.box{width:100%;max-width:380px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:30px 30px 26px}
+.box h1{font-family:var(--serif);font-weight:500;font-size:24px;color:var(--navy);margin:0 0 18px}
+.box label{display:block;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:6px}
+.box input,.box select{width:100%;border:1px solid #cfd5de;border-radius:8px;padding:10px 12px;font:inherit;font-size:15px;background:#fff;color:var(--text)}
+.box input:focus,.box select:focus,.search:focus,.sel:focus{outline:2px solid var(--bright);outline-offset:1px;border-color:transparent}
+.go{width:100%;margin-top:14px;padding:11px;border:0;border-radius:8px;background:var(--navy);color:#fff;font-weight:600;font-size:15px;cursor:pointer}
+.go:disabled{opacity:.55;cursor:default}
+.err{color:var(--red);font-size:13.5px;margin-top:10px;min-height:20px}
+.box .note{font-size:13px;color:var(--muted);margin:-8px 0 16px}
+.box img{height:30px;margin-bottom:18px}
+/* app */
+#app{display:grid;grid-template-columns:248px minmax(0,1fr);min-height:100vh}
+.side{background:var(--navy);color:#cdd6e3;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+.brand{padding:22px 22px 18px;border-bottom:1px solid rgba(255,255,255,.08)}
+.brand .ey{font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:#8fa3bf}
+.brand .t{font-size:19px;font-weight:600;color:#fff;margin-top:4px;line-height:1.25}
+.prog{display:flex;align-items:center;gap:12px;padding:16px 22px;border-bottom:1px solid rgba(255,255,255,.08)}
+.ring{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;flex-shrink:0}
+.ring i{width:36px;height:36px;border-radius:50%;background:var(--navy);display:grid;place-items:center;font-style:normal;font-size:12px;font-weight:600;color:#fff}
+.prog b{display:block;color:#fff;font-weight:600;font-size:14px}.prog span{font-size:12px;white-space:nowrap}
+.list{padding:10px 0;overflow:auto;flex:1}
+.list .h{font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:#7f93b0;padding:8px 22px}
+.aw{display:flex;align-items:center;gap:10px;padding:9px 22px;font-size:14px;color:#cdd6e3;cursor:pointer;border:0;border-left:3px solid transparent;background:none;width:100%;text-align:left}
+.aw:hover{background:rgba(255,255,255,.04)}
+.aw.on{background:rgba(255,255,255,.08);border-left-color:var(--bright);color:#fff;font-weight:500}
+.aw .st{margin-left:auto;font-size:12px;color:#8fa3bf;font-variant-numeric:tabular-nums}
+.ok{width:16px;height:16px;border-radius:50%;background:var(--bright);display:grid;place-items:center;flex-shrink:0}
+.ok svg{width:10px;height:10px}.dot{width:16px;height:16px;border-radius:50%;border:1.5px solid #4a5f7f;flex-shrink:0}
+.dot.half{border-color:var(--bright);background:linear-gradient(90deg,var(--bright) 50%,transparent 50%)}
+.foot{padding:16px 22px;border-top:1px solid rgba(255,255,255,.08);font-size:12.5px;line-height:1.5}
+.foot b{color:#fff;font-weight:500}.foot a{color:#8fa3bf;cursor:pointer}.foot a:hover{color:#fff}
+.top{background:#fff;border-bottom:1px solid var(--line);padding:12px 32px;display:flex;align-items:center;gap:18px;position:sticky;top:0;z-index:5}
+.top img{height:26px}.top .sp{flex:1}.top .who{font-size:13.5px;color:var(--muted)}.top .who b{color:var(--text);font-weight:600}
+.saved{font-size:12.5px;color:var(--green);display:flex;align-items:center;gap:6px}
+.saved::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.saved.busy{color:var(--muted)}.saved.bad{color:var(--red)}
+.banner{margin:18px 32px 0;padding:12px 16px;border-radius:10px;font-size:14px;display:flex;gap:14px;align-items:center}
+.banner.done{background:#fff;border:1px solid var(--line);border-left:4px solid var(--green);color:var(--text);box-shadow:var(--shadow)}.banner.done b{color:var(--green)}.banner.late{background:#fff6e5;border:1px solid #f0d49a;color:#6b4500}
+.banner button{margin-left:auto;border:1px solid currentColor;background:#fff;color:inherit;border-radius:8px;padding:6px 12px;font-weight:600;cursor:pointer;font-size:13.5px}
+.rk.none{visibility:hidden}
+.body{display:grid;grid-template-columns:minmax(0,980px) clamp(270px,21vw,360px);gap:28px;padding:26px 32px 60px}
+.hero .ey{font-size:11.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--muted)}
+.hero h1{font-family:var(--serif);font-weight:500;font-size:30px;color:var(--navy);margin:4px 0 6px;line-height:1.2}
+.hero p{margin:0;color:var(--muted);max-width:760px}
+.how{margin:16px 0 18px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 16px;font-size:14px;color:var(--muted);display:flex;flex-wrap:wrap;gap:8px 26px}
+.how b{color:var(--text);font-weight:600}.how>span{display:flex;gap:8px;align-items:baseline;white-space:nowrap}
+.how em{font-style:normal;width:20px;height:20px;border-radius:50%;background:var(--navy);color:#fff;font-size:11px;display:inline-grid;place-items:center;flex-shrink:0}
+.tools{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;margin-bottom:8px}
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);flex:1 1 380px;white-space:nowrap}
+.tabs button{padding:9px 14px;font-size:14px;color:var(--muted);border:0;background:none;border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer}
+.tabs button.on{color:var(--blue);border-bottom-color:var(--blue);font-weight:600}
+.tabs small{color:var(--dim);margin-left:4px;font-size:12.5px}
+.search{border:1px solid var(--line);border-radius:8px;padding:8px 12px;font:inherit;font-size:14px;width:200px;background:#fff}
+.sel{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font:inherit;font-size:14px;background:#fff;color:var(--text)}
+.grp{display:flex;align-items:baseline;gap:10px;margin:22px 0 10px}
+.grp h2{font-size:13px;letter-spacing:1.4px;text-transform:uppercase;color:var(--navy);margin:0;font-weight:600}
+.grp span{font-size:13px;color:var(--dim)}
+.empty{padding:28px;text-align:center;color:var(--muted);background:#fff;border:1px dashed #cfd5de;border-radius:12px;margin-top:14px}
+.nom{background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden}
+.nom.win{border-color:var(--blue);box-shadow:0 0 0 1px var(--blue),var(--shadow)}
+.nom.bk{border-color:#8796ad;box-shadow:0 0 0 1px #8796ad,var(--shadow)}
+.row{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:16px;padding:18px 20px 14px}
+.rk{width:36px;height:36px;border-radius:50%;background:var(--line2);color:var(--muted);display:grid;place-items:center;font-weight:600;font-size:14px}
+.nom.win .rk{background:var(--blue);color:#fff}.nom.bk .rk{background:#fff;border:1.5px solid var(--navy);color:var(--navy)}
+.nm{font-size:17px;font-weight:600;color:var(--text)}.role{font-size:13.5px;color:var(--muted)}
+.meta{display:flex;flex-wrap:wrap;gap:4px 18px;margin-top:6px;font-size:13px;color:var(--muted)}
+.meta b{color:var(--text);font-weight:600}
+.bars{display:inline-flex;gap:2px;vertical-align:-1px;margin-right:5px}.bars i{width:6px;height:12px;border-radius:1px;background:#c3cad4}.bars i.f{background:var(--bright)}
+.q{font-family:var(--serif);font-style:italic;font-size:15.5px;line-height:1.55;color:#2a3342;margin:12px 0 4px}
+.q::before{content:"\201C";color:var(--gold);font-size:26px;line-height:0;vertical-align:-8px;margin-right:2px;font-style:normal}
+.qby{font-size:12.5px;color:var(--dim)}
+.why{font-size:13px;color:var(--muted);margin-top:8px}
+.acts{display:flex;flex-direction:column;gap:8px;min-width:132px}
+.b{border:1px solid #cfd5de;background:#fff;border-radius:8px;padding:8px 14px;font-size:14px;font-weight:600;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+.b:hover:not(:disabled){border-color:var(--blue);color:var(--blue)}
+.b:disabled{opacity:.5;cursor:default}
+.b.w.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.b.k.on{background:#e7edf7;border-color:var(--navy);color:var(--navy)}
+.ex{display:flex;justify-content:space-between;align-items:center;gap:16px;border-top:1px solid var(--line2);padding:10px 20px 10px 80px;font-size:13.5px;background:#fbfcfd}
+.ex button{color:var(--blue);font-weight:600;cursor:pointer;border:0;background:none;padding:0;white-space:nowrap;font-size:13.5px}
+.ex span{color:var(--muted)}.ex .also{color:var(--amber)}
+.all{border-top:1px solid var(--line2);padding:6px 20px 14px 80px;background:#fbfcfd}
+.c{padding:10px 0;border-bottom:1px solid var(--line2)}.c:last-child{border-bottom:0}
+.c .by{font-size:12.5px;color:var(--muted);margin-bottom:2px}.c .by b{color:var(--text);font-weight:600}
+.c p{margin:0;font-size:14.5px;white-space:pre-line}.c p.none{color:var(--dim);font-style:italic}
+.tag{font-size:11.5px;font-weight:600;color:var(--gold);letter-spacing:.4px;text-transform:uppercase;margin-left:8px}
+.tag.self{color:var(--muted)}
+.picks{position:sticky;top:78px;align-self:start}
+.pk{background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:18px}
+.pk h3{margin:0;font-size:15px;color:var(--navy)}.pk .s{font-size:13px;color:var(--muted);margin:2px 0 14px}
+.meter{height:6px;background:var(--line2);border-radius:3px;margin-bottom:14px}.meter i{display:block;height:6px;background:var(--blue);border-radius:3px;transition:width .2s}
+.slot{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line2);font-size:14px;min-height:39px}
+.slot .n{width:22px;height:22px;border-radius:50%;background:var(--blue);color:#fff;font-size:11.5px;font-weight:600;display:grid;place-items:center;flex-shrink:0}
+.slot .r{margin-left:auto;color:var(--dim);font-size:18px;line-height:1;cursor:pointer;border:0;background:none;padding:0 2px}
+.slot .r:hover{color:var(--red)}
+.slot.e{color:var(--dim)}.slot.e .n{background:#fff;border:1.5px dashed #c3cad4;color:var(--dim)}
+.slot .n.bn{background:#fff;border:1.5px solid var(--navy);color:var(--navy)}
+.lab{font-size:11.5px;letter-spacing:1.3px;text-transform:uppercase;color:var(--muted);margin:16px 0 4px}
+.next{width:100%;margin-top:16px;padding:11px;border:0;border-radius:8px;background:var(--navy);color:#fff;font-weight:600;font-size:14.5px;cursor:pointer}
+.next.submit{background:var(--blue)}
+.sub{font-size:12.5px;color:var(--muted);margin-top:10px;line-height:1.45}
+.toast{position:fixed;left:50%;top:64px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:11px 18px;border-radius:10px;font-size:14px;box-shadow:0 8px 24px rgba(10,34,64,.25);z-index:20;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(10,34,64,.72);backdrop-filter:blur(3px);display:grid;place-items:center;z-index:30;padding:30px}
+.mbox{background:#fff;border-radius:14px;max-width:820px;width:100%;max-height:calc(100vh - 60px);display:flex;flex-direction:column;box-shadow:0 20px 50px rgba(0,0,0,.25)}
+.mhead{padding:22px 26px 12px}.mhead h2{font-family:var(--serif);font-weight:500;color:var(--navy);margin:0 0 4px;font-size:24px}
+.mhead p{margin:0;color:var(--muted);font-size:14px}
+.mlist{overflow:auto;padding:4px 26px 22px;columns:2;column-gap:28px;column-fill:balance}
+.mlist div{break-inside:avoid;padding:10px 0;border-bottom:1px solid var(--line2);font-size:13.5px}
+.mlist h4{margin:0 0 4px;font-size:13px;color:var(--navy);letter-spacing:.3px}
+.mlist .bk{color:var(--muted)}
+.mfoot{padding:14px 26px 20px;display:flex;gap:10px;justify-content:flex-end;border-top:1px solid var(--line)}
+.mfoot button{padding:10px 18px;border-radius:8px;font-weight:600;cursor:pointer;font-size:14.5px}
+.mfoot .cancel{background:#fff;border:1px solid #cfd5de;color:var(--text)}.mfoot .ok2{background:var(--blue);border:0;color:#fff}
+/* admin */
+#admin{max-width:1180px;margin:0 auto;padding:28px 32px 60px}
+#admin h1{font-family:var(--serif);font-weight:500;color:var(--navy);font-size:28px;margin:0 0 4px}
+#admin .lead{color:var(--muted);margin:0 0 20px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;margin-bottom:18px}
+.card h2{font-size:13px;letter-spacing:1.4px;text-transform:uppercase;color:var(--navy);margin:0 0 12px;font-weight:600;display:flex;align-items:center;gap:12px}
+.card h2 .sp{flex:1}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-size:12px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);font-weight:600;padding:8px 10px;border-bottom:1px solid var(--line)}
+td{padding:9px 10px;border-bottom:1px solid var(--line2);vertical-align:top}
+td.num{font-variant-numeric:tabular-nums;text-align:center}th.num{text-align:center}
+tr.cut td{border-bottom:2px solid var(--blue)}
+tr.close td:first-child{box-shadow:inset 3px 0 0 var(--gold)}
+.st-sub{color:var(--green);font-weight:600}.st-prog{color:var(--blue);font-weight:600}.st-none{color:var(--dim)}
+.small{font-size:12.5px;color:var(--muted)}
+.abtn{border:1px solid #cfd5de;background:#fff;border-radius:8px;padding:7px 12px;font-weight:600;cursor:pointer;font-size:13.5px;color:var(--text)}
+.abtn.pri{background:var(--navy);border-color:var(--navy);color:#fff}
+.chk{font-size:13.5px;color:var(--muted);display:flex;gap:6px;align-items:center;font-weight:400;letter-spacing:0;text-transform:none}
+.flag{color:var(--amber);font-size:12.5px}
+/* narrow desktop */
+@media (max-width:1240px){#app{grid-template-columns:224px minmax(0,1fr)}.body{grid-template-columns:minmax(0,1fr) 260px;gap:20px;padding:22px 24px 60px}
+ .top{padding:12px 24px}.row{grid-template-columns:40px minmax(0,1fr)}.acts{grid-column:2;flex-direction:row;min-width:0}.acts .b{min-width:120px}
+ .ex,.all{padding-left:76px}.banner{margin:16px 24px 0}.search{width:170px}.aw{padding:8px 18px;font-size:13.5px}.brand,.prog,.foot{padding-left:18px;padding-right:18px}}
+#phone{display:none}
+@media (max-width:759px){body>*:not(#phone){display:none!important}#phone{display:grid}}
+</style></head><body>
+
+<div id="phone" class="center"><div class="box"><h1>Please open this on a computer</h1><p style="margin:0;color:var(--muted)">This page is built for a desktop or laptop screen.</p></div></div>
+
+<div id="gate" class="center" hidden><form class="box" id="gateForm" autocomplete="off">
+ <h1>Nomination Review</h1>
+ <label for="pw">Password</label>
+ <input id="pw" type="password" autocomplete="current-password" required autofocus>
+ <button class="go" id="gateGo" type="submit">Continue</button>
+ <div class="err" id="gateErr" role="alert"></div>
+</form></div>
+
+<div id="who" class="center" hidden><form class="box" id="whoForm">
+ <img id="whoLogo" alt="">
+ <h1>Select your name</h1>
+ <label for="whoSel">Reviewer</label>
+ <select id="whoSel" required><option value="">Choose your name</option></select>
+ <button class="go" id="whoGo" type="submit">Continue</button>
+ <div class="err" id="whoErr" role="alert"></div>
+</form></div>
+
+<div id="app" hidden>
+ <aside class="side">
+  <div class="brand"><div class="ey" id="bEy"></div><div class="t" id="bT"></div></div>
+  <div class="prog"><div class="ring" id="ring"><i id="ringTxt"></i></div><div><b id="progTxt"></b><span id="dueTxt"></span></div></div>
+  <nav class="list"><div class="h">Awards</div><div id="awList"></div></nav>
+  <div class="foot">Reviewing as <b id="meName"></b> &middot; <a id="switchMe">Switch</a><br>Your picks are private until everyone submits.</div>
+ </aside>
+ <div>
+  <div class="top"><img id="logo" alt="Long Island Jewish Medical Center"><div class="sp"></div><div class="saved" id="saved">All changes saved</div><div class="who">Questions? Contact <b id="contact"></b></div></div>
+  <div id="bannerSlot"></div>
+  <div class="body">
+   <section id="main"></section>
+   <aside class="picks"><div class="pk" id="pk"></div></aside>
+  </div>
+ </div>
+</div>
+
+<div id="admin" hidden></div>
+<div class="toast" id="toast" role="status"></div>
+<div id="modalSlot"></div>
+
+<script>
+const API = "https://nomination-review.abv-review.workers.dev";
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const CHECK = '<svg viewBox="0 0 10 10"><path d="M2 5.2l2 2 4-4.4" stroke="#fff" stroke-width="1.6" fill="none"/></svg>';
+const STRENGTH = {5:"Exceptional",4:"Strong",3:"Good",2:"General",1:"Brief"};
+const fmtTime = ms => new Date(ms).toLocaleString("en-US",{timeZone:"America/New_York",weekday:"short",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}) + " ET";
+const fmtClock = ms => new Date(ms).toLocaleTimeString("en-US",{timeZone:"America/New_York",hour:"numeric",minute:"2-digit"});
+let TOKEN = null;
+try { TOKEN = sessionStorage.getItem("nr_t"); } catch {}
+const S = {data:null, me:null, picks:{}, submitted:null, due:null, released:false, cur:0, tab:"sugg", sort:"sugg", q:"", open:new Set(), pending:{}, timers:{}};
+
+async function api(path, opts = {}) {
+  const h = {"Content-Type":"application/json"};
+  if (TOKEN) h.Authorization = "Bearer " + TOKEN;
+  if (opts.admin) h["X-Admin-Key"] = opts.admin;
+  const r = await fetch(API + path, {method: opts.method || "GET", headers: h, body: opts.body ? JSON.stringify(opts.body) : undefined});
+  let j = {}; try { j = await r.json(); } catch {}
+  return {status: r.status, ok: r.ok, ...j};
+}
+function toast(msg) { const t = $("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("show"), 2600); }
+function show(id) { for (const x of ["gate","who","app","admin"]) $(x).hidden = x !== id; }
+
+// ---------- sign-in ----------
+$("gateForm").onsubmit = async e => {
+  e.preventDefault(); $("gateErr").textContent = ""; $("gateGo").disabled = true;
+  try {
+    const r = await api("/api/login", {method:"POST", body:{password:$("pw").value}});
+    if (r.ok) { TOKEN = r.token; try { sessionStorage.setItem("nr_t", TOKEN); } catch {} $("pw").value = ""; showWho(r.reviewers); }
+    else if (r.error === "locked") $("gateErr").textContent = `Too many tries. Please wait ${r.retry_after} minutes and try again.`;
+    else $("gateErr").textContent = "That password is not right. Please try again.";
+  } catch { $("gateErr").textContent = "Could not connect. Check your connection and try again."; }
+  $("gateGo").disabled = false;
+};
+function showWho(list, err) {
+  const sel = $("whoSel");
+  sel.innerHTML = '<option value="">Choose your name</option>' + list.map(n => `<option>${esc(n)}</option>`).join("");
+  $("whoErr").textContent = err || ""; $("whoLogo").hidden = true;
+  show("who"); sel.focus();
+}
+$("whoForm").onsubmit = async e => {
+  e.preventDefault(); const name = $("whoSel").value; if (!name) { $("whoErr").textContent = "Please choose your name."; return; }
+  $("whoGo").disabled = true; await enter(name); $("whoGo").disabled = false;
+};
+async function enter(name) {
+  try {
+    const r = await api("/api/me", {method:"POST", body:{reviewer:name}});
+    if (r.status === 401) { signOut(); return; }
+    if (!r.ok) { $("whoErr").textContent = "Something went wrong. Please try again."; return; }
+    S.data = r.data; S.me = r.reviewer; S.picks = r.picks || {}; S.submitted = r.submitted; S.due = Date.parse(r.due_at); S.released = r.released;
+    for (const a of S.data.awards) { S.picks[a.name] ||= {w:[], b:[]}; a.byKey = new Map(a.nominees.map(n => [n.k, n])); }
+    try { localStorage.setItem("nr_last", name); } catch {}
+    const first = S.data.awards.findIndex(a => S.picks[a.name].w.length < S.data.winners);
+    S.cur = first < 0 ? 0 : first;
+    document.title = S.data.title;
+    $("bEy").textContent = S.data.brand_ey; $("bT").innerHTML = esc(S.data.brand_t) + "<br>Winner Selection";
+    $("logo").src = S.data.logo; $("contact").textContent = S.data.contact; $("meName").textContent = S.me;
+    show("app"); renderAll(); window.scrollTo(0, 0);
+  } catch { $("whoErr").textContent = "Could not connect. Check your connection and try again."; }
+}
+function signOut(msg) {
+  TOKEN = null; try { sessionStorage.removeItem("nr_t"); } catch {}
+  S.data = null; document.title = "Nomination Review"; show("gate");
+  $("gateErr").textContent = msg || ""; $("pw").focus();
+}
+$("switchMe").onclick = async () => {
+  await flushAll();
+  const r = await api("/api/login", {method:"POST", body:{password:""}}).catch(() => ({}));
+  void r; // only to keep the session warm; the reviewer list comes from the data we have
+  showWho(S.data.reviewers);
+};
+
+// ---------- state helpers ----------
+const A = () => S.data.awards[S.cur];
+const P = (a = A()) => S.picks[a.name];
+const complete = a => P(a).w.length === S.data.winners;
+const doneCount = () => S.data.awards.filter(complete).length;
+const locked = () => !!S.submitted;
+
+function setPick(k, kind) {
+  if (locked()) { toast("Your picks are submitted. Choose “Change my picks” to edit."); return; }
+  const p = P(), a = A();
+  const inW = p.w.includes(k), inB = p.b.includes(k);
+  if (kind === "w") {
+    if (inW) p.w = p.w.filter(x => x !== k);
+    else {
+      if (p.w.length >= S.data.winners) { toast(`You already have ${S.data.winners} winners. Remove one first.`); return; }
+      p.b = p.b.filter(x => x !== k); p.w.push(k);
+    }
+  } else {
+    if (inB) p.b = p.b.filter(x => x !== k);
+    else {
+      if (p.b.length >= S.data.backups) { toast(`You already have ${S.data.backups} backups. Remove one first.`); return; }
+      p.w = p.w.filter(x => x !== k); p.b.push(k);
+    }
+  }
+  queueSave(a.name); renderAll(true);
+}
+function queueSave(award) {
+  S.pending[award] = true; setSaved("busy");
+  clearTimeout(S.timers[award]); S.timers[award] = setTimeout(() => save(award), 350);
+}
+async function save(award, tries = 0) {
+  const p = S.picks[award];
+  try {
+    const r = await api("/api/picks", {method:"PUT", body:{award, winners:p.w, backups:p.b}});
+    if (r.status === 401) { setSaved("bad", "Signed out. Please sign in again."); signOut("You were signed out. Sign in again; your saved picks are kept."); return; }
+    if (r.status === 409) { S.submitted = S.submitted || Date.now(); renderAll(); return; }
+    if (!r.ok) throw 0;
+    delete S.pending[award];
+    if (!Object.keys(S.pending).length) setSaved("ok", "All changes saved, " + fmtClock(r.saved_at));
+  } catch {
+    setSaved("bad", "Not saved yet, retrying...");
+    S.timers[award] = setTimeout(() => save(award, tries + 1), Math.min(15000, 1500 * 2 ** tries));
+  }
+}
+async function flushAll() {
+  for (const a of Object.keys(S.pending)) { clearTimeout(S.timers[a]); await save(a); }
+}
+function setSaved(kind, txt) {
+  const el = $("saved"); el.className = "saved" + (kind === "busy" ? " busy" : kind === "bad" ? " bad" : "");
+  el.textContent = txt || (kind === "busy" ? "Saving..." : "All changes saved");
+}
+window.addEventListener("beforeunload", e => { if (Object.keys(S.pending).length) { e.preventDefault(); e.returnValue = ""; } });
+
+// ---------- render ----------
+function renderAll(keepScroll) {
+  renderSide(); renderBanner(); renderMain(); renderPicks();
+  if (!keepScroll) window.scrollTo(0, 0);
+}
+function renderSide() {
+  const n = doneCount(), t = S.data.awards.length;
+  $("ring").style.background = `conic-gradient(var(--bright) 0 ${n / t * 360}deg, rgba(255,255,255,.12) ${n / t * 360}deg 360deg)`;
+  $("ringTxt").textContent = `${n}/${t}`;
+  $("progTxt").textContent = S.submitted ? "Submitted" : `${n} of ${t} awards done`;
+  $("dueTxt").textContent = "Due " + S.data.due_label;
+  $("awList").innerHTML = S.data.awards.map((a, i) => {
+    const c = P(a).w.length, icon = c === S.data.winners ? `<span class="ok">${CHECK}</span>` : `<span class="dot${c ? " half" : ""}"></span>`;
+    return `<button class="aw${i === S.cur ? " on" : ""}" data-i="${i}">${icon}${esc(a.name)}<span class="st">${c}/${S.data.winners}</span></button>`;
+  }).join("");
+}
+$("awList").onclick = e => { const b = e.target.closest(".aw"); if (b) go(+b.dataset.i); };
+function go(i) { S.cur = i; S.tab = "sugg"; S.q = ""; S.open.clear(); renderAll(); }
+
+function renderBanner() {
+  let h = "";
+  if (S.submitted) h = `<div class="banner done"><span><b>Your picks are submitted</b> (${esc(fmtTime(S.submitted))}). Thank you.</span><button id="reopen">Change my picks</button></div>`;
+  else if (Date.now() > S.due) h = `<div class="banner late"><span><b>Picks were due ${esc(S.data.due_label)}.</b> You can still finish; please submit as soon as you can.</span></div>`;
+  $("bannerSlot").innerHTML = h;
+  if ($("reopen")) $("reopen").onclick = async () => {
+    const r = await api("/api/reopen", {method:"POST"});
+    if (r.ok) { S.submitted = null; renderAll(true); toast("You can change your picks now. Submit again when you are done."); }
+    else toast("Could not reopen. Please try again.");
+  };
+}
+
+function bars(n) { let s = ""; for (let i = 1; i <= 5; i++) s += `<i${n && i <= n ? ' class="f"' : ""}></i>`; return `<span class="bars">${s}</span>`; }
+function card(n, a) {
+  const p = P(a), w = p.w.includes(n.k), b = p.b.includes(n.k), open = S.open.has(n.k);
+  const counted = n.noms.filter(x => !x.self);
+  const written = n.noms.filter(x => x.t.trim());
+  const blank = n.noms.filter(x => !x.t.trim());
+  const nomTxt = `<span><b>${n.votes}</b> nominator${n.votes === 1 ? "" : "s"}${n.selfn ? `<span class="small"> (+${n.selfn} self-nomination, not counted)</span>` : ""}</span>`;
+  const str = n.max ? `<span>${bars(n.max)}Best comment: <b>${STRENGTH[n.max]}</b></span>` : `<span>No written comments</span>`;
+  const quote = n.quote ? `<div class="q">${esc(n.quote)}</div><div class="qby">${esc(n.quote_by)}</div>` : "";
+  const why = n.why && n.quote ? `<div class="why">${esc(n.why)}</div>` : "";
+  const left = n.also.length ? `<span class="also">Also suggested for: ${esc(n.also.join(", "))}</span>`
+    : n.merged.length ? `<span>Includes nominations entered as ${esc(n.merged.join(", "))}</span>`
+    : n.others.length ? `<span>Also nominated for: ${esc(n.others.join(", "))}</span>` : "<span></span>";
+  const cnt = written.length;
+  const link = cnt ? (open ? "Hide comments &#9652;" : `Read ${cnt === 1 ? "the comment" : cnt === 2 ? "both comments" : "all " + cnt + " comments"} &#9662;`) : (blank.length ? (open ? "Hide &#9652;" : "See who nominated &#9662;") : "");
+  let all = "";
+  if (open) {
+    all = `<div class="all">` + written.map(x => `<div class="c"><div class="by"><b>${esc(nameOf(x.by))}</b>${esc(unitOf(x.by))}${x.so ? '<span class="tag">Standout</span>' : ""}${x.self ? '<span class="tag self">Self-nomination, not counted</span>' : ""}${x.as && x.as !== n.name ? `<span class="small"> &middot; entered as “${esc(x.as)}”</span>` : ""}</div><p>${esc(x.t)}</p></div>`).join("")
+      + (blank.length ? `<div class="c"><div class="by">Nominated without a comment by</div><p class="none">${blank.map(x => esc(nameOf(x.by)) + (x.self ? " (self)" : "")).join(", ")}</p></div>` : "") + `</div>`;
+  }
+  const dis = locked() ? " disabled" : "";
+  return `<div class="nom${w ? " win" : b ? " bk" : ""}" data-k="${esc(n.k)}"><div class="row"><div class="rk${n.rank ? "" : " none"}">${n.rank ?? ""}</div><div>
+   <div class="nm">${esc(n.name)}</div>${n.role ? `<div class="role">${esc(n.role)}</div>` : ""}
+   <div class="meta">${nomTxt}${str}</div>${quote}${why}</div>
+   <div class="acts"><button class="b w${w ? " on" : ""}" data-act="w"${dis} aria-pressed="${w}">${w ? "&#10003; " : ""}Winner</button><button class="b k${b ? " on" : ""}" data-act="b"${dis} aria-pressed="${b}">${b ? "&#10003; " : ""}Backup</button></div></div>
+   <div class="ex">${left}${link ? `<button data-act="o">${link}</button>` : ""}</div>${all}</div>`;
+}
+const nameOf = by => by.split(",")[0];
+const unitOf = by => by.includes(",") ? ", " + by.split(",").slice(1).join(",").trim() : "";
+
+function sorted(list) {
+  const s = S.sort, by = {
+    sugg: (x, y) => (x.rank ?? 1e9) - (y.rank ?? 1e9),
+    votes: (x, y) => y.votes - x.votes || (x.rank ?? 1e9) - (y.rank ?? 1e9),
+    str: (x, y) => (y.max ?? 0) - (x.max ?? 0) || (y.avg ?? 0) - (x.avg ?? 0) || y.votes - x.votes,
+    az: (x, y) => x.name.localeCompare(y.name),
+  }[s];
+  return [...list].sort(by);
+}
+function renderMain() {
+  const a = A(), p = P(a), q = S.q.trim().toLowerCase();
+  const match = n => !q || n.name.toLowerCase().includes(q) || n.merged.some(m => m.toLowerCase().includes(q)) || (n.role || "").toLowerCase().includes(q);
+  const sugg = a.nominees.filter(n => n.tier !== "other");
+  const mine = [...p.w, ...p.b].map(k => a.byKey.get(k)).filter(Boolean);
+  let h = `<div class="hero"><div class="ey">Award ${S.cur + 1} of ${S.data.awards.length} &middot; ${a.nominees.length} nominees</div><h1>${esc(a.name)}</h1><p>${esc(a.desc)}</p></div>
+  <div class="how"><span><em>1</em><span>Read the <b>suggested 7</b></span></span><span><em>2</em><span>Pick <b>${S.data.winners} winners</b>, up to <b>${S.data.backups} backups</b></span></span><span><em>3</em><span>Swap in anyone from <b>All nominees</b></span></span></div>
+  <div class="tools"><div class="tabs" role="tablist">
+    <button class="${S.tab === "sugg" ? "on" : ""}" data-tab="sugg">Suggested<small>${sugg.length}</small></button>
+    <button class="${S.tab === "all" ? "on" : ""}" data-tab="all">All nominees<small>${a.nominees.length}</small></button>
+    <button class="${S.tab === "mine" ? "on" : ""}" data-tab="mine">My picks<small>${mine.length}</small></button>
+    ${S.released ? `<button class="${S.tab === "res" ? "on" : ""}" data-tab="res">Results</button>` : ""}</div>
+   ${S.tab === "all" ? `<select class="sel" id="sortSel" aria-label="Sort">
+     <option value="sugg"${S.sort === "sugg" ? " selected" : ""}>Sort: Suggested order</option><option value="votes"${S.sort === "votes" ? " selected" : ""}>Most nominators</option>
+     <option value="str"${S.sort === "str" ? " selected" : ""}>Strongest comments</option><option value="az"${S.sort === "az" ? " selected" : ""}>A to Z</option></select>` : ""}
+   ${S.tab !== "res" ? `<input class="search" id="search" placeholder="Find a name" value="${esc(S.q)}" aria-label="Find a name">` : ""}</div>`;
+  if (S.tab === "sugg") {
+    const t7 = sugg.filter(n => n.tier === "top7" && match(n)), bk = sugg.filter(n => n.tier === "backup" && match(n));
+    h += `<div class="grp"><h2>Suggested top 7</h2><span>Ranked by number of nominators and strength of comments</span></div>` + (t7.map(n => card(n, a)).join("") || `<div class="empty">No match in the suggested top 7.</div>`);
+    h += `<div class="grp"><h2>Next in line</h2><span>Strong backups if you want to swap someone in</span></div>` + (bk.map(n => card(n, a)).join("") || `<div class="empty">No match here.</div>`);
+  } else if (S.tab === "all") {
+    const l = sorted(a.nominees).filter(match);
+    h += `<div class="grp"><h2>All nominees</h2><span>${l.length} shown</span></div>` + (l.map(n => card(n, a)).join("") || `<div class="empty">No nominee matches “${esc(S.q)}”.</div>`);
+  } else if (S.tab === "mine") {
+    const w = p.w.map(k => a.byKey.get(k)).filter(n => n && match(n)), b = p.b.map(k => a.byKey.get(k)).filter(n => n && match(n));
+    h += `<div class="grp"><h2>Winners</h2><span>${p.w.length} of ${S.data.winners}</span></div>` + (w.map(n => card(n, a)).join("") || `<div class="empty">No winners picked yet. Start with the Suggested tab.</div>`);
+    h += `<div class="grp"><h2>Backups</h2><span>${p.b.length} of ${S.data.backups}, optional</span></div>` + (b.map(n => card(n, a)).join("") || `<div class="empty">No backups picked.</div>`);
+  } else h += `<div id="resBox"><div class="empty">Loading results...</div></div>`;
+  $("main").innerHTML = h;
+  if (S.tab === "res") loadReviewerResults();
+}
+$("main").addEventListener("click", e => {
+  const t = e.target.closest("[data-tab]"); if (t) { S.tab = t.dataset.tab; S.q = ""; S.open.clear(); renderMain(); return; }
+  const b = e.target.closest("[data-act]"); if (!b) return;
+  const k = b.closest(".nom").dataset.k;
+  if (b.dataset.act === "o") { S.open.has(k) ? S.open.delete(k) : S.open.add(k); renderMain(); return; }
+  setPick(k, b.dataset.act);
+});
+$("main").addEventListener("input", e => {
+  if (e.target.id === "search") { S.q = e.target.value; const pos = e.target.selectionStart; renderMain(); const s = $("search"); s.focus(); s.setSelectionRange(pos, pos); }
+});
+$("main").addEventListener("change", e => { if (e.target.id === "sortSel") { S.sort = e.target.value; renderMain(); } });
+
+function renderPicks() {
+  const a = A(), p = P(a), W = S.data.winners, B = S.data.backups, nm = k => esc(a.byKey.get(k)?.name || k);
+  const rm = !locked();
+  let h = `<h3>Your picks</h3><div class="s">${esc(a.name)}</div><div class="meter"><i style="width:${p.w.length / W * 100}%"></i></div>`;
+  for (let i = 0; i < W; i++) h += p.w[i] ? `<div class="slot"><span class="n">${i + 1}</span>${nm(p.w[i])}${rm ? `<button class="r" data-rm="${esc(p.w[i])}" aria-label="Remove">&times;</button>` : ""}</div>` : `<div class="slot e"><span class="n">${i + 1}</span>Choose a winner</div>`;
+  h += `<div class="lab">Backups (up to ${B})</div>`;
+  for (let i = 0; i < B; i++) h += p.b[i] ? `<div class="slot"><span class="n bn">B</span>${nm(p.b[i])}${rm ? `<button class="r" data-rm="${esc(p.b[i])}" aria-label="Remove">&times;</button>` : ""}</div>` : `<div class="slot e"><span class="n">B</span>Optional</div>`;
+  const all = doneCount() === S.data.awards.length;
+  const nextI = S.data.awards.findIndex((x, i) => i > S.cur && !complete(x));
+  const anyI = S.data.awards.findIndex(x => !complete(x));
+  if (S.submitted) h += `<div class="sub">Submitted ${esc(fmtTime(S.submitted))}.</div>`;
+  else if (all) h += `<button class="next submit" id="submitBtn">Review and submit my picks</button><div class="sub">All ${S.data.awards.length} awards have ${W} winners. You can change picks until ${esc(S.data.due_label)}.</div>`;
+  else {
+    const to = S.cur < S.data.awards.length - 1 ? S.cur + 1 : (nextI < 0 ? anyI : nextI);
+    const label = S.cur < S.data.awards.length - 1 ? `Next award: ${esc(S.data.awards[to].name)} &rarr;` : `Go to unfinished: ${esc(S.data.awards[to].name)} &rarr;`;
+    h += `<button class="next" id="nextBtn" data-to="${to}">${label}</button><div class="sub">Submit appears when all ${S.data.awards.length} awards have ${W} winners. You can change picks until ${esc(S.data.due_label)}.</div>`;
+  }
+  $("pk").innerHTML = h;
+}
+$("pk").addEventListener("click", e => {
+  const r = e.target.closest("[data-rm]");
+  if (r) { const k = r.dataset.rm, p = P(); setPick(k, p.w.includes(k) ? "w" : "b"); return; }
+  if (e.target.id === "nextBtn") go(+e.target.dataset.to);
+  if (e.target.id === "submitBtn") openSubmit();
+});
+
+function openSubmit() {
+  const rows = S.data.awards.map(a => {
+    const p = P(a), nm = k => esc(a.byKey.get(k)?.name || k);
+    return `<div><h4>${esc(a.name)}</h4>${p.w.map(nm).join(", ")}${p.b.length ? `<div class="bk">Backups: ${p.b.map(nm).join(", ")}</div>` : ""}</div>`;
+  }).join("");
+  $("modalSlot").innerHTML = `<div class="modal" role="dialog" aria-modal="true" aria-labelledby="mT"><div class="mbox"><div class="mhead"><h2 id="mT">Submit your picks</h2><p>Check your ${S.data.winners} winners for each award. After you submit you can still reopen and change them until ${esc(S.data.due_label)}.</p></div><div class="mlist">${rows}</div><div class="mfoot"><button class="cancel" id="mCancel">Keep editing</button><button class="ok2" id="mOk">Submit my picks</button></div></div></div>`;
+  $("mCancel").onclick = () => $("modalSlot").innerHTML = "";
+  $("mOk").onclick = async () => {
+    $("mOk").disabled = true; await flushAll();
+    const r = await api("/api/submit", {method:"POST"});
+    $("modalSlot").innerHTML = "";
+    if (r.ok) { S.submitted = r.submitted; renderAll(); toast("Submitted. Thank you."); }
+    else if (r.error === "incomplete") toast("Some awards still need " + S.data.winners + " winners: " + r.missing.join(", "));
+    else toast("Could not submit. Please try again.");
+  };
+}
+
+async function loadReviewerResults() {
+  const r = await api("/api/results");
+  const box = $("resBox"); if (!box) return;
+  if (!r.ok) { box.innerHTML = `<div class="empty">Results are not shared yet.</div>`; return; }
+  const a = A(), c = r.counts[a.name] || {};
+  const rows = a.nominees.map(n => ({n, w: c[n.k]?.w || 0, b: c[n.k]?.b || 0})).filter(x => x.w || x.b).sort((x, y) => y.w - x.w || y.b - x.b);
+  box.innerHTML = `<div class="grp"><h2>Results</h2><span>${r.submitted} of ${r.reviewers} reviewers submitted</span></div><div class="card"><table><tr><th>Nominee</th><th class="num">Winner picks</th><th class="num">Backup picks</th></tr>${rows.map((x, i) => `<tr${i === 6 ? ' class="cut"' : ""}><td><b>${esc(x.n.name)}</b><div class="small">${esc(x.n.role)}</div></td><td class="num">${x.w}</td><td class="num">${x.b}</td></tr>`).join("")}</table></div>`;
+}
+
+// ---------- admin ----------
+let ADMIN = null;
+try { ADMIN = sessionStorage.getItem("nr_a"); } catch {}
+let ALL = false;
+function adminGate(err) {
+  show("admin");
+  $("admin").innerHTML = `<div class="center" style="min-height:80vh"><form class="box" id="aForm"><h1>Organizer view</h1><label for="ak">Organizer key</label><input id="ak" type="password" required autofocus><button class="go" type="submit">Continue</button><div class="err">${esc(err || "")}</div></form></div>`;
+  $("aForm").onsubmit = e => { e.preventDefault(); ADMIN = $("ak").value; loadAdmin(); };
+}
+async function loadAdmin() {
+  const [st, rs] = await Promise.all([api("/api/admin/status", {admin: ADMIN}), api("/api/admin/results" + (ALL ? "?all=1" : ""), {admin: ADMIN})]);
+  if (!st.ok || !rs.ok) { ADMIN = null; try { sessionStorage.removeItem("nr_a"); } catch {} return adminGate(st.error === "locked" ? `Too many tries. Wait ${st.retry_after} minutes.` : "That key is not right."); }
+  try { sessionStorage.setItem("nr_a", ADMIN); } catch {}
+  document.title = "Review tracker";
+  const subN = st.reviewers.filter(r => r.submitted).length;
+  const trk = st.reviewers.map(r => {
+    const s = r.submitted ? `<span class="st-sub">Submitted</span>` : r.winners ? `<span class="st-prog">In progress</span>` : r.first_seen ? `<span class="st-prog">Signed in</span>` : `<span class="st-none">Not started</span>`;
+    return `<tr><td><b>${esc(r.name)}</b></td><td>${s}</td><td class="num">${r.complete}/${st.awards}</td><td class="num">${r.winners}</td><td class="num">${r.backups}</td><td>${r.last_seen ? esc(fmtTime(r.last_seen)) : ""}</td><td>${r.submitted ? esc(fmtTime(r.submitted)) : ""}</td></tr>`;
+  }).join("");
+  const multi = {};
+  const sections = rs.awards.map(a => {
+    const rows = a.nominees.map(n => ({...n, wc: n.w.length, bc: n.b.length})).filter(n => n.wc || n.bc || n.tier === "top7")
+      .sort((x, y) => y.wc - x.wc || y.bc - x.bc || (x.rank ?? 1e9) - (y.rank ?? 1e9));
+    const c7 = rows[6]?.wc, c8 = rows[7]?.wc, closeCall = rows.length > 7 && c7 > 0 && c7 === c8;
+    rows.slice(0, 7).forEach(n => { if (n.wc) (multi[n.k] ||= {name: n.name, aw: []}).aw.push(a.name); });
+    const body = rows.map((n, i) => `<tr class="${i === 6 ? "cut" : ""}${closeCall && n.wc === c7 ? " close" : ""}"><td class="num">${i + 1}</td><td><b>${esc(n.name)}</b><div class="small">${esc(n.role)}</div></td><td class="num"><b>${n.wc}</b></td><td class="small">${esc(n.w.join(", "))}</td><td class="num">${n.bc}</td><td class="small">${esc(n.b.join(", "))}</td><td class="num">${n.rank ?? ""}</td></tr>`).join("");
+    return `<div class="card"><h2>${esc(a.name)}${closeCall ? `<span class="flag">Close call at the 7th spot (${c7} picks tie)</span>` : ""}</h2>${rows.length ? `<table><tr><th class="num">#</th><th>Nominee</th><th class="num">Winner picks</th><th>Picked by</th><th class="num">Backup</th><th>Backup by</th><th class="num">Suggested rank</th></tr>${body}</table>` : `<div class="small">No picks yet.</div>`}</div>`;
+  }).join("");
+  const multiRows = Object.values(multi).filter(m => m.aw.length > 1);
+  $("admin").innerHTML = `<h1>Review tracker</h1><p class="lead">Live view for the organizer. Reviewers never see this page. Refreshes every minute; last ${esc(fmtClock(st.now))} ET.</p>
+   <div class="card"><h2>Reviewers<span class="sp"></span><span class="small" style="text-transform:none;letter-spacing:0">${subN} of ${st.reviewers.length} submitted</span><button class="abtn" id="aRef">Refresh</button></h2>
+   <table><tr><th>Reviewer</th><th>Status</th><th class="num">Awards done</th><th class="num">Winners</th><th class="num">Backups</th><th>Last active</th><th>Submitted</th></tr>${trk}</table></div>
+   <div class="card"><h2>Results<span class="sp"></span><label class="chk"><input type="checkbox" id="aAll"${ALL ? " checked" : ""}> Include reviewers who have not submitted</label>
+    <button class="abtn${rs.released ? "" : " pri"}" id="aRel">${rs.released ? "Hide results from reviewers" : "Share results with reviewers"}</button></h2>
+    <div class="small">Counting ${ALL ? "everyone's current picks" : `${rs.submitted.length} submitted reviewer${rs.submitted.length === 1 ? "" : "s"}`}. Blue line = 7th place. Gold edge = a tie at the 7th spot. ${rs.released ? "Reviewers can see counts (not names)." : "Only you can see this."}</div></div>
+   ${multiRows.length ? `<div class="card"><h2>In the top 7 of more than one award</h2><table>${multiRows.map(m => `<tr><td><b>${esc(m.name)}</b></td><td>${esc(m.aw.join(", "))}</td></tr>`).join("")}</table></div>` : ""}
+   ${sections}`;
+  $("aRef").onclick = loadAdmin;
+  $("aAll").onchange = e => { ALL = e.target.checked; loadAdmin(); };
+  $("aRel").onclick = async () => {
+    const want = !rs.released;
+    if (want && !confirm("Share the pick counts with all reviewers? They will see counts per nominee, not who picked whom.")) return;
+    await api("/api/admin/release", {method:"POST", admin: ADMIN, body:{released: want}}); loadAdmin();
+  };
+  clearTimeout(loadAdmin.t); loadAdmin.t = setTimeout(() => { if (!$("admin").hidden && ADMIN) loadAdmin(); }, 60000);
+}
+
+// ---------- start ----------
+async function start() {
+  if (location.hash === "#admin") { ADMIN ? loadAdmin() : adminGate(); return; }
+  if (TOKEN) {
+    let last = null; try { last = localStorage.getItem("nr_last"); } catch {}
+    const r = await api("/api/me", {method:"POST", body:{}}).catch(() => ({}));
+    if (r.ok) { await enter(r.reviewer); return; }
+    if (r.error === "reviewer") {
+      const l = await fetchReviewers(); if (l) { showWho(l); if (last) $("whoSel").value = last; return; }
+    }
+    signOut();
+  } else show("gate");
+}
+async function fetchReviewers() { return null; }
+window.addEventListener("hashchange", () => location.reload());
+start();
+</script>
+</body></html>
