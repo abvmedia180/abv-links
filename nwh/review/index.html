@@ -220,7 +220,7 @@ const fmtTime = ms => new Date(ms).toLocaleString("en-US",{timeZone:"America/New
 const fmtClock = ms => new Date(ms).toLocaleTimeString("en-US",{timeZone:"America/New_York",hour:"numeric",minute:"2-digit"});
 let TOKEN = null;
 try { TOKEN = sessionStorage.getItem("nr_t"); } catch {}
-const S = {data:null, me:null, picks:{}, everSaved:new Set(), submitted:null, due:null, released:false, cur:0, tab:"sugg", sort:"sugg", q:"", open:new Set(), pending:{}, timers:{}, busy:{}, dq:new Map()};
+const S = {data:null, me:null, picks:{}, everSaved:new Set(), submitted:null, due:null, released:false, cur:0, tab:"all", sort:"sugg", q:"", open:new Set(), pending:{}, timers:{}, busy:{}, dq:new Map()};
 
 async function api(path, opts = {}) {
   const h = {"Content-Type":"application/json"};
@@ -356,7 +356,7 @@ function renderSide() {
   }).join("");
 }
 $("awList").onclick = e => { const b = e.target.closest(".aw"); if (b) go(+b.dataset.i); };
-function go(i) { S.cur = i; S.tab = "sugg"; S.q = ""; S.open.clear(); renderAll(); }
+function go(i) { S.cur = i; S.tab = "all"; S.q = ""; S.open.clear(); renderAll(); }
 function renderBanner() {
   let h = "";
   if (S.submitted) h = `<div class="banner done"><span><b>Your picks are submitted</b> (${esc(fmtTime(S.submitted))}). Thank you.</span><button id="reopen">Change my picks</button></div>`;
@@ -415,18 +415,20 @@ function renderMain() {
   let h = `<div class="hero"><div class="ey">Award ${S.cur + 1} of ${S.data.awards.length} &middot; ${a.nominees.length} nominees</div><h1>${esc(a.name)}</h1><p>${esc(a.desc)}</p></div>
   <p class="method"><b>How the suggestions were made:</b> each nominee has a score out of 20. Up to 10 points for how many people nominated them (2 points per nominator) and up to 10 for how specific and sincere their comments are. Each person is suggested for only one award, and every unit has at least one winner. These are only suggestions; you choose.</p>
   <div class="tools"><div class="tabs" role="tablist">
-    <button class="${S.tab === "sugg" ? "on" : ""}" data-tab="sugg">Suggested<small>${sugg.length}</small></button>
-    <button class="${S.tab === "all" ? "on" : ""}" data-tab="all">All nominees<small>${a.nominees.length}</small></button>
+    <button class="${S.tab === "all" ? "on" : ""}" data-tab="all">Nominees<small>${a.nominees.length}</small></button>
     <button class="${S.tab === "mine" ? "on" : ""}" data-tab="mine">My picks<small>${mine.length}</small></button>
     ${S.released ? `<button class="${S.tab === "res" ? "on" : ""}" data-tab="res">Results</button>` : ""}</div>
    ${S.tab === "all" ? `<select class="sel" id="sortSel" aria-label="Sort">
-     <option value="sugg"${S.sort === "sugg" ? " selected" : ""}>Sort: Suggested order</option><option value="votes"${S.sort === "votes" ? " selected" : ""}>Most nominators</option>
+     <option value="sugg"${S.sort === "sugg" ? " selected" : ""}>Sort: Suggested (highest score first)</option><option value="votes"${S.sort === "votes" ? " selected" : ""}>Most nominators</option>
      <option value="str"${S.sort === "str" ? " selected" : ""}>Strongest comments</option><option value="az"${S.sort === "az" ? " selected" : ""}>A to Z</option></select>` : ""}
    ${S.tab !== "res" ? `<input class="search" id="search" placeholder="Find a name" value="${esc(S.q)}" aria-label="Find a name">` : ""}</div>`;
-  if (S.tab === "sugg") {
+  if (S.tab === "all" && S.sort === "sugg") {
+    // one ranked list: suggested 7, next in line, then everyone else by score
     const t7 = sugg.filter(n => n.tier === "top7" && match(n)), bk = sugg.filter(n => n.tier === "backup" && match(n));
-    h += `<div class="grp"><h2>Suggested 7</h2><span>Our suggestion. Click Winner, or drag a name into your picks.</span></div>` + (t7.map(n => card(n, a)).join("") || `<div class="empty">No match in the suggested top 7.</div>`);
-    h += `<div class="grp"><h2>Next in line</h2><span>Strongest people not suggested elsewhere</span></div>` + (bk.map(n => card(n, a)).join("") || `<div class="empty">No match here.</div>`);
+    const rest = sorted(a.nominees.filter(n => n.tier === "other")).filter(match);
+    h += `<div class="grp"><h2>Suggested 7</h2><span>Start here: the highest scores for this award.</span></div>` + (t7.map(n => card(n, a)).join("") || `<div class="empty">No match in the suggested 7.</div>`);
+    h += `<div class="grp"><h2>Next in line</h2><span>Strongest people not suggested for another award.</span></div>` + (bk.map(n => card(n, a)).join("") || `<div class="empty">No match here.</div>`);
+    h += `<div class="grp"><h2>All remaining nominees</h2><span>${rest.length}, highest score first.</span></div>` + (rest.map(n => card(n, a)).join("") || `<div class="empty">No match here.</div>`);
   } else if (S.tab === "all") {
     const l = sorted(a.nominees).filter(match);
     h += `<div class="grp"><h2>All nominees</h2><span>${l.length} shown</span></div>` + (l.map(n => card(n, a)).join("") || `<div class="empty">No nominee matches “${esc(S.q)}”.</div>`);
