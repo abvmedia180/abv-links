@@ -113,6 +113,12 @@ button{font:inherit}[hidden]{display:none!important}
 .slot .r:hover{color:var(--red)}
 .slot.e{color:var(--dim)}.slot.e .n{background:#fff;border:1.5px dashed #c3cad4;color:var(--dim)}
 .slot .n.bn{background:#fff;border:1.5px solid var(--navy);color:var(--navy)}
+.zone{border-radius:8px;transition:background .12s,box-shadow .12s}
+.zone.over{background:#eef3fb;box-shadow:0 0 0 2px var(--blue) inset}
+.slot[draggable=true]{cursor:grab}.slot.over{box-shadow:0 -2px 0 var(--blue)}
+.nom[draggable=true] .row{cursor:grab}.dragging{opacity:.45}
+#main.rmzone{outline:2px dashed var(--red);outline-offset:6px;border-radius:12px}
+.hint{font-size:12px;color:var(--muted);margin:-8px 0 12px}
 .lab{font-size:11.5px;letter-spacing:1.3px;text-transform:uppercase;color:var(--muted);margin:16px 0 4px}
 .next{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;margin-top:16px;padding:11px;border:0;border-radius:8px;background:var(--navy);color:#fff;font-weight:600;font-size:14.5px;cursor:pointer}
 .next.submit{background:var(--blue)}
@@ -209,7 +215,7 @@ const fmtTime = ms => new Date(ms).toLocaleString("en-US",{timeZone:"America/New
 const fmtClock = ms => new Date(ms).toLocaleTimeString("en-US",{timeZone:"America/New_York",hour:"numeric",minute:"2-digit"});
 let TOKEN = null;
 try { TOKEN = sessionStorage.getItem("nr_t"); } catch {}
-const S = {data:null, me:null, picks:{}, everSaved:new Set(), submitted:null, due:null, released:false, cur:0, tab:"sugg", sort:"sugg", q:"", open:new Set(), pending:{}, timers:{}};
+const S = {data:null, me:null, picks:{}, everSaved:new Set(), submitted:null, due:null, released:false, cur:0, tab:"sugg", sort:"sugg", q:"", open:new Set(), pending:{}, timers:{}, busy:{}};
 
 async function api(path, opts = {}) {
   const h = {"Content-Type":"application/json"};
@@ -302,6 +308,8 @@ function queueSave(award) {
   clearTimeout(S.timers[award]); S.timers[award] = setTimeout(() => save(award), 350);
 }
 async function save(award, tries = 0) {
+  while (S.busy[award]) await S.busy[award];  // one save per award at a time, so an older save never lands last
+  let done; S.busy[award] = new Promise(r => done = r);
   const p = S.picks[award];
   try {
     const r = await api("/api/picks", {method:"PUT", body:{award, winners:p.w, backups:p.b}});
@@ -313,7 +321,7 @@ async function save(award, tries = 0) {
   } catch {
     setSaved("bad", "Not saved yet, retrying...");
     S.timers[award] = setTimeout(() => save(award, tries + 1), Math.min(15000, 1500 * 2 ** tries));
-  }
+  } finally { S.busy[award] = null; done(); }
 }
 async function flushAll() {
   for (const a of Object.keys(S.pending)) { clearTimeout(S.timers[a]); await save(a); }
@@ -380,7 +388,7 @@ function card(n, a) {
       + (blank.length ? `<div class="c"><div class="by">Nominated without a comment by</div><p class="none">${blank.map(x => esc(nameOf(x.by)) + (x.self ? " (self)" : "")).join(", ")}</p></div>` : "") + `</div>`;
   }
   const dis = locked() ? " disabled" : "";
-  return `<div class="nom${w ? " win" : b ? " bk" : ""}" data-k="${esc(n.k)}"><div class="row"><div>
+  return `<div class="nom${w ? " win" : b ? " bk" : ""}" data-k="${esc(n.k)}"${locked() ? "" : ' draggable="true"'}><div class="row"><div>
    <div class="nm">${esc(n.name)}</div>${n.role ? `<div class="role">${esc(n.role)}</div>` : ""}
    ${n.summary ? `<div class="sum">${esc(n.summary)}</div>` : ""}${quote}<div class="meta">${meta}</div></div>
    <div class="acts"><button class="b w${w ? " on" : ""}" data-act="w"${dis} aria-pressed="${w}">${w ? "&#10003; " : ""}Winner</button><button class="b k${b ? " on" : ""}" data-act="b"${dis} aria-pressed="${b}">${b ? "&#10003; " : ""}Backup</button></div></div>
@@ -444,10 +452,12 @@ $("main").addEventListener("change", e => { if (e.target.id === "sortSel") { S.s
 function renderPicks() {
   const a = A(), p = P(a), W = S.data.winners, B = S.data.backups, nm = k => esc(a.byKey.get(k)?.name || k);
   const rm = !locked();
-  let h = `<h3>Your picks</h3><div class="s">${esc(a.name)}</div><div class="meter"><i style="width:${p.w.length / W * 100}%"></i></div>`;
-  for (let i = 0; i < W; i++) h += p.w[i] ? `<div class="slot"><span class="n">${i + 1}</span>${nm(p.w[i])}${rm ? `<button class="r" data-rm="${esc(p.w[i])}" aria-label="Remove">&times;</button>` : ""}</div>` : `<div class="slot e"><span class="n">${i + 1}</span>Choose a winner</div>`;
-  h += `<div class="lab">Backups (up to ${B})</div>`;
-  for (let i = 0; i < B; i++) h += p.b[i] ? `<div class="slot"><span class="n bn">B</span>${nm(p.b[i])}${rm ? `<button class="r" data-rm="${esc(p.b[i])}" aria-label="Remove">&times;</button>` : ""}</div>` : `<div class="slot e"><span class="n">B</span>Optional</div>`;
+  const dr = rm ? ' draggable="true"' : "";
+  let h = `<h3>Your picks</h3><div class="s">${esc(a.name)}</div><div class="meter"><i style="width:${p.w.length / W * 100}%"></i></div>${rm ? `<div class="hint">Drag names in, between, or off the list.</div>` : ""}<div class="zone" data-zone="w">`;
+  for (let i = 0; i < W; i++) h += p.w[i] ? `<div class="slot" data-k="${esc(p.w[i])}" data-from="w" data-i="${i}"${dr}><span class="n">${i + 1}</span>${nm(p.w[i])}${rm ? `<button class="r" data-rm="${esc(p.w[i])}" aria-label="Remove">&times;</button>` : ""}</div>` : `<div class="slot e" data-i="${i}"><span class="n">${i + 1}</span>Choose a winner</div>`;
+  h += `</div><div class="lab">Backups (up to ${B})</div><div class="zone" data-zone="b">`;
+  for (let i = 0; i < B; i++) h += p.b[i] ? `<div class="slot" data-k="${esc(p.b[i])}" data-from="b" data-i="${i}"${dr}><span class="n bn">B</span>${nm(p.b[i])}${rm ? `<button class="r" data-rm="${esc(p.b[i])}" aria-label="Remove">&times;</button>` : ""}</div>` : `<div class="slot e" data-i="${i}"><span class="n">B</span>Optional</div>`;
+  h += `</div>`;
   const all = doneCount() === S.data.awards.length;
   const nextI = S.data.awards.findIndex((x, i) => i > S.cur && !complete(x));
   const anyI = S.data.awards.findIndex(x => !complete(x));
@@ -466,6 +476,43 @@ $("pk").addEventListener("click", e => {
   if (e.target.id === "nextBtn") go(+e.target.dataset.to);
   if (e.target.id === "submitBtn") openSubmit();
 });
+
+// ---------- drag and drop ----------
+// cards -> winners/backups; slots -> reorder, other list, or back onto the page to remove
+function place(k, to, idx) {
+  if (locked()) { toast("Your picks are submitted. Choose “Change my picks” to edit."); return; }
+  const p = P(), a = A(), W = S.data.winners, B = S.data.backups;
+  const w = p.w.filter(x => x !== k), b = p.b.filter(x => x !== k);
+  if (to === "w" && w.length >= W) { toast(`You already have ${W} winners. Drag one out first.`); return; }
+  if (to === "b" && b.length >= B) { toast(`You already have ${B} backups. Drag one out first.`); return; }
+  const list = to === "w" ? w : to === "b" ? b : null;
+  if (list) list.splice(idx == null || idx > list.length ? list.length : idx, 0, k);
+  p.w = w; p.b = b; queueSave(a.name); renderAll(true);
+}
+const DRAG = {k: null, from: null};
+function clearOver() { document.querySelectorAll(".over").forEach(x => x.classList.remove("over")); $("main").classList.remove("rmzone"); }
+document.addEventListener("dragstart", e => {
+  const el = e.target.closest?.(".nom[draggable], .slot[draggable]"); if (!el) return;
+  DRAG.k = el.dataset.k; DRAG.from = el.dataset.from || "card";
+  e.dataTransfer.effectAllowed = "move"; e.dataTransfer.setData("text/plain", DRAG.k);
+  el.classList.add("dragging");
+  if (DRAG.from !== "card") $("main").classList.add("rmzone");
+});
+document.addEventListener("dragend", e => { e.target.classList?.remove("dragging"); clearOver(); DRAG.k = null; });
+$("pk").addEventListener("dragover", e => {
+  const z = e.target.closest(".zone"); if (!z || !DRAG.k) return;
+  e.preventDefault(); e.dataTransfer.dropEffect = "move";
+  document.querySelectorAll(".over").forEach(x => x !== z && x.classList.remove("over")); z.classList.add("over");
+  const sl = e.target.closest(".slot:not(.e)"); if (sl) sl.classList.add("over");
+});
+$("pk").addEventListener("dragleave", e => { const sl = e.target.closest(".slot"); if (sl) sl.classList.remove("over"); });
+$("pk").addEventListener("drop", e => {
+  const z = e.target.closest(".zone"); if (!z || !DRAG.k) return;
+  e.preventDefault(); const sl = e.target.closest(".slot:not(.e)");
+  const k = DRAG.k; clearOver(); place(k, z.dataset.zone, sl ? +sl.dataset.i : null);
+});
+$("main").addEventListener("dragover", e => { if (DRAG.k && DRAG.from !== "card") { e.preventDefault(); e.dataTransfer.dropEffect = "move"; } });
+$("main").addEventListener("drop", e => { if (DRAG.k && DRAG.from !== "card") { e.preventDefault(); const k = DRAG.k; clearOver(); place(k, null); toast("Removed from your picks."); } });
 
 function openSubmit() {
   const rows = S.data.awards.map(a => {
