@@ -135,6 +135,8 @@ button{font:inherit}[hidden]{display:none!important}
 .mlist div{break-inside:avoid;padding:10px 0;border-bottom:1px solid var(--line2);font-size:13.5px}
 .mlist h4{margin:0 0 4px;font-size:13px;color:var(--navy);letter-spacing:.3px}
 .mlist .bk{color:var(--muted)}
+.wel{max-width:640px}.wbody{overflow:auto;padding:0 26px 18px;font-size:14.5px;scrollbar-width:thin;scrollbar-color:#cfd5de transparent}
+.wbody h4{margin:16px 0 6px;font-size:13px;letter-spacing:1.2px;text-transform:uppercase;color:var(--navy)}.wbody p{margin:6px 0}.wbody ol,.wbody ul{margin:6px 0;padding-left:22px}.wbody li{margin:3px 0}
 .mfoot{padding:14px 26px 20px;display:flex;gap:10px;justify-content:flex-end;border-top:1px solid var(--line)}
 .mfoot button{padding:10px 18px;border-radius:8px;font-weight:600;cursor:pointer;font-size:14.5px}
 .mfoot .cancel{background:#fff;border:1px solid #cfd5de;color:var(--text)}.mfoot .ok2{background:var(--blue);border:0;color:#fff}
@@ -189,7 +191,7 @@ tr.close td:first-child{box-shadow:inset 3px 0 0 var(--gold)}
   <div class="brand"><div class="ey" id="bEy"></div><div class="t" id="bT"></div></div>
   <div class="prog"><div class="ring" id="ring"><i id="ringTxt"></i></div><div><b id="progTxt"></b><span id="dueTxt"></span></div></div>
   <nav class="list"><div class="h">Awards</div><div id="awList"></div></nav>
-  <div class="foot">Reviewing as <b id="meName"></b> &middot; <a id="switchMe">Switch</a><br>Your picks are private until everyone submits.</div>
+  <div class="foot">Reviewing as <b id="meName"></b> &middot; <a id="switchMe">Switch</a><br>Your picks are private until everyone submits.<br><a id="howBtn">How this works</a></div>
  </aside>
  <div>
   <div class="top"><img id="logo" alt="Long Island Jewish Medical Center"><div class="sp"></div><div class="saved" id="saved">All changes saved</div><div class="who">Questions? Contact <b id="contact"></b></div></div>
@@ -257,12 +259,14 @@ async function enter(name) {
     S.data = r.data; S.me = r.reviewer; S.picks = r.picks || {}; S.everSaved = new Set(Object.keys(S.picks)); S.submitted = r.submitted; S.due = Date.parse(r.due_at); S.released = r.released;
     for (const a of S.data.awards) { S.picks[a.name] ||= {w:[], b:[]}; a.byKey = new Map(a.nominees.map(n => [n.k, n])); }
     try { localStorage.setItem("nr_last", name); } catch {}
-    const first = S.data.awards.findIndex(a => !S.everSaved.has(a.name));
-    S.cur = first < 0 ? 0 : first; seed();
+    const first = S.data.awards.findIndex(a => !complete(a));
+    S.cur = first < 0 ? 0 : first;
     document.title = S.data.title;
     $("bEy").textContent = S.data.brand_ey; $("bT").innerHTML = esc(S.data.brand_t) + "<br>Winner Selection";
     $("logo").src = S.data.logo; $("contact").textContent = S.data.contact; $("meName").textContent = S.me;
     show("app"); renderAll(); window.scrollTo(0, 0);
+    let seen = null; try { seen = localStorage.getItem("nr_welcome_" + name); } catch {}
+    if (!seen) showWelcome();
   } catch { $("whoErr").textContent = "Could not connect. Check your connection and try again."; }
 }
 function signOut(msg) {
@@ -349,16 +353,7 @@ function renderSide() {
   }).join("");
 }
 $("awList").onclick = e => { const b = e.target.closest(".aw"); if (b) go(+b.dataset.i); };
-function go(i) { S.cur = i; S.tab = "sugg"; S.q = ""; S.open.clear(); seed(); renderAll(); }
-// first visit to an award: start from the suggested 7 so reviewers only swap
-function seed() {
-  const a = A();
-  if (locked() || S.everSaved.has(a.name)) return;
-  S.everSaved.add(a.name);
-  S.picks[a.name] = {w: [...a.suggested], b: []};
-  queueSave(a.name);
-}
-
+function go(i) { S.cur = i; S.tab = "sugg"; S.q = ""; S.open.clear(); renderAll(); }
 function renderBanner() {
   let h = "";
   if (S.submitted) h = `<div class="banner done"><span><b>Your picks are submitted</b> (${esc(fmtTime(S.submitted))}). Thank you.</span><button id="reopen">Change my picks</button></div>`;
@@ -412,7 +407,7 @@ function renderMain() {
   const sugg = a.nominees.filter(n => n.tier !== "other");
   const mine = [...p.w, ...p.b].map(k => a.byKey.get(k)).filter(Boolean);
   let h = `<div class="hero"><div class="ey">Award ${S.cur + 1} of ${S.data.awards.length} &middot; ${a.nominees.length} nominees</div><h1>${esc(a.name)}</h1><p>${esc(a.desc)}</p></div>
-  <details class="method"><summary>How the suggestions were made</summary><p>Score out of 20: up to 10 for nominators (2 points each) and up to 10 for how specific and sincere the comments are. One award per person, and every unit has at least one winner. Self-nominations do not count.</p></details>
+  <p class="method"><b>How the suggestions were made:</b> each nominee has a score out of 20. Up to 10 points for how many people nominated them (2 points per nominator) and up to 10 for how specific and sincere their comments are. Each person is suggested for only one award, and every unit has at least one winner. These are only suggestions; you choose.</p>
   <div class="tools"><div class="tabs" role="tablist">
     <button class="${S.tab === "sugg" ? "on" : ""}" data-tab="sugg">Suggested<small>${sugg.length}</small></button>
     <button class="${S.tab === "all" ? "on" : ""}" data-tab="all">All nominees<small>${a.nominees.length}</small></button>
@@ -424,7 +419,7 @@ function renderMain() {
    ${S.tab !== "res" ? `<input class="search" id="search" placeholder="Find a name" value="${esc(S.q)}" aria-label="Find a name">` : ""}</div>`;
   if (S.tab === "sugg") {
     const t7 = sugg.filter(n => n.tier === "top7" && match(n)), bk = sugg.filter(n => n.tier === "backup" && match(n));
-    h += `<div class="grp"><h2>Suggested 7</h2><span>Already in your picks. Remove anyone you would change.</span></div>` + (t7.map(n => card(n, a)).join("") || `<div class="empty">No match in the suggested top 7.</div>`);
+    h += `<div class="grp"><h2>Suggested 7</h2><span>Our suggestion. Click Winner, or drag a name into your picks.</span></div>` + (t7.map(n => card(n, a)).join("") || `<div class="empty">No match in the suggested top 7.</div>`);
     h += `<div class="grp"><h2>Next in line</h2><span>Strongest people not suggested elsewhere</span></div>` + (bk.map(n => card(n, a)).join("") || `<div class="empty">No match here.</div>`);
   } else if (S.tab === "all") {
     const l = sorted(a.nominees).filter(match);
@@ -462,11 +457,11 @@ function renderPicks() {
   const nextI = S.data.awards.findIndex((x, i) => i > S.cur && !complete(x));
   const anyI = S.data.awards.findIndex(x => !complete(x));
   if (S.submitted) h += `<div class="sub">Submitted ${esc(fmtTime(S.submitted))}.</div>`;
-  else if (all) h += `<button class="next submit" id="submitBtn">Review and submit my picks</button><div class="sub">All ${S.data.awards.length} awards have ${W} winners. You can change picks until ${esc(S.data.due_label)}.</div>`;
+  else if (all) h += `<button class="next submit" id="submitBtn">Review and submit my picks</button><div class="sub">All ${S.data.awards.length} awards have ${W} winners.</div>`;
   else {
     const to = S.cur < S.data.awards.length - 1 ? S.cur + 1 : (nextI < 0 ? anyI : nextI);
     const label = S.cur < S.data.awards.length - 1 ? `Next: ${esc(S.data.awards[to].name)} &rarr;` : `Go to unfinished: ${esc(S.data.awards[to].name)} &rarr;`;
-    h += `<button class="next" id="nextBtn" data-to="${to}">${label}</button><div class="sub">Submit appears when all ${S.data.awards.length} awards have ${W} winners. You can change picks until ${esc(S.data.due_label)}.</div>`;
+    h += `<button class="next" id="nextBtn" data-to="${to}">${label}</button><div class="sub">Submit appears when all ${S.data.awards.length} awards have ${W} winners.</div>`;
   }
   $("pk").innerHTML = h;
 }
@@ -514,12 +509,30 @@ $("pk").addEventListener("drop", e => {
 $("main").addEventListener("dragover", e => { if (DRAG.k && DRAG.from !== "card") { e.preventDefault(); e.dataTransfer.dropEffect = "move"; } });
 $("main").addEventListener("drop", e => { if (DRAG.k && DRAG.from !== "card") { e.preventDefault(); const k = DRAG.k; clearOver(); place(k, null); toast("Removed from your picks."); } });
 
+function showWelcome() {
+  const W = S.data.winners, B = S.data.backups, N = S.data.awards.length;
+  $("modalSlot").innerHTML = `<div class="modal" role="dialog" aria-modal="true" aria-labelledby="wT"><div class="mbox wel"><div class="mhead"><h2 id="wT">How this works</h2><p>About 20 to 30 minutes. You can stop and come back any time.</p></div>
+   <div class="wbody">
+    <h4>What to do</h4>
+    <ol><li>Go through each of the ${N} awards on the left.</li><li>Pick <b>${W} winners</b> per award, plus up to ${B} backups if you like. Click <b>Winner</b> or <b>Backup</b>, or drag names into your picks on the right.</li><li>When all ${N} awards have ${W} winners, click <b>Review and submit</b>.</li></ol>
+    <h4>How the suggestions were made</h4>
+    <p>Every nominee has a score out of 20:</p>
+    <ul><li><b>Up to 10 points for nominations:</b> 2 points for each person who nominated them.</li><li><b>Up to 10 points for the comments:</b> every comment was read for a real story, sincerity, impact on patients or the team, and fit with the award. A short comment with a real example counts more than a long general one.</li></ul>
+    <p>Each person is suggested for <b>only one award</b>, the one where their case is strongest, so more people are recognized. Every unit has at least one suggested winner. Self-nominations do not count.</p>
+    <p>The <b>Suggested 7</b> are a starting point only. Nothing is picked for you. If you know someone's work, trust your judgment.</p>
+    <h4>Saving</h4>
+    <p>Every click saves right away. If you step away, close the page, or finish from home, sign in again with the same password and your name, and your picks will be there.</p>
+   </div><div class="mfoot"><button class="ok2" id="wOk">Got it, start</button></div></div></div>`;
+  $("wOk").onclick = () => { try { localStorage.setItem("nr_welcome_" + S.me, "1"); } catch {} $("modalSlot").innerHTML = ""; };
+}
+$("howBtn").onclick = () => showWelcome();
+
 function openSubmit() {
   const rows = S.data.awards.map(a => {
     const p = P(a), nm = k => esc(a.byKey.get(k)?.name || k);
     return `<div><h4>${esc(a.name)}</h4>${p.w.map(nm).join(", ")}${p.b.length ? `<div class="bk">Backups: ${p.b.map(nm).join(", ")}</div>` : ""}</div>`;
   }).join("");
-  $("modalSlot").innerHTML = `<div class="modal" role="dialog" aria-modal="true" aria-labelledby="mT"><div class="mbox"><div class="mhead"><h2 id="mT">Submit your picks</h2><p>Check your ${S.data.winners} winners for each award. After you submit you can still reopen and change them until ${esc(S.data.due_label)}.</p></div><div class="mlist">${rows}</div><div class="mfoot"><button class="cancel" id="mCancel">Keep editing</button><button class="ok2" id="mOk">Submit my picks</button></div></div></div>`;
+  $("modalSlot").innerHTML = `<div class="modal" role="dialog" aria-modal="true" aria-labelledby="mT"><div class="mbox"><div class="mhead"><h2 id="mT">Submit your picks</h2><p>Check your ${S.data.winners} winners for each award.</p></div><div class="mlist">${rows}</div><div class="mfoot"><button class="cancel" id="mCancel">Keep editing</button><button class="ok2" id="mOk">Submit my picks</button></div></div></div>`;
   $("mCancel").onclick = () => $("modalSlot").innerHTML = "";
   $("mOk").onclick = async () => {
     $("mOk").disabled = true; await flushAll();
