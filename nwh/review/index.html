@@ -6,7 +6,7 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,500;1,400&display=swap" rel="stylesheet">
 <style>
 :root{--navy:#17375e;--blue:#003CA5;--bright:#009ADF;--gold:#C9962B;--bg:#f0f2f5;--card:#fff;--line:#e5e7eb;--line2:#f1f3f6;
---text:#1a1a2e;--muted:#5f6b7a;--dim:#7b8696;--green:#1f7a4d;--red:#b42318;--amber:#8a5a00;--font:'IBM Plex Sans',-apple-system,'Segoe UI',sans-serif;
+--text:#1a1a2e;--muted:#5f6b7a;--dim:#66717f;--green:#1f7a4d;--red:#b42318;--amber:#8a5a00;--font:'IBM Plex Sans',-apple-system,'Segoe UI',sans-serif;
 --serif:'IBM Plex Serif',Georgia,serif;--shadow:0 1px 2px rgba(16,24,40,.05),0 1px 3px rgba(16,24,40,.06);color-scheme:light}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%}
 body{font:15px/1.5 var(--font);color:var(--text);background:var(--bg)}
@@ -17,7 +17,7 @@ button{font:inherit}[hidden]{display:none!important}
 .box h1{font-family:var(--serif);font-weight:500;font-size:24px;color:var(--navy);margin:0 0 18px}
 .box label{display:block;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:6px}
 .box input,.box select{width:100%;border:1px solid #cfd5de;border-radius:8px;padding:10px 12px;font:inherit;font-size:15px;background:#fff;color:var(--text)}
-.box input:focus,.box select:focus,.search:focus,.sel:focus{outline:2px solid var(--bright);outline-offset:1px;border-color:transparent}
+.box input:focus,.box select:focus,.search:focus,.sel:focus{outline:2px solid var(--blue);outline-offset:1px;border-color:transparent}
 .go{width:100%;margin-top:14px;padding:11px;border:0;border-radius:8px;background:var(--navy);color:#fff;font-weight:600;font-size:15px;cursor:pointer}
 .go:disabled{opacity:.55;cursor:default}
 .err{color:var(--red);font-size:13.5px;margin-top:10px;min-height:20px}
@@ -33,17 +33,17 @@ button{font:inherit}[hidden]{display:none!important}
 .ring{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;flex-shrink:0}
 .ring i{width:36px;height:36px;border-radius:50%;background:var(--navy);display:grid;place-items:center;font-style:normal;font-size:12px;font-weight:600;color:#fff}
 .prog b{display:block;color:#fff;font-weight:600;font-size:14px}.prog span{font-size:12px;white-space:nowrap}
-.list{padding:10px 0;overflow:auto;flex:1;scrollbar-width:none}.list::-webkit-scrollbar{display:none}
+.list{padding:10px 0 28px;overflow:auto;flex:1;scrollbar-width:none;-webkit-mask-image:linear-gradient(#000 calc(100% - 28px),transparent);mask-image:linear-gradient(#000 calc(100% - 28px),transparent)}.list::-webkit-scrollbar{display:none}
 .list .h{font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:#7f93b0;padding:8px 22px}
-.aw{display:flex;align-items:center;gap:10px;padding:9px 22px;font-size:14px;color:#cdd6e3;cursor:pointer;border:0;border-left:3px solid transparent;background:none;width:100%;text-align:left}
+.aw{display:flex;align-items:center;gap:10px;padding:8px 22px;font-size:14px;color:#e3e9f1;cursor:pointer;border:0;border-left:3px solid transparent;background:none;width:100%;text-align:left}
 .aw:hover{background:rgba(255,255,255,.04)}
 .aw.on{background:rgba(255,255,255,.08);border-left-color:var(--bright);color:#fff;font-weight:500}
-.aw .st{margin-left:auto;font-size:12px;color:#8fa3bf;font-variant-numeric:tabular-nums}
+.aw .st{margin-left:auto;font-size:12px;color:rgba(255,255,255,.75);font-variant-numeric:tabular-nums}
 .ok{width:16px;height:16px;border-radius:50%;background:var(--bright);display:grid;place-items:center;flex-shrink:0}
 .ok svg{width:10px;height:10px}.dot{width:16px;height:16px;border-radius:50%;border:1.5px solid #4a5f7f;flex-shrink:0}
 .dot.half{border-color:var(--bright);background:linear-gradient(90deg,var(--bright) 50%,transparent 50%)}
-.foot{padding:16px 22px;border-top:1px solid rgba(255,255,255,.08);font-size:12.5px;line-height:1.5}
-.foot b{color:#fff;font-weight:500}.foot a{color:#8fa3bf;cursor:pointer}.foot a:hover{color:#fff}
+.foot{padding:16px 22px;border-top:1px solid rgba(255,255,255,.08);font-size:12.5px;line-height:1.5;color:rgba(255,255,255,.78)}
+.foot b{color:#fff;font-weight:500}.foot a{color:#fff;text-decoration:underline;cursor:pointer}.foot a:hover{color:#fff}
 .top{background:#fff;border-bottom:1px solid var(--line);padding:12px 32px;display:flex;align-items:center;gap:18px;position:sticky;top:0;z-index:5}
 .top img{height:26px}.top .sp{flex:1}.top .who{font-size:13.5px;color:var(--muted)}.top .who b{color:var(--text);font-weight:600}
 .saved{font-size:12.5px;color:var(--green);display:flex;align-items:center;gap:6px}
@@ -72,21 +72,21 @@ button{font:inherit}[hidden]{display:none!important}
 .grp span{font-size:13px;color:var(--dim)}
 .empty{padding:28px;text-align:center;color:var(--muted);background:#fff;border:1px dashed #cfd5de;border-radius:12px;margin-top:14px}
 .nom{background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden}
-.nom.win{border-color:var(--blue);box-shadow:0 0 0 1px var(--blue),var(--shadow)}
-.nom.bk{border-color:#8796ad;box-shadow:0 0 0 1px #8796ad,var(--shadow)}
-.row{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:16px;padding:18px 20px 14px}
+.nom.win{border-color:#9db3d9;background:#f7f9fd}
+.nom.bk{border-color:#b7c0cc;background:#fafbfc}
+.row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;padding:18px 20px 14px}
 .rk{width:36px;height:36px;border-radius:50%;background:var(--line2);color:var(--muted);display:grid;place-items:center;font-weight:600;font-size:14px}
 .nom.win .rk{background:var(--blue);color:#fff}.nom.bk .rk{background:#fff;border:1.5px solid var(--navy);color:var(--navy)}
 .nm{font-size:17px;font-weight:600;color:var(--text)}.role{font-size:13.5px;color:var(--muted)}
 .meta{display:flex;flex-wrap:wrap;gap:4px 18px;margin-top:6px;font-size:13px;color:var(--muted)}
 .meta b{color:var(--text);font-weight:600}
 .bars{display:inline-flex;gap:2px;vertical-align:-1px;margin-right:5px}.bars i{width:6px;height:12px;border-radius:1px;background:#c3cad4}.bars i.f{background:var(--bright)}
-.q{font-family:var(--serif);font-style:italic;font-size:15.5px;line-height:1.55;color:#2a3342;margin:12px 0 4px}
+.q{text-wrap:pretty;font-family:var(--serif);font-style:italic;font-size:15.5px;line-height:1.55;color:#2a3342;margin:12px 0 4px}
 .q::before{content:"\201C";color:var(--gold);font-size:26px;line-height:0;vertical-align:-8px;margin-right:2px;font-style:normal}
-.qby{font-size:12.5px;color:var(--dim)}
+.qby{font-size:12.5px;color:var(--muted)}
 .why{font-size:13px;color:var(--muted);margin-top:8px}
-.sum{font-size:14.5px;color:var(--text);margin-top:8px;max-width:680px}
-.method{font-size:13px;color:var(--muted);margin:10px 0 0;max-width:760px}.method b{color:var(--text);font-weight:600}
+.sum{text-wrap:pretty;font-size:14.5px;color:var(--text);margin-top:8px;max-width:680px}
+.method{font-size:13px;color:var(--muted);margin:12px 0 4px;max-width:760px}.method summary{cursor:pointer;color:var(--blue);font-weight:600;display:inline}.method p{margin:6px 0 0}.method b{color:var(--text);font-weight:600}
 .pre{font-size:13px;color:var(--muted)}.elsew{color:var(--amber)}
 .acts{display:flex;flex-direction:column;gap:8px;min-width:132px}
 .b{border:1px solid #cfd5de;background:#fff;border-radius:8px;padding:8px 14px;font-size:14px;font-weight:600;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
@@ -94,10 +94,10 @@ button{font:inherit}[hidden]{display:none!important}
 .b:disabled{opacity:.5;cursor:default}
 .b.w.on{background:var(--blue);border-color:var(--blue);color:#fff}
 .b.k.on{background:#e7edf7;border-color:var(--navy);color:var(--navy)}
-.ex{display:flex;justify-content:space-between;align-items:center;gap:16px;border-top:1px solid var(--line2);padding:10px 20px 10px 80px;font-size:13.5px;background:#fbfcfd}
+.ex{display:flex;justify-content:space-between;align-items:center;gap:16px;border-top:1px solid var(--line2);padding:10px 20px;font-size:13.5px;background:#fbfcfd}
 .ex button{color:var(--blue);font-weight:600;cursor:pointer;border:0;background:none;padding:0;white-space:nowrap;font-size:13.5px}
 .ex span{color:var(--muted)}.ex .also{color:var(--amber)}
-.all{border-top:1px solid var(--line2);padding:6px 20px 14px 80px;background:#fbfcfd}
+.all{border-top:1px solid var(--line2);padding:6px 20px 14px;background:#fbfcfd}
 .c{padding:10px 0;border-bottom:1px solid var(--line2)}.c:last-child{border-bottom:0}
 .c .by{font-size:12.5px;color:var(--muted);margin-bottom:2px}.c .by b{color:var(--text);font-weight:600}
 .c p{margin:0;font-size:14.5px;white-space:pre-line}.c p.none{color:var(--dim);font-style:italic}
@@ -117,7 +117,7 @@ button{font:inherit}[hidden]{display:none!important}
 .next{width:100%;margin-top:16px;padding:11px;border:0;border-radius:8px;background:var(--navy);color:#fff;font-weight:600;font-size:14.5px;cursor:pointer}
 .next.submit{background:var(--blue)}
 .sub{font-size:12.5px;color:var(--muted);margin-top:10px;line-height:1.45}
-.toast{position:fixed;left:50%;top:64px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:11px 18px;border-radius:10px;font-size:14px;box-shadow:0 8px 24px rgba(10,34,64,.25);z-index:20;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:11px 18px;border-radius:10px;font-size:14px;box-shadow:0 8px 24px rgba(10,34,64,.25);z-index:20;opacity:0;transition:opacity .2s;pointer-events:none}
 .toast.show{opacity:1}
 /* modal */
 .modal{position:fixed;inset:0;background:rgba(10,34,64,.72);backdrop-filter:blur(3px);display:grid;place-items:center;z-index:30;padding:30px}
@@ -153,8 +153,8 @@ tr.close td:first-child{box-shadow:inset 3px 0 0 var(--gold)}
 .flag{color:var(--amber);font-size:12.5px}
 /* narrow desktop */
 @media (max-width:1240px){#app{grid-template-columns:224px minmax(0,1fr)}.body{grid-template-columns:minmax(0,1fr) 260px;gap:20px;padding:22px 24px 60px}
- .top{padding:12px 24px}.row{grid-template-columns:40px minmax(0,1fr)}.acts{grid-column:2;flex-direction:row;min-width:0}.acts .b{min-width:120px}
- .ex,.all{padding-left:76px}.banner{margin:16px 24px 0}.search{width:170px}.aw{padding:8px 18px;font-size:13.5px}.brand,.prog,.foot{padding-left:18px;padding-right:18px}}
+ .top{padding:12px 24px}.row{grid-template-columns:minmax(0,1fr)}.acts{grid-column:1;flex-direction:row;min-width:0}.acts .b{min-width:120px}
+.banner{margin:16px 24px 0}.search{width:170px}.aw{padding:8px 18px;font-size:13.5px}.brand,.prog,.foot{padding-left:18px;padding-right:18px}}
 #phone{display:none}
 @media (max-width:759px){body>*:not(#phone){display:none!important}#phone{display:grid}}
 </style></head><body>
@@ -380,7 +380,7 @@ function card(n, a) {
       + (blank.length ? `<div class="c"><div class="by">Nominated without a comment by</div><p class="none">${blank.map(x => esc(nameOf(x.by)) + (x.self ? " (self)" : "")).join(", ")}</p></div>` : "") + `</div>`;
   }
   const dis = locked() ? " disabled" : "";
-  return `<div class="nom${w ? " win" : b ? " bk" : ""}" data-k="${esc(n.k)}"><div class="row"><div class="rk${n.rank ? "" : " none"}">${n.rank ?? ""}</div><div>
+  return `<div class="nom${w ? " win" : b ? " bk" : ""}" data-k="${esc(n.k)}"><div class="row"><div>
    <div class="nm">${esc(n.name)}</div>${n.role ? `<div class="role">${esc(n.role)}</div>` : ""}
    ${n.summary ? `<div class="sum">${esc(n.summary)}</div>` : ""}${quote}<div class="meta">${meta}</div></div>
    <div class="acts"><button class="b w${w ? " on" : ""}" data-act="w"${dis} aria-pressed="${w}">${w ? "&#10003; " : ""}Winner</button><button class="b k${b ? " on" : ""}" data-act="b"${dis} aria-pressed="${b}">${b ? "&#10003; " : ""}Backup</button></div></div>
@@ -404,8 +404,7 @@ function renderMain() {
   const sugg = a.nominees.filter(n => n.tier !== "other");
   const mine = [...p.w, ...p.b].map(k => a.byKey.get(k)).filter(Boolean);
   let h = `<div class="hero"><div class="ey">Award ${S.cur + 1} of ${S.data.awards.length} &middot; ${a.nominees.length} nominees</div><h1>${esc(a.name)}</h1><p>${esc(a.desc)}</p></div>
-  <p class="method"><b>How the suggestions were made:</b> each nominee has a score out of 20, up to 10 for how many people nominated them (2 per person) and up to 10 for how strong and specific the comments are. Each person is suggested for only one award, and every unit has at least one winner.</p>
-  <div class="how"><span><em>1</em><span>The <b>suggested 7</b> are already picked for you</span></span><span><em>2</em><span><b>Swap</b> anyone you would change</span></span><span><em>3</em><span>Optional: up to <b>${S.data.backups} backups</b></span></span></div>
+  <details class="method"><summary>How the suggestions were made</summary><p>Score out of 20: up to 10 for nominators (2 points each) and up to 10 for how specific and sincere the comments are. One award per person, and every unit has at least one winner. Self-nominations do not count.</p></details>
   <div class="tools"><div class="tabs" role="tablist">
     <button class="${S.tab === "sugg" ? "on" : ""}" data-tab="sugg">Suggested<small>${sugg.length}</small></button>
     <button class="${S.tab === "all" ? "on" : ""}" data-tab="all">All nominees<small>${a.nominees.length}</small></button>
