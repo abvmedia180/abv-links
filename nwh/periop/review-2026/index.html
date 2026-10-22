@@ -221,7 +221,7 @@ const fmtTime = ms => new Date(ms).toLocaleString("en-US",{timeZone:"America/New
 const fmtClock = ms => new Date(ms).toLocaleTimeString("en-US",{timeZone:"America/New_York",hour:"numeric",minute:"2-digit"});
 let TOKEN = null;
 try { TOKEN = sessionStorage.getItem("nr_t"); } catch {}
-const S = {data:null, me:null, picks:{}, everSaved:new Set(), submitted:null, due:null, released:false, cur:0, tab:"all", sort:"sugg", q:"", open:new Set(), pending:{}, timers:{}, busy:{}, dq:new Map()};
+const S = {data:null, me:null, picks:{}, everSaved:new Set(), submitted:null, due:null, released:false, cur:0, tab:"all", sort:"sugg", q:"", open:new Set(), pending:{}, timers:{}, busy:{}, dq:new Map(), closed:new Set()};
 
 async function api(path, opts = {}) {
   const h = {"Content-Type":"application/json"};
@@ -374,8 +374,8 @@ function renderBanner() {
 }
 
 function bars(n) { let s = ""; for (let i = 1; i <= 5; i++) s += `<i${n && i <= n ? ' class="f"' : ""}></i>`; return `<span class="bars">${s}</span>`; }
-function card(n, a) {
-  const p = P(a), w = p.w.includes(n.k), b = p.b.includes(n.k), mb = (p.m || []).includes(n.k), open = S.open.has(n.k);
+function card(n, a, auto) {  // auto: comments start open (Standout and below)
+  const p = P(a), w = p.w.includes(n.k), b = p.b.includes(n.k), mb = (p.m || []).includes(n.k), open = auto ? !S.closed.has(n.k) : S.open.has(n.k);
   const written = n.noms.filter(x => x.t.trim());
   const blank = n.noms.filter(x => !x.t.trim());
   const meta = `<span><b>${n.votes}</b> nominator${n.votes === 1 ? "" : "s"}</span><span>Score <b>${n.score}</b>/20</span>`;
@@ -393,7 +393,7 @@ function card(n, a) {
   const dis = locked() || out ? " disabled" : "";
   if (out) left = `<span class="dqt">Disqualified by direct leadership</span>${out.mine ? '<a class="clr" data-act="undq">Undo (put back)</a>' : ""}`;
   else if (!locked()) left = (left === "<span></span>" ? "" : left) + `<a class="clr dqa" data-act="dq">Disqualify (direct leadership only)</a>`;
-  return `<div class="nom${out ? " out" : w ? " win" : b ? " bk" : ""}" data-k="${esc(n.k)}"${locked() || out ? "" : ' draggable="true"'}><div class="row"><div>
+  return `<div class="nom${out ? " out" : w ? " win" : b ? " bk" : ""}" data-k="${esc(n.k)}"${auto ? ' data-auto="1"' : ""}${locked() || out ? "" : ' draggable="true"'}><div class="row"><div>
    <div class="nm">${esc(n.name)}</div>${n.role ? `<div class="role">${esc(n.role)}</div>` : ""}
    ${n.summary ? `<div class="sum">${esc(n.summary)}</div>` : ""}${quote}<div class="meta">${meta}</div></div>
    <div class="acts"><button class="b w${w ? " on" : ""}" data-act="w"${dis} aria-pressed="${w}">${w ? "&#10003; " : ""}Winner</button><button class="b k${b ? " on" : ""}" data-act="b"${dis} aria-pressed="${b}">${b ? "&#10003; " : ""}Backup</button><button class="b m${mb ? " on" : ""}" data-act="m"${dis || w || b ? " disabled" : ""} aria-pressed="${mb}" title="Private shortlist. Not counted.">${mb ? "&#9733;" : "&#9734;"} Maybe</button></div></div>
@@ -433,8 +433,8 @@ function renderMain() {
     const rest = sorted(a.nominees.filter(n => n.tier === "other" && n.cp < 6)).filter(match);
     h += `<div class="grp"><h2>Suggested 7</h2><span>Start here: the highest scores for this award.</span></div>` + (t7.map(n => card(n, a)).join("") || `<div class="empty">No match in the suggested 7.</div>`);
     h += `<div class="grp"><h2>Next in line</h2><span>Strongest people not suggested for another award.</span></div>` + (bk.map(n => card(n, a)).join("") || `<div class="empty">No match here.</div>`);
-    if (strong.length) h += `<div class="grp"><h2>Standout comments</h2><span>A strong, specific story, even with only one nominator.</span></div>` + strong.map(n => card(n, a)).join("");
-    h += `<div class="grp"><h2>All remaining nominees</h2><span>${rest.length}, highest score first.</span></div>` + (rest.map(n => card(n, a)).join("") || `<div class="empty">No match here.</div>`);
+    if (strong.length) h += `<div class="grp"><h2>Standout comments</h2><span>A strong, specific story, even with only one nominator.</span></div>` + strong.map(n => card(n, a, true)).join("");
+    h += `<div class="grp"><h2>All remaining nominees</h2><span>${rest.length}, highest score first.</span></div>` + (rest.map(n => card(n, a, true)).join("") || `<div class="empty">No match here.</div>`);
   } else if (S.tab === "all") {
     const l = sorted(a.nominees).filter(match);
     h += `<div class="grp"><h2>All nominees</h2><span>${l.length} shown</span></div>` + (l.map(n => card(n, a)).join("") || `<div class="empty">No nominee matches “${esc(S.q)}”.</div>`);
@@ -452,7 +452,7 @@ $("main").addEventListener("click", e => {
   const t = e.target.closest("[data-tab]"); if (t) { S.tab = t.dataset.tab; S.q = ""; S.open.clear(); renderMain(); return; }
   const b = e.target.closest("[data-act]"); if (!b) return;
   const k = b.closest(".nom").dataset.k;
-  if (b.dataset.act === "o") { S.open.has(k) ? S.open.delete(k) : S.open.add(k); renderMain(); return; }
+  if (b.dataset.act === "o") { const set = b.closest(".nom").dataset.auto ? S.closed : S.open; set.has(k) ? set.delete(k) : set.add(k); renderMain(); return; }
   if (b.dataset.act === "dq") { openDq(k); return; }
   if (b.dataset.act === "undq") { undoDq(k); return; }
   setPick(k, b.dataset.act);
