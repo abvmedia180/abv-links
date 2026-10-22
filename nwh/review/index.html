@@ -425,9 +425,11 @@ function renderMain() {
   if (S.tab === "all" && S.sort === "sugg") {
     // one ranked list: suggested 7, next in line, then everyone else by score
     const t7 = sugg.filter(n => n.tier === "top7" && match(n)), bk = sugg.filter(n => n.tier === "backup" && match(n));
-    const rest = sorted(a.nominees.filter(n => n.tier === "other")).filter(match);
+    const strong = a.nominees.filter(n => n.tier === "other" && n.cp >= 6).sort((x, y) => y.cp - x.cp || y.score - x.score).filter(match);
+    const rest = sorted(a.nominees.filter(n => n.tier === "other" && n.cp < 6)).filter(match);
     h += `<div class="grp"><h2>Suggested 7</h2><span>Start here: the highest scores for this award.</span></div>` + (t7.map(n => card(n, a)).join("") || `<div class="empty">No match in the suggested 7.</div>`);
     h += `<div class="grp"><h2>Next in line</h2><span>Strongest people not suggested for another award.</span></div>` + (bk.map(n => card(n, a)).join("") || `<div class="empty">No match here.</div>`);
+    if (strong.length) h += `<div class="grp"><h2>Standout comments</h2><span>A strong, specific story, even with only one nominator.</span></div>` + strong.map(n => card(n, a)).join("");
     h += `<div class="grp"><h2>All remaining nominees</h2><span>${rest.length}, highest score first.</span></div>` + (rest.map(n => card(n, a)).join("") || `<div class="empty">No match here.</div>`);
   } else if (S.tab === "all") {
     const l = sorted(a.nominees).filter(match);
