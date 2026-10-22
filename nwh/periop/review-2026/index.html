@@ -407,7 +407,7 @@ function card(n, a, auto) {  // auto: comments start open (Standout and below)
   }
   const out = S.dq.get(n.k) || (n.sdq ? {self: true} : null);
   const dis = locked() || out ? " disabled" : "";
-  if (out && out.self) left = `<span class="sdq">* Disqualified: self-nominations are not allowed</span>`;
+  if (out && out.self) left = `<span class="sdq">* Not eligible: self-nominations do not count</span>`;
   else if (out) left = `<span class="dqt">Disqualified by direct leadership</span>${out.mine ? '<a class="clr" data-act="undq">Undo (put back)</a>' : ""}`;
   else if (!locked()) left = (left === "<span></span>" ? "" : left) + `<a class="clr dqa" data-act="dq">Disqualify (direct leadership only)</a>`;
   return `<div class="nom${out ? (out.self ? " selfout" : " out") : w ? " win" : b ? " bk" : ""}" data-k="${esc(n.k)}"${auto ? ' data-auto="1"' : ""}${locked() || out ? "" : ' draggable="true"'}><div class="row"><div>
@@ -453,7 +453,7 @@ function renderMain() {
     h += `<div class="grp"><h2>Next in line</h2><span>Strongest people not suggested for another award.</span></div>` + (bk.map(n => card(n, a)).join("") || `<div class="empty">No match here.</div>`);
     if (strong.length) h += `<div class="grp"><h2>Standout comments</h2><span>A strong, heartfelt comment, even with only one nominator.</span></div>` + strong.map(n => card(n, a, true)).join("");
     h += `<div class="grp"><h2>All remaining nominees</h2><span>${rest.length}, highest score first.</span></div>` + (rest.map(n => card(n, a, true)).join("") || `<div class="empty">No match here.</div>`);
-    if (selfs.length) h += `<div class="grp"><h2>Not eligible</h2><span>Nominated themselves. Self-nominations are not allowed.</span></div>` + selfs.map(n => card(n, a)).join("");
+    if (selfs.length) h += `<div class="grp"><h2>Not eligible</h2><span>Only nominated by themselves. Self-nominations do not count.</span></div>` + selfs.map(n => card(n, a)).join("");
   } else if (S.tab === "all") {
     const l = sorted(a.nominees).filter(match);
     h += `<div class="grp"><h2>All nominees</h2><span>${l.length} shown</span></div>` + (l.map(n => card(n, a)).join("") || `<div class="empty">No nominee matches “${esc(S.q)}”.</div>`);
