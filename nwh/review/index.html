@@ -27,14 +27,14 @@ button{font:inherit}[hidden]{display:none!important}
 #app{display:grid;grid-template-columns:248px minmax(0,1fr);min-height:100vh}
 .side{background:var(--navy);color:#cdd6e3;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
 .brand{padding:22px 22px 18px;border-bottom:1px solid rgba(255,255,255,.08)}
-.brand .ey{font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:#8fa3bf}
+.brand .ey{font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:rgba(255,255,255,.75)}
 .brand .t{font-size:19px;font-weight:600;color:#fff;margin-top:4px;line-height:1.25}
 .prog{display:flex;align-items:center;gap:12px;padding:16px 22px;border-bottom:1px solid rgba(255,255,255,.08)}
 .ring{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;flex-shrink:0}
 .ring i{width:36px;height:36px;border-radius:50%;background:var(--navy);display:grid;place-items:center;font-style:normal;font-size:12px;font-weight:600;color:#fff}
 .prog b{display:block;color:#fff;font-weight:600;font-size:14px}.prog span{font-size:12px;white-space:nowrap}
 .list{padding:10px 0 28px;overflow:auto;flex:1;scrollbar-width:none;-webkit-mask-image:linear-gradient(#000 calc(100% - 28px),transparent);mask-image:linear-gradient(#000 calc(100% - 28px),transparent)}.list::-webkit-scrollbar{display:none}
-.list .h{font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:#7f93b0;padding:8px 22px}
+.list .h{font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:rgba(255,255,255,.7);padding:8px 22px}
 .aw{display:flex;align-items:center;gap:10px;padding:8px 22px;font-size:14px;color:#e3e9f1;cursor:pointer;border:0;border-left:3px solid transparent;background:none;width:100%;text-align:left}
 .aw:hover{background:rgba(255,255,255,.04)}
 .aw.on{background:rgba(255,255,255,.08);border-left-color:var(--bright);color:#fff;font-weight:500}
@@ -54,18 +54,18 @@ button{font:inherit}[hidden]{display:none!important}
 .banner button{margin-left:auto;border:1px solid currentColor;background:#fff;color:inherit;border-radius:8px;padding:6px 12px;font-weight:600;cursor:pointer;font-size:13.5px}
 .rk.none{visibility:hidden}
 .body{display:grid;grid-template-columns:minmax(0,980px) clamp(270px,21vw,360px);gap:28px;padding:26px 32px 60px}
-.hero .ey{font-size:11.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--muted)}
+.hero .ey{font-size:11.5px;letter-spacing:1.6px;text-transform:uppercase;color:#4f5b6a}
 .hero h1{font-family:var(--serif);font-weight:500;font-size:30px;color:var(--navy);margin:4px 0 6px;line-height:1.2}
 .hero p{margin:0;color:var(--muted);max-width:760px}
 .how{margin:16px 0 18px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 16px;font-size:14px;color:var(--muted);display:flex;flex-wrap:wrap;gap:8px 26px}
 .how b{color:var(--text);font-weight:600}.how>span{display:flex;gap:8px;align-items:baseline;white-space:nowrap}
 .how em{font-style:normal;width:20px;height:20px;border-radius:50%;background:var(--navy);color:#fff;font-size:11px;display:inline-grid;place-items:center;flex-shrink:0}
 .tools{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;margin-bottom:8px}
-.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);flex:1 1 380px;white-space:nowrap}
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);flex:1 1 300px;white-space:nowrap}.tools .search,.tools .sel{flex:0 0 auto}
 .tabs button{padding:9px 14px;font-size:14px;color:var(--muted);border:0;background:none;border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer}
 .tabs button.on{color:var(--blue);border-bottom-color:var(--blue);font-weight:600}
 .tabs small{color:var(--dim);margin-left:4px;font-size:12.5px}
-.search{border:1px solid var(--line);border-radius:8px;padding:8px 12px;font:inherit;font-size:14px;width:200px;background:#fff}
+.search{border:1px solid var(--line);border-radius:8px;padding:8px 12px;font:inherit;font-size:14px;width:170px;background:#fff}
 .sel{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font:inherit;font-size:14px;background:#fff;color:var(--text)}
 .grp{display:flex;align-items:baseline;gap:10px;margin:22px 0 10px}
 .grp h2{font-size:13px;letter-spacing:1.4px;text-transform:uppercase;color:var(--navy);margin:0;font-weight:600}
@@ -114,7 +114,7 @@ button{font:inherit}[hidden]{display:none!important}
 .slot.e{color:var(--dim)}.slot.e .n{background:#fff;border:1.5px dashed #c3cad4;color:var(--dim)}
 .slot .n.bn{background:#fff;border:1.5px solid var(--navy);color:var(--navy)}
 .lab{font-size:11.5px;letter-spacing:1.3px;text-transform:uppercase;color:var(--muted);margin:16px 0 4px}
-.next{width:100%;margin-top:16px;padding:11px;border:0;border-radius:8px;background:var(--navy);color:#fff;font-weight:600;font-size:14.5px;cursor:pointer}
+.next{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;margin-top:16px;padding:11px;border:0;border-radius:8px;background:var(--navy);color:#fff;font-weight:600;font-size:14.5px;cursor:pointer}
 .next.submit{background:var(--blue)}
 .sub{font-size:12.5px;color:var(--muted);margin-top:10px;line-height:1.45}
 .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:11px 18px;border-radius:10px;font-size:14px;box-shadow:0 8px 24px rgba(10,34,64,.25);z-index:20;opacity:0;transition:opacity .2s;pointer-events:none}
@@ -455,7 +455,7 @@ function renderPicks() {
   else if (all) h += `<button class="next submit" id="submitBtn">Review and submit my picks</button><div class="sub">All ${S.data.awards.length} awards have ${W} winners. You can change picks until ${esc(S.data.due_label)}.</div>`;
   else {
     const to = S.cur < S.data.awards.length - 1 ? S.cur + 1 : (nextI < 0 ? anyI : nextI);
-    const label = S.cur < S.data.awards.length - 1 ? `Next award: ${esc(S.data.awards[to].name)} &rarr;` : `Go to unfinished: ${esc(S.data.awards[to].name)} &rarr;`;
+    const label = S.cur < S.data.awards.length - 1 ? `Next: ${esc(S.data.awards[to].name)} &rarr;` : `Go to unfinished: ${esc(S.data.awards[to].name)} &rarr;`;
     h += `<button class="next" id="nextBtn" data-to="${to}">${label}</button><div class="sub">Submit appears when all ${S.data.awards.length} awards have ${W} winners. You can change picks until ${esc(S.data.due_label)}.</div>`;
   }
   $("pk").innerHTML = h;
