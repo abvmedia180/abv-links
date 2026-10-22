@@ -5,7 +5,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,500;1,400&display=swap" rel="stylesheet">
 <style>
-:root{--navy:#0a2240;--blue:#003CA5;--bright:#009ADF;--gold:#C9962B;--bg:#f0f2f5;--card:#fff;--line:#e5e7eb;--line2:#f1f3f6;
+:root{--navy:#17375e;--blue:#003CA5;--bright:#009ADF;--gold:#C9962B;--bg:#f0f2f5;--card:#fff;--line:#e5e7eb;--line2:#f1f3f6;
 --text:#1a1a2e;--muted:#5f6b7a;--dim:#7b8696;--green:#1f7a4d;--red:#b42318;--amber:#8a5a00;--font:'IBM Plex Sans',-apple-system,'Segoe UI',sans-serif;
 --serif:'IBM Plex Serif',Georgia,serif;--shadow:0 1px 2px rgba(16,24,40,.05),0 1px 3px rgba(16,24,40,.06);color-scheme:light}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%}
@@ -33,7 +33,7 @@ button{font:inherit}[hidden]{display:none!important}
 .ring{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;flex-shrink:0}
 .ring i{width:36px;height:36px;border-radius:50%;background:var(--navy);display:grid;place-items:center;font-style:normal;font-size:12px;font-weight:600;color:#fff}
 .prog b{display:block;color:#fff;font-weight:600;font-size:14px}.prog span{font-size:12px;white-space:nowrap}
-.list{padding:10px 0;overflow:auto;flex:1}
+.list{padding:10px 0;overflow:auto;flex:1;scrollbar-width:none}.list::-webkit-scrollbar{display:none}
 .list .h{font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:#7f93b0;padding:8px 22px}
 .aw{display:flex;align-items:center;gap:10px;padding:9px 22px;font-size:14px;color:#cdd6e3;cursor:pointer;border:0;border-left:3px solid transparent;background:none;width:100%;text-align:left}
 .aw:hover{background:rgba(255,255,255,.04)}
@@ -85,6 +85,9 @@ button{font:inherit}[hidden]{display:none!important}
 .q::before{content:"\201C";color:var(--gold);font-size:26px;line-height:0;vertical-align:-8px;margin-right:2px;font-style:normal}
 .qby{font-size:12.5px;color:var(--dim)}
 .why{font-size:13px;color:var(--muted);margin-top:8px}
+.sum{font-size:14.5px;color:var(--text);margin-top:8px;max-width:680px}
+.method{font-size:13px;color:var(--muted);margin:10px 0 0;max-width:760px}.method b{color:var(--text);font-weight:600}
+.pre{font-size:13px;color:var(--muted)}.elsew{color:var(--amber)}
 .acts{display:flex;flex-direction:column;gap:8px;min-width:132px}
 .b{border:1px solid #cfd5de;background:#fff;border-radius:8px;padding:8px 14px;font-size:14px;font-weight:600;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
 .b:hover:not(:disabled){border-color:var(--blue);color:var(--blue)}
@@ -121,7 +124,8 @@ button{font:inherit}[hidden]{display:none!important}
 .mbox{background:#fff;border-radius:14px;max-width:820px;width:100%;max-height:calc(100vh - 60px);display:flex;flex-direction:column;box-shadow:0 20px 50px rgba(0,0,0,.25)}
 .mhead{padding:22px 26px 12px}.mhead h2{font-family:var(--serif);font-weight:500;color:var(--navy);margin:0 0 4px;font-size:24px}
 .mhead p{margin:0;color:var(--muted);font-size:14px}
-.mlist{overflow:auto;padding:4px 26px 22px;columns:2;column-gap:28px;column-fill:balance}
+.mlist{overflow:auto;padding:4px 26px 22px;columns:2;column-gap:28px;column-fill:balance;scrollbar-width:thin;scrollbar-color:#cfd5de transparent}
+.mlist::-webkit-scrollbar{width:6px}.mlist::-webkit-scrollbar-thumb{background:#cfd5de;border-radius:3px}
 .mlist div{break-inside:avoid;padding:10px 0;border-bottom:1px solid var(--line2);font-size:13.5px}
 .mlist h4{margin:0 0 4px;font-size:13px;color:var(--navy);letter-spacing:.3px}
 .mlist .bk{color:var(--muted)}
@@ -205,7 +209,7 @@ const fmtTime = ms => new Date(ms).toLocaleString("en-US",{timeZone:"America/New
 const fmtClock = ms => new Date(ms).toLocaleTimeString("en-US",{timeZone:"America/New_York",hour:"numeric",minute:"2-digit"});
 let TOKEN = null;
 try { TOKEN = sessionStorage.getItem("nr_t"); } catch {}
-const S = {data:null, me:null, picks:{}, submitted:null, due:null, released:false, cur:0, tab:"sugg", sort:"sugg", q:"", open:new Set(), pending:{}, timers:{}};
+const S = {data:null, me:null, picks:{}, everSaved:new Set(), submitted:null, due:null, released:false, cur:0, tab:"sugg", sort:"sugg", q:"", open:new Set(), pending:{}, timers:{}};
 
 async function api(path, opts = {}) {
   const h = {"Content-Type":"application/json"};
@@ -244,11 +248,11 @@ async function enter(name) {
     const r = await api("/api/me", {method:"POST", body:{reviewer:name}});
     if (r.status === 401) { signOut(); return; }
     if (!r.ok) { $("whoErr").textContent = "Something went wrong. Please try again."; return; }
-    S.data = r.data; S.me = r.reviewer; S.picks = r.picks || {}; S.submitted = r.submitted; S.due = Date.parse(r.due_at); S.released = r.released;
+    S.data = r.data; S.me = r.reviewer; S.picks = r.picks || {}; S.everSaved = new Set(Object.keys(S.picks)); S.submitted = r.submitted; S.due = Date.parse(r.due_at); S.released = r.released;
     for (const a of S.data.awards) { S.picks[a.name] ||= {w:[], b:[]}; a.byKey = new Map(a.nominees.map(n => [n.k, n])); }
     try { localStorage.setItem("nr_last", name); } catch {}
-    const first = S.data.awards.findIndex(a => S.picks[a.name].w.length < S.data.winners);
-    S.cur = first < 0 ? 0 : first;
+    const first = S.data.awards.findIndex(a => !S.everSaved.has(a.name));
+    S.cur = first < 0 ? 0 : first; seed();
     document.title = S.data.title;
     $("bEy").textContent = S.data.brand_ey; $("bT").innerHTML = esc(S.data.brand_t) + "<br>Winner Selection";
     $("logo").src = S.data.logo; $("contact").textContent = S.data.contact; $("meName").textContent = S.me;
@@ -337,7 +341,15 @@ function renderSide() {
   }).join("");
 }
 $("awList").onclick = e => { const b = e.target.closest(".aw"); if (b) go(+b.dataset.i); };
-function go(i) { S.cur = i; S.tab = "sugg"; S.q = ""; S.open.clear(); renderAll(); }
+function go(i) { S.cur = i; S.tab = "sugg"; S.q = ""; S.open.clear(); seed(); renderAll(); }
+// first visit to an award: start from the suggested 7 so reviewers only swap
+function seed() {
+  const a = A();
+  if (locked() || S.everSaved.has(a.name)) return;
+  S.everSaved.add(a.name);
+  S.picks[a.name] = {w: [...a.suggested], b: []};
+  queueSave(a.name);
+}
 
 function renderBanner() {
   let h = "";
@@ -354,27 +366,23 @@ function renderBanner() {
 function bars(n) { let s = ""; for (let i = 1; i <= 5; i++) s += `<i${n && i <= n ? ' class="f"' : ""}></i>`; return `<span class="bars">${s}</span>`; }
 function card(n, a) {
   const p = P(a), w = p.w.includes(n.k), b = p.b.includes(n.k), open = S.open.has(n.k);
-  const counted = n.noms.filter(x => !x.self);
   const written = n.noms.filter(x => x.t.trim());
   const blank = n.noms.filter(x => !x.t.trim());
-  const nomTxt = `<span><b>${n.votes}</b> nominator${n.votes === 1 ? "" : "s"}${n.selfn ? `<span class="small"> (+${n.selfn} self-nomination, not counted)</span>` : ""}</span>`;
-  const str = n.max ? `<span>${bars(n.max)}Best comment: <b>${STRENGTH[n.max]}</b></span>` : `<span>No written comments</span>`;
-  const quote = n.quote ? `<div class="q">${esc(n.quote)}</div><div class="qby">${esc(n.quote_by)}</div>` : "";
-  const why = n.why && n.quote ? `<div class="why">${esc(n.why)}</div>` : "";
-  const left = n.also.length ? `<span class="also">Also suggested for: ${esc(n.also.join(", "))}</span>`
-    : n.merged.length ? `<span>Includes nominations entered as ${esc(n.merged.join(", "))}</span>`
-    : n.others.length ? `<span>Also nominated for: ${esc(n.others.join(", "))}</span>` : "<span></span>";
+  const meta = `<span><b>${n.votes}</b> nominator${n.votes === 1 ? "" : "s"}</span><span>Score <b>${n.score}</b>/20</span>`;
+  const quote = n.quote ? `<div class="q">${esc(n.quote)}</div>${n.quote_by ? `<div class="qby">${esc(nameOf(n.quote_by))}</div>` : ""}` : "";
+  const left = n.elsewhere ? `<span class="elsew">Suggested winner for ${esc(n.elsewhere)}</span>`
+    : n.merged.length ? `<span>Includes nominations entered as ${esc(n.merged.join(", "))}</span>` : "<span></span>";
   const cnt = written.length;
   const link = cnt ? (open ? "Hide comments &#9652;" : `Read ${cnt === 1 ? "the comment" : cnt === 2 ? "both comments" : "all " + cnt + " comments"} &#9662;`) : (blank.length ? (open ? "Hide &#9652;" : "See who nominated &#9662;") : "");
   let all = "";
   if (open) {
-    all = `<div class="all">` + written.map(x => `<div class="c"><div class="by"><b>${esc(nameOf(x.by))}</b>${esc(unitOf(x.by))}${x.so ? '<span class="tag">Standout</span>' : ""}${x.self ? '<span class="tag self">Self-nomination, not counted</span>' : ""}${x.as && x.as !== n.name ? `<span class="small"> &middot; entered as “${esc(x.as)}”</span>` : ""}</div><p>${esc(x.t)}</p></div>`).join("")
+    all = `<div class="all">` + written.map(x => `<div class="c"><div class="by"><b>${esc(nameOf(x.by))}</b>${esc(unitOf(x.by))}${x.self ? '<span class="tag self">Self-nomination, not counted</span>' : ""}${x.as && x.as !== n.name ? `<span class="small"> &middot; entered as “${esc(x.as)}”</span>` : ""}</div><p>${esc(x.t)}</p></div>`).join("")
       + (blank.length ? `<div class="c"><div class="by">Nominated without a comment by</div><p class="none">${blank.map(x => esc(nameOf(x.by)) + (x.self ? " (self)" : "")).join(", ")}</p></div>` : "") + `</div>`;
   }
   const dis = locked() ? " disabled" : "";
   return `<div class="nom${w ? " win" : b ? " bk" : ""}" data-k="${esc(n.k)}"><div class="row"><div class="rk${n.rank ? "" : " none"}">${n.rank ?? ""}</div><div>
    <div class="nm">${esc(n.name)}</div>${n.role ? `<div class="role">${esc(n.role)}</div>` : ""}
-   <div class="meta">${nomTxt}${str}</div>${quote}${why}</div>
+   ${n.summary ? `<div class="sum">${esc(n.summary)}</div>` : ""}${quote}<div class="meta">${meta}</div></div>
    <div class="acts"><button class="b w${w ? " on" : ""}" data-act="w"${dis} aria-pressed="${w}">${w ? "&#10003; " : ""}Winner</button><button class="b k${b ? " on" : ""}" data-act="b"${dis} aria-pressed="${b}">${b ? "&#10003; " : ""}Backup</button></div></div>
    <div class="ex">${left}${link ? `<button data-act="o">${link}</button>` : ""}</div>${all}</div>`;
 }
@@ -383,9 +391,9 @@ const unitOf = by => by.includes(",") ? ", " + by.split(",").slice(1).join(",").
 
 function sorted(list) {
   const s = S.sort, by = {
-    sugg: (x, y) => (x.rank ?? 1e9) - (y.rank ?? 1e9),
-    votes: (x, y) => y.votes - x.votes || (x.rank ?? 1e9) - (y.rank ?? 1e9),
-    str: (x, y) => (y.max ?? 0) - (x.max ?? 0) || (y.avg ?? 0) - (x.avg ?? 0) || y.votes - x.votes,
+    sugg: (x, y) => (x.rank ?? 1e9) - (y.rank ?? 1e9) || y.score - x.score,
+    votes: (x, y) => y.votes - x.votes || y.score - x.score,
+    str: (x, y) => y.cp - x.cp || y.votes - x.votes,
     az: (x, y) => x.name.localeCompare(y.name),
   }[s];
   return [...list].sort(by);
@@ -396,7 +404,8 @@ function renderMain() {
   const sugg = a.nominees.filter(n => n.tier !== "other");
   const mine = [...p.w, ...p.b].map(k => a.byKey.get(k)).filter(Boolean);
   let h = `<div class="hero"><div class="ey">Award ${S.cur + 1} of ${S.data.awards.length} &middot; ${a.nominees.length} nominees</div><h1>${esc(a.name)}</h1><p>${esc(a.desc)}</p></div>
-  <div class="how"><span><em>1</em><span>Read the <b>suggested 7</b></span></span><span><em>2</em><span>Pick <b>${S.data.winners} winners</b>, up to <b>${S.data.backups} backups</b></span></span><span><em>3</em><span>Swap in anyone from <b>All nominees</b></span></span></div>
+  <p class="method"><b>How the suggestions were made:</b> each nominee has a score out of 20, up to 10 for how many people nominated them (2 per person) and up to 10 for how strong and specific the comments are. Each person is suggested for only one award, and every unit has at least one winner.</p>
+  <div class="how"><span><em>1</em><span>The <b>suggested 7</b> are already picked for you</span></span><span><em>2</em><span><b>Swap</b> anyone you would change</span></span><span><em>3</em><span>Optional: up to <b>${S.data.backups} backups</b></span></span></div>
   <div class="tools"><div class="tabs" role="tablist">
     <button class="${S.tab === "sugg" ? "on" : ""}" data-tab="sugg">Suggested<small>${sugg.length}</small></button>
     <button class="${S.tab === "all" ? "on" : ""}" data-tab="all">All nominees<small>${a.nominees.length}</small></button>
@@ -408,8 +417,8 @@ function renderMain() {
    ${S.tab !== "res" ? `<input class="search" id="search" placeholder="Find a name" value="${esc(S.q)}" aria-label="Find a name">` : ""}</div>`;
   if (S.tab === "sugg") {
     const t7 = sugg.filter(n => n.tier === "top7" && match(n)), bk = sugg.filter(n => n.tier === "backup" && match(n));
-    h += `<div class="grp"><h2>Suggested top 7</h2><span>Ranked by number of nominators and strength of comments</span></div>` + (t7.map(n => card(n, a)).join("") || `<div class="empty">No match in the suggested top 7.</div>`);
-    h += `<div class="grp"><h2>Next in line</h2><span>Strong backups if you want to swap someone in</span></div>` + (bk.map(n => card(n, a)).join("") || `<div class="empty">No match here.</div>`);
+    h += `<div class="grp"><h2>Suggested 7</h2><span>Already in your picks. Remove anyone you would change.</span></div>` + (t7.map(n => card(n, a)).join("") || `<div class="empty">No match in the suggested top 7.</div>`);
+    h += `<div class="grp"><h2>Next in line</h2><span>Strongest people not suggested elsewhere</span></div>` + (bk.map(n => card(n, a)).join("") || `<div class="empty">No match here.</div>`);
   } else if (S.tab === "all") {
     const l = sorted(a.nominees).filter(match);
     h += `<div class="grp"><h2>All nominees</h2><span>${l.length} shown</span></div>` + (l.map(n => card(n, a)).join("") || `<div class="empty">No nominee matches “${esc(S.q)}”.</div>`);
