@@ -110,6 +110,16 @@ button{font:inherit}[hidden]{display:none!important}
 .meter{height:6px;background:var(--line2);border-radius:3px;margin-bottom:14px}.meter i{display:block;height:6px;background:var(--blue);border-radius:3px;transition:width .2s}
 .slot{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line2);font-size:14px;min-height:39px}
 .slot .n{width:22px;height:22px;border-radius:50%;background:var(--blue);color:#fff;font-size:11.5px;font-weight:600;display:grid;place-items:center;flex-shrink:0}
+.sdq{color:#c8102e;font-weight:700;font-size:13.5px}
+.tprog{display:flex;align-items:center;gap:10px;margin-right:22px}
+.tbar{width:220px;height:8px;background:var(--line2);border-radius:4px;overflow:hidden}.tbar i{display:block;height:100%;width:0;background:var(--blue);border-radius:4px;transition:width .35s ease}
+#tbarTxt{font-size:13px;color:var(--dim);white-space:nowrap}#tbarTxt b{color:var(--navy)}
+@media (max-width:1400px){.tbar{width:120px}#tbarTxt .x{display:none}.tprog{margin-right:14px}}
+.confetti{position:fixed;top:-12px;width:8px;height:12px;z-index:60;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(105vh) rotate(720deg);opacity:.9}}
+.thanks{text-align:center;padding:34px 34px 8px}.thanks h2{margin:0 0 10px}.thanks p{margin:0 auto 8px;max-width:420px;line-height:1.5}
+.slot .nmw{min-width:0;line-height:1.25}.slot .u{display:block;color:var(--dim);font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:1100px){.tbar{display:none}}
 .slot .r{margin-left:auto;color:var(--dim);font-size:18px;line-height:1;cursor:pointer;border:0;background:none;padding:0 2px}
 .slot .r:hover{color:var(--red)}
 .slot.e{color:var(--dim)}.slot.e .n{background:#fff;border:1.5px dashed #c3cad4;color:var(--dim)}
@@ -141,7 +151,7 @@ button{font:inherit}[hidden]{display:none!important}
 .mfoot{padding:14px 26px 20px;display:flex;gap:10px;justify-content:flex-end;border-top:1px solid var(--line)}
 .mfoot button{padding:10px 18px;border-radius:8px;font-weight:600;cursor:pointer;font-size:14.5px}
 .mfoot .cancel{background:#fff;border:1px solid #cfd5de;color:var(--text)}.mfoot .danger{background:var(--red);border:0;color:#fff}.mfoot .danger:disabled{opacity:.4;cursor:default}
-.nom.out{background:#f6f7f9}.nom.out .row{opacity:.55}.dqt{color:var(--red);font-weight:600}.exl{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.nom.out,.nom.selfout{background:#f6f7f9}.nom.out .row,.nom.selfout .row{opacity:.55}.dqt{color:var(--red);font-weight:600}.exl{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
 .dqa{font-size:12.5px}.reasons label{display:flex;gap:8px;align-items:center;padding:6px 0;font-size:14.5px;cursor:pointer}
 .elsetag{font-size:12.5px;font-weight:600;color:var(--amber);margin-left:10px;white-space:nowrap}
 .cs{font-size:12px;color:var(--muted);margin-top:4px}.cwhy{font-size:12.5px;color:#6b4500;background:#fff8e6;border-radius:6px;padding:6px 10px;margin-top:6px}
@@ -200,7 +210,7 @@ tr.close td:first-child{box-shadow:inset 3px 0 0 var(--gold)}
   <div class="foot">Reviewing as <b id="meName"></b> &middot; <a id="switchMe">Switch</a><br><span style="white-space:nowrap;font-size:11.5px">Picks stay private until all submit.</span><br><a id="howBtn">How this works</a> &middot; <a id="resetAll">Clear all my picks</a></div>
  </aside>
  <div>
-  <div class="top"><img id="logo" alt="Long Island Jewish Medical Center"><div class="sp"></div><div class="saved" id="saved">All changes saved</div><div class="who">Questions? Contact <b id="contact"></b></div></div>
+  <div class="top"><img id="logo" alt="Long Island Jewish Medical Center"><div class="sp"></div><div class="tprog" title="Winners picked across all awards"><div class="tbar"><i id="tbarFill"></i></div><span id="tbarTxt"></span></div><div class="saved" id="saved">All changes saved</div><div class="who">Questions? Contact <b id="contact"></b></div></div>
   <div id="bannerSlot"></div>
   <div class="body">
    <section id="main"></section>
@@ -356,6 +366,11 @@ function renderSide() {
   $("ringTxt").textContent = `${n}/${t}`;
   $("progTxt").textContent = S.submitted ? "Submitted" : `${n} of ${t} awards done`;
   $("dueTxt").textContent = "Due " + S.data.due_label;
+  // overall progress (Abe 10/22): winners picked across every award, so it moves with each pick, in any order
+  const need = t * S.data.winners, got = S.data.awards.reduce((s, a) => s + Math.min(P(a).w.length, S.data.winners), 0);
+  const pct = S.submitted ? 100 : Math.round(got / need * 100);
+  $("tbarFill").style.width = pct + "%";
+  $("tbarTxt").innerHTML = S.submitted ? "<b>Submitted</b>" : `<b>${pct}% done</b><span class="x"> · ${got} of ${need} winners picked</span>`;
   $("awList").innerHTML = S.data.awards.map((a, i) => {
     const c = P(a).w.length, icon = c === S.data.winners ? `<span class="ok">${CHECK}</span>` : `<span class="dot${c ? " half" : ""}"></span>`;
     return `<button class="aw${i === S.cur ? " on" : ""}" data-i="${i}">${icon}${esc(a.name)}<span class="st">${c}/${S.data.winners}</span></button>`;
@@ -390,12 +405,13 @@ function card(n, a, auto) {  // auto: comments start open (Standout and below)
     all = `<div class="all">` + written.map(x => `<div class="c"><div class="by"><b>${esc(nameOf(x.by))}</b>${esc(unitOf(x.by))}${x.self ? '<span class="tag self">Self-nomination, not counted</span>' : ""}${x.as && x.as !== n.name ? `<span class="small"> &middot; entered as “${esc(x.as)}”</span>` : ""}</div><p>${esc(x.t)}</p>${x.ov ? `<div class="cs">Comment strength ${x.ov}/10</div>` : ""}${x.why ? `<div class="cwhy">* Why this scored lower: ${esc(x.why)}</div>` : ""}</div>`).join("")
       + (blank.length ? `<div class="c"><div class="by">Nominated without a comment by</div><p class="none">${blank.map(x => esc(nameOf(x.by)) + (x.self ? " (self)" : "")).join(", ")}</p></div>` : "") + `</div>`;
   }
-  const out = S.dq.get(n.k);
+  const out = S.dq.get(n.k) || (n.sdq ? {self: true} : null);
   const dis = locked() || out ? " disabled" : "";
-  if (out) left = `<span class="dqt">Disqualified by direct leadership</span>${out.mine ? '<a class="clr" data-act="undq">Undo (put back)</a>' : ""}`;
+  if (out && out.self) left = `<span class="sdq">* Disqualified: self-nominations are not allowed</span>`;
+  else if (out) left = `<span class="dqt">Disqualified by direct leadership</span>${out.mine ? '<a class="clr" data-act="undq">Undo (put back)</a>' : ""}`;
   else if (!locked()) left = (left === "<span></span>" ? "" : left) + `<a class="clr dqa" data-act="dq">Disqualify (direct leadership only)</a>`;
-  return `<div class="nom${out ? " out" : w ? " win" : b ? " bk" : ""}" data-k="${esc(n.k)}"${auto ? ' data-auto="1"' : ""}${locked() || out ? "" : ' draggable="true"'}><div class="row"><div>
-   <div class="nm">${esc(n.name)}${n.elsewhere ? `<span class="elsetag" title="Each person is suggested for one award only">* Suggested winner for ${esc(n.elsewhere)}</span>` : ""}</div>${n.role ? `<div class="role">${esc(n.role)}</div>` : ""}
+  return `<div class="nom${out ? (out.self ? " selfout" : " out") : w ? " win" : b ? " bk" : ""}" data-k="${esc(n.k)}"${auto ? ' data-auto="1"' : ""}${locked() || out ? "" : ' draggable="true"'}><div class="row"><div>
+   <div class="nm">${esc(n.name)}${n.up ? `<span class="elsetag" title="Suggested so every unit has at least one winner">* Unit pick: suggested so every unit has a winner</span>` : ""}${n.elsewhere ? `<span class="elsetag" title="Each person is suggested for one award only">* Suggested winner for ${esc(n.elsewhere)}</span>` : ""}</div>${n.role ? `<div class="role">${esc(n.role)}</div>` : ""}
    ${n.summary ? `<div class="sum">${esc(n.summary)}</div>` : ""}${quote}<div class="meta">${meta}</div></div>
    <div class="acts"><button class="b w${w ? " on" : ""}" data-act="w"${dis} aria-pressed="${w}">${w ? "&#10003; " : ""}Winner</button><button class="b k${b ? " on" : ""}" data-act="b"${dis} aria-pressed="${b}">${b ? "&#10003; " : ""}Backup</button><button class="b m${mb ? " on" : ""}" data-act="m"${dis || w || b ? " disabled" : ""} aria-pressed="${mb}" title="Private shortlist. Not counted.">${mb ? "&#9733;" : "&#9734;"} Maybe</button></div></div>
    <div class="ex"><span class="exl">${left}</span>${link ? `<button data-act="o">${link}</button>` : ""}</div>${all}</div>`;
@@ -410,7 +426,7 @@ function sorted(list) {
     str: (x, y) => y.cp - x.cp || y.votes - x.votes,
     az: (x, y) => x.name.localeCompare(y.name),
   }[s];
-  return [...list].sort(by);
+  return [...list].sort((x, y) => (x.sdq ? 1 : 0) - (y.sdq ? 1 : 0) || by(x, y));  // self-nominators always last
 }
 function renderMain() {
   const a = A(), p = P(a), q = S.q.trim().toLowerCase();
@@ -418,7 +434,7 @@ function renderMain() {
   const sugg = a.nominees.filter(n => n.tier !== "other");
   const mine = [...p.w, ...p.b].map(k => a.byKey.get(k)).filter(Boolean);
   let h = `<div class="hero"><div class="ey">Award ${S.cur + 1} of ${S.data.awards.length} &middot; ${a.nominees.length} nominees</div><h1>${esc(a.name)}</h1><p>${esc(a.desc)}</p></div>
-  <p class="method"><b>How the suggestions were made:</b> each nominee has a score out of 20. Up to 10 points for how many people nominated them (2 points per nominator) and up to 10 for how specific and sincere their comments are. Each person is suggested for only one award, and every unit has at least one winner. These are only suggestions; you choose.</p>
+  <p class="method"><b>How the suggestions were made:</b> each nominee has a score out of 20. Up to 10 points for how many people nominated them (2 points per nominator) and up to 10 for the comments: how sincere and heartfelt they are and how well they fit the award, with extra credit for a specific story. Each person is suggested for only one award, and every unit has at least one winner (anyone included only for that reason is marked "* Unit pick"). These are only suggestions; you choose.</p>
   <div class="tools"><div class="tabs" role="tablist">
     <button class="${S.tab === "all" ? "on" : ""}" data-tab="all">Nominees<small>${a.nominees.length}</small></button>
     <button class="${S.tab === "mine" ? "on" : ""}" data-tab="mine">My picks<small>${mine.length}</small></button>
@@ -430,12 +446,14 @@ function renderMain() {
   if (S.tab === "all" && S.sort === "sugg") {
     // one ranked list: suggested 7, next in line, then everyone else by score
     const t7 = sugg.filter(n => n.tier === "top7" && match(n)), bk = sugg.filter(n => n.tier === "backup" && match(n));
-    const strong = a.nominees.filter(n => n.tier === "other" && n.cp >= 6).sort((x, y) => y.cp - x.cp || y.score - x.score).filter(match);
-    const rest = sorted(a.nominees.filter(n => n.tier === "other" && n.cp < 6)).filter(match);
+    const strong = a.nominees.filter(n => n.tier === "other" && !n.sdq && n.cp >= 6).sort((x, y) => y.cp - x.cp || y.score - x.score).filter(match);
+    const rest = sorted(a.nominees.filter(n => n.tier === "other" && !n.sdq && n.cp < 6)).filter(match);
+    const selfs = a.nominees.filter(n => n.sdq).filter(match);
     h += `<div class="grp"><h2>Suggested 7</h2><span>Start here: the highest scores for this award.</span></div>` + (t7.map(n => card(n, a)).join("") || `<div class="empty">No match in the suggested 7.</div>`);
     h += `<div class="grp"><h2>Next in line</h2><span>Strongest people not suggested for another award.</span></div>` + (bk.map(n => card(n, a)).join("") || `<div class="empty">No match here.</div>`);
-    if (strong.length) h += `<div class="grp"><h2>Standout comments</h2><span>A strong, specific story, even with only one nominator.</span></div>` + strong.map(n => card(n, a, true)).join("");
+    if (strong.length) h += `<div class="grp"><h2>Standout comments</h2><span>A strong, heartfelt comment, even with only one nominator.</span></div>` + strong.map(n => card(n, a, true)).join("");
     h += `<div class="grp"><h2>All remaining nominees</h2><span>${rest.length}, highest score first.</span></div>` + (rest.map(n => card(n, a, true)).join("") || `<div class="empty">No match here.</div>`);
+    if (selfs.length) h += `<div class="grp"><h2>Not eligible</h2><span>Nominated themselves. Self-nominations are not allowed.</span></div>` + selfs.map(n => card(n, a)).join("");
   } else if (S.tab === "all") {
     const l = sorted(a.nominees).filter(match);
     h += `<div class="grp"><h2>All nominees</h2><span>${l.length} shown</span></div>` + (l.map(n => card(n, a)).join("") || `<div class="empty">No nominee matches “${esc(S.q)}”.</div>`);
@@ -464,7 +482,7 @@ $("main").addEventListener("input", e => {
 $("main").addEventListener("change", e => { if (e.target.id === "sortSel") { S.sort = e.target.value; renderMain(); } });
 
 function renderPicks() {
-  const a = A(), p = P(a), W = S.data.winners, B = S.data.backups, nm = k => esc(a.byKey.get(k)?.name || k);
+  const a = A(), p = P(a), W = S.data.winners, B = S.data.backups, nm = k => `<span class="nmw">${esc(a.byKey.get(k)?.name || k)}${a.byKey.get(k)?.unit ? `<span class="u">${esc(a.byKey.get(k).unit)}</span>` : ""}</span>`;
   const rm = !locked();
   const dr = rm ? ' draggable="true"' : "";
   let h = `<h3>Your picks</h3><div class="s">${esc(a.name)}</div><div class="meter"><i style="width:${p.w.length / W * 100}%"></i></div>${rm ? `<div class="hint">Drag names in, between, or off the list.</div>` : ""}<div class="zone" data-zone="w">`;
@@ -567,7 +585,7 @@ function showWelcome() {
     <h4>Your job</h4>
     <ul><li>Pick <b>${W} winners</b> for each of the ${N} awards.</li><li>Backups are <b>optional</b> (up to ${B}).</li><li>Click <b>Winner</b>, or drag a name to the right. Not sure yet? Click <b>Maybe</b> (private, not counted).</li><li>Submit when all ${N} are done.</li></ul>
     <h4>How we suggested names</h4>
-    <ul><li>Score out of 20: <b>nominations</b> (up to 10) + <b>comment strength</b> (up to 10).</li><li>One award per person. Every unit included.</li><li>Suggestions only. You decide.</li></ul>
+    <ul><li>Score out of 20: <b>nominations</b> (up to 10) + <b>comment strength</b> (up to 10).</li><li>One award per person. Every unit has at least one winner (<b>* Unit pick</b> marks anyone included only for that).</li><li>Suggestions only. You decide.</li><li>Want a different view? Use the <b>Sort</b> menu above the list: <b>Suggested</b>, <b>Most nominators</b>, <b>Strongest comments</b>, or <b>A to Z</b>.</li></ul>
     <h4>Disqualify (direct leaders only)</h4>
     <ul><li>Someone should not win (HR, performance, not eligible)? Click <b>Disqualify</b> on their card.</li><li>It removes them for everyone. Only the organizer sees the reason.</li><li>Clicked by mistake? Click <b>Undo</b> on the card.</li></ul>
     <h4>Saving</h4>
@@ -606,10 +624,27 @@ function openSubmit() {
     $("mOk").disabled = true; await flushAll();
     const r = await api("/api/submit", {method:"POST"});
     $("modalSlot").innerHTML = "";
-    if (r.ok) { S.submitted = r.submitted; renderAll(); toast("Submitted. Thank you."); }
+    if (r.ok) { S.submitted = r.submitted; renderAll(); thankYou(); }
     else if (r.error === "incomplete") toast("Some awards still need " + S.data.winners + " winners: " + r.missing.join(", "));
     else toast("Could not submit. Please try again.");
   };
+}
+
+function thankYou() {
+  if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const cols = ["#0072ce", "#17375e", "#f2a900", "#00a3ad", "#c8102e", "#ffffff"];
+    for (let i = 0; i < 140; i++) {
+      const c = document.createElement("i"); c.className = "confetti";
+      c.style.left = Math.random() * 100 + "vw"; c.style.background = cols[i % cols.length];
+      c.style.animationDuration = 2.2 + Math.random() * 1.8 + "s"; c.style.animationDelay = Math.random() * .6 + "s";
+      document.body.appendChild(c); setTimeout(() => c.remove(), 5000);
+    }
+  }
+  const first = (S.me || "").split(" ")[0];
+  $("modalSlot").innerHTML = `<div class="modal" role="dialog" aria-modal="true" aria-labelledby="tyT"><div class="mbox"><div class="thanks"><h2 id="tyT">Thank you${first ? ", " + esc(first) : ""}!</h2>
+   <p>Your picks are in. We really appreciate the time you took to read these nominations. It helps us recognize the right people.</p>
+   <p>Need to change something? Click <b>Change my picks</b> at the top.</p></div><div class="mfoot"><button class="ok2" id="tyOk">Close</button></div></div></div>`;
+  $("tyOk").onclick = () => $("modalSlot").innerHTML = "";
 }
 
 async function loadReviewerResults() {
