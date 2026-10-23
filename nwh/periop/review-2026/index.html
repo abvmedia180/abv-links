@@ -283,6 +283,7 @@ async function enter(name) {
     S.cur = first < 0 ? 0 : first;
     document.title = S.data.title;
     $("bEy").textContent = S.data.brand_ey; $("bT").innerHTML = esc(S.data.brand_t) + "<br>Winner Selection";
+    if (S.data.icon) { let l = document.querySelector("link[rel=icon]"); if (!l) { l = document.createElement("link"); l.rel = "icon"; document.head.appendChild(l); } l.href = S.data.icon; }  // icon arrives with the data, so the page source stays generic
     $("logo").src = S.data.logo; $("contact").innerHTML = S.data.contact_email ? `<a href="mailto:${esc(S.data.contact_email)}?subject=${encodeURIComponent("Awards review question")}" style="color:inherit">${esc(S.data.contact)}</a>` : esc(S.data.contact); $("meName").textContent = S.me;
     show("app"); renderAll(); window.scrollTo(0, 0);
     let seen = null; try { seen = localStorage.getItem("nr_welcome_" + name); } catch {}
