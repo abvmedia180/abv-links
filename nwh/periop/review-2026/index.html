@@ -512,7 +512,7 @@ function renderPicks() {
     const label = S.cur < S.data.awards.length - 1 ? `Next: ${esc(S.data.awards[to].name)} &rarr;` : `Go to unfinished: ${esc(S.data.awards[to].name)} &rarr;`;
     h += `<button class="next" id="nextBtn" data-to="${to}">${label}</button><div class="sub">Submit appears when all ${S.data.awards.length} awards have ${W} winners.</div>`;
   }
-  if (S.me === "Abe Varughese" && rm) h += `<div class="sub"><a class="clr" id="pickSugg">Pick suggested 7</a></div>`;  // organizer-only shortcut (Abe 10/22)
+  if (S.me && S.me === S.data.organizer && rm) h += `<div class="sub"><a class="clr" id="pickSugg">Pick suggested 7</a></div>`;  // organizer-only shortcut (Abe 10/22)
   h += `<button class="cmt" id="cmtBtn">${S.collapse ? "Show all comments &#9662;" : "Hide all comments &#9652;"}</button>`;
   if (rm && (p.w.length || p.b.length)) h += `<div class="sub"><a class="clr" id="clearAward">Clear picks for this award</a></div>`;
   $("pk").innerHTML = h;
