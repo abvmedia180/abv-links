@@ -236,7 +236,7 @@ const fmtTime = ms => new Date(ms).toLocaleString("en-US",{timeZone:"America/New
 const fmtClock = ms => new Date(ms).toLocaleTimeString("en-US",{timeZone:"America/New_York",hour:"numeric",minute:"2-digit"});
 let TOKEN = null;
 try { TOKEN = sessionStorage.getItem("nr_t"); } catch {}
-const S = {data:null, me:null, picks:{}, everSaved:new Set(), submitted:null, due:null, released:false, cur:0, tab:"all", sort:"sugg", q:"", open:new Set(), pending:{}, timers:{}, busy:{}, dq:new Map(), closed:new Set(), collapse:true, showRest:false};
+const S = {data:null, me:null, picks:{}, everSaved:new Set(), submitted:null, due:null, released:false, cur:0, tab:"all", sort:"sugg", q:"", open:new Set(), pending:{}, timers:{}, busy:{}, dq:new Map(), closed:new Set(), collapse:true, showRest:false, showSelf:false};
 try { S.collapse = localStorage.getItem("nr_cmt_open") !== "1"; } catch {}  // comments start closed (Abe 10/22)
 
 async function api(path, opts = {}) {
@@ -459,7 +459,10 @@ function renderMain() {
     h += `<div class="grp sec"><h2>All remaining nominees</h2><span>${rest.length}, highest score first.</span></div>`
       + (showRest ? (rest.map(n => card(n, a)).join("") || `<div class="empty">No match here.</div>`) + (q ? "" : `<button class="restbtn" id="restBtn">Hide remaining nominees &#9652;</button>`)
                   : `<button class="restbtn" id="restBtn">Show all ${rest.length} remaining nominees &#9662;</button>`);
-    if (selfs.length) h += `<div class="grp sec"><h2>Not eligible</h2><span>Only nominated by themselves. Self-nominations do not count.</span></div>` + selfs.map(n => card(n, a)).join("");
+    const showSelf = S.showSelf || q;
+    if (selfs.length) h += `<div class="grp sec"><h2>Not eligible</h2><span>Only nominated by themselves. Self-nominations do not count.</span></div>`
+      + (showSelf ? selfs.map(n => card(n, a)).join("") + (q ? "" : `<button class="restbtn" id="selfBtn">Hide not eligible &#9652;</button>`)
+                  : `<button class="restbtn" id="selfBtn">Show ${selfs.length} not eligible &#9662;</button>`);
   } else if (S.tab === "all") {
     const l = sorted(a.nominees).filter(match);
     h += `<div class="grp"><h2>All nominees</h2><span>${l.length} shown</span></div>` + (l.map(n => card(n, a)).join("") || `<div class="empty">No nominee matches “${esc(S.q)}”.</div>`);
@@ -472,6 +475,7 @@ function renderMain() {
   } else h += `<div id="resBox"><div class="empty">Loading results...</div></div>`;
   $("main").innerHTML = h;
   if ($("restBtn")) $("restBtn").onclick = () => { S.showRest = !S.showRest; renderMain(); };
+  if ($("selfBtn")) $("selfBtn").onclick = () => { S.showSelf = !S.showSelf; renderMain(); };
   if (S.tab === "res") loadReviewerResults();
 }
 $("main").addEventListener("click", e => {
