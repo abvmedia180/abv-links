@@ -70,6 +70,9 @@ button{font:inherit}[hidden]{display:none!important}
 .grp{display:flex;align-items:baseline;gap:10px;margin:22px 0 10px}
 .grp h2{font-size:13px;letter-spacing:1.4px;text-transform:uppercase;color:var(--navy);margin:0;font-weight:600}
 .grp span{font-size:13px;color:var(--dim)}
+.grp.sec{margin-top:56px;padding-top:22px;border-top:1px solid var(--line)}
+.restbtn{display:block;width:100%;padding:14px;border:1px dashed #b9c2cf;border-radius:10px;background:#fff;color:var(--navy);font-weight:600;font-size:14.5px;cursor:pointer}.restbtn:hover{border-color:var(--navy)}
+.cmt{width:100%;margin-top:10px;padding:10px;border:1.5px solid var(--bright);border-radius:8px;background:#eaf6fd;color:#00609a;font-weight:600;font-size:14px;cursor:pointer}.cmt:hover{background:#d8effb}
 .empty{padding:28px;text-align:center;color:var(--muted);background:#fff;border:1px dashed #cfd5de;border-radius:12px;margin-top:14px}
 .nom{background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden}
 .nom.win{border-color:#9db3d9;background:#f7f9fd}
@@ -233,8 +236,8 @@ const fmtTime = ms => new Date(ms).toLocaleString("en-US",{timeZone:"America/New
 const fmtClock = ms => new Date(ms).toLocaleTimeString("en-US",{timeZone:"America/New_York",hour:"numeric",minute:"2-digit"});
 let TOKEN = null;
 try { TOKEN = sessionStorage.getItem("nr_t"); } catch {}
-const S = {data:null, me:null, picks:{}, everSaved:new Set(), submitted:null, due:null, released:false, cur:0, tab:"all", sort:"sugg", q:"", open:new Set(), pending:{}, timers:{}, busy:{}, dq:new Map(), closed:new Set(), collapse:false};
-try { S.collapse = localStorage.getItem("nr_collapse") === "1"; } catch {}
+const S = {data:null, me:null, picks:{}, everSaved:new Set(), submitted:null, due:null, released:false, cur:0, tab:"all", sort:"sugg", q:"", open:new Set(), pending:{}, timers:{}, busy:{}, dq:new Map(), closed:new Set(), collapse:true, showRest:false};
+try { S.collapse = localStorage.getItem("nr_cmt_open") !== "1"; } catch {}  // comments start closed (Abe 10/22)
 
 async function api(path, opts = {}) {
   const h = {"Content-Type":"application/json"};
@@ -392,7 +395,7 @@ function renderBanner() {
 }
 
 function bars(n) { let s = ""; for (let i = 1; i <= 5; i++) s += `<i${n && i <= n ? ' class="f"' : ""}></i>`; return `<span class="bars">${s}</span>`; }
-function card(n, a) {  // comments start open on every card (Abe 10/22); "Collapse all comments" flips the default
+function card(n, a) {  // comments start closed (Abe 10/22); the blue "Open all comments" button in Your picks flips the default
   const p = P(a), w = p.w.includes(n.k), b = p.b.includes(n.k), mb = (p.m || []).includes(n.k), open = S.collapse ? S.open.has(n.k) : !S.closed.has(n.k);
   const written = n.noms.filter(x => x.t.trim());
   const blank = n.noms.filter(x => !x.t.trim());
@@ -435,7 +438,6 @@ function renderMain() {
   const sugg = a.nominees.filter(n => n.tier !== "other");
   const mine = [...p.w, ...p.b].map(k => a.byKey.get(k)).filter(Boolean);
   let h = `<div class="hero"><div class="ey">Award ${S.cur + 1} of ${S.data.awards.length} &middot; ${a.nominees.length} nominees</div><h1>${esc(a.name)}</h1><p>${esc(a.desc)}</p></div>
-  <p class="method"><b>How the suggestions were made:</b> each nominee has a score out of 20. Up to 10 points for how many people nominated them (2 points per nominator) and up to 10 for the comments: how sincere and heartfelt they are and how well they fit the award, with extra credit for a specific story. Each person is suggested for only one award, and every unit has at least one winner (anyone included only for that reason is marked "* Unit pick"). These are only suggestions; you choose.</p>
   <div class="tools"><div class="tabs" role="tablist">
     <button class="${S.tab === "all" ? "on" : ""}" data-tab="all">Nominees<small>${a.nominees.length}</small></button>
     <button class="${S.tab === "mine" ? "on" : ""}" data-tab="mine">My picks<small>${mine.length}</small></button>
@@ -443,7 +445,6 @@ function renderMain() {
    ${S.tab === "all" ? `<select class="sel" id="sortSel" aria-label="Sort">
      <option value="sugg"${S.sort === "sugg" ? " selected" : ""}>Sort: Suggested (highest score first)</option><option value="votes"${S.sort === "votes" ? " selected" : ""}>Most nominators</option>
      <option value="str"${S.sort === "str" ? " selected" : ""}>Strongest comments</option><option value="az"${S.sort === "az" ? " selected" : ""}>A to Z</option></select>` : ""}
-   ${S.tab !== "res" ? `<button class="sel" id="collapseAll" type="button">${S.collapse ? "Open all comments" : "Collapse all comments"}</button>` : ""}
    ${S.tab !== "res" ? `<input class="search" id="search" placeholder="Find a name" value="${esc(S.q)}" aria-label="Find a name">` : ""}</div>`;
   if (S.tab === "all" && S.sort === "sugg") {
     // one ranked list: suggested 7, next in line, then everyone else by score
@@ -452,10 +453,13 @@ function renderMain() {
     const rest = sorted(a.nominees.filter(n => n.tier === "other" && !n.sdq && n.cp < 6)).filter(match);
     const selfs = a.nominees.filter(n => n.sdq).filter(match);
     h += `<div class="grp"><h2>Suggested 7</h2><span>Start here: the highest scores for this award.</span></div>` + (t7.map(n => card(n, a)).join("") || `<div class="empty">No match in the suggested 7.</div>`);
-    h += `<div class="grp"><h2>Next in line</h2><span>Strongest people not suggested for another award.</span></div>` + (bk.map(n => card(n, a)).join("") || `<div class="empty">No match here.</div>`);
-    if (strong.length) h += `<div class="grp"><h2>Standout comments</h2><span>A strong, heartfelt comment, even with only one nominator.</span></div>` + strong.map(n => card(n, a)).join("");
-    h += `<div class="grp"><h2>All remaining nominees</h2><span>${rest.length}, highest score first.</span></div>` + (rest.map(n => card(n, a)).join("") || `<div class="empty">No match here.</div>`);
-    if (selfs.length) h += `<div class="grp"><h2>Not eligible</h2><span>Only nominated by themselves. Self-nominations do not count.</span></div>` + selfs.map(n => card(n, a)).join("");
+    h += `<div class="grp sec"><h2>Next in line</h2><span>Strongest people not suggested for another award.</span></div>` + (bk.map(n => card(n, a)).join("") || `<div class="empty">No match here.</div>`);
+    if (strong.length) h += `<div class="grp sec"><h2>Standout comments</h2><span>A strong, heartfelt comment, even with only one nominator.</span></div>` + strong.map(n => card(n, a)).join("");
+    const showRest = S.showRest || q;  // a name search always shows everyone
+    h += `<div class="grp sec"><h2>All remaining nominees</h2><span>${rest.length}, highest score first.</span></div>`
+      + (showRest ? (rest.map(n => card(n, a)).join("") || `<div class="empty">No match here.</div>`) + (q ? "" : `<button class="restbtn" id="restBtn">Hide remaining nominees &#9652;</button>`)
+                  : `<button class="restbtn" id="restBtn">Show all ${rest.length} remaining nominees &#9662;</button>`);
+    if (selfs.length) h += `<div class="grp sec"><h2>Not eligible</h2><span>Only nominated by themselves. Self-nominations do not count.</span></div>` + selfs.map(n => card(n, a)).join("");
   } else if (S.tab === "all") {
     const l = sorted(a.nominees).filter(match);
     h += `<div class="grp"><h2>All nominees</h2><span>${l.length} shown</span></div>` + (l.map(n => card(n, a)).join("") || `<div class="empty">No nominee matches “${esc(S.q)}”.</div>`);
@@ -467,11 +471,7 @@ function renderMain() {
     h += `<div class="grp"><h2>Maybe</h2><span>Your private shortlist. Not counted.</span></div>` + (m.map(n => card(n, a)).join("") || `<div class="empty">Click Maybe on anyone you want to come back to.</div>`);
   } else h += `<div id="resBox"><div class="empty">Loading results...</div></div>`;
   $("main").innerHTML = h;
-  if ($("collapseAll")) $("collapseAll").onclick = () => {
-    S.collapse = !S.collapse; S.open.clear(); S.closed.clear();
-    try { localStorage.setItem("nr_collapse", S.collapse ? "1" : "0"); } catch {}
-    renderMain();
-  };
+  if ($("restBtn")) $("restBtn").onclick = () => { S.showRest = !S.showRest; renderMain(); };
   if (S.tab === "res") loadReviewerResults();
 }
 $("main").addEventListener("click", e => {
@@ -508,6 +508,7 @@ function renderPicks() {
     const label = S.cur < S.data.awards.length - 1 ? `Next: ${esc(S.data.awards[to].name)} &rarr;` : `Go to unfinished: ${esc(S.data.awards[to].name)} &rarr;`;
     h += `<button class="next" id="nextBtn" data-to="${to}">${label}</button><div class="sub">Submit appears when all ${S.data.awards.length} awards have ${W} winners.</div>`;
   }
+  h += `<button class="cmt" id="cmtBtn">${S.collapse ? "Open all comments &#9662;" : "Close all comments &#9652;"}</button>`;
   if (rm && (p.w.length || p.b.length)) h += `<div class="sub"><a class="clr" id="clearAward">Clear picks for this award</a></div>`;
   $("pk").innerHTML = h;
 }
@@ -517,6 +518,11 @@ $("pk").addEventListener("click", e => {
   if (e.target.id === "nextBtn") go(+e.target.dataset.to);
   if (e.target.id === "submitBtn") openSubmit();
   if (e.target.id === "clearAward") confirmClear(false);
+  if (e.target.id === "cmtBtn") {
+    S.collapse = !S.collapse; S.open.clear(); S.closed.clear();
+    try { localStorage.setItem("nr_cmt_open", S.collapse ? "0" : "1"); } catch {}
+    renderAll(true);
+  }
 });
 
 // ---------- drag and drop ----------
@@ -593,6 +599,8 @@ function showWelcome() {
     <ul><li>Pick <b>${W} winners</b> for each of the ${N} awards.</li><li>Backups are <b>optional</b> (up to ${B}).</li><li>Click <b>Winner</b>, or drag a name to the right. Not sure yet? Click <b>Maybe</b> (private, not counted).</li><li>Submit when all ${N} are done.</li></ul>
     <h4>How we suggested names</h4>
     <ul><li>Score out of 20: <b>nominations</b> (up to 10) + <b>comment strength</b> (up to 10).</li><li>One award per person. Every unit has at least one winner (<b>* Unit pick</b> marks anyone included only for that).</li><li>Suggestions only. You decide.</li><li>Want a different view? Use the <b>Sort</b> menu above the list: <b>Suggested</b>, <b>Most nominators</b>, <b>Strongest comments</b>, or <b>A to Z</b>.</li></ul>
+    <h4>Reading comments</h4>
+    <ul><li>Comments start <b>closed</b> so the list is easy to scan.</li><li>Click the blue <b>Open all comments</b> button on the right (under your picks) to see every comment. Click it again to close them.</li><li>Or click <b>Read comments</b> on one person's card.</li><li>Everyone outside the top sections is under <b>Show all remaining nominees</b> at the bottom.</li></ul>
     <h4>Disqualify (direct leaders only)</h4>
     <ul><li>Someone should not win (HR, performance, not eligible)? Click <b>Disqualify</b> on their card.</li><li>It removes them for everyone. Only the organizer sees the reason.</li><li>Clicked by mistake? Click <b>Undo</b> on the card.</li></ul>
     <h4>Saving</h4>
