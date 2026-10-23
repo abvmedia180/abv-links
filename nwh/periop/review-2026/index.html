@@ -395,7 +395,7 @@ function renderBanner() {
 }
 
 function bars(n) { let s = ""; for (let i = 1; i <= 5; i++) s += `<i${n && i <= n ? ' class="f"' : ""}></i>`; return `<span class="bars">${s}</span>`; }
-function card(n, a) {  // comments start closed (Abe 10/22); the blue "Open all comments" button in Your picks flips the default
+function card(n, a) {  // comments start closed (Abe 10/22); the blue "Show all comments" button in Your picks flips the default
   const p = P(a), w = p.w.includes(n.k), b = p.b.includes(n.k), mb = (p.m || []).includes(n.k), open = S.collapse ? S.open.has(n.k) : !S.closed.has(n.k);
   const written = n.noms.filter(x => x.t.trim());
   const blank = n.noms.filter(x => !x.t.trim());
@@ -508,7 +508,7 @@ function renderPicks() {
     const label = S.cur < S.data.awards.length - 1 ? `Next: ${esc(S.data.awards[to].name)} &rarr;` : `Go to unfinished: ${esc(S.data.awards[to].name)} &rarr;`;
     h += `<button class="next" id="nextBtn" data-to="${to}">${label}</button><div class="sub">Submit appears when all ${S.data.awards.length} awards have ${W} winners.</div>`;
   }
-  h += `<button class="cmt" id="cmtBtn">${S.collapse ? "Open all comments &#9662;" : "Close all comments &#9652;"}</button>`;
+  h += `<button class="cmt" id="cmtBtn">${S.collapse ? "Show all comments &#9662;" : "Hide all comments &#9652;"}</button>`;
   if (rm && (p.w.length || p.b.length)) h += `<div class="sub"><a class="clr" id="clearAward">Clear picks for this award</a></div>`;
   $("pk").innerHTML = h;
 }
@@ -600,7 +600,7 @@ function showWelcome() {
     <h4>How we suggested names</h4>
     <ul><li>Score out of 20: <b>nominations</b> (up to 10) + <b>comment strength</b> (up to 10).</li><li>One award per person. Every unit has at least one winner (<b>* Unit pick</b> marks anyone included only for that).</li><li>Suggestions only. You decide.</li><li>Want a different view? Use the <b>Sort</b> menu above the list: <b>Suggested</b>, <b>Most nominators</b>, <b>Strongest comments</b>, or <b>A to Z</b>.</li></ul>
     <h4>Reading comments</h4>
-    <ul><li>Comments start <b>closed</b> so the list is easy to scan.</li><li>Click the blue <b>Open all comments</b> button on the right (under your picks) to see every comment. Click it again to close them.</li><li>Or click <b>Read comments</b> on one person's card.</li><li>Everyone outside the top sections is under <b>Show all remaining nominees</b> at the bottom.</li></ul>
+    <ul><li>Comments start <b>closed</b> so the list is easy to scan.</li><li>Click the blue <b>Show all comments</b> button on the right (under your picks) to see every comment. Click it again to hide them.</li><li>Or click <b>Read comments</b> on one person's card.</li><li>Everyone outside the top sections is under <b>Show all remaining nominees</b> at the bottom.</li></ul>
     <h4>Disqualify (direct leaders only)</h4>
     <ul><li>Someone should not win (HR, performance, not eligible)? Click <b>Disqualify</b> on their card.</li><li>It removes them for everyone. Only the organizer sees the reason.</li><li>Clicked by mistake? Click <b>Undo</b> on the card.</li></ul>
     <h4>Saving</h4>
