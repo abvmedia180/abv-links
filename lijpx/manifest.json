@@ -1,7 +1,7 @@
 {
   "site": {
     "version": "5.0",
-    "lastUpdated": "October 24, 2026 12:07 AM ET"
+    "lastUpdated": "October 25, 2026 4:55 PM ET"
   },
   "check": "data/check.enc?v=fe922920fb",
   "tools": [
@@ -16,7 +16,7 @@
     {
       "id": "quiet",
       "version": "2.0",
-      "lastUpdated": "October 24, 2026 12:07 AM ET",
+      "lastUpdated": "October 25, 2026 4:55 PM ET",
       "module": "tools/quiet/tool.js?v=a94e8ada3a",
       "data": "data/quiet.enc?v=2e57f99553",
       "css": "tools/quiet/tool.css?v=78633619d4"
@@ -24,9 +24,9 @@
     {
       "id": "cfam",
       "version": "2.0",
-      "lastUpdated": "October 24, 2026 12:07 AM ET",
+      "lastUpdated": "October 25, 2026 4:55 PM ET",
       "module": "tools/cfam/tool.js?v=bbdc40ebbc",
-      "data": "data/cfam.enc?v=1e09371ba3",
+      "data": "data/cfam.enc?v=2afd60f99c",
       "css": "tools/cfam/tool.css?v=95638953b5"
     },
     {
